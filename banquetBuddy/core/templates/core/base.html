@@ -34,6 +34,11 @@
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
                 </ul>
+                {% if user.is_authenticated %}
+                    <form class="form-inline my-2 my-lg-0">
+                        <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
+                    </form>
+                {% endif %}
                 <form class="form-inline my-2 my-lg-0" style="position: relative;">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-icon">
                         <i class="fas fa-search"></i>
