@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elegir registro</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .register-form {
+        background-color: #54bfaf;
+        padding: 20px;
+        border-radius: 35px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .register-container {
+        margin-top: 120px; /* Ajuste de margen superior */
+    }
+
+    .rounded-input {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 8px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .register-heading {
+        padding-bottom: 20px; /* Ajuste de espacio inferior del título */
+    }
+
+    .btn {
+        background-color: #02483E;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    /* Ajuste de margen superior para el primer párrafo dentro de .register-form */
+    .register-form p:first-child {
+        margin-top: 0px;
+    }
+
+    /* Alineación de texto centrada para los párrafos dentro de .register-form */
+    .register-form p {
+        text-align: center;
+        margin: 10px 0; /* Añadido un pequeño margen vertical */
+    }
+
+    /* Ajuste de margen inferior para el último contenedor */
+    .last-container {
+        margin-bottom: 155px; /* Ajustar según sea necesario */
+    }
+</style>
+<body>
+
+<div class="container">
+    <div class="row register-container"> <!-- Clase agregada para contenedor -->
+        <div class="col-md-4">
+            <div class="register-form">
+                <h2 class="register-heading"><u>Particular</u></h2>
+                <p>Search</p>
+                <p>Compare</p>
+                <p>Hire</p>
+                <a href="/register_particular" class="btn">Sign Up</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="register-form">
+                <h2 class="register-heading"><u>Employee</u></h2>
+                <p>Create a profile</p>
+                <p>Search opportunities</p>
+                <p>Apply for jobs</p>
+                <a href="/register_employee" class="btn">Sign Up</a>
+            </div>
+        </div>
+        <div class="col-md-4 last-container"> <!-- Aplicando la clase last-container al último contenedor -->
+            <div class="register-form">
+                <h2 class="register-heading"><u>Company</u></h2>
+                <p>Promote your service</p>
+                <p>Manage</p>
+                <p>Hire Workers</p>
+                <a href="/register_company" class="btn">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

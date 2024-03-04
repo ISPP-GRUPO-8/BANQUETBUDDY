@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block content %}
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
@@ -10,8 +13,8 @@
             {% if not request.user.is_authenticated %}
             <div class="col-12 text-center mt-4 btn-container">
                 <a href="/login" class="btn btn-login mr-3">Log in</a>
-                <a href="#" class="btn btn-signup ml-3">Sign up</a>
-            </div>
+                <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+            </div>         
             {% endif %}        
         </div>
     </div>
