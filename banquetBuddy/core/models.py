@@ -50,9 +50,12 @@ class CateringCompany(models.Model):
     phone_number = PhoneNumberField()
     service_description = models.TextField(blank=True)
     logo = models.BinaryField(blank=True, null=True)
-    cuisine_type = ArrayField(models.CharField(max_length=255), blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    price_plan = models.CharField(max_length=50, choices=PricePlan.choices)  
+    cuisine_types = models.ManyToManyField('CuisineType', related_name='catering_companies', null=True, blank=True)
+    price_plan = models.CharField(max_length=50, choices=PricePlan.choices)
+
+class CuisineType(models.Model):
+    name = models.CharField(max_length=255)
 
 class Employee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='EmployeeUsername')
