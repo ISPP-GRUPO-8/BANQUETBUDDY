@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Applicants for Offer: {{ offer.title }}</h1>
+<ul>
+  {% for applicant in applicants %}
+    <li>
+      {{ applicant.employee.user.username }} 
+      Telefono de Contacto: {{ applicant.employee.phone_number }} - 
+      Nivel de Inglés: {{ applicant.employee.english_level }} - 
+      Profesión: {{ applicant.employee.profession }}
+    </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

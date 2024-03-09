@@ -151,64 +151,74 @@ def create_catering_companies():
                 catering_company.save()
 employee_data = [
     {
-        'username': 'employee1',
+        'username': 'OliverS',
         'password': 'employee1',
         'experience': 'Experiencia en la preparación de banquetes para grandes eventos',
-        'skill': 'Creatividad para desarrollar platos innovadores'
+        'skill': 'Creatividad para desarrollar platos innovadores',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee2',
+        'username': 'WillJ98',
         'password': 'employee2',
         'experience': 'Trabajo en restaurantes de cocina internacional',
-        'skill': 'Trabajo en equipo en entornos de alta presión'
+        'skill': 'Trabajo en equipo en entornos de alta presión',
+        'english_level': 'B2'
     },
     {
-        'username': 'employee3',
+        'username': 'HarryB_22',
         'password': 'employee3',
         'experience': 'Gestión de la logística de eventos gastronómicos',
-        'skill': 'Destreza en la decoración y presentación de platos'
+        'skill': 'Destreza en la decoración y presentación de platos',
+        'english_level': 'A2'
     },
     {
-        'username': 'employee4',
+        'username': 'GeorgeM_10',
         'password': 'employee4',
         'experience': 'Supervisión de personal en servicios de catering',
-        'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes'
+        'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes',
+        'english_level': 'NINGUNO'
     },
     {
-        'username': 'employee5',
+        'username': 'JackW',
         'password': 'employee5',
         'experience': 'Planificación y ejecución de menús para eventos especiales',
-        'skill': 'Comunicación efectiva con clientes y proveedores'
+        'skill': 'Comunicación efectiva con clientes y proveedores',
+        'english_level': 'C2'
     },
     {
-        'username': 'employee6',
+        'username': 'AmeliaW',
         'password': 'employee6',
         'experience': 'Experiencia en la gestión de cocinas industriales',
-        'skill': 'Gestión del tiempo para coordinar la preparación de múltiples platos'
+        'skill': 'Gestión del tiempo para coordinar la preparación de múltiples platos',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee7',
+        'username': 'OliviaT',
         'password': 'employee7',
         'experience': 'Conocimiento de normativas de higiene y seguridad alimentaria',
-        'skill': 'Capacidad para resolver problemas rápidamente durante eventos en vivo'
+        'skill': 'Capacidad para resolver problemas rápidamente durante eventos en vivo',
+        'english_level': 'B1'
     },
     {
-        'username': 'employee8',
+        'username': 'IsabellaG',
         'password': 'employee8',
         'experience': 'Trabajo en servicios de catering para bodas y eventos sociales',
-        'skill': 'Conocimiento de técnicas de servicio y atención al cliente'
+        'skill': 'Conocimiento de técnicas de servicio y atención al cliente',
+        'english_level': 'A1'
     },
     {
-        'username': 'employee9',
+        'username': 'AvaJ',
         'password': 'employee9',
         'experience': 'Participación en catas y maridajes de vinos y alimentos',
-        'skill': 'Flexibilidad para ajustarse a cambios de último minuto en los pedidos'
+        'skill': 'Flexibilidad para ajustarse a cambios de último minuto en los pedidos',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee10',
+        'username': 'SophiaM99',
         'password': 'employee10',
         'experience': 'Manejo de equipos y utensilios especializados en cocina',
-        'skill': 'Compromiso con la calidad y la excelencia en la cocina'
+        'skill': 'Compromiso con la calidad y la excelencia en la cocina',
+        'english_level': 'C1'
     }
 ]
 
@@ -221,6 +231,7 @@ def create_employees(num_employees):
             profession=choice(['Chef', 'Camarero', 'Pastelero']),
             experience=employee_data[_]['experience'],
             skills=employee_data[_]['skill'],
+            english_level=employee_data[_]['english_level'],
             location=faker.address(),
             curriculum=None, 
             recommendation_letter=None 

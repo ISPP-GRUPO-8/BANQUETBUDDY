@@ -35,6 +35,15 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    
+class EnglishLevel(models.TextChoices):
+    C2 = 'C2', 'C2'
+    C1 = 'C1', 'C1'
+    B2 = 'B2', 'B2'
+    B1 = 'B1', 'B1'
+    A2 = 'A2', 'A2'
+    A1 = 'A1', 'A1'
+    NINGUNO = 'NINGUNO', 'Ninguno'
 
 
 class Particular(models.Model):
@@ -60,6 +69,7 @@ class Employee(models.Model):
     profession = models.CharField(max_length=255)
     experience = models.CharField(max_length=255)
     skills = models.CharField(max_length=255)
+    english_level = models.CharField(max_length=50, choices=EnglishLevel.choices, default="NINGUNO")
     location = models.CharField(max_length=255)
     curriculum = models.BinaryField(blank=True, null=True)
     recommendation_letter = models.BinaryField(blank=True, null=True)
