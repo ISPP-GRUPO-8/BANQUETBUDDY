@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Reservation</title>
+</head>
+<body>
+
+  <h1>Reservation Details</h1>
+
+  <ul>
+    <li><strong>Name:</strong> {{ event.name }}</li>
+    <li><strong>Date:</strong> {{ event.date }}</li>
+    <li><strong>Details:</strong> {{ event.details }}</li>
+    <li><strong>Number of Guests:</strong> {{ event.number_guests }}</li>
+    <li><strong>Booking State:</strong> {{ event.booking_state }}</li>
+    <li><strong>Particular:</strong> {{ event.particular }}</li>
+
+  </ul>
+
+</body>
+</html>
+
+{% endblock %}

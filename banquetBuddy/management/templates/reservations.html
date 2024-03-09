@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Reservations</title>
+</head>
+<body>
+
+  <h1>Event Reservations</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Booking State</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reservation in reservations %}
+        <tr>
+          <td>{{ reservation.name }}</td>
+          <td>{{ reservation.date }}</td>
+          <td>{{ reservation.booking_state }}</td>
+          <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>
+{% endblock %}
