@@ -11,11 +11,12 @@ Con BanquetBuddy, transformamos la planificación de eventos, mejorando la exper
 ## Pre-requisitos 📋
 
 Instalación en el requierement.txt:
-  Django==4.2.7
-  djangorestframework==3.14.0
-  Pillow==10.1.0
-  psycopg2==2.9.9
-  stripe==7.7.0
+  
+  - Django==4.2.7
+  - djangorestframework==3.14.0
+  - Pillow==10.1.0
+  - psycopg2==2.9.9
+  - stripe==7.7.0
 
 Instalación base de datos:
 
@@ -36,11 +37,8 @@ https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 Puedes encontrar nuestro proyecto en: [[Despliegue](https://banquetbuddy.pythonanywhere.com/)]
 ## Construido con 🛠️
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
-* [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
+* [Django](https://docs.djangoproject.com/en/5.0/) - El framework web usado
+* [PostgreSQL](https://www.postgresql.org/docs/) - La base de datos usada
 
 ## Wiki 📖
 
