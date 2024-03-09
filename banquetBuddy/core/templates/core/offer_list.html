@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    form {
+    margin: 10%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-top: 20px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer List</title>
+</head>
+<body>
+    <h1>Offer List</h1>
+    <ul>
+        {% for offer in offers %}
+        <li>
+            <h2>{{ offer.title }}</h2>
+            <h2>{{ offer.location }}</h2>
+            <p>{{ offer.description }}</p>
+            <!-- Aquí puedes agregar más detalles de la oferta -->
+            {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
+                <form action="{% url 'edit_offer' offer.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Edit</button>
+                </form>
+                <form action="{% url 'delete_offer' offer.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            {% endif %}
+            <form action="{% url 'apply_offer' offer.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Apply</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+<!--  En esta plantilla,
+     cada oferta se muestra como un elemento de lista (<li>) con su título,
+     descripción y un botón para aplicar. Cuando se hace clic en el botón "Apply", 
+     se enviará una solicitud POST a la vista apply_offer() con el ID de la oferta correspondiente, 
+     que procesará la aplicación y luego redirigirá de vuelta a la lista de ofertas. -->
+{% endblock %}

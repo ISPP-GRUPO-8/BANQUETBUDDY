@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    form {
+        margin: 10%;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    label {
+        display: block;
+        margin-top: 20px;
+    }
+
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    input[type="submit"] {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #c82333;
+    }
+</style>
+<h1>Delete Offer</h1>
+<form action="{% url 'delete_offer' offer.id %}" method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete "{{ offer.title }}"?</p>
+    <input type="submit" value="Delete">
+</form>
+{% endblock %}

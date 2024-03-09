@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Particular, CateringCompany, Employee
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CustomUser
+from .models import CustomUser, Offer
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -90,3 +90,8 @@ class CustomUserCreationForm(UserCreationForm):
             "password1",
             "password2",
         ]
+
+class OfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ['title', 'description', 'requirements', 'location']

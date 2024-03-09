@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Offer</title>
+</head>
+<body>
+    <h1>Apply for Offer</h1>
+    <h2>{{ offer.title }}</h2>
+    <p>{{ offer.description }}</p>
+    <!-- Agrega más detalles de la oferta según sea necesario -->
+
+    <h3>Application Form</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Apply</button>
+    </form>
+</body>
+</html>
+{% endblock %}

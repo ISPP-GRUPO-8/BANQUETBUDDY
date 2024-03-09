@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    form {
+    margin: 10%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-top: 20px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+</style>
+<h1>Editar oferta de trabajo</h1>
+    <form action="{% url 'edit_offer' offer.id %}" method="post">
+        {% csrf_token %}
+        <label for="id_title">Título:</label>
+        <input type="text" id="id_title" name="title" value="{{ offer.title }}" required><br>
+
+        <label for="id_description">Descripción:</label>
+        <textarea id="id_description" name="description" required>{{ offer.description }}</textarea><br>
+
+        <label for="id_requirements">Requisitos:</label>
+        <textarea id="id_requirements" name="requirements" required>{{ offer.requirements }}</textarea><br>
+
+        <label for="id_location">Ubicación:</label>
+        <input type="text" id="id_location" name="location" value="{{ offer.location }}" required><br>
+
+        <input type="submit" value="Guardar">
+    </form>
+{% endblock %}
