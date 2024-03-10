@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'caterings',
+    'catering_particular',
     'phonenumber_field',
 
 ]
