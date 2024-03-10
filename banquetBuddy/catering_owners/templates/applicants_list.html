@@ -2,16 +2,52 @@
 {% load static %}
 
 {% block content %}
-<h1>Applicants for Offer: {{ offer.title }}</h1>
-<ul>
-  {% for applicant in applicants %}
-    <li>
-      {{ applicant.employee.user.username }} 
-      Telefono de Contacto: {{ applicant.employee.phone_number }} - 
-      Nivel de Inglés: {{ applicant.employee.english_level }} - 
-      Profesión: {{ applicant.employee.profession }}
-    </li>
-  {% endfor %}
-</ul>
+<html lang="en">
+<form method="get" action="{% url 'applicants' offer_id=offer.id %}">
+    {{ filter_form.as_p }}
+    <button type="submit">Filter</button>
+</form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Applicant List</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">English Level</th>
+                    <th scope="col">Profession</th>
+                    <th scope="col">Experience</th>
+                    <th scope="col">Skills</th>
+                    <th scope="col">Curriculum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicant in applicants %}
+                <tr>
+                    <td>{{ applicant.english_level }}</td>
+                    <td>{{ applicant.profession }}</td>
+                    <td>{{ applicant.experience }}</td>
+                    <td>{{ applicant.skills }}</td>
+                    <td>
+                        {% if applicant.curriculum %}
+                        <a href="{{ applicant.curriculum.url }}">View Curriculum</a>
+                        {% else %}
+                        No Curriculum Available
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFOnpDljFH8zYZVp0LN37AUaRB1 EjwRsYH/@IcsVQTsNznExv0m0MzQK8L" crossorigin="anonymous"></script>
+</body>
+</html>
 
 {% endblock %}

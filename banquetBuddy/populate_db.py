@@ -176,7 +176,7 @@ employee_data = [
         'password': 'employee4',
         'experience': 'Supervisión de personal en servicios de catering',
         'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes',
-        'english_level': 'NINGUNO'
+        'english_level': 'NONE'
     },
     {
         'username': 'JackW',

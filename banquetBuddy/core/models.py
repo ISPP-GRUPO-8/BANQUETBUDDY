@@ -43,7 +43,7 @@ class EnglishLevel(models.TextChoices):
     B1 = 'B1', 'B1'
     A2 = 'A2', 'A2'
     A1 = 'A1', 'A1'
-    NINGUNO = 'NINGUNO', 'Ninguno'
+    NINGUNO = 'NONE', 'None'
 
 
 class Particular(models.Model):
