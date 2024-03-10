@@ -11,6 +11,8 @@
     {% if catering.cateringcompany.logo %}
         <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
     {% endif %}
-    <a href="{% url 'booking_process' catering.id %}" class="btn btn-primary">Book</a>
+    {% if particular %}
+        <a href="{% url 'booking_process' catering.id %}" class="btn btn-primary">Book</a>
+    {% endif %}
 </div>
 {% endblock %}
