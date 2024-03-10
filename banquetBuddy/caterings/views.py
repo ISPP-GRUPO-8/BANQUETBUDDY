@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from core.models import CateringService, Particular, Review
 
@@ -11,12 +12,23 @@ def listar_caterings(request):
 
 def catering_detail(request, catering_id):
     context = {}
-    catering = get_object_or_404(CateringService, id = catering_id)
+    catering = get_object_or_404(CateringService, id=catering_id)
     context['catering'] = catering
 
-    reviews = Review.objects.filter(cateringservice_id=catering.id)
-    context['reviews'] = reviews
+    reviews_list = Review.objects.filter(cateringservice_id=catering.id).order_by('-date')
     
+    paginator = Paginator(reviews_list, 3)  # Muestra 3 reviews por página
+    page = request.GET.get('page')
+
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+
+    context['reviews'] = reviews
+
     return render(request, 'catering_detail.html', context)
 
 def catering_review(request, catering_id):

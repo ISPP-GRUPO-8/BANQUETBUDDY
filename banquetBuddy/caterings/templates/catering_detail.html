@@ -3,65 +3,100 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>{{ catering.name }}</h1>
-    <p><strong>Descripción:</strong> {{ catering.description }}</p>
-    <p><strong>Ubicación:</strong> {{ catering.location }}</p>
-    <p><strong>Capacidad:</strong> {{ catering.capacity }}</p>
-    <p><strong>Precio:</strong> {{ catering.price }}</p>
-    {% if catering.cateringcompany.logo %}
-        <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
-    {% endif %}
-    <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
-    <br></br>
-    <div class="row">
-        {% for review in reviews %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 d-flex flex-column shadow-sm">
+  <h1>{{ catering.name }}</h1>
+  <p><strong>Descripción:</strong> {{ catering.description }}</p>
+  <p><strong>Ubicación:</strong> {{ catering.location }}</p>
+  <p><strong>Capacidad:</strong> {{ catering.capacity }}</p>
+  <p><strong>Precio:</strong> {{ catering.price }}</p>
+  {% if catering.cateringcompany.logo %}
+      <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
+  {% endif %}
+  <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
+  <br></br>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for review in reviews %}
+      <div class="col mb-4">
+          <div class="card d-flex flex-column shadow-sm custom-card">
               <div class="card-body flex-fill d-flex flex-column">
-                <div class="rating">
-                    {% for _ in "xxxxx" %}
-                        {% if forloop.counter <= review.rating %}
-                            <span style="color: gold;">&#9733;</span>
-                        {% else %}
-                            <span>&#9733;</span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <p class="card-text">{{ review.description }}</p>
-                <div class="mt-auto">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">{{ review.date }}</small>
+                  <div class="rating">
+                      {% for _ in "xxxxx" %}
+                          {% if forloop.counter <= review.rating %}
+                              <span style="color: gold;">&#9733;</span>
+                          {% else %}
+                              <span>&#9733;</span>
+                          {% endif %}
+                      {% endfor %}
                   </div>
-                </div>
+                  <p class="card-text"><strong>{{ review.description }}</strong></p>
+                  <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <small class="text-muted">{{ review.particular.user }}</small>
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
-        {% endfor %}
       </div>
+      {% endfor %}
+  </div>
+
+  <div class="pagination mt-4">
+      <span class="step-links">
+          {% if reviews.has_previous %}
+              <a href="?page=1">&laquo; First</a>
+              <a href="?page={{ reviews.previous_page_number }}">Previous</a>
+          {% endif %}
+  
+          <span class="current">
+              Page {{ reviews.number }} de {{ reviews.paginator.num_pages }}.
+          </span>
+  
+          {% if reviews.has_next %}
+              <a href="?page={{ reviews.next_page_number }}">Next</a>
+              <a href="?page={{ reviews.paginator.num_pages }}">Last &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
 </div>
 
 <style> 
-.rating {
+  .custom-card {
+    background-color: #54bfaf; 
+    border-radius: 20px; 
+    padding: 20px; 
+    height: 400px; 
+    margin-bottom: 20px; 
+  }
+  
+  .rating {
     unicode-bidi: bidi-override;
-    direction: rtl;
-}
-
-.rating > span {
+    direction: ltr;
+  }
+  
+  .rating > span {
     display: inline-block;
     font-size: 1.5em; /* Tamaño de las estrellas */
     margin-right: 5px; /* Espacio entre las estrellas */
     color: gray; /* Color de las estrellas vacías */
     pointer-events: none; /* Evitar eventos de ratón sobre las estrellas */
-}
-
-.rating > span.empty {
+  }
+  
+  .rating > span.empty {
     color: transparent; /* Las estrellas vacías son transparentes */
-}
-
-.rating > span:hover:before,
-.rating > span:hover ~ span:before {
+  }
+  
+  .rating > span:hover:before,
+  .rating > span:hover ~ span:before {
     content: "\2605";
     color: gold;
+  }
+  
+  .pagination {
+    margin-top: 20px; /* Agrega margen superior para espacio entre la paginación y las tarjetas */
+  }
+
+  .card-text strong {
+  font-family: Arial, sans-serif; /* Cambia la fuente */
+  font-size: 20px; /* Tamaño de la fuente */
 }
-</style>
+  </style>
 {% endblock %}
