@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>New Review for: {{ catering.name }}</h1>
+
+    <form method="post" action="{% url 'add_review' catering.id %}">
+        {% csrf_token %}
+
+        {% if form_error %}
+            <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="description">Review Description:</label>
+            <input type="text" name="description" class="form-control {% if form_error %}is-invalid{% endif %}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <div class="rating">
+                <input type="radio" id="star5" name="rating" value="5">
+                <label for="star5"></label>
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4"></label>
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3"></label>
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2"></label>
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1"></label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm Review</button>
+    </form>
+</div>
+
+<style>
+    .rating {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+
+    .rating > span {
+        display: inline-block;
+        position: relative;
+        width: 1.1em;
+        z-index: 1; /* Asegura que las estrellas seleccionadas estén por encima de las no seleccionadas */
+    }
+
+    .rating > span:hover:before,
+    .rating > span:hover ~ span:before {
+        content: "\2605";
+        position: absolute;
+        z-index: 2; /* Asegura que las estrellas seleccionadas estén por encima de las no seleccionadas */
+    }
+
+    .rating > span:hover:before {
+        color: gold;
+    }
+
+    .rating > input[type="radio"] {
+        display: none;
+    }
+
+    .rating > label:before {
+        content: "\2606";
+        position: relative;
+        z-index: 1; /* Asegura que las estrellas seleccionadas estén por encima de las no seleccionadas */
+    }
+
+    .rating > input[type="radio"]:checked ~ label:before,
+    .rating:not(:checked) > label:hover:before,
+    .rating:not(:checked) > label:hover ~ label:before {
+        content: "\2605";
+        color: gold;
+        position: absolute;
+        z-index: 2; /* Asegura que las estrellas seleccionadas estén por encima de las no seleccionadas */
+    }
+</style>
+{% endblock %}

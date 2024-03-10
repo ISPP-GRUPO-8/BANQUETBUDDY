@@ -12,5 +12,6 @@
         <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
     {% endif %}
     <!-- Aquí puedes agregar más detalles según tu modelo -->
+    <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
 </div>
 {% endblock %}
