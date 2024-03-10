@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class CateringCompany(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='CateringCompanyusername')
-    company_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     address = models.CharField(max_length=200)
     phone_number = PhoneNumberField()
     cif = models.CharField(max_length=20)
@@ -19,7 +19,7 @@ class CateringCompany(models.Model):
     price_plan = models.CharField(max_length=50, choices=PricePlan.choices)  
 
     def __str__(self):
-        return self.company_name
+        return self.name
     
 class CateringService(models.Model):
     cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='cateringCompany')

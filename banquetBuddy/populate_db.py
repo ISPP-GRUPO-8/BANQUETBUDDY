@@ -10,9 +10,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
 django.setup()
 
 from faker import Faker
-from core.models import (CustomUser, Particular, CateringCompany, Employee, Message,
-                          CateringService, Event, Task, Menu, Review,
-                          EmployeeWorkService, Offer, JobApplication, TaskEmployee)
+from core.models import *
+from catering_employees.models import *
+from catering_owners.models import *
+from catering_particular.models import *
 from random import randint, choice
 
 faker = Faker(['es_ES'])

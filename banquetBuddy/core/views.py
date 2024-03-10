@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -56,11 +58,17 @@ def logout_view(request):
 def elegir_registro(request):
     return render(request, "core/elegir_registro.html")
 
-
 @login_required
 def profile_view(request):
     context = {}
     context["user"] = request.user
+    
+    # Verificar si el usuario tiene una empresa de catering asociada
+    catering_company = CateringCompany.objects.filter(user=request.user).first()
+    if catering_company:
+        context["catering_company"] = catering_company
+        print("Catering Company:", catering_company)  # Imprimir información de depuración
+    
     return render(request, "core/profile.html", context)
 
 

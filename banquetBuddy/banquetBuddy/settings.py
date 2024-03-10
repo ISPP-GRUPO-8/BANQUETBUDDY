@@ -60,7 +60,12 @@ ROOT_URLCONF = 'banquetBuddy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'banquetBuddy/catering_owners/templates'),  # Directorio de plantillas para catering_owners
+            os.path.join(BASE_DIR, 'banquetBuddy/catering_employees/templates'),
+            os.path.join(BASE_DIR, 'banquetBuddy/catering_particular/templates'),
+            os.path.join(BASE_DIR, 'banquetBuddy/core/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
