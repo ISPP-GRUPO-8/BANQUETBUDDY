@@ -29,28 +29,36 @@ def catering_detail(request, catering_id):
 
     context['reviews'] = reviews
 
+    user = request.user
+    particular = Particular.objects.filter(user_id=user.id)
+    context['particular'] = particular
+
     return render(request, 'catering_detail.html', context)
 
 def catering_review(request, catering_id):
     catering = get_object_or_404(CateringService, id=catering_id)
     user = request.user
-    particular = get_object_or_404(Particular, user_id=user.id)
-    context = {'catering': catering}
+    particular = Particular.objects.filter(user_id=user.id)
 
-    if request.method == 'POST':
-        description = request.POST.get('description')
-        rating = request.POST.get('rating')
+    if particular:
+        context = {'catering': catering, 'particular':particular}
 
-        review = Review.objects.create(
-            cateringservice=catering,
-            particular=particular,
-            date=datetime.now().date(),
-            description=description,
-            rating=rating
-        )
+        if request.method == 'POST':
+            description = request.POST.get('description')
+            rating = request.POST.get('rating')
 
-        url_catering = reverse('catering_detail', args=[catering.id])
-        return redirect(url_catering)
+            review = Review.objects.create(
+                cateringservice=catering,
+                particular=Particular.objects.get(user=user),
+                date=datetime.now().date(),
+                description=description,
+                rating=rating
+            )
+
+            url_catering = reverse('catering_detail', args=[catering.id])
+            return redirect(url_catering)
+    else:
+        return redirect("/")
 
     return render(request, 'catering_review.html', context)
 

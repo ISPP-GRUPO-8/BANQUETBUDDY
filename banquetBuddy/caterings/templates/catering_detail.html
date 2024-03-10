@@ -11,7 +11,9 @@
   {% if catering.cateringcompany.logo %}
       <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
   {% endif %}
-  <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
+  {% if particular %}
+      <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
+  {% endif %}
   <br></br>
   <div class="row row-cols-1 row-cols-md-3 g-4">
       {% for review in reviews %}
