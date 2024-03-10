@@ -46,9 +46,14 @@ def booking_process(request, catering_id):
     if request.method == 'POST':
         event_date = request.POST.get('event_date')
         number_guests = request.POST.get('number_guests')
+        menu_selected = request.POST.get('menu_selected')
 
         # Validación y lógica de reserva aquí
-        if not (event_date and number_guests):
+        if not menu_selected:
+            messages.error(request, 'Please select a menu')
+            context['form_error_menu'] = True
+             
+        if not (event_date and number_guests and menu_selected):
             messages.error(request, 'Please complete all fields')
             context['form_error'] = True  # Agregar marcador para mostrar mensajes de error
 
