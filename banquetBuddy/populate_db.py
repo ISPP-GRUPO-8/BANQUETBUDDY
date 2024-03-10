@@ -1,4 +1,5 @@
 import os
+from django.core.files import File
 import django
 from django.utils import timezone
 from faker.providers import person, address
@@ -10,8 +11,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
 django.setup()
 
 from faker import Faker
-from core.models import (CustomUser, Particular, CateringCompany, Employee, Message,
-                          CateringService, Event, Task, Menu, Review,
+from core.models import (CuisineType, CuisineTypeModel, CustomUser, Particular, CateringCompany, Employee, Message,
+                          CateringService, Event, Plate, Task, Menu, Review,
                           EmployeeWorkService, Offer, JobApplication, TaskEmployee)
 from random import randint, choice
 
@@ -19,6 +20,11 @@ faker = Faker(['es_ES'])
 faker.add_provider(person)
 faker.add_provider(address)
 
+def create_cuisine_types():
+    for cuisine in CuisineType.choices:
+        CuisineTypeModel.objects.get_or_create(type=cuisine[0])
+
+create_cuisine_types()
 
 
 def truncate_all_tables():
@@ -31,9 +37,6 @@ def truncate_all_tables():
     for model1 in models_to_truncate:
         model1.objects.all().delete()
     print("All data has been deleted from the database.")
-
-if __name__ == "__main__":
-    truncate_all_tables()
 
 
 
@@ -114,41 +117,39 @@ catering_descriptions = [
 
     
 cuisine_types = [
-        ["Mediterránea"],
-        ["Oriental"],
-        ["Mexicana"],
-        ["Fusión"],
-        ["Tradicional"],
-        ["Gourmet"],
-        ["Asiática"],
-        ["Mariscos y pescados"],
-        ["Casera"],
-        ["Repostería"]
-    ]
+   ["MEDITERRANEAN"],  
+    ["ORIENTAL"],       
+    ["MEXICAN"]        
+]
+
+
 def create_catering_companies():
-    i=0
     for i in range(7):
-        user = CustomUser.objects.create_user(username=catering_names[i],password =catering_names[i],  email=catering_names[1]+str(i)+"@gmail.com")
+        user = CustomUser.objects.create_user(username=catering_names[i], password=catering_names[i], email=catering_names[i]+"@gmail.com")
         catering_company = CateringCompany.objects.create(
             user=user,
             name=catering_names[i],
             phone_number=faker.phone_number(),
             service_description=catering_descriptions[i],
-            logo=None,  
-            cuisine_type=cuisine_types[i],
+            logo=None,
             is_verified=faker.boolean(),
             price_plan=choice(['BASE', 'PREMIUM', 'PREMIUM_PRO', 'NO_SUBSCRIBED'])
         )
-        # logo path
-        logo_path = os.path.join(settings.STATICFILES_DIRS[1], logos_catering[i])
 
-    
+        # Añadir los tipos de cocina
+        for cuisine_key in cuisine_types[i % len(cuisine_types)]:  
+            cuisine_instance = CuisineTypeModel.objects.get(type=cuisine_key)
+            catering_company.cuisine_types.add(cuisine_instance)
+
+        # logo path
+        logo_filename = logos_catering[i]
+        logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logos', logo_filename)
+        
         if os.path.exists(logo_path):
-            
             with open(logo_path, 'rb') as f:
-                logo_bytes = f.read()
-                catering_company.logo = logo_bytes
+                catering_company.logo = File(f, name=logo_filename)
                 catering_company.save()
+
 employee_data = [
     {
         'username': 'OliverS',
@@ -410,16 +411,54 @@ menus_restrictions = [
 ]
 
 def create_menus(num_menus):
-    services = CateringService.objects.all()
-    for _ in range(num_menus):
-        Menu.objects.create(
-            cateringservice=choice(services),
-            name=menus_name[_],
-            description=menus_descriptions[_],
-            price=randint(200, 1000) / 100,
-            plates=menus_plates[_],
-            diet_restrictions=menus_restrictions[_]
-        )
+    companies = CateringCompany.objects.all()
+    for company in companies:
+        for _ in range(num_menus):
+            menu = Menu.objects.create(
+                cateringcompany=company,
+                name=choice(menus_name),
+                description=choice(menus_descriptions),
+                diet_restrictions=choice(menus_restrictions)
+            )
+
+
+def generate_plate_name():
+    plate_names = ['Ensalada César', 'Tacos al Pastor', 'Paella Valenciana', 'Pasta Carbonara', 'Risotto de Setas', 'Curry de Pollo']
+    return choice(plate_names)  # Esto selecciona un nombre de plato al azar de la lista
+
+def generate_plate_description():
+    return faker.text(max_nb_chars=200)
+
+
+
+def create_plates():
+    plate_images = [
+        "plate1.JPG",  
+        "plate2.JPG",
+        "plate3.JPG",  
+        "plate4.JPG",
+        "plate5.JPG",  
+        "plate6.JPG",
+    ]
+    for menu in Menu.objects.all():
+        num_plates = randint(2, 5)
+        for _ in range(num_plates):
+            plate_image_filename = choice(plate_images)
+            plate_image_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'plates', plate_image_filename)
+
+            if os.path.exists(plate_image_path):
+                with open(plate_image_path, 'rb') as f:
+                    Plate.objects.create(
+                        menu=menu,
+                        name=generate_plate_name(),
+                        description=generate_plate_description(),
+                        price=faker.random_number(digits=2),  # Genera un precio aleatorio para el plato
+                        image=File(f, name=plate_image_filename)
+                    )
+
+
+
+
 
 
 reviews_data = [
@@ -555,8 +594,13 @@ def create_task_employees(num_relations):
         )
 
 
+def create_cuisine_types():
+    for cuisine in CuisineType.choices:
+        CuisineTypeModel.objects.get_or_create(type=cuisine[0])
+
 def populate_database():
-    truncate_all_tables
+    truncate_all_tables()
+    create_cuisine_types()  # Crear los tipos de cocina antes de crear las compañías de catering
     create_particulars(8)
     create_catering_companies()
     create_employees(10)
@@ -565,6 +609,7 @@ def populate_database():
     create_events(10)
     create_tasks(10)
     create_menus(10)
+    create_plates()
     create_reviews(10)
     create_employee_work_services(10)
     create_offers(10)
@@ -574,3 +619,4 @@ def populate_database():
 if __name__ == "__main__":
     populate_database()
     print("Database successfully populated.")
+
