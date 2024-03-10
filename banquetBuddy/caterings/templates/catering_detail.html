@@ -11,7 +11,57 @@
     {% if catering.cateringcompany.logo %}
         <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
     {% endif %}
-    <!-- Aquí puedes agregar más detalles según tu modelo -->
     <a href="{% url 'add_review' catering.id %}" class="btn btn-primary">Add Review</a>
+    <br></br>
+    <div class="row">
+        {% for review in reviews %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 d-flex flex-column shadow-sm">
+              <div class="card-body flex-fill d-flex flex-column">
+                <div class="rating">
+                    {% for _ in "xxxxx" %}
+                        {% if forloop.counter <= review.rating %}
+                            <span style="color: gold;">&#9733;</span>
+                        {% else %}
+                            <span>&#9733;</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="card-text">{{ review.description }}</p>
+                <div class="mt-auto">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{ review.date }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
 </div>
+
+<style> 
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+}
+
+.rating > span {
+    display: inline-block;
+    font-size: 1.5em; /* Tamaño de las estrellas */
+    margin-right: 5px; /* Espacio entre las estrellas */
+    color: gray; /* Color de las estrellas vacías */
+    pointer-events: none; /* Evitar eventos de ratón sobre las estrellas */
+}
+
+.rating > span.empty {
+    color: transparent; /* Las estrellas vacías son transparentes */
+}
+
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+    content: "\2605";
+    color: gold;
+}
+</style>
 {% endblock %}

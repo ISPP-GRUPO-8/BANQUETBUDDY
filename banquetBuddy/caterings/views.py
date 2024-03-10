@@ -13,6 +13,10 @@ def catering_detail(request, catering_id):
     context = {}
     catering = get_object_or_404(CateringService, id = catering_id)
     context['catering'] = catering
+
+    reviews = Review.objects.filter(cateringservice_id=catering.id)
+    context['reviews'] = reviews
+    
     return render(request, 'catering_detail.html', context)
 
 def catering_review(request, catering_id):
