@@ -79,16 +79,16 @@ def create_particulars(num_particulars):
         )
 
 catering_names = [
-        "Delicias Mediterráneas",
-        "Sabor Oriental",
-        "Rincón Mexicano",
-        "Gourmet Fusion",
-        "Cocina Antonio",
-        "Exquisitez Gastronómica",
-        "Catering Benito",
-        "Sabores del Mar",
-        "Sazón Casera",
-        "Dulces Caprichos"
+        "DeliciasMediterraneas",
+        "SaborOriental",
+        "RinconMexicano",
+        "GourmetFusion",
+        "CocinaAntonio",
+        "ExquisitezGastronomica",
+        "CateringBenito",
+        "SaboresdelMar",
+        "SazonCasera",
+        "DulcesCaprichos"
     ]
 
 logos_catering = [

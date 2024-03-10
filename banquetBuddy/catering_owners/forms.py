@@ -12,6 +12,16 @@ class EmployeeFilterForm(forms.Form):
     experience = forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Experience'}))
     skills = forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Skills'}))
     
+    ENGLISH_LEVEL_HIERARCHY = {
+        'C2': 7,
+        'C1': 6,
+        'B2': 5,
+        'B1': 4,
+        'A2': 3,
+        'A1': 2,
+        'NONE': 1,
+    }
+    
     def filter_queryset(self, queryset):
         english_level = self.cleaned_data.get('english_level')
         profession = self.cleaned_data.get('profession')
@@ -19,7 +29,10 @@ class EmployeeFilterForm(forms.Form):
         skills = self.cleaned_data.get('skills')
 
         if english_level:
-            queryset = queryset.filter(employee__english_level=english_level)
+            hierarchy_value = self.ENGLISH_LEVEL_HIERARCHY.get(english_level, 0)
+            print(hierarchy_value)
+            queryset = queryset.filter(employee__english_level__in=[clave for clave, valor in self.ENGLISH_LEVEL_HIERARCHY.items() if valor >= hierarchy_value])
+
         if profession:
             queryset = queryset.filter(employee__profession__icontains=profession)
         if experience:

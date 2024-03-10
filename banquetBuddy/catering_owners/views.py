@@ -5,12 +5,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from core.models import *
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render
 from .forms import EmployeeFilterForm
 
 # Create your views here.
 
+@login_required
 def employee_applications(request, offer_id):
-    offer = Offer.objects.get(pk=offer_id)
+    offer = get_object_or_404(Offer, id=offer_id)
+    if request.user != offer.cateringservice.cateringcompany.user:
+        # Puedes redirigir a una página de error o mostrar un mensaje
+        return render(request, 'error.html', {'message': 'No tienes permisos para acceder a esta oferta'})
+    
     applicants = offer.job_applications.select_related('employee').all()
 
     filter_form = EmployeeFilterForm(request.GET or None)
