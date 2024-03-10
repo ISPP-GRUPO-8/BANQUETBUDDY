@@ -3,10 +3,30 @@
 
 {% block content %}
 <html lang="en">
-<form method="get" action="{% url 'applicants' offer_id=offer.id %}">
-    {{ filter_form.as_p }}
-    <button type="submit">Filter</button>
-</form>
+<div class="container mt-4">
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-8 col-lg-16">
+            <form method="get" action="{% url 'applicants' offer.id %}" class="form-inline" enctype="multipart/form-data">
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        {{ filter_form.english_level }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.profession }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.experience }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.skills }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

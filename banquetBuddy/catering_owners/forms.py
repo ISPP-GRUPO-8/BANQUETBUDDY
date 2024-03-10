@@ -7,10 +7,10 @@ class EmployeeFilterForm(forms.Form):
 
     english_level_choices = [EMPTY_CHOICE] + list(EnglishLevel.choices)
     
-    english_level = forms.ChoiceField(choices=english_level_choices, required=False)
-    profession = forms.CharField(max_length=255, required=False)
-    experience = forms.CharField(max_length=255, required=False)
-    skills = forms.CharField(max_length=255, required=False)
+    english_level = forms.ChoiceField(choices=english_level_choices, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    profession = forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profession'}))
+    experience = forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Experience'}))
+    skills = forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Skills'}))
     
     def filter_queryset(self, queryset):
         english_level = self.cleaned_data.get('english_level')
