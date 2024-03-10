@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'phonenumber_field',
-
+    'catering_owners',
+    'catering_particular',
+    'catering_employees',
 ]
 
 MIDDLEWARE = [
