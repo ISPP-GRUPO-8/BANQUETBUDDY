@@ -10,7 +10,7 @@ from .forms import (
     CustomUserCreationForm,
 )
 from django.contrib import messages
-from .models import CustomUser
+from .models import CustomUser, CateringService
 from django.contrib.auth.decorators import login_required
 
 
@@ -202,3 +202,19 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
+
+def listar_caterings(request):
+    context = {}
+    caterings = CateringService.objects.all()
+    context = {'caterings': caterings}
+    if 'buscar' not in context:
+        busqueda = ''
+
+    if request.method == 'POST':
+        busqueda = request.POST.get('buscar', '')
+        caterings = CateringService.objects.filter(Q(name__icontains=busqueda))
+        print(caterings)
+
+    context['buscar'] = busqueda    
+    context['caterings'] = caterings
+    return render(request, 'listar_caterings.html', context)
