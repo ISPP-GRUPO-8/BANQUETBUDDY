@@ -16,7 +16,7 @@ class CateringCompany(models.Model):
     verification_document = models.FileField(upload_to='verification_documents/')
     is_verified = models.BooleanField(default=False)
     service_description = models.TextField(blank=True)
-    logo = models.BinaryField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
     price_plan = models.CharField(max_length=50, choices=PricePlan.choices)
 
     def __str__(self):
