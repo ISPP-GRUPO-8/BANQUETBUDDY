@@ -53,20 +53,13 @@
             <li class="list-group-item">
               <strong>Plan de precios:</strong> {{ catering_company.price_plan }}
             </li>
-            <li class="list-group-item">
-              <strong>Descripción del servicio:</strong> {{ catering_company.service_description }}
-            </li>
-            <!-- Agrega más campos según sea necesario -->
           </ul>
         </div>
       </div>
     </div>
     {% endif %}
   </div>
-  <!-- Línea divisoria solo si hay una empresa de catering asociada -->
-  {% if catering_company %}
-  <hr class="my-4">
-  {% endif %}
+ 
   <div class="row justify-content-center">
     <a href="{% url 'profile_edit' %}" class="text-decoration-none">
       <button

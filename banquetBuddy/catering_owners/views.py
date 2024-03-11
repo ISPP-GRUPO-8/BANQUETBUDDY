@@ -1,10 +1,8 @@
-from django.shortcuts import render
-from .forms import CateringCompanyForm
-
-from core.forms import CustomUserCreationForm
-
-from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from .forms import CateringCompanyForm
+from core.forms import CustomUserCreationForm
+from django.contrib import messages
 
 def register_company(request):
     if request.method == "POST":
@@ -17,7 +15,10 @@ def register_company(request):
             company_profile.user = user
             company_profile.save()
             messages.success(request, "Registration successful!")
-            return redirect("home")
+            # Redirigir al usuario a la página de inicio después del registro exitoso
+            return redirect("home")  # Corregido
+            print(response.content)
+            print(response.redirect_chain)
         else:
             messages.error(request, "Error occurred during registration.")
     else:

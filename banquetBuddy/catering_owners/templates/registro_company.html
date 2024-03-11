@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% block content %} {% load static %}
+{% extends 'core/base.html' %}
+{% block content %}
+{% load static %}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -49,15 +51,26 @@
                 <div class="col-md-6">
                   {% for field in company_form %}
                   <div class="form-group">
+                    {% if field.name == 'verification_document' %}
+                    <strong>Tax Identification Document or Commercial Record</strong>
+                    {% endif %}
                     {% if field.field.widget.input_type != 'file' %}
+                    {% if field.name == 'price_plan' %}
+                    <select name="{{ field.html_name }}" class="rounded-input {% if field.errors %}is-invalid{% endif %}" required>
+                      {% for value, display_name in field.field.choices %}
+                      <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>{{ display_name }}</option>
+                      {% endfor %}
+                    </select>
+                    {% else %}
                     <input
                       type="{{ field.field.widget.input_type }}"
                       name="{{ field.html_name }}"
-                      placeholder="{{ field.label }}"
+                      placeholder="{{ field.field.widget.attrs.placeholder }}"
                       class="rounded-input {% if field.errors %}is-invalid{% endif %}"
                       value="{% if field.value %}{{ field.value }}{% endif %}"
                       required
                     />
+                    {% endif %}
                     {% else %}
                     <input
                       type="file"
