@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from core.models import CateringService
 from django.db.models import Q
 
@@ -18,3 +17,4 @@ def listar_caterings(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
+
