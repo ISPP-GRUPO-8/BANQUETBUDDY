@@ -8,6 +8,15 @@ Con BanquetBuddy, transformamos la planificación de eventos, mejorando la exper
 
 Únete a nosotros en esta deliciosa aventura y descubre cómo podemos hacer que tu próximo evento sea inolvidable. ¡Bienvenido a BanquetBuddy!
 
+## Enlaces de interés 🔗
+
+[Landing Page](https://ispp-grupo-8.github.io/banquetbuddy.landing-page/)
+
+[¡Dame tu opinión!](https://docs.google.com/forms/d/e/1FAIpQLSfMTBCnbfQ6rzbyg9BjClGEgxGa4RmDEFyk_vA2AcKwnMnp0w/viewform)
+
+[Docusaurus](https://github.com/marrocrod/DocusaurusBanquetBuddy)
+
+
 ## Pre-requisitos 📋
 
 Instalación en el requierement.txt:
@@ -25,7 +34,7 @@ https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 
 ## Instalación 🔧
 
-1) Crear la base de datos en PostgreSQL (mirar settings.py para los nombres)
+1) Crear la base de datos en PostgreSQL ('NAME': 'ispp','USER': 'ispp','PASSWORD': 'ispp')
 2) pip install -r requierements.txt 
 3) python ./manage.py migrate (Crear tablas DB)
 4) python ./populate_db.py (Poblar BD)
