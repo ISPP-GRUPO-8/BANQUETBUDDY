@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ catering.name }}</h1>
+    <p><strong>Descripción:</strong> {{ catering.description }}</p>
+    <p><strong>Ubicación:</strong> {{ catering.location }}</p>
+    <p><strong>Capacidad:</strong> {{ catering.capacity }}</p>
+    <p><strong>Precio:</strong> {{ catering.price }}</p>
+    {% if catering.cateringcompany.logo %}
+    <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
+    {% endif %}
+
+
+
+    <!-- Aquí puedes agregar más detalles según tu modelo -->
+</div>
+{% endblock %}
