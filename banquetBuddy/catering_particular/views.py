@@ -38,7 +38,7 @@ def validar_filtros(request, filtros):
 def aplicar_filtros(caterings, filtros, limpiar_filtros):
     if filtros["cocina"] and not limpiar_filtros["limpiar_cocina"]:
         caterings = caterings.filter(
-            cateringcompany__cuisine_type__icontains=filtros["cocina"]
+            cateringcompany__cuisine_types__type=filtros["cocina"]
         )
     else:
         filtros["cocina"] = ""
@@ -59,11 +59,11 @@ def listar_caterings(request):
 
     # Obtener tipos de cocina únicos
     tipos_cocina = (
-        CateringCompany.objects.values_list("cuisine_type", flat=True)
-        .exclude(cuisine_type__isnull=True)
+        CateringCompany.objects.values_list("cuisine_types__type", flat=True)
+        .exclude(cuisine_types__isnull=True)
         .distinct()
     )
-    tipos_cocina = [str(tipo[0]) for tipo in tipos_cocina if tipo[0]]
+    print(tipos_cocina)
 
     filtros, limpiar_filtros = obtener_filtros(request)
     filtros = validar_filtros(request, filtros)
