@@ -202,3 +202,30 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
+
+@login_required
+def profile_company_edit_view(request):
+    context = {}
+    context["companyForm"] = request.user
+
+    if request.method == "POST":
+        service_description = request.POST.get("service_description", "")
+        logo = request.POST.get("logo", "")
+        cuisine_type = request.POST.get("cuisine_type", "")
+
+        # Pasar valores al contexto
+        context["service_description"] = service_description
+        context["logo"] = logo
+        context["cuisine_type"] = cuisine_type
+
+
+        companyForm = request.user
+        companyForm.service_description = service_description
+        companyForm.logo = logo
+        companyForm.cuisine_type = cuisine_type
+
+        companyForm.save()
+
+        return redirect("profile")
+
+    return render(request, "core/profile_company_edit.html", context)
