@@ -112,7 +112,7 @@
           <p class="card-text">Ubicación: {{ catering.location }}</p>
           <p class="card-text">Capacidad: {{ catering.capacity }}</p>
           <p class="card-text">Precio: {{ catering.price }}</p>
-          <a href="#" class="btn btn-primary">Ver detalles</a>
+          <a href="{% url 'catering_detail' catering.id %}" class="btn btn-primary">Ver detalles</a>
         </div>
       </div>
     </div>

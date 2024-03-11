@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from core.models import CateringService, CateringCompany
 
 
@@ -47,3 +47,13 @@ def listar_caterings(request):
 
     print(tipos_cocina)
     return render(request, "listar_caterings.html", context)
+
+    context = {"caterings": caterings}
+    return render(request, "listar_caterings.html", context)
+
+
+def catering_detail(request, catering_id):
+    context = {}
+    catering = get_object_or_404(CateringService, id=catering_id)
+    context["catering"] = catering
+    return render(request, "catering_detail.html", context)
