@@ -33,6 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
+                    {% if is_particular %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
                     <form class="form-inline my-2 my-lg-0">
