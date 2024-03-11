@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'core',
     'catering_particular',
     'phonenumber_field',
-
+    'catering_owners',
+    'catering_particular',
+    'catering_employees',
 ]
 
 MIDDLEWARE = [

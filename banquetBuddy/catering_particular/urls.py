@@ -6,3 +6,4 @@ urlpatterns = [
     path('<int:catering_id>/', catering_detail, name='catering_detail'), 
 
 ]
+
