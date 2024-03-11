@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'catering_particular',
     'phonenumber_field',
     'catering_owners',
-    'catering_particular',
     'catering_employees',
 ]
 
