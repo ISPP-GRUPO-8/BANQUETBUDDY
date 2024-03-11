@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from core.models import CateringService, CateringCompany
+from django.contrib import messages
 
 
 def listar_caterings(request):
@@ -23,6 +24,17 @@ def listar_caterings(request):
     limpiar_precio = request.GET.get("limpiar_precio", None)
     limpiar_invitados = request.GET.get("limpiar_invitados", None)
 
+    # Validar los filtros de precio máximo y número de invitados
+    if precio_maximo:
+        if not precio_maximo.isdigit() or int(precio_maximo) < 0:
+            messages.error(request, "El precio máximo debe ser un número.")
+            precio_maximo = ""
+
+    if num_invitados:
+        if not num_invitados.isdigit() or int(num_invitados) < 0:
+            messages.error(request, "El número de invitados debe ser un número.")
+            num_invitados = ""
+
     # Aplicar los filtros si se proporcionan
     if cocina and not limpiar_cocina:
         caterings = caterings.filter(cateringcompany__cuisine_type__icontains=cocina)
@@ -45,10 +57,6 @@ def listar_caterings(request):
         "num_invitados": num_invitados,
     }
 
-    print(tipos_cocina)
-    return render(request, "listar_caterings.html", context)
-
-    context = {"caterings": caterings}
     return render(request, "listar_caterings.html", context)
 
 

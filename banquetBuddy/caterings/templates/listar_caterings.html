@@ -6,10 +6,15 @@
   <!-- Botón para mostrar/ocultar el formulario de filtros -->
   <div class="d-flex justify-content-center">
     <button id="toggleFiltros" class="btn btn-secondary mb-3">
-      Mostrar/Ocultar Filtros
+      <i class="fas fa-bars"></i>
     </button>
   </div>
 
+  {% if messages %} 
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %} 
+  {% endif %}
   <!-- Formulario de filtros -->
   <form
     method="GET"
@@ -97,7 +102,7 @@
     </div>
     <!-- Botón para aplicar filtros -->
     <div class="d-flex justify-content-center">
-      <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+      <button type="submit" class="btn btn-primary">Aplicar</button>
     </div>
   </form>
   <hr />
@@ -112,7 +117,11 @@
           <p class="card-text">Ubicación: {{ catering.location }}</p>
           <p class="card-text">Capacidad: {{ catering.capacity }}</p>
           <p class="card-text">Precio: {{ catering.price }}</p>
-          <a href="{% url 'catering_detail' catering.id %}" class="btn btn-primary">Ver detalles</a>
+          <a
+            href="{% url 'catering_detail' catering.id %}"
+            class="btn btn-primary"
+            >Ver detalles</a
+          >
         </div>
       </div>
     </div>
@@ -122,16 +131,14 @@
 
 <!-- Script para mostrar/ocultar el formulario de filtros -->
 <script>
-  document
-    .getElementById("toggleFiltros")
-    .addEventListener("click", function () {
-      var formFiltros = document.getElementById("formFiltros");
-      if (formFiltros.style.display === "none") {
-        formFiltros.style.display = "block";
-      } else {
-        formFiltros.style.display = "none";
-      }
-    });
+  document.getElementById("toggleFiltros").addEventListener("click", function () {
+    var formFiltros = document.getElementById("formFiltros");
+    if (formFiltros.style.display === "none") {
+      formFiltros.style.display = "block";
+    } else {
+      formFiltros.style.display = "none";
+    }
+  });
 </script>
 
 {% endblock %}
