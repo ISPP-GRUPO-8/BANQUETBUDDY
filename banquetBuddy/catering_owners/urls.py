@@ -1,9 +1,8 @@
 from django.urls import path
 
-from core.views import home
 from . import views
+from core.views import home
 from django.urls import path, include
-from catering_owners.views import employee_applications
 
 urlpatterns = [
     path('', home, name='home'),

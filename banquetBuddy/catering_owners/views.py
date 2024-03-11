@@ -30,3 +30,4 @@ def register_company(request):
         "registro_company.html",
         {"user_form": user_form, "company_form": company_form},
     )
+

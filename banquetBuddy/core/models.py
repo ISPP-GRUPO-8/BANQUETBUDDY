@@ -35,6 +35,15 @@ class BookingState(models.TextChoices):
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
 
+class EnglishLevel(models.TextChoices):
+    C2 = 'C2', 'C2'
+    C1 = 'C1', 'C1'
+    B2 = 'B2', 'B2'
+    B1 = 'B1', 'B1'
+    A2 = 'A2', 'A2'
+    A1 = 'A1', 'A1'
+    NINGUNO = 'NONE', 'None'
+
 class CuisineType(models.TextChoices):
     MEDITERRANEAN = 'MEDITERRANEAN', 'Mediterránea'
     ORIENTAL = 'ORIENTAL', 'Oriental'
