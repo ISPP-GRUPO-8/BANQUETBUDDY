@@ -32,17 +32,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "core",
-    "phonenumber_field",
-    "catering_owners",
-    "catering_particular",
-    "catering_employees",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'core',
+    'catering_particular',
+    'phonenumber_field',
+    'catering_owners',
+    'catering_employees',
 ]
 
 MIDDLEWARE = [

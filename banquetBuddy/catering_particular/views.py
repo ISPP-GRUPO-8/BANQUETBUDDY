@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from core.models import CateringService, CateringCompany
 from django.contrib import messages
+from django.http import HttpResponseForbidden
+from core.views import *
 
 
 def obtener_filtros(request):
@@ -55,6 +57,9 @@ def aplicar_filtros(caterings, filtros, limpiar_filtros):
 
 
 def listar_caterings(request):
+  
+    if not is_particular(request):
+        return HttpResponseForbidden("No eres cliente")
     caterings = CateringService.objects.all()
 
     # Obtener tipos de cocina únicos
@@ -80,6 +85,9 @@ def listar_caterings(request):
 
 def catering_detail(request, catering_id):
     context = {}
-    catering = get_object_or_404(CateringService, id=catering_id)
-    context["catering"] = catering
-    return render(request, "catering_detail.html", context)
+    if not is_particular(request):
+        return HttpResponseForbidden("No eres cliente")
+    catering = get_object_or_404(CateringService, id = catering_id)
+    context['catering'] = catering
+    return render(request, 'catering_detail.html', context)
+

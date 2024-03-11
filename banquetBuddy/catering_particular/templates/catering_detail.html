@@ -9,8 +9,9 @@
     <p><strong>Capacidad:</strong> {{ catering.capacity }}</p>
     <p><strong>Precio:</strong> {{ catering.price }}</p>
     {% if catering.cateringcompany.logo %}
-        <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
+    <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
     {% endif %}
+
     <!-- Aquí puedes agregar más detalles según tu modelo -->
 </div>
 {% endblock %}
