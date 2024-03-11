@@ -3,6 +3,7 @@
 
 {% block content %}
     <div class="container mt-4">
+        {% if request.user.is_authenticated %}
         <form method="post" action="{% url 'listar_caterings' %}" id="miFormulario" class="mb-4">
             {% csrf_token %}
             <div class="input-group">
@@ -13,7 +14,8 @@
                     </button>
                 </div>
             </div>
-        </form>        
+        </form>  
+        {% endif %}      
     </div>
     <div class="container">
         <div class="row">
@@ -22,6 +24,12 @@
             </div>
         </div>
     </div>
+    {% if not request.user.is_authenticated %}
+            <div class="col-12 text-center mt-4 btn-container">
+                <a href="/login" class="btn btn-login mr-3">Log in</a>
+                <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+            </div>         
+            {% endif %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
