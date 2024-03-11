@@ -12,9 +12,10 @@ from .forms import EmployeeFilterForm
 
 @login_required
 def employee_applications(request, offer_id):
+    
     offer = get_object_or_404(Offer, id=offer_id)
+    
     if request.user != offer.cateringservice.cateringcompany.user:
-        # Puedes redirigir a una página de error o mostrar un mensaje
         return render(request, 'error.html', {'message': 'No tienes permisos para acceder a esta oferta'})
     
     applicants = offer.job_applications.select_related('employee').all()

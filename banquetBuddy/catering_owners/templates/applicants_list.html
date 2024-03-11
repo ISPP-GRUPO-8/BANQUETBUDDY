@@ -9,6 +9,9 @@
             <form method="get" action="{% url 'applicants' offer.id %}" class="form-inline" enctype="multipart/form-data">
                 <div class="form-row align-items-center">
                     <div class="col">
+                        English level:
+                    </div>
+                    <div class="col">
                         {{ filter_form.english_level }}
                     </div>
                     <div class="col">
