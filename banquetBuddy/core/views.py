@@ -13,6 +13,8 @@ from .forms import (
 from django.contrib import messages
 from .models import CustomUser, CateringService
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
 
 
 def home(request):
@@ -233,12 +235,10 @@ def profile_edit_view(request):
 
     return render(request, "core/profile_edit.html", context)
 
-def listar_caterings(request):
+def listar_caterings_home(request):
     context = {}
+    busqueda = ''
     caterings = CateringService.objects.all()
-    context = {'caterings': caterings}
-    if 'buscar' not in context:
-        busqueda = ''
 
     if request.method == 'POST':
         busqueda = request.POST.get('buscar', '')
