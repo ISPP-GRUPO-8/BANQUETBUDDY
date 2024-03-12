@@ -44,6 +44,15 @@
             <li class="list-group-item">
               <strong>CIF:</strong> {{ catering_company.cif }}
             </li>
+            <!-- Mostrar el documento de verificación de la empresa -->
+            <li class="list-group-item">
+              <strong>Documento de Verificación:</strong>
+              {% if catering_company.verification_document %}
+                <a href="{{ catering_company.verification_document.url }}" target="_blank">{{ catering_company.verification_document.name }}</a>
+              {% else %}
+                No hay documento de verificación asociado.
+              {% endif %}
+            </li>
             <li class="list-group-item">
               <strong>Estado de verificación:</strong> {% if catering_company.is_verified %} Empresa verificada {% else %} Empresa no verificada {% endif %}<br>
               {% if not catering_company.is_verified %}
