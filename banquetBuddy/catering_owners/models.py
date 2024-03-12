@@ -4,6 +4,7 @@ from catering_particular.models import Particular
 from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType
 from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
+from catering_employees.models import Employee
 
 
 class CateringCompany(models.Model):
@@ -43,6 +44,7 @@ class CateringService(models.Model):
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
+    menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
     date = models.DateField()
     details = models.TextField()
@@ -50,8 +52,10 @@ class Event(models.Model):
     number_guests = models.IntegerField()
 
 class Task(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
+    employees = models.ManyToManyField('catering_employees.Employee', related_name='tasks')
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE)
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='tasks')
     description = models.TextField()
     assignment_date = models.DateField()
     assignment_state = models.CharField(max_length=50, choices=AssignmentState.choices)  
