@@ -21,9 +21,13 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Caterings</a>
-                    </li>
+                    {% if request.user.is_authenticated %}
+                        {% if is_particular %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/caterings">Caterings</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
                     </li>
@@ -88,7 +92,8 @@
                     </a>
                 </div>
                 <div class="col social-medias-container text-center">
-                    <a href="https://www.facebook.com/profile.php?id=61557219530468" target="_blank" class="text-decoration-none">
+                    <a href="https://www.facebook.com/profile.php?id=61557219530468" target="_blank"
+                    class="text-decoration-none">
                         <p class="text-white text-lg">Facebook</p>
                         <i class="fab fa-facebook-f icon-lg"></i>
                     </a>
