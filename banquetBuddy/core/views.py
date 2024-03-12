@@ -19,6 +19,11 @@ def home(request):
     context['is_employee'] = is_employee(request)
     context['is_catering_company'] = is_catering_company(request)
     return render(request, "core/home.html", context)
+    context={}
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    return render(request, "core/home.html", context)
 
 def is_particular(request):
     try:
@@ -45,6 +50,14 @@ def is_catering_company(request):
     except:
         res = False
     return res
+
+def home(request):
+    context={}
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    return render(request, "core/home.html", context)
+
 
 def about_us(request):
     return render(request, "core/aboutus.html")
