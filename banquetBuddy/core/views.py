@@ -6,6 +6,8 @@ from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from .models import *
 from django.contrib import messages
 from .models import CustomUser
 from django.contrib.auth.decorators import login_required
@@ -13,12 +15,9 @@ from django.contrib.auth.decorators import login_required
 
 
 
+
+
 def home(request):
-    context={}
-    context['is_particular'] = is_particular(request)
-    context['is_employee'] = is_employee(request)
-    context['is_catering_company'] = is_catering_company(request)
-    return render(request, "core/home.html", context)
     context={}
     context['is_particular'] = is_particular(request)
     context['is_employee'] = is_employee(request)
@@ -52,12 +51,33 @@ def is_catering_company(request):
     return res
 
 def home(request):
-    context={}
-    context['is_particular'] = is_particular(request)
-    context['is_employee'] = is_employee(request)
-    context['is_catering_company'] = is_catering_company(request)
-    return render(request, "core/home.html", context)
+    return render(request, "core/home.html")
 
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
