@@ -18,7 +18,6 @@ def listar_caterings(request):
     if request.method == 'POST':
         busqueda = request.POST.get('buscar', '')
         caterings = CateringService.objects.filter(Q(name__icontains=busqueda))
-        print(caterings)
         
     context['buscar'] = busqueda    
     context['caterings'] = caterings
