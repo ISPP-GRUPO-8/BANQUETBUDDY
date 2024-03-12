@@ -4,14 +4,14 @@ import os
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from banquetBuddy.catering_employees.forms import EmployeeFilterForm
-from banquetBuddy.catering_employees.models import Employee
-from banquetBuddy.catering_owners.models import CateringCompany, CateringService, JobApplication, Offer
+from catering_employees.forms import EmployeeFilterForm
+from catering_employees.models import Employee
+from catering_owners.models import CateringCompany, CateringService, JobApplication, Offer
 
 from core.forms import CustomUserCreationForm
 from .forms import CateringCompanyForm
 from core.models import CustomUser
-from phonenumbers import PhoneNumber
+from phonenumbers import PhoneNumber, parse, is_valid_number
 
 class RegisterCompanyTestCase(TestCase):
     def test_register_company_view(self):
@@ -114,7 +114,8 @@ class ViewTests(TestCase):
     def setUp(self) -> None:
         
         self.user = CustomUser.objects.create_user(username='testuser', password='testpassword', email='testuser@gmail.com')
-        self.catering_company = CateringCompany.objects.create(user=self.user, name='Prueba', phone_number=PhoneNumber.from_string("+15551234567"), service_description='Prueba', price_plan='PREMIUM_PRO')
+        phone_number = parse("+15551234567", "US")
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Prueba', phone_number=str(phone_number), service_description='Prueba', price_plan='PREMIUM_PRO')
         self.catering_service = CateringService.objects.create(
             cateringcompany=self.catering_company,
             name="Brunch para la oficina",
