@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'management',
     'catering_particular',
     'phonenumber_field',
     'catering_owners',

@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseForbidden
 from core.models import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
@@ -26,3 +25,24 @@ def employee_applications(request, offer_id):
 
     context = {'applicants': applicants, 'offer': offer, 'filter_form': filter_form}
     return render(request, "applicants_list.html", context)
+
+
+@login_required
+def view_reservations(request, catering_service_id):
+
+    catering_service = get_object_or_404(CateringService, pk=catering_service_id)
+    if request.user == catering_service.cateringcompany.user:  
+        catering_service = get_object_or_404(CateringService, pk=catering_service_id)
+        reservations = catering_service.events.all()
+        return render(request,'reservations.html',{'reservations': reservations,'catering_service':catering_service})
+    else:
+        return HttpResponseForbidden("You don't have permission to view this reservations.")
+    
+@login_required
+def view_reservation(request, event_id,catering_service_id):
+    catering_service = get_object_or_404(CateringService, pk=catering_service_id)
+    if request.user == catering_service.cateringcompany.user:  
+        event = get_object_or_404(Event, pk=event_id)
+        return render(request,'view_reservation.html',{'event': event})
+    else:
+        return HttpResponseForbidden("You don't have permission to view this reservation.")
