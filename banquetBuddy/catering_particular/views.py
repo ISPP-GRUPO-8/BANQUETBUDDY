@@ -3,6 +3,7 @@ from core.models import CateringService, CateringCompany
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from core.views import *
+from django.db.models import Q
 
 
 def obtener_filtros(request):
@@ -23,14 +24,14 @@ def obtener_filtros(request):
 
 def validar_filtros(request, filtros):
     if filtros["precio_maximo"]:
-        if not filtros["precio_maximo"].isdigit() or int(filtros["precio_maximo"]) < 0:
-            messages.error(request, "El precio máximo debe ser un número positivo.")
+        if not filtros["precio_maximo"].isdigit() or int(filtros["precio_maximo"]) <= 0:
+            messages.error(request, "The max price must be a positive number.")
             filtros["precio_maximo"] = ""
 
     if filtros["num_invitados"]:
-        if not filtros["num_invitados"].isdigit() or int(filtros["num_invitados"]) < 0:
+        if not filtros["num_invitados"].isdigit() or int(filtros["num_invitados"]) <= 0:
             messages.error(
-                request, "El número de invitados debe ser un número positivo."
+                request, "The number of attendees must be a positive number."
             )
             filtros["num_invitados"] = ""
 
@@ -57,9 +58,12 @@ def aplicar_filtros(caterings, filtros, limpiar_filtros):
 
 
 def listar_caterings(request):
-  
+    context = {}
+    context["is_particular"] = is_particular(request)
+    context["is_employee"] = is_employee(request)
+    context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
-        return HttpResponseForbidden("No eres cliente")
+        return HttpResponseForbidden("You are not a particular")
     caterings = CateringService.objects.all()
 
     # Obtener tipos de cocina únicos
@@ -68,26 +72,38 @@ def listar_caterings(request):
         .exclude(cuisine_types__isnull=True)
         .distinct()
     )
-    print(tipos_cocina)
 
     filtros, limpiar_filtros = obtener_filtros(request)
     filtros = validar_filtros(request, filtros)
     caterings, filtros = aplicar_filtros(caterings, filtros, limpiar_filtros)
 
-    context = {
-        "caterings": caterings,
-        "tipos_cocina": tipos_cocina,
-        **filtros,
-    }
+    context.update(
+        {
+            "caterings": caterings,
+            "tipos_cocina": tipos_cocina,
+            **filtros,
+        }
+    )
 
+    if "search" not in context:
+        busqueda = ""
+
+    if request.method == "POST":
+        busqueda = request.POST.get("search", "")
+        caterings = CateringService.objects.filter(Q(name__icontains=busqueda))
+
+    context["search"] = busqueda
+    context["caterings"] = caterings
     return render(request, "listar_caterings.html", context)
 
 
 def catering_detail(request, catering_id):
     context = {}
+    context["is_particular"] = is_particular(request)
+    context["is_employee"] = is_employee(request)
+    context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
         return HttpResponseForbidden("No eres cliente")
-    catering = get_object_or_404(CateringService, id = catering_id)
-    context['catering'] = catering
-    return render(request, 'catering_detail.html', context)
-
+    catering = get_object_or_404(CateringService, id=catering_id)
+    context["catering"] = catering
+    return render(request, "catering_detail.html", context)
