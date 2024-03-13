@@ -3,6 +3,7 @@ from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from .models import *
 from .forms import (
     ParticularForm,
     CateringCompanyForm,
@@ -15,8 +16,37 @@ from django.contrib.auth.decorators import login_required
 
 
 def home(request):
-    return render(request, "core/home.html")
+    context={}
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    return render(request, "core/home.html", context)
 
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
@@ -202,30 +232,3 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
-
-@login_required
-def profile_company_edit_view(request):
-    context = {}
-    context["companyForm"] = request.user
-
-    if request.method == "POST":
-        service_description = request.POST.get("service_description", "")
-        logo = request.POST.get("logo", "")
-        cuisine_type = request.POST.get("cuisine_type", "")
-
-        # Pasar valores al contexto
-        context["service_description"] = service_description
-        context["logo"] = logo
-        context["cuisine_type"] = cuisine_type
-
-
-        companyForm = request.user
-        companyForm.service_description = service_description
-        companyForm.logo = logo
-        companyForm.cuisine_type = cuisine_type
-
-        companyForm.save()
-
-        return redirect("profile")
-
-    return render(request, "core/profile_company_edit.html", context)

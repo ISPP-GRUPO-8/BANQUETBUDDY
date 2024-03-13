@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User, AbstractUser
-from enum import Enum
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -35,6 +33,15 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    
+class EnglishLevel(models.TextChoices):
+    C2 = 'C2', 'C2'
+    C1 = 'C1', 'C1'
+    B2 = 'B2', 'B2'
+    B1 = 'B1', 'B1'
+    A2 = 'A2', 'A2'
+    A1 = 'A1', 'A1'
+    NINGUNO = 'NONE', 'None'
 
 
 class CuisineType(models.TextChoices):
@@ -103,6 +110,7 @@ class Employee(models.Model):
     profession = models.CharField(max_length=255)
     experience = models.CharField(max_length=255)
     skills = models.CharField(max_length=255)
+    english_level = models.CharField(max_length=50, choices=EnglishLevel.choices, default="NINGUNO")
     location = models.CharField(max_length=255)
     curriculum = models.BinaryField(blank=True, null=True)
     recommendation_letter = models.BinaryField(blank=True, null=True)
@@ -129,6 +137,7 @@ class CateringService(models.Model):
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
+    menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
     date = models.DateField()
     details = models.TextField()
@@ -136,8 +145,10 @@ class Event(models.Model):
     number_guests = models.IntegerField()
 
 class Task(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
+    employees = models.ManyToManyField('Employee', related_name='tasks')
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE)
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='tasks')
     description = models.TextField()
     assignment_date = models.DateField()
     assignment_state = models.CharField(max_length=50, choices=AssignmentState.choices)  
@@ -148,6 +159,7 @@ class Task(models.Model):
         constraints = [
             models.CheckConstraint(check=models.Q(assignment_date__lt=models.F('expiration_date')), name='assignment_before_expiration')
         ]
+
 
 class Menu(models.Model):
     cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True )
@@ -200,7 +212,3 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField()
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
-
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')

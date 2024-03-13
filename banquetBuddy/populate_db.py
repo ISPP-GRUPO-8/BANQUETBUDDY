@@ -13,7 +13,7 @@ django.setup()
 from faker import Faker
 from core.models import (CuisineType, CuisineTypeModel, CustomUser, Particular, CateringCompany, Employee, Message,
                           CateringService, Event, Plate, Task, Menu, Review,
-                          EmployeeWorkService, Offer, JobApplication, TaskEmployee)
+                          EmployeeWorkService, Offer, JobApplication)
 from random import randint, choice
 
 faker = Faker(['es_ES'])
@@ -32,7 +32,7 @@ def truncate_all_tables():
     models_to_truncate = [
         Particular, CateringCompany, Employee, Message,
         CateringService, Event, Task, Menu, Review,
-        EmployeeWorkService, Offer, JobApplication, TaskEmployee, CustomUser
+        EmployeeWorkService, Offer, JobApplication, CustomUser
     ]
     for model1 in models_to_truncate:
         model1.objects.all().delete()
@@ -79,16 +79,16 @@ def create_particulars(num_particulars):
         )
 
 catering_names = [
-        "Delicias Mediterráneas",
-        "Sabor Oriental",
-        "Rincón Mexicano",
-        "Gourmet Fusion",
-        "Cocina Antonio",
-        "Exquisitez Gastronómica",
-        "Catering Benito",
-        "Sabores del Mar",
-        "Sazón Casera",
-        "Dulces Caprichos"
+        "DeliciasMediterraneas",
+        "SaborOriental",
+        "RinconMexicano",
+        "GourmetFusion",
+        "CocinaAntonio",
+        "ExquisitezGastronomica",
+        "CateringBenito",
+        "SaboresdelMar",
+        "SazonCasera",
+        "DulcesCaprichos"
     ]
 
 logos_catering = [
@@ -152,64 +152,74 @@ def create_catering_companies():
 
 employee_data = [
     {
-        'username': 'employee1',
+        'username': 'OliverS',
         'password': 'employee1',
         'experience': 'Experiencia en la preparación de banquetes para grandes eventos',
-        'skill': 'Creatividad para desarrollar platos innovadores'
+        'skill': 'Creatividad para desarrollar platos innovadores',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee2',
+        'username': 'WillJ98',
         'password': 'employee2',
         'experience': 'Trabajo en restaurantes de cocina internacional',
-        'skill': 'Trabajo en equipo en entornos de alta presión'
+        'skill': 'Trabajo en equipo en entornos de alta presión',
+        'english_level': 'B2'
     },
     {
-        'username': 'employee3',
+        'username': 'HarryB_22',
         'password': 'employee3',
         'experience': 'Gestión de la logística de eventos gastronómicos',
-        'skill': 'Destreza en la decoración y presentación de platos'
+        'skill': 'Destreza en la decoración y presentación de platos',
+        'english_level': 'A2'
     },
     {
-        'username': 'employee4',
+        'username': 'GeorgeM_10',
         'password': 'employee4',
         'experience': 'Supervisión de personal en servicios de catering',
-        'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes'
+        'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes',
+        'english_level': 'NONE'
     },
     {
-        'username': 'employee5',
+        'username': 'JackW',
         'password': 'employee5',
         'experience': 'Planificación y ejecución de menús para eventos especiales',
-        'skill': 'Comunicación efectiva con clientes y proveedores'
+        'skill': 'Comunicación efectiva con clientes y proveedores',
+        'english_level': 'C2'
     },
     {
-        'username': 'employee6',
+        'username': 'AmeliaW',
         'password': 'employee6',
         'experience': 'Experiencia en la gestión de cocinas industriales',
-        'skill': 'Gestión del tiempo para coordinar la preparación de múltiples platos'
+        'skill': 'Gestión del tiempo para coordinar la preparación de múltiples platos',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee7',
+        'username': 'OliviaT',
         'password': 'employee7',
         'experience': 'Conocimiento de normativas de higiene y seguridad alimentaria',
-        'skill': 'Capacidad para resolver problemas rápidamente durante eventos en vivo'
+        'skill': 'Capacidad para resolver problemas rápidamente durante eventos en vivo',
+        'english_level': 'B1'
     },
     {
-        'username': 'employee8',
+        'username': 'IsabellaG',
         'password': 'employee8',
         'experience': 'Trabajo en servicios de catering para bodas y eventos sociales',
-        'skill': 'Conocimiento de técnicas de servicio y atención al cliente'
+        'skill': 'Conocimiento de técnicas de servicio y atención al cliente',
+        'english_level': 'A1'
     },
     {
-        'username': 'employee9',
+        'username': 'AvaJ',
         'password': 'employee9',
         'experience': 'Participación en catas y maridajes de vinos y alimentos',
-        'skill': 'Flexibilidad para ajustarse a cambios de último minuto en los pedidos'
+        'skill': 'Flexibilidad para ajustarse a cambios de último minuto en los pedidos',
+        'english_level': 'C1'
     },
     {
-        'username': 'employee10',
+        'username': 'SophiaM99',
         'password': 'employee10',
         'experience': 'Manejo de equipos y utensilios especializados en cocina',
-        'skill': 'Compromiso con la calidad y la excelencia en la cocina'
+        'skill': 'Compromiso con la calidad y la excelencia en la cocina',
+        'english_level': 'C1'
     }
 ]
 
@@ -222,6 +232,7 @@ def create_employees(num_employees):
             profession=choice(['Chef', 'Camarero', 'Pastelero']),
             experience=employee_data[_]['experience'],
             skills=employee_data[_]['skill'],
+            english_level=employee_data[_]['english_level'],
             location=faker.address(),
             curriculum=None, 
             recommendation_letter=None 
@@ -304,14 +315,71 @@ events_details = [
     "Una fiesta sorpresa con entretenimiento en vivo y baile hasta el amanecer."
 ]
 
+menus_restrictions = [
+    "Sin restricciones: este menú incluye una variedad de platos para todos los gustos y necesidades dietéticas.",
+    "Vegetariano: todos los platos de este menú son aptos para vegetarianos, sin carne ni productos de origen animal.",
+    "Sin gluten: ideal para personas con intolerancia al gluten, este menú ofrece platos libres de trigo y otros cereales con gluten.",
+    "Bajo en calorías: diseñado para aquellos que desean controlar su ingesta de calorías, este menú ofrece opciones saludables y equilibradas.",
+    "Sin lactosa: adecuado para personas con intolerancia a la lactosa, este menú excluye productos lácteos de la dieta.",
+    "Vegano: todos los platos de este menú son aptos para veganos, sin ingredientes de origen animal.",
+    "Orgánico: ingredientes frescos y orgánicos se utilizan en este menú para una experiencia culinaria más saludable y sostenible.",
+    "Bajo en carbohidratos: perfecto para aquellos que siguen una dieta baja en carbohidratos, este menú ofrece opciones sin azúcares añadidos ni alimentos ricos en carbohidratos.",
+    "Sin frutos secos: ideal para personas con alergias a los frutos secos, este menú excluye cualquier tipo de fruto seco de los platos.",
+    "Sin azúcar: diseñado para aquellos que desean reducir su consumo de azúcar, este menú ofrece postres y platos sin azúcares añadidos."
+]
+
+def create_menus(num_menus):
+    companies = CateringCompany.objects.all()
+    for company in companies:
+        for _ in range(num_menus):
+            menu = Menu.objects.create(
+                cateringcompany=company,
+                name=choice(menus_name),
+                description=choice(menus_descriptions),
+                diet_restrictions=choice(menus_restrictions)
+            )
+
+def create_plates():
+    plate_images = [
+        "plate1.JPG",  
+        "plate2.JPG",
+        "plate3.JPG",  
+        "plate4.JPG",
+        "plate5.JPG",  
+        "plate6.JPG",
+    ]
+    for menu in Menu.objects.all():
+        num_plates = randint(2, 5)
+        for _ in range(num_plates):
+            plate_image_filename = choice(plate_images)
+            plate_image_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'plates', plate_image_filename)
+
+            if os.path.exists(plate_image_path):
+                with open(plate_image_path, 'rb') as f:
+                    try:
+                        Plate.objects.create(
+                            menu=menu,
+                            name=generate_plate_name(),
+                            description=generate_plate_description(),
+                            price=faker.random_number(digits=2),
+                            image=File(f, name=plate_image_filename)
+                        )
+                    except Exception as e:
+                        print(f"Error al crear plato: {e}")
+           
+
+
 
 def create_events(num_events):
     services = CateringService.objects.all()
     particulars = Particular.objects.all()
+    menus = Menu.objects.all()
     for _ in range(num_events):
+        menu = choice(menus) if menus else None
         Event.objects.create(
             cateringservice=choice(services),
             particular=choice(particulars),
+            menu=menu,
             name=faker.word(),
             date=faker.date_between(start_date='today', end_date='+1y'),
             details=events_details[_],
@@ -336,9 +404,11 @@ def create_tasks(num_tasks):
     events = Event.objects.all()
     services = CateringService.objects.all()
     for _ in range(num_tasks):
+        service = choice(services)
         Task.objects.create(
             event=choice(events),
-            cateringservice=choice(services),
+            cateringservice=service,
+            cateringcompany=service.cateringcompany,  # Asegúrate de que cada tarea tenga una compañía de catering
             description=tasks_descriptions[_],
             assignment_date=faker.date_between(start_date='-1y', end_date='today'),
             assignment_state=choice(['PENDING', 'IN_PROGRESS', 'COMPLETED']),
@@ -386,29 +456,7 @@ menus_plates = [
     ["Lentejas estofadas", "Estofado de ternera con patatas", "Arroz con leche", "Pastel de manzana", "Galletas de chocolate caseras"]
 ]
 
-menus_restrictions = [
-    "Sin restricciones: este menú incluye una variedad de platos para todos los gustos y necesidades dietéticas.",
-    "Vegetariano: todos los platos de este menú son aptos para vegetarianos, sin carne ni productos de origen animal.",
-    "Sin gluten: ideal para personas con intolerancia al gluten, este menú ofrece platos libres de trigo y otros cereales con gluten.",
-    "Bajo en calorías: diseñado para aquellos que desean controlar su ingesta de calorías, este menú ofrece opciones saludables y equilibradas.",
-    "Sin lactosa: adecuado para personas con intolerancia a la lactosa, este menú excluye productos lácteos de la dieta.",
-    "Vegano: todos los platos de este menú son aptos para veganos, sin ingredientes de origen animal.",
-    "Orgánico: ingredientes frescos y orgánicos se utilizan en este menú para una experiencia culinaria más saludable y sostenible.",
-    "Bajo en carbohidratos: perfecto para aquellos que siguen una dieta baja en carbohidratos, este menú ofrece opciones sin azúcares añadidos ni alimentos ricos en carbohidratos.",
-    "Sin frutos secos: ideal para personas con alergias a los frutos secos, este menú excluye cualquier tipo de fruto seco de los platos.",
-    "Sin azúcar: diseñado para aquellos que desean reducir su consumo de azúcar, este menú ofrece postres y platos sin azúcares añadidos."
-]
 
-def create_menus(num_menus):
-    companies = CateringCompany.objects.all()
-    for company in companies:
-        for _ in range(num_menus):
-            menu = Menu.objects.create(
-                cateringcompany=company,
-                name=choice(menus_name),
-                description=choice(menus_descriptions),
-                diet_restrictions=choice(menus_restrictions)
-            )
 
 
 def generate_plate_name():
@@ -420,30 +468,7 @@ def generate_plate_description():
 
 
 
-def create_plates():
-    plate_images = [
-        "plate1.JPG",  
-        "plate2.JPG",
-        "plate3.JPG",  
-        "plate4.JPG",
-        "plate5.JPG",  
-        "plate6.JPG",
-    ]
-    for menu in Menu.objects.all():
-        num_plates = randint(2, 5)
-        for _ in range(num_plates):
-            plate_image_filename = choice(plate_images)
-            plate_image_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'plates', plate_image_filename)
 
-            if os.path.exists(plate_image_path):
-                with open(plate_image_path, 'rb') as f:
-                    Plate.objects.create(
-                        menu=menu,
-                        name=generate_plate_name(),
-                        description=generate_plate_description(),
-                        price=faker.random_number(digits=2),  # Genera un precio aleatorio para el plato
-                        image=File(f, name=plate_image_filename)
-                    )
 
 
 
@@ -573,15 +598,6 @@ def create_job_applications(num_applications):
         )
 
 
-def create_task_employees(num_relations):
-    employees = Employee.objects.all()
-    tasks = Task.objects.all()
-    for _ in range(num_relations):
-        TaskEmployee.objects.create(
-            employee=choice(employees),
-            task=choice(tasks)
-        )
-
 
 def create_cuisine_types():
     for cuisine in CuisineType.choices:
@@ -595,15 +611,14 @@ def populate_database():
     create_employees(10)
     create_messages(5)
     create_catering_services(10)
+    create_menus(10)
     create_events(10)
     create_tasks(10)
-    create_menus(10)
     create_plates()
     create_reviews(10)
     create_employee_work_services(10)
     create_offers(10)
     create_job_applications(10)
-    create_task_employees(10)
 
 if __name__ == "__main__":
     populate_database()
