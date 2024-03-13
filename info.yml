@@ -1,0 +1,76 @@
+project:
+  name: 'ISPP-2024-L2-08'
+  owner: 'L2'
+  teamId: '08'
+  identities: {}
+  notifications:
+    email: 'banquetbuddy.ispp@gmail.com'
+  members:
+    member1:
+      name: 'Francisco José'
+      surname: 'Vargas Castro' 
+      githubUsername: 'fravarcas'
+    member2:
+      name: 'Artemio'
+      surname: 'Rodríguez Asensio' 
+      githubUsername: 'artrodase'
+    member3:
+      name: 'Álvaro'
+      surname: 'Sanchez Flores' 
+      githubUsername: 'Alvsanflo'
+    member4:
+      name: 'Alberto'
+      surname: 'Benítez Morales' 
+      githubUsername: 'albertobemo7'
+    member5:
+      name: 'Alvaro'
+      surname: 'Carrera Bernal' 
+      githubUsername: 'alvcarber1'
+    member6:
+      name: 'Alvaro'
+      surname: 'Navarro Rivera' 
+      githubUsername: 'alvnavriv'
+    member7:
+      name: 'Eduardo'
+      surname: 'De Bustamante Lucena' 
+      githubUsername: 'edubusluc'
+    member8:
+      name: 'Guillermo Alonso'
+      surname: 'Pacheco' 
+      githubUsername: 'elguille2'
+    member9:
+      name: 'Fernando'
+      surname: 'Barroso Barroso' 
+      githubUsername: 'ferbarbar1'
+    member10:
+      name: 'Gonzalo'
+      surname: 'Santiago Martin' 
+      githubUsername: 'gonsanmar2'
+    member11:
+      name: 'Jaime'
+      surname: 'Caballero Hernández' 
+      githubUsername: 'jaicabher1'
+    member12:
+      name: 'Javier'
+      surname: 'Nunes Ruiz' 
+      githubUsername: 'javiernr02'
+    member13:
+      name: 'Javier'
+      surname: 'Rodriguez Cordero' 
+      githubUsername: 'javierrc8'
+    member14:
+      name: 'Juan'
+      surname: 'Martinez Cano' 
+      githubUsername: 'juamarcan8'
+    member15:
+      name: 'Marco Antonio'
+      surname: 'Roca Rodriguez' 
+      githubUsername: 'marrocrod'
+    member16:
+      name: 'Mario'
+      surname: 'Sanchez Naranjo' 
+      githubUsername: 'marsannar2'
+    member17:
+      name: 'Pablo'
+      surname: 'Martinez Valladares' 
+      githubUsername: 'Pablomv8'
