@@ -5,13 +5,14 @@ from catering_owners.models import CateringService
 from .forms import ParticularForm
 from core.forms import CustomUserCreationForm
 from django.shortcuts import render, get_object_or_404
-from core.models import CateringService, CateringCompany
+from catering_owners.models import CateringCompany, CateringService
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
 
 # Create your views here.
+
 
 def register_particular(request):
     if request.method == "POST":
@@ -89,6 +90,7 @@ def aplicar_filtros(caterings, filtros, limpiar_filtros):
         filtros["num_invitados"] = ""
 
     return caterings, filtros
+
 
 def listar_caterings(request):
     context = {}
