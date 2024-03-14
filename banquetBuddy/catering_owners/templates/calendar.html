@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Calendar</title>
+</head>
+
+
+
+<body>
+    <h1>Events on {{month_name}}/{{year}} for {{catering_name}} </h1>
+    <a href="{% url 'prev_month' catering_service_id=catering_service_id year=year month=month %}">Previous Month</a>
+    <a href="{% url 'next_month' catering_service_id=catering_service_id year=year month=month %}">Next Month</a>
+    <table border="1">
+        <tr>
+          <th>Lun</th>
+          <th>Mar</th>
+          <th>Mie</th>
+          <th>Jue</th>
+          <th>Vie</th>
+          <th>Sab</th>
+          <th>Dom</th>
+        </tr>
+        {% for week in cal %}
+            <tr>
+            {% for day in week %}
+                {% if day in event_days %}
+                    <td style="background-color: yellow;"><a href="{% url 'reservations_for_day' catering_service_id=catering_service_id year=year month=month day=day %}">{{ day }}</a></td>
+                {% else %}
+                    <td>{{ day }}</td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+      </table>
+</body>
+</html>
+{% endblock %}

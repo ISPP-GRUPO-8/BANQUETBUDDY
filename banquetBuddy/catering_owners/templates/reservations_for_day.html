@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h1>Events for {{ selected_date.day}}/{{ selected_date.month}}/{{ selected_date.year}}</h1>
+  
+  {% if reservations %}
+    <ul>
+      {% for reservation in reservations %}
+        <li>Name:{{ reservation.name }}</li>
+        <li>Date: {{ reservation.date }}</li>
+        <li>Details: {{ reservation.details }}</li>
+        <li>Booking State: {{ reservation.booking_state }}</li>
+        <li>Number of guests: {{ reservation.number_guests }}</li>
+        <hr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay reservas para este día.</p>
+  {% endif %}
+{% endblock %}
