@@ -4,42 +4,52 @@
 
 {% block content %}
 <style>
-    form {
-    margin: 10%;
-}
+    h1 {
+        text-align: center;
+        color: #333;
+    }
 
-h1 {
-    text-align: center;
-    color: #333;
-}
+    label {
+        display: block;
+        margin-top: 3%;
+    }
 
-label {
-    display: block;
-    margin-top: 20px;
-}
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
 
-input[type="text"], textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+    .apply{
+        display: block;
+        width: 25%;
+        padding: 0.5%;
+        background-color: #02483E;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+        margin-left: 65%;
+        margin-right: 10%;
+    }
+    .list {
+        margin-right: 8%;
+        margin-left: 8%;
+        margin-bottom: 3%;
+    }
+    .offer {
+        margin-top: 3%;
+    }
 
-input[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
+    hr {
+        margin-top: 3%;
+    }
 
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
+    .offerTitle {
+        font-weight: bold;
+    }
+
 </style>
 <html lang="en">
 <head>
@@ -48,31 +58,34 @@ input[type="submit"]:hover {
     <title>Offer List</title>
 </head>
 <body>
-    <h1>Offer List</h1>
-    <ul>
+    <h1 style="margin-top: 2%;">Offer List</h1>
+    <div class="list">
         {% for offer in offers %}
-        <li>
-            <h2>{{ offer.title }}</h2>
-            <h2>{{ offer.location }}</h2>
+        <div class="offer">
+            <h2 class="offerTitle">{{ offer.title }}</h2>
+            <h4>{{ offer.location }}</h4>
             <p>{{ offer.description }}</p>
             <!-- Aquí puedes agregar más detalles de la oferta -->
             {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
+                <button href="{% url 'applicants' offer.id%}">Applications</button>
                 <form action="{% url 'edit_offer' offer.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit">Edit</button>
+                    <button type="submit">Edit</button>-
                 </form>
                 <form action="{% url 'delete_offer' offer.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit">Delete</button>
                 </form>
-            {% endif %}
+            {% else %}
             <form action="{% url 'apply_offer' offer.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Apply</button>
+                <button class="apply" type="submit">Apply</button>
             </form>
-        </li>
+            {% endif %}
+            <hr></hr>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 </body>
 </html>
 <!--  En esta plantilla,

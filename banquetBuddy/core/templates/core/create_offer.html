@@ -4,57 +4,63 @@
 {% block content %}
 <style>
     form {
-    margin: 10%;
+    margin-top: 5%;
+    margin-left: 9%;
+    margin-right: 9%;
+    margin-bottom: 5%;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
-}
+    h1 {
+        text-align: center;
+        color: #333;
+    }
 
-label {
-    display: block;
-    margin-top: 20px;
-}
+    label {
+        display: block;
+        margin-top: 3%;
+    }
 
-input[type="text"], textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
 
-input[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-}
+    input[type="submit"] {
+        display: block;
+        width: 80%;
+        padding: 0.5%;
+        background-color: #02483E;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 4%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
 
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
+   
+
+
 </style>
-<h1>Crear nueva oferta de trabajo</h1>
-    <form action="/guardar/" method="post">
-        {% csrf_token %}
-        <label for="id_title">Título:</label>
-        <input type="text" id="id_title" name="title" required><br>
+<h1 style="margin-top: 5%;">Crear nueva oferta de trabajo</h1>
+    <div class="form">
+        <form action="/guardar/" method="post">
+            {% csrf_token %}
+            <label for="id_title">Título:</label>
+            <input type="text" id="id_title" name="title" required><br>
 
-        <label for="id_description">Descripción:</label>
-        <textarea id="id_description" name="description"  required></textarea><br>
+            <label for="id_description">Descripción:</label>
+            <textarea id="id_description" name="description"  required></textarea><br>
 
-        <label for="id_requirements">Requisitos:</label>
-        <textarea id="id_requirements" name="requirements"  required></textarea><br>
+            <label for="id_requirements">Requisitos:</label>
+            <textarea id="id_requirements" name="requirements"  required></textarea><br>
 
-        <label for="id_location">Ubicación:</label>
-        <input type="text" id="id_location" name="location" required><br>
+            <label for="id_location">Ubicación:</label>
+            <input type="text" id="id_location" name="location" required><br>
 
-        <input type="submit" value="Guardar">
-    </form>
+            <input type="submit" value="Guardar">
+        </form>
+    </div>
 {% endblock %}
