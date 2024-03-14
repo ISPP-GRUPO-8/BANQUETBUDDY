@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User, AbstractUser
-from enum import Enum
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -35,6 +33,46 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    
+class EnglishLevel(models.TextChoices):
+    C2 = 'C2', 'C2'
+    C1 = 'C1', 'C1'
+    B2 = 'B2', 'B2'
+    B1 = 'B1', 'B1'
+    A2 = 'A2', 'A2'
+    A1 = 'A1', 'A1'
+    NINGUNO = 'NONE', 'None'
+
+
+class CuisineType(models.TextChoices):
+    MEDITERRANEAN = 'MEDITERRANEAN', 'Mediterránea'
+    ORIENTAL = 'ORIENTAL', 'Oriental'
+    MEXICAN = 'MEXICAN', 'Mexicana'
+    ITALIAN = 'ITALIAN', 'Italiana'
+    FRENCH = 'FRENCH', 'Francesa'
+    SPANISH = 'SPANISH', 'Española'
+    INDIAN = 'INDIAN', 'India'
+    CHINESE = 'CHINESE', 'China'
+    JAPANESE = 'JAPANESE', 'Japonesa'
+    THAI = 'THAI', 'Tailandesa'
+    GREEK = 'GREEK', 'Griega'
+    LEBANESE = 'LEBANESE', 'Libanesa'
+    TURKISH = 'TURKISH', 'Turca'
+    KOREAN = 'KOREAN', 'Coreana'
+    VIETNAMESE = 'VIETNAMESE', 'Vietnamita'
+    AMERICAN = 'AMERICAN', 'Americana'
+    BRAZILIAN = 'BRAZILIAN', 'Brasileña'
+    ARGENTINE = 'ARGENTINE', 'Argentina'
+    VEGETARIAN = 'VEGETARIAN', 'Vegetariana'
+    VEGAN = 'VEGAN', 'Vegana'
+    GLUTEN_FREE = 'GLUTEN_FREE', 'Sin Gluten'
+    SEAFOOD = 'SEAFOOD', 'Mariscos'
+    BBQ = 'BBQ', 'Barbacoa'
+    FAST_FOOD = 'FAST_FOOD', 'Comida Rápida'
+    FUSION = 'FUSION', 'Fusión'
+    TRADITIONAL = 'TRADITIONAL', 'Tradicional'
+    ORGANIC = 'ORGANIC', 'Orgánica'
+    GOURMET = 'GOURMET', 'Gourmet'
 
 
 class Particular(models.Model):
@@ -48,11 +86,23 @@ class CateringCompany(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='CateringCompanyusername')
     name = models.CharField(max_length=255)
     phone_number = PhoneNumberField()
+    cuisine_types = models.ManyToManyField('CuisineTypeModel', related_name='catering_companies')
     service_description = models.TextField(blank=True)
-    logo = models.BinaryField(blank=True, null=True)
-    cuisine_type = ArrayField(models.CharField(max_length=255), blank=True, null=True)
+    logo = models.ImageField(upload_to='logos_catering/', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
-    price_plan = models.CharField(max_length=50, choices=PricePlan.choices)  
+    price_plan = models.CharField(max_length=50, choices=PricePlan.choices)
+
+
+class CuisineTypeModel(models.Model):
+    type = models.CharField(
+        max_length=50,
+        choices=CuisineType.choices,
+        unique=True
+    )
+
+    def __str__(self):
+        return self.get_type_display()
+
 
 class Employee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='EmployeeUsername')
@@ -60,6 +110,7 @@ class Employee(models.Model):
     profession = models.CharField(max_length=255)
     experience = models.CharField(max_length=255)
     skills = models.CharField(max_length=255)
+    english_level = models.CharField(max_length=50, choices=EnglishLevel.choices, default="NINGUNO")
     location = models.CharField(max_length=255)
     curriculum = models.BinaryField(blank=True, null=True)
     recommendation_letter = models.BinaryField(blank=True, null=True)
@@ -84,8 +135,9 @@ class CateringService(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Event(models.Model):
-    cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='events')
+    cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
+    menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
     date = models.DateField()
     details = models.TextField()
@@ -93,8 +145,10 @@ class Event(models.Model):
     number_guests = models.IntegerField()
 
 class Task(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
+    employees = models.ManyToManyField('Employee', related_name='tasks')
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE)
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='tasks')
     description = models.TextField()
     assignment_date = models.DateField()
     assignment_state = models.CharField(max_length=50, choices=AssignmentState.choices)  
@@ -106,13 +160,29 @@ class Task(models.Model):
             models.CheckConstraint(check=models.Q(assignment_date__lt=models.F('expiration_date')), name='assignment_before_expiration')
         ]
 
+
 class Menu(models.Model):
-    cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='menus')
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True )
+    cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='menus')
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    plates = ArrayField(models.CharField(max_length=255), blank=True, null=True)
     diet_restrictions = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Plate(models.Model):
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='plates', null=True, blank=True)
+    menu = models.ForeignKey(Menu, on_delete=models.SET_NULL, null=True, blank=True, related_name='plates')
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='plates_images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Review(models.Model):
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='reviews')
@@ -142,14 +212,3 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField()
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
-
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')
-
-
-
-
-
-
-
