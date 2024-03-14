@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404, HttpResponse,redirect
 from django.http import HttpResponseForbidden
 from core.models import CateringService
 from core.views import *
@@ -112,7 +112,7 @@ def booking_process(request, catering_id):
 
         # Puedes agregar más lógica según sea necesario
 
-        return HttpResponse(f'Reservation confirmed for {catering.name} by {user.username}, on {event_date} with {number_guests} guests. {menu.name}')
+        return redirect('/')
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, 'booking_process.html', context)
