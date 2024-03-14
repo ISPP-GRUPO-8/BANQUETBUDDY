@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -11,7 +12,7 @@ from .forms import (
     OfferForm
 )
 from django.contrib import messages
-from .models import CustomUser, Offer
+from .models import CustomUser, Offer, CateringCompany, CateringService
 from django.contrib.auth.decorators import login_required
 
 
@@ -208,13 +209,17 @@ def offer_list(request):
     offers = Offer.objects.all() 
     return render(request, 'core/offer_list.html', {'offers': offers})
 
-
+@login_required
 def create_offer(request):
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('home') 
+            catering_company = request.user.CateringCompanyusername
+            catering_service = get_object_or_404(CateringService, cateringcompany=catering_company)
+            offer = form.save(commit=False)
+            offer.cateringservice = catering_service
+            offer.save()
+            return redirect('offer_list')
     else:
         form = OfferForm()
     
