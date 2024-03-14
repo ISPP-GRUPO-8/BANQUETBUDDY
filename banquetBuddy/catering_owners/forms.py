@@ -1,5 +1,5 @@
 from django import forms
-from core.models import EnglishLevel
+from core.models import CuisineTypeModel, EnglishLevel, CateringCompany, CuisineType
 
 class EmployeeFilterForm(forms.Form):
     
@@ -41,3 +41,25 @@ class EmployeeFilterForm(forms.Form):
             queryset = queryset.filter(employee__skills__icontains=skills)
 
         return queryset
+    
+
+class CateringProfileForm(forms.ModelForm):
+        class Meta:
+            model = CateringCompany
+            fields = ["service_description", "cuisine_types", "logo"]
+            widgets = {
+                "service_description": forms.Textarea(
+                attrs={"placeholder": "Descripción del servicio", "class": "form-control"}
+            ),
+            "cuisine_types": forms.SelectMultiple(
+                choices=CuisineType.choices,
+                attrs={"class": "form-control"}
+            ),
+            "logo": forms.FileInput(
+                attrs={"class": "form-control-file"}
+            ),
+        }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['cuisine_types'].queryset = CuisineTypeModel.objects.all()
+

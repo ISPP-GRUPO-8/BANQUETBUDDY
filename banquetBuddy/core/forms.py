@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Particular, CateringCompany, Employee
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CustomUser, CuisineTypeModel, CuisineType
+from .models import CustomUser
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -53,28 +53,6 @@ class CateringCompanyForm(forms.ModelForm):
                 }
             ),
         }
-
-class CateringProfileForm(forms.ModelForm):
-    class Meta:
-        model = CateringCompany
-        fields = ["service_description", "cuisine_types", "logo"]
-        widgets = {
-            "service_description": forms.Textarea(
-                attrs={"placeholder": "Descripción del servicio", "class": "form-control"}
-            ),
-            "cuisine_types": forms.SelectMultiple(
-                choices=CuisineType.choices,
-                attrs={"class": "form-control"}
-            ),
-            "logo": forms.FileInput(
-                attrs={"class": "form-control-file"}
-            ),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['cuisine_types'].queryset = CuisineTypeModel.objects.all()
-
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
