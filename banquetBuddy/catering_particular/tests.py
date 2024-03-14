@@ -1,6 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from core.models import CustomUser, Particular, CateringCompany, CateringService
+from catering_owners.models import CateringCompany, CateringService
+from catering_particular.models import Particular
+
+from core.models import CustomUser
 
 class CateringViewsTestCase(TestCase):
     def setUp(self):
