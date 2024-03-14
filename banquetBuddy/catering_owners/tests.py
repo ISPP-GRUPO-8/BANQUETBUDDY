@@ -4,15 +4,20 @@ import os
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from core.forms import CustomUserCreationForm
-from .forms import CateringCompanyForm
-
-from core.forms import CustomUserCreationForm
-from .forms import CateringCompanyForm
+from .models import CateringCompany
 from core.models import CustomUser
-from phonenumbers import PhoneNumber, parse, is_valid_number
+from core.forms import CustomUserCreationForm
+from .forms import CateringCompanyForm
+from phonenumbers import parse
 
 class RegisterCompanyTestCase(TestCase):
+
+    def setUp(self) -> None:
+        
+        self.user = CustomUser.objects.create_user(username='testuser', password='testpassword', email='testuser@gmail.com')
+        phone_number = parse("+15551234567", "US")
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Prueba', phone_number=str(phone_number), service_description='Prueba', price_plan='PREMIUM_PRO')
+
     def test_register_company_view(self):
         response = self.client.get(reverse('register_company'))
         self.assertEqual(response.status_code, 200)
@@ -116,7 +121,3 @@ class RegisterCompanyTestCase(TestCase):
     def tearDown(self) -> None:
         self.user.delete()
         self.catering_company.delete()
-        self.catering_service.delete()
-        self.offer.delete()
-        self.employee.delete()
-        self.job_application.delete()
