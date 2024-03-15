@@ -70,6 +70,10 @@ def application_to_offer(request, offer_id):
     except Employee.DoesNotExist:
         return render(request, 'error_employee.html')
     offer = get_object_or_404(Offer, id=offer_id)
-    JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
+    
+    if JobApplication.objects.filter(employee=employee, offer=offer):
+        return render(request, 'error_employee_already_applied.html')
+    else:
+        JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
     
     return render(request, "application_success.html")
