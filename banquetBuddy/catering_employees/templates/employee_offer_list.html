@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    label {
+        display: block;
+        margin-top: 3%;
+    }
+
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .list {
+        margin-right: 8%;
+        margin-left: 8%;
+        margin-bottom: 3%;
+    }
+    .offer {
+        margin-top: 3%;
+    }
+
+    hr {
+        margin-top: 3%;
+    }
+
+    .offerTitle {
+        font-weight: bold;
+    }
+    .apply-button {
+        background-color: #02483E;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+</style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer List</title>
+</head>
+<body>
+    <h1 style="margin-top: 2%;">Offer List</h1>
+    <div class="list">
+        {% for offer in offers %}
+        <div class="offer">
+            <h2 class="offerTitle">{{ offer.title }}</h2>
+            <h4>{{ offer.location }}</h4>
+            <p>{{ offer.description }}</p>
+             <button class="apply-button" onclick="applyToOffer({{ offer.id }})">Apply</button>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function applyToOffer(offerId) {
+            window.location.href = "/employeeApplication/" + offerId;
+        }
+    </script>
+</body>
+</html>
+{% endblock %}
