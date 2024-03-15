@@ -1,28 +1,33 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse
+from .forms import CateringCompanyForm
+from core.forms import CustomUserCreationForm
 from django.contrib import messages
-from core.models import *
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
-from .forms import EmployeeFilterForm
 
-# Create your views here.
-
-@login_required
-def employee_applications(request, offer_id):
+def register_company(request):
+    if request.method == "POST":
+        user_form = CustomUserCreationForm(request.POST, request.FILES)
+        company_form = CateringCompanyForm(request.POST, request.FILES)
+        
+        if user_form.is_valid() and company_form.is_valid():
+            user = user_form.save()
+            company_profile = company_form.save(commit=False)
+            company_profile.user = user
+            company_profile.save()
+            messages.success(request, "Registration successful!")
+            # Redirigir al usuario a la página de inicio después del registro exitoso
+            return redirect("home")  # Corregido
+            print(response.content)
+            print(response.redirect_chain)
+        else:
+            messages.error(request, "Error occurred during registration.")
+    else:
+        user_form = CustomUserCreationForm()
+        company_form = CateringCompanyForm()
     
-    offer = get_object_or_404(Offer, id=offer_id)
-    
-    if request.user != offer.cateringservice.cateringcompany.user:
-        return render(request, 'error.html', {'message': 'No tienes permisos para acceder a esta oferta'})
-    
-    applicants = offer.job_applications.select_related('employee').all()
+    return render(
+        request,
+        "registro_company.html",
+        {"user_form": user_form, "company_form": company_form},
+    )
 
-    filter_form = EmployeeFilterForm(request.GET or None)
-    if filter_form.is_valid():
-        applicants = filter_form.filter_queryset(applicants)
-
-    context = {'applicants': applicants, 'offer': offer, 'filter_form': filter_form}
-    return render(request, "applicants_list.html", context)

@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import *
+from . import views
+from core.views import *
+from catering_particular.views import *
 
 urlpatterns = [
     path('my_books', my_books, name='my_books'),
@@ -7,6 +9,6 @@ urlpatterns = [
     path('my_books/<int:event_id>/cancel', book_cancel, name='book_cancel'),
     path('', listar_caterings, name='listar_caterings'),
     path('<int:catering_id>/', catering_detail, name='catering_detail'), 
-    path('<int:catering_id>/book/', booking_process, name='booking_process')
+    path('<int:catering_id>/book/', booking_process, name='booking_process'),
+    path('register_particular',views.register_particular,name='register_particular'),
 ]
-
