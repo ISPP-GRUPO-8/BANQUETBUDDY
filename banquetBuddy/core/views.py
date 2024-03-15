@@ -13,6 +13,15 @@ from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 
 
+def get_user_type(user):
+    if hasattr(user, 'ParticularUsername'):
+        return "Particular"
+    elif hasattr(user, 'CateringCompanyusername'):
+        return "Catering Company"
+    elif hasattr(user, 'EmployeeUsername'):
+        return "Employee"
+    else:
+        return "Unknown"
 
 
 
