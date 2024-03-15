@@ -57,8 +57,16 @@ def employee_applications(request, offer_id):
 @login_required
 def employee_offer_list(request):
 
+    current_user = request.user
     offers = Offer.objects.all()
-    context = {'offers': offers}
+    
+    try:
+        employee = Employee.objects.get(user=current_user)
+    except Employee.DoesNotExist:
+        return render(request, 'error_employee.html')
+    
+    applications = {offer.id: offer.job_applications.filter(employee=employee).exists() for offer in offers}
+    context = {'offers': offers, 'applications': applications}
     
     return render(request, "employee_offer_list.html", context)
 
