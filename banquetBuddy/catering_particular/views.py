@@ -33,7 +33,6 @@ def book_edit(request, event_id):
     catering_service = get_object_or_404(CateringService, id = event.cateringservice_id)
     catering = get_object_or_404(CateringCompany, user_id = catering_service.cateringcompany_id)
     menus = Menu.objects.filter(cateringcompany_id = catering.user_id)
-    print(menus)
     context["menus"] = menus
     context["event"] = event
 
@@ -46,6 +45,16 @@ def book_edit(request, event_id):
         context["number_guests"] = number_guests
         context["menu"] = menu
         context["events"] = events
+
+        if number_guests == '0':
+            context['error'] = "The number of guests can not be 0."
+            return render(request, 'book_edit.html', context)
+        
+        date2 = datetime.strptime(date, '%Y-%m-%d').date()
+
+        if datetime.now().date() > date2:
+            context['error'] = "The selected date cannot be in the past."
+            return render(request, 'book_edit.html', context)
 
         event.date = date
         event.number_guests = number_guests
