@@ -206,7 +206,6 @@ def catering_detail(request, catering_id):
 @login_required
 def booking_process(request, catering_id):
     cateringservice = get_object_or_404(CateringService, id=catering_id)
-    print(cateringservice.cateringcompany_id) 
     catering = get_object_or_404(CateringCompany, user_id = cateringservice.cateringcompany_id)
     user = request.user
     particular = get_object_or_404(Particular, user_id=user.id)
@@ -230,7 +229,6 @@ def booking_process(request, catering_id):
         number_guests = request.POST.get('number_guests')
         selected_menu = request.POST.get('selected_menu')
 
-        print(selected_menu)
         # Validación y lógica de reserva aquí
         if not selected_menu:
             messages.error(request, 'Please select a menu')
@@ -278,7 +276,7 @@ def booking_process(request, catering_id):
 
         # Puedes agregar más lógica según sea necesario
 
-        return HttpResponse(f'Reservation confirmed for {catering.name} by {user.username}, on {event_date} with {number_guests} guests. {menu.name}')
+        return redirect('/')
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, 'booking_process.html', context)
