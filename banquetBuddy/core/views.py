@@ -194,5 +194,4 @@ def profile_edit_view(request):
         user.save()
 
         return redirect("profile")
-
     return render(request, "core/profile_edit.html", context)

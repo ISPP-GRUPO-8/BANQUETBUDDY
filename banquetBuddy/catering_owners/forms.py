@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import CateringCompany
 
+
 class CateringCompanyForm(forms.ModelForm):
     def clean_cif(self):
         cif = self.cleaned_data.get('cif')
@@ -19,14 +20,15 @@ class CateringCompanyForm(forms.ModelForm):
                 raise ValidationError("The file must be a PDF.")
         return verification_document
 
+    
     class Meta:
         model = CateringCompany
         fields = ["name", "address", "phone_number", "cif","price_plan", "verification_document"]
         widgets = {
-            "name": forms.TextInput(attrs={"placeholder": "Company name", "class": "rounded-input"}),
-            "address": forms.TextInput(attrs={"placeholder": "Company's address", "class": "rounded-input"}),
-            "phone_number": forms.TextInput(attrs={"placeholder": "Phone number", "class": "rounded-input"}),
-            "cif": forms.TextInput(attrs={"placeholder": "Ex: A1234567J", "class": "rounded-input"}),
-            "price_plan": forms.Select(attrs={"class": "rounded-input"}),
-            "verification_document": forms.FileInput(attrs={"class": "rounded-input"}),
+                "name": forms.TextInput(attrs={"placeholder": "Company name", "class": "rounded-input"}),
+                "address": forms.TextInput(attrs={"placeholder": "Company's address", "class": "rounded-input"}),
+                "phone_number": forms.TextInput(attrs={"placeholder": "Phone number", "class": "rounded-input"}),
+                "cif": forms.TextInput(attrs={"placeholder": "Ex: A1234567J", "class": "rounded-input"}),
+                "price_plan": forms.Select(attrs={"class": "rounded-input"}),
+                "verification_document": forms.FileInput(attrs={"class": "rounded-input"}),
         }
