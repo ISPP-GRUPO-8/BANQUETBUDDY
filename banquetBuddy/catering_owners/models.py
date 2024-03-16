@@ -118,7 +118,3 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField()
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
-
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')
