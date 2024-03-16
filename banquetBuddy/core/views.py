@@ -1,22 +1,92 @@
 from django.shortcuts import render, redirect
+from catering_employees.models import Employee
+from catering_particular.models import Particular
+
+from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import (
-    ParticularForm,
-    CateringCompanyForm,
-    EmployeeForm,
-    CustomUserCreationForm,
-)
+from .models import *
 from django.contrib import messages
 from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 
 
+def get_user_type(user):
+    if hasattr(user, 'ParticularUsername'):
+        return "Particular"
+    elif hasattr(user, 'CateringCompanyusername'):
+        return "Catering Company"
+    elif hasattr(user, 'EmployeeUsername'):
+        return "Employee"
+    else:
+        return "Unknown"
+
+
+
+
+def home(request):
+    context={}
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    return render(request, "core/home.html", context)
+
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+
 def home(request):
     return render(request, "core/home.html")
 
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
@@ -60,96 +130,20 @@ def logout_view(request):
     logout(request)
     return redirect("/")
 
-
-def register_particular(request):
-    if request.method == "POST":
-        user_form = CustomUserCreationForm(request.POST)
-        particular_form = ParticularForm(request.POST)
-
-        if user_form.is_valid() and particular_form.is_valid():
-
-            user = user_form.save()
-
-            particular_profile = particular_form.save(commit=False)
-            particular_profile.user = user
-            particular_profile.save()
-            messages.success(request, "Registration successful!")
-
-            return redirect("home")
-
-    else:
-        user_form = CustomUserCreationForm()
-        particular_form = ParticularForm()
-
-    return render(
-        request,
-        "core/registro_particular.html",
-        {"user_form": user_form, "particular_form": particular_form},
-    )
-
-
-def register_employee(request):
-    if request.method == "POST":
-        user_form = CustomUserCreationForm(request.POST)
-        employee_form = EmployeeForm(request.POST)
-
-        if user_form.is_valid() and employee_form.is_valid():
-
-            user = user_form.save()
-
-            employee_profile = employee_form.save(commit=False)
-            employee_profile.user = user
-            employee_profile.save()
-            messages.success(request, "Registration successful!")
-
-            return redirect("home")
-
-    else:
-        user_form = CustomUserCreationForm()
-        employee_form = EmployeeForm()
-
-    return render(
-        request,
-        "core/registro_empleado.html",
-        {"user_form": user_form, "employee_form": employee_form},
-    )
-
-
-def register_company(request):
-    if request.method == "POST":
-        user_form = CustomUserCreationForm(request.POST)
-        company_form = CateringCompanyForm(request.POST)
-
-        if user_form.is_valid() and company_form.is_valid():
-
-            user = user_form.save()
-
-            company_profile = company_form.save(commit=False)
-            company_profile.user = user
-            company_profile.save()
-            messages.success(request, "Registration successful!")
-
-            return redirect("home")
-
-    else:
-        user_form = CustomUserCreationForm()
-        company_form = CateringCompanyForm()
-
-    return render(
-        request,
-        "core/registro_company.html",
-        {"user_form": user_form, "company_form": company_form},
-    )
-
-
 def elegir_registro(request):
     return render(request, "core/elegir_registro.html")
-
 
 @login_required
 def profile_view(request):
     context = {}
     context["user"] = request.user
+    
+    # Verificar si el usuario tiene una empresa de catering asociada
+    catering_company = CateringCompany.objects.filter(user=request.user).first()
+    if catering_company:
+        context["catering_company"] = catering_company
+        print("Catering Company:", catering_company)  # Imprimir información de depuración
+    
     return render(request, "core/profile.html", context)
 
 
@@ -200,5 +194,4 @@ def profile_edit_view(request):
         user.save()
 
         return redirect("profile")
-
     return render(request, "core/profile_edit.html", context)

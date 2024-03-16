@@ -1,0 +1,189 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4 text-center">Caterings List</h1>
+  <hr />
+  {% if messages %} 
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %} 
+  {% endif %}
+  <form
+    method="post"
+    action="{% url 'listar_caterings' %}"
+    id="miFormulario"
+    class="mb-4"
+  >
+    {% csrf_token %}
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control bg-light border-0 small"
+        placeholder="Search..."
+        id="search"
+        name="search"
+        value="{{ search }}"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-primary  mb-3" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+      <!-- Botón para mostrar/ocultar el formulario de filtros -->
+      <button id="toggleFiltros" class="btn btn-secondary mb-3 ml-2">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </form>
+  <!-- Formulario de filtros -->
+  <form
+    method="GET"
+    id="formFiltros"
+    style="{% if cocina or precio_maximo or num_invitados %}display: block{% else %}display: none{% endif %}"
+  >
+    <!-- Filtro por tipo de cocina -->
+    <div class="form-group">
+      <label for="tipo_cocina">Cuisine type:</label>
+      <div class="input-group">
+        <select class="form-control" id="tipo_cocina" name="cocina">
+          <option value="">Select a cusine type</option>
+          {% for tipo_cocina in tipos_cocina %} 
+            <option value="{{ tipo_cocina }}" {% if tipo_cocina == cocina %}selected{% endif %}>{{ tipo_cocina }}</option>
+          {% endfor %}
+        </select>
+        <!-- Botón para eliminar filtro -->
+        {% if cocina %}
+        <div class="input-group-append">
+          <button
+            type="submit"
+            name="limpiar_cocina"
+            value="1"
+            class="btn btn-sm btn-danger"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- Filtro por precio máximo -->
+    <div class="form-group">
+      <label for="precio_maximo">Max price:</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          id="precio_maximo"
+          name="precio_maximo"
+          placeholder="Max price"
+          value="{{ precio_maximo }}"
+        />
+        <!-- Botón para eliminar filtro -->
+        {% if precio_maximo %}
+        <div class="input-group-append">
+          <button
+            type="submit"
+            name="limpiar_precio"
+            value="1"
+            class="btn btn-sm btn-danger"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Filtro por número de invitados -->
+    <div class="form-group">
+      <label for="num_invitados">Number of attendees:</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          id="num_invitados"
+          name="num_invitados"
+          placeholder="Number of attendees"
+          value="{{ num_invitados }}"
+        />
+        <!-- Botón para eliminar filtro -->
+        {% if num_invitados %}
+        <div class="input-group-append">
+          <button
+            type="submit"
+            name="limpiar_invitados"
+            value="1"
+            class="btn btn-sm btn-danger"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Botón para aplicar filtros -->
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+  </form>
+
+  <hr />
+
+  <div class="row">
+    {% for catering in caterings %}
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ catering.name }}</h5>
+          <p class="card-text">{{ catering.description }}</p>
+          <p class="card-text">Location: {{ catering.location }}</p>
+          <p class="card-text">Capacity: {{ catering.capacity }}</p>
+          <p class="card-text">Price: {{ catering.price }}</p>
+          <a
+            href="{% url 'catering_detail' catering.id %}"
+            class="btn btn-primary"
+            >View details</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Script para mostrar/ocultar el formulario de filtros -->
+<script>
+  document.getElementById("toggleFiltros").addEventListener("click", function (event) {
+    event.preventDefault(); // Evitar que el formulario se envíe al hacer clic en el botón
+
+    var formFiltros = document.getElementById("formFiltros");
+    if (formFiltros.style.display === "none") {
+      formFiltros.style.display = "block";
+    } else {
+      formFiltros.style.display = "none";
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const search = document.getElementById("search");
+
+    search.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.keyCode === 13) {
+        // Evita la acción predeterminada para que no se envíe el formulario automáticamente
+        event.preventDefault();
+
+        // Verifica si hay un valor en el campo de búsqueda antes de enviar el formulario
+        if (search.value.trim() !== "") {
+          document.getElementById("miFormulario").submit();
+        }
+      }
+    });
+  });
+</script>
+
+{% endblock %}
