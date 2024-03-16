@@ -88,6 +88,7 @@ def application_to_offer(request, offer_id):
     
     return render(request, "application_success.html")
 
+@login_required
 def employee_applications_list(request):
 
     current_user = request.user
@@ -96,7 +97,7 @@ def employee_applications_list(request):
     except Employee.DoesNotExist:
         return render(request, 'error_employee.html')
     
-    applications = JobApplication.objects.filter(employee=current_user.employee)
+    applications = JobApplication.objects.filter(employee=employee)
     context = {'applications': applications}
     
     return render(request, "application_employee_list.html", context)
