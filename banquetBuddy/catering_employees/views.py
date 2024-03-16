@@ -6,6 +6,7 @@ from .models import Employee
 from .forms import EmployeeFilterForm, EmployeeForm
 
 from core.forms import CustomUserCreationForm
+from catering_owners.models import JobApplication, Employee
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
@@ -77,6 +78,7 @@ def application_to_offer(request, offer_id):
         employee = Employee.objects.get(user=current_user)
     except Employee.DoesNotExist:
         return render(request, 'error_employee.html')
+
     offer = get_object_or_404(Offer, id=offer_id)
     
     if JobApplication.objects.filter(employee=employee, offer=offer):
@@ -85,3 +87,17 @@ def application_to_offer(request, offer_id):
         JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
     
     return render(request, "application_success.html")
+
+@login_required
+def employee_applications_list(request):
+
+    current_user = request.user
+    try:
+        employee = Employee.objects.get(user=current_user)
+    except Employee.DoesNotExist:
+        return render(request, 'error_employee.html')
+    
+    applications = JobApplication.objects.filter(employee=employee)
+    context = {'applications': applications}
+    
+    return render(request, "application_employee_list.html", context)

@@ -217,3 +217,46 @@ class BookingProcessTestCase(TestCase):
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+        
+class EmployeeApplicationsListTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.employee = Employee.objects.create(user=self.user, phone_number='123456789', profession='Developer', experience='2 years', skills='Python, Django', location='Somewhere')
+
+    def test_employee_applications_list_authenticated_employee(self):
+        
+        self.client.force_login(self.user)
+        
+        job_application = JobApplication.objects.create(employee=self.employee, job_title='Developer', company='Example Inc.')
+        
+        # Hacemos una solicitud GET a la vista
+        response = self.client.get(reverse('JobApplicationList'))
+        
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(job_application, response.context['applications'])
+
+    def test_employee_applications_list_authenticated_non_employee(self):
+
+        non_employee_user = CustomUser.objects.create_user(username='nonemployee', email='nonemployee@example.com', password='password')
+        # Simulamos que el usuario está autenticado
+        self.client.force_login(non_employee_user)
+        
+        # Hacemos una solicitud GET a la vista
+        response = self.client.get(reverse('JobApplicationList'))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'error_employee.html')
+
+    def test_employee_applications_list_unauthenticated(self):
+        # Simulamos que el usuario no está autenticado
+        self.client.logout()
+        
+        response = self.client.get(reverse('JobApplicationList'))
+        
+        # Verificamos que la respuesta sea 302 Redireccionamiento
+        self.assertEqual(response.status_code, 302)
+        
+    def tearDown(self) -> None:
+        self.user.delete()
+        self.employee.delete()
