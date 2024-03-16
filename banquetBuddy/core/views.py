@@ -1,18 +1,16 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+
 from .forms import (
     ParticularForm,
     CateringCompanyForm,
     EmployeeForm,
     CustomUserCreationForm,
-    OfferForm
 )
 from django.contrib import messages
-from .models import CustomUser, Offer, CateringCompany, CateringService
+from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 
 
@@ -205,64 +203,3 @@ def profile_edit_view(request):
 
     return render(request, "core/profile_edit.html", context)
 
-def offer_list(request):
-    offers = Offer.objects.all() 
-    return render(request, 'core/offer_list.html', {'offers': offers})
-
-@login_required
-def create_offer(request):
-    if request.method == 'POST':
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            catering_company = request.user.CateringCompanyusername
-            catering_service = get_object_or_404(CateringService, cateringcompany=catering_company)
-            offer = form.save(commit=False)
-            offer.cateringservice = catering_service
-            offer.save()
-            return redirect('offer_list')
-    else:
-        form = OfferForm()
-    
-    return render(request, 'core/create_offer.html', {'form': form})
-
-def edit_offer(request, offer_id): 
-    offer = get_object_or_404(Offer, pk=offer_id) 
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == 'POST':
-            form = OfferForm(request.POST, instance=offer)
-            if form.is_valid():
-                form.save()
-                return redirect('home')  
-        else:
-            form = OfferForm(instance=offer)
-        return render(request, 'edit_offer.html', {'form': form})
-    else:
-        return redirect('home')  
-
-@login_required
-def delete_offer(request, offer_id):
-    offer = get_object_or_404(Offer, pk=offer_id)
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == 'POST':
-            offer.delete()
-            return redirect('home') 
-        return render(request, 'delete_offer.html', {'offer': offer})
-    else:
-        return redirect('home')
-    
-def apply_offer(request, offer_id):
-    offer = get_object_or_404(Offer, pk=offer_id)
-
-    if request.method == 'POST':
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            # Procesar la aplicación, por ejemplo, guardarla en la base de datos
-            application = form.save(commit=False)
-            application.offer = offer  # Asignar la oferta a la aplicación
-            application.save()
-            # Aquí podrías agregar cualquier lógica adicional, como enviar un correo electrónico de confirmación
-            return redirect('offer_list')  # Redirigir de vuelta a la lista de ofertas después de aplicar
-    else:
-        form = OfferForm()
-
-    return render(request, 'offer_list.html', {'form': form, 'offer': offer})

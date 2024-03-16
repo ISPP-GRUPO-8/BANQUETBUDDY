@@ -91,7 +91,3 @@ class CustomUserCreationForm(UserCreationForm):
             "password2",
         ]
 
-class OfferForm(forms.ModelForm):
-    class Meta:
-        model = Offer
-        fields = ['title', 'description', 'requirements', 'location']

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% extends 'core/base.html' %}
+{% extends 'offers/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -67,7 +67,7 @@
             <p>{{ offer.description }}</p>
             <!-- Aquí puedes agregar más detalles de la oferta -->
             {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
-                <button href="{% url 'applicants' offer.id%}">Applications</button>
+                <button href="{% url 'apply_offer' offer.id%}">Applications</button>
                 <form action="{% url 'edit_offer' offer.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit">Edit</button>-

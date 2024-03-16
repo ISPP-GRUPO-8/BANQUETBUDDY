@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'offers/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -41,9 +41,11 @@
     }
 </style>
 <h1>Delete Offer</h1>
-<form action="{% url 'delete_offer' offer.id %}" method="post">
+<form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
     {% csrf_token %}
-    <p>Are you sure you want to delete "{{ offer.title }}"?</p>
-    <input type="submit" value="Delete">
+    <p>Are you sure you want to delete the offer "{{ offer.title }}"?</p>
+    <p>Description: {{ offer.description }}</p>
+    <input type="submit" value="Yes, delete">
+    <a href="{% url 'offer_list' %}">No, cancel</a>
 </form>
 {% endblock %}
