@@ -116,7 +116,7 @@ class Offer(models.Model):
 class JobApplication(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='job_applications')
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
-    date_application = models.DateField()
+    date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
 
 class TaskEmployee(models.Model):

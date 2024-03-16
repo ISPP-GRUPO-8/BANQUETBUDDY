@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from catering_owners.models import Offer
+from catering_owners.models import Offer, JobApplication
+from .models import Employee
 from .forms import EmployeeFilterForm, EmployeeForm
 
 from core.forms import CustomUserCreationForm
@@ -52,3 +53,35 @@ def employee_applications(request, offer_id):
 
     context = {'applicants': applicants, 'offer': offer, 'filter_form': filter_form}
     return render(request, "applicants_list.html", context)
+
+@login_required
+def employee_offer_list(request):
+
+    current_user = request.user
+    offers = Offer.objects.all()
+    
+    try:
+        employee = Employee.objects.get(user=current_user)
+    except Employee.DoesNotExist:
+        return render(request, 'error_employee.html')
+    
+    applications = {offer.id: offer.job_applications.filter(employee=employee).exists() for offer in offers}
+    context = {'offers': offers, 'applications': applications}
+    
+    return render(request, "employee_offer_list.html", context)
+
+def application_to_offer(request, offer_id):
+    
+    current_user = request.user
+    try:
+        employee = Employee.objects.get(user=current_user)
+    except Employee.DoesNotExist:
+        return render(request, 'error_employee.html')
+    offer = get_object_or_404(Offer, id=offer_id)
+    
+    if JobApplication.objects.filter(employee=employee, offer=offer):
+        return render(request, 'error_employee_already_applied.html')
+    else:
+        JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
+    
+    return render(request, "application_success.html")
