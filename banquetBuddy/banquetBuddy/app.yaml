@@ -1,0 +1,14 @@
+runtime: python39
+instance_class: F2
+
+handlers:
+- url: /static
+  static_dir: static/
+
+- url: .*
+  script: auto
+
+env_variables:
+  GAE_APPLICATION: "true"
+  APPENGINE_URL: https://ispp-grupo8.uc.r.appspot.com
+

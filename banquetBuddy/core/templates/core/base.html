@@ -22,9 +22,13 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/caterings">Caterings</a>
-                    </li>
+                    {% if request.user.is_authenticated %}
+                        {% if is_particular %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/caterings">Caterings</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
                     </li>
@@ -34,6 +38,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
+                    {% if request.user.is_authenticated and request.user.EmployeeUsername %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employeeOfferList">Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/JobApplicationList">Offers applied</a>
+                    </li>
+                    {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
                     <form class="form-inline my-2 my-lg-0">
@@ -46,8 +58,13 @@
                     </button>
                     <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
                 </form>
-                {% if request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'my_books' %}">Books</a>
+                {% if user.is_authenticated %}
+                    {% if is_particular %}
+                        <a class="nav-link" href="{% url 'my_books' %}">Books</a>
+                    {% endif %}
+                    {% if is_catering_company %}
+                        <a class="nav-link" href="{% url 'catering_books' %}">Books</a> 
+                    {% endif %}
                     <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                     </a>
@@ -90,7 +107,8 @@
                     </a>
                 </div>
                 <div class="col social-medias-container text-center">
-                    <a href="https://www.facebook.com/profile.php?id=61557219530468" target="_blank" class="text-decoration-none">
+                    <a href="https://www.facebook.com/profile.php?id=61557219530468" target="_blank"
+                    class="text-decoration-none">
                         <p class="text-white text-lg">Facebook</p>
                         <i class="fab fa-facebook-f icon-lg"></i>
                     </a>
