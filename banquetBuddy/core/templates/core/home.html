@@ -3,18 +3,30 @@
 
 {% block content %}
     <div class="container mt-4">
-        {% if request.user.is_authenticated %}
-        <form method="post" action="{% url 'listar_caterings' %}" id="miFormulario" class="mb-4">
-            {% csrf_token %}
-            <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 large-search-box" placeholder="Buscar..." id="buscar" name="buscar" value="{{ buscar }}">
-                <div class="input-group-append">
-                    <button class="btn btn-custom" type="submit">
-                        <i class="fas fa-search fa-lg"></i>
-                    </button>
-                </div>
-            </div>
-        </form>  
+        {% if request.user.is_authenticated and request.user.ParticularUsername %}
+        <form
+    method="post"
+    action="{% url 'listar_caterings' %}"
+    id="miFormulario"
+    class="mb-4"
+  >
+    {% csrf_token %}
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control bg-light border-0 small"
+        placeholder="Search..."
+        id="search"
+        name="search"
+        value="{{ search }}"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-primary  mb-3" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </form>
         {% endif %}      
     </div>
     <div class="container">
@@ -24,12 +36,14 @@
             </div>
         </div>
     </div>
+
     {% if not request.user.is_authenticated %}
-            <div class="col-12 text-center mt-4 btn-container">
-                <a href="/login" class="btn btn-login mr-3">Log in</a>
-                <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
-            </div>         
-            {% endif %}
+        <div class="col-12 text-center mt-4 btn-container">
+            <a href="/login" class="btn btn-login mr-3">Log in</a>
+            <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+        </div>         
+    {% endif %}
+
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
@@ -51,8 +65,8 @@
 
 <style>
     .large-search-box {
-        height: 50px; /* Adjust as needed */
-        font-size: 1.2rem; /* Adjust as needed */
+        height: 50px; /* Ajusta según sea necesario */
+        font-size: 1.2rem; /* Ajusta según sea necesario */
     }  
     .btn-custom {
         background-color: #02483E;

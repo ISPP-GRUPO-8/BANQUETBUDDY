@@ -8,8 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomUser
+from catering_owners.models import  CateringService
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+
 
 
 
@@ -22,8 +24,6 @@ def get_user_type(user):
         return "Employee"
     else:
         return "Unknown"
-
-
 
 
 def home(request):
@@ -201,13 +201,10 @@ def listar_caterings_home(request):
     context = {}
     busqueda = ''
     caterings = CateringService.objects.all()
-
-    if request.method == 'POST':
-        busqueda = request.POST.get('buscar', '')
-        caterings = CateringService.objects.filter(Q(name__icontains=busqueda))
-        print(caterings)
+    busqueda = request.POST.get("buscar", "") 
+    if busqueda:
+        caterings = CateringService.objects.filter(name__icontains=busqueda)
 
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
-

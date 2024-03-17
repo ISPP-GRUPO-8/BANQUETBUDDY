@@ -15,5 +15,4 @@ urlpatterns = [
     path('register_choice', elegir_registro, name='register_choice'),
     path('profile', profile_view, name='profile'),
     path('profile-edit', profile_edit_view, name='profile_edit'),
-    path('', listar_caterings_home, name='listar_caterings')
 ]
