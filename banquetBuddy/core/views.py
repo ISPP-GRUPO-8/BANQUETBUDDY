@@ -6,10 +6,8 @@ from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from .models import *
 from django.contrib import messages
-from .models import CustomUser, CateringService
+from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -196,7 +194,6 @@ def profile_edit_view(request):
         user.save()
 
         return redirect("profile")
-<<<<<<< HEAD
 
     return render(request, "core/profile_edit.html", context)
 
@@ -213,6 +210,4 @@ def listar_caterings_home(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
-=======
-    return render(request, "core/profile_edit.html", context)
->>>>>>> origin/develop
+

@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
 from django.urls import path, include
 from core.views import *
+
+
 
 urlpatterns = [
     path('', home, name='home'),
@@ -14,5 +15,5 @@ urlpatterns = [
     path('register_choice', elegir_registro, name='register_choice'),
     path('profile', profile_view, name='profile'),
     path('profile-edit', profile_edit_view, name='profile_edit'),
-    path('', views.listar_caterings_home, name='listar_caterings')
+    path('', listar_caterings_home, name='listar_caterings')
 ]
