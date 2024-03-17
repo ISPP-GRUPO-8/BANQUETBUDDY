@@ -44,10 +44,16 @@ class MenuForm(forms.ModelForm):
     class Meta:
         model = Menu
         fields = ['name', 'description', 'diet_restrictions', 'cateringservice']
-
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'diet_restrictions': forms.TextInput(attrs={'class': 'form-control'}),
+            'cateringservice': forms.Select(attrs={'class': 'form-control'}),
+        }
+  
+  
 class OfferForm(forms.ModelForm):
     class Meta:
         model = Offer
         fields = ['title', 'description', 'requirements', 'location']
-
 

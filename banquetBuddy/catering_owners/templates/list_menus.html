@@ -2,45 +2,80 @@
 
 {% block content %}
 
+<style>
+    .custom-border {
+        border-color: rgb(4, 101, 4) !important; /* Cambia el color verde aquí */
+    }
+</style>
+
 {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-</ul>
+<div class="container mt-3">
+    <div class="alert alert-success" id="messageAlert" role="alert">
+        <ul class="list-unstyled mb-0">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script>
+    setTimeout(function() {
+        document.getElementById('messageAlert').style.display = 'none';
+    }, 4000); // 4 segundos
+</script>
 {% endif %}
 
-<h2>Mis Menús</h2>
-<ul>
-    {% for menu in menus %}
-    <li>{{ menu.name }} - {{ menu.description }}</li>
 
-    <form action="{% url 'edit_menu' menu.id %}" method="get">
-        {% csrf_token %}
-        <input type="submit" value="Editar" />
-    </form>
 
-    <form action="{% url 'delete_menu' menu.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Eliminar" />
-    </form>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="color: rgb(4, 101, 4); font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
     
+    <div class="row justify-content-end mb-4">
+        <div class="col-md-2">
+            <a href="{% url 'add_menu' %}" class="text-decoration-none">
+                <button class="btn btn-success btn-block" style="background-color: rgb(4, 101, 4);">
+                    <i class="bi bi-plus-circle"></i> Add menu
+                </button>
+            </a>
+        </div>
+    </div>
 
-    {% empty %}
-    <li>No hay menús disponibles.</li>
-    {% endfor %}
-</ul>
+    <div class="row">
+        {% for menu in menus %}
+        <div class="col-md-4 mb-4">
+            <div class="card rounded-3 border custom-border">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: rgb(4, 101, 4);">{{ menu.name }}</h5>
+                    <p class="card-text">{{ menu.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary mr-2"><i class="bi bi-pencil"></i></button>
+                    </form>
+                    <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p>No menus available.</p>
+        </div>
+        {% endfor %}
+    </div>
 
-<div class="row justify-content-center mt-3">
-    <a href="{% url 'add_menu' %}" class="text-decoration-none">
-        <button class="btn btn-rounded text-white" style="background-color: #54bfaf">
-            Agregar Menú
-        </button>
-    </a>
-  </div>
+    <div class="row justify-content-end mt-3 mb-4">
+        <div class="col-md-2">
+            <a href="{% url 'add_menu' %}" class="text-decoration-none">
+                <button class="btn btn-success btn-block" style="background-color: rgb(4, 101, 4);">
+                    <i class="bi bi-plus-circle"></i> Add menu
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
-
-
-
-
