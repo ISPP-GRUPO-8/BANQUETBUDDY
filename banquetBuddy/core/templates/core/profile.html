@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
 
 <div class="container my-5">
   <div class="row justify-content-center mb-4">
@@ -23,7 +25,69 @@
         </div>
       </div>
     </div>
+    
+    {% if catering_company %}
+    <div class="container my-5">
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+          <div class="card" style="background-color: #02483e">
+            <div class="card-body">
+              <h2 class="card-title text-center text-white">Gestión</h2>
+              <ul class="list-group list-group-flush rounded">
+                <li class="list-group-item">
+                  <a href="{% url 'list_menus' %}" class="text-decoration-none"> Mis menus </a>
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+    {% if catering_company %}
+    <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
+    <div class="col-md-6">
+      <div class="card" style="background-color: #02483e">
+        <div class="card-body">
+          <h2 class="card-title text-center text-white">Datos de la Empresa</h2>
+          <ul class="list-group list-group-flush rounded">
+            <li class="list-group-item">
+              <strong>Nombre de la empresa:</strong> {{ catering_company.name }}
+            </li>
+            <li class="list-group-item">
+              <strong>Dirección:</strong> {{ catering_company.address }}
+            </li>
+            <li class="list-group-item">
+              <strong>Teléfono:</strong> {{ catering_company.phone_number }}
+            </li>
+            <li class="list-group-item">
+              <strong>CIF:</strong> {{ catering_company.cif }}
+            </li>
+            <!-- Mostrar el documento de verificación de la empresa -->
+            <li class="list-group-item">
+              <strong>Documento de Verificación:</strong>
+              {% if catering_company.verification_document %}
+                <a href="{{ catering_company.verification_document.url }}" target="_blank">{{ catering_company.verification_document.name }}</a>
+              {% else %}
+                No hay documento de verificación asociado.
+              {% endif %}
+            </li>
+            <li class="list-group-item">
+              <strong>Estado de verificación:</strong> {% if catering_company.is_verified %} Empresa verificada {% else %} Empresa no verificada {% endif %}<br>
+              {% if not catering_company.is_verified %}
+              <small>El proceso de verificación se llevará a cabo en los próximos días hábiles</small>
+              {% endif %}
+            </li>
+            <li class="list-group-item">
+              <strong>Plan de precios:</strong> {{ catering_company.price_plan }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endif %}
   </div>
+ 
   <div class="row justify-content-center">
     <a href="{% url 'profile_edit' %}" class="text-decoration-none">
       <button

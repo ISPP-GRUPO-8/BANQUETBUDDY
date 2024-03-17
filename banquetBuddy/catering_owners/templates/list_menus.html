@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<h2>Mis Menús</h2>
+<ul>
+    {% for menu in menus %}
+    <li>{{ menu.name }} - {{ menu.description }}</li>
+
+    <form action="{% url 'edit_menu' menu.id %}" method="get">
+        {% csrf_token %}
+        <input type="submit" value="Editar" />
+    </form>
+
+    <form action="{% url 'delete_menu' menu.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Eliminar" />
+    </form>
+    
+
+    {% empty %}
+    <li>No hay menús disponibles.</li>
+    {% endfor %}
+</ul>
+
+<div class="row justify-content-center mt-3">
+    <a href="{% url 'add_menu' %}" class="text-decoration-none">
+        <button class="btn btn-rounded text-white" style="background-color: #54bfaf">
+            Agregar Menú
+        </button>
+    </a>
+  </div>
+
+{% endblock %}
+
+
+
+
