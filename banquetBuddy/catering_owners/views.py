@@ -50,7 +50,7 @@ def add_menu(request):
             menu = form.save(commit=False)
             menu.cateringcompany = catering_company
             menu.save()
-            messages.success(request, "Menú creado con éxito.")
+            messages.success(request, "Menu created successfully..")
             return redirect('list_menus')
     else:
         form = MenuForm(request.user)  
@@ -65,7 +65,7 @@ def edit_menu(request, menu_id):
         form = MenuForm(request.user, request.POST, instance=menu)
         if form.is_valid():
             form.save()
-            messages.success(request, "Menú actualizado con éxito.")
+            messages.success(request, "Menu updated successfully.")
             return redirect('list_menus')
     else:
         form = MenuForm(request.user, instance=menu)
@@ -77,7 +77,7 @@ def delete_menu(request, menu_id):
     menu = get_object_or_404(Menu, id=menu_id, cateringcompany__user=request.user)
     if request.method == 'POST':
         menu.delete()
-        messages.success(request, "Menú eliminado con éxito.")
+        messages.success(request, "Menu removed successfully.")
         return redirect('list_menus')
     else:        
         return redirect('list_menus')
