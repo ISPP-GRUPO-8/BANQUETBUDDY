@@ -15,9 +15,11 @@ urlpatterns = [
     path('add_menu/', views.add_menu, name='add_menu'),
     path('edit_menu/<int:menu_id>/', views.edit_menu, name='edit_menu'),
     path('delete_menu/<int:menu_id>/', views.delete_menu, name='delete_menu'),
+    path('catering_profile_edit', views.catering_profile_edit, name='catering_profile_edit')
 ]
 
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
