@@ -33,6 +33,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url 'offer_list' %}>Offers</a>
+                    </li>
                 </ul>
                 {% if user.is_authenticated %}
                     <form class="form-inline my-2 my-lg-0">

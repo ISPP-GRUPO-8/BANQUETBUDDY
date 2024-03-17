@@ -3,49 +3,52 @@
 
 {% block content %}
 <style>
-    form {
-        margin: 10%;
-    }
 
-    h1 {
+    .row {
         text-align: center;
-        color: #333;
+    }
+    .text {
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 7%
     }
 
-    label {
+    .butYes {
+        text-align: center;
         display: block;
-        margin-top: 20px;
-    }
-
-    input[type="text"], textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-
-    input[type="submit"] {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        background-color: #dc3545;
+        width: 40%;
+        padding: 0.5%;
         color: white;
         border: none;
-        border-radius: 5px;
         cursor: pointer;
-        margin-top: 20px;
+        margin-left: 30%;
+        margin-bottom: 2%;
+        background-color: #cb3234
+
     }
 
-    input[type="submit"]:hover {
-        background-color: #c82333;
+    .butNo {
+        text-align: center;
+        display: block;
+        width: 40%;
+        padding: 0.5%;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 30%;
+        background-color: #02483E
+  
     }
+
 </style>
-<h1>Delete Offer</h1>
-<form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete the offer "{{ offer.title }}"?</p>
-    <p>Description: {{ offer.description }}</p>
-    <input type="submit" value="Yes, delete">
-    <a href="{% url 'offer_list' %}">No, cancel</a>
-</form>
+<h3 class="text">Are you sure you want to delete the offer "{{ offer.title }}"?</h3>
+            <form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
+                {% csrf_token %}
+                <input class="butYes" type="submit" href="{% url 'offer_list' %}" value="Yes, delete">
+            </form>
+
+            <form>
+                <input class="butNo" href="{% url 'offer_list' %}" value="No">
+            </form>
+
 {% endblock %}

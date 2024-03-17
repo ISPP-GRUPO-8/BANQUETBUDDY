@@ -26,35 +26,37 @@ input[type="text"], textarea {
 
 input[type="submit"] {
     display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
+    width: 80%;
+    padding: 0.5%;
+    background-color: #02483E;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 4%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 input[type="submit"]:hover {
     background-color: #0056b3;
 }
 </style>
-<h1>Editar oferta de trabajo</h1>
+<h1>Edit Job Offer</h1>
     <form action="{% url 'edit_offer' offer.id %}" method="post">
         {% csrf_token %}
-        <label for="id_title">Título:</label>
+        <label for="id_title">Tittle:</label>
         <input type="text" id="id_title" name="title" value="{{ offer.title }}" required><br>
 
-        <label for="id_description">Descripción:</label>
+        <label for="id_description">Description:</label>
         <textarea id="id_description" name="description" required>{{ offer.description }}</textarea><br>
 
-        <label for="id_requirements">Requisitos:</label>
+        <label for="id_requirements">Requirements:</label>
         <textarea id="id_requirements" name="requirements" required>{{ offer.requirements }}</textarea><br>
 
-        <label for="id_location">Ubicación:</label>
+        <label for="id_location">Location:</label>
         <input type="text" id="id_location" name="location" value="{{ offer.location }}" required><br>
 
-        <input type="submit" value="Guardar">
+        <input type="submit" value="Create">
     </form>
 {% endblock %}

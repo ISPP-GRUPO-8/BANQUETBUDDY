@@ -12,18 +12,20 @@ def offer_list(request):
 
 @login_required
 def create_offer(request):
+    catering_company = request.user.CateringCompanyusername  
+    catering_services = CateringService.objects.filter(cateringcompany=catering_company)
+    
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
             offer = form.save(commit=False)
-            catering_service = get_object_or_404(CateringService, pk=13)  # Obtiene el CateringService con ID 13
-            offer.cateringservice = catering_service
+            offer.cateringservice = CateringService.objects.get(pk=request.POST['catering_service'])  # Obtener el CateringService seleccionado en el formulario
             offer.save()
             return redirect('offer_list')
     else:
         form = OfferForm()
     
-    return render(request, 'offers/create_offer.html', {'form': form})
+    return render(request, 'offers/create_offer.html', {'form': form, 'catering_services': catering_services})
 
 @login_required
 def edit_offer(request, offer_id): 

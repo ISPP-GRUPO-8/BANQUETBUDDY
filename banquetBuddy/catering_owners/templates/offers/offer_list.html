@@ -33,6 +33,52 @@
         margin-left: 65%;
         margin-right: 10%;
     }
+
+    .applications {
+        display: block;
+        width: 25%;
+        padding: 0.5%;
+        background-color: #02483E;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+    }
+
+    .edit {
+        display: block;
+        width: 25%;
+        padding: 0.5%;
+        background-color: yellow;
+        color: black;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+
+    }
+
+    .delete {
+        display: block;
+        width: 25%;
+        padding: 0.5%;
+        background-color: red; 
+        color: black;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+    }
+
+    .create {
+        display: block;
+        width: 25%;
+        padding: 0.5%;
+        background-color: #02483E;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+    }
+
     .list {
         margin-right: 8%;
         margin-left: 8%;
@@ -51,43 +97,50 @@
     }
 
 </style>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offer List</title>
-</head>
-<body>
     <h1 style="margin-top: 2%;">Offer List</h1>
     <div class="list">
+        {% if user.is_authenticated and user.CateringCompanyusername %}
+        <form action="{% url 'create_offer' %}" method="post">
+            {% csrf_token %}
+            <button class="create" type="submit">Create offer</button>
+        </form>
+        {% endif %}
+
+            
         {% for offer in offers %}
         <div class="offer">
             <h2 class="offerTitle">{{ offer.title }}</h2>
             <h4>{{ offer.location }}</h4>
             <p>{{ offer.description }}</p>
             <!-- Aquí puedes agregar más detalles de la oferta -->
-            {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
-                <button href="{% url 'apply_offer' offer.id%}">Applications</button>
-                <form action="{% url 'edit_offer' offer.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Edit</button>-
-                </form>
-                <form action="{% url 'delete_offer' offer.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Delete</button>
-                </form>
-            {% else %}
+            {% if user.is_authenticated and not user.CateringCompanyusername %}
             <form action="{% url 'apply_offer' offer.id %}" method="post">
                 {% csrf_token %}
                 <button class="apply" type="submit">Apply</button>
             </form>
             {% endif %}
+            {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
+                <div class="row justify-content-end">
+                    <div class="col-xs-12 col-sm-4">
+                        <form action="{% url 'edit_offer' offer.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="edit" type="submit">Edit</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <form action="{% url 'delete_offer' offer.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="delete" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                
+            {% endif %}
+            
             <hr></hr>
         </div>
         {% endfor %}
     </div>
-</body>
-</html>
 <!--  En esta plantilla,
      cada oferta se muestra como un elemento de lista (<li>) con su título,
      descripción y un botón para aplicar. Cuando se hace clic en el botón "Apply", 
