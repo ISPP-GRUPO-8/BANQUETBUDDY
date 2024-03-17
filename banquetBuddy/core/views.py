@@ -3,13 +3,13 @@ from catering_employees.models import Employee
 from catering_particular.models import Particular
 
 from catering_owners.models import CateringCompany
-from .forms import EmailAuthenticationForm
+from .forms import EmailAuthenticationForm, ParticularForm, CateringCompanyForm, EmployeeForm, CustomUserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from .models import *
+
 from django.contrib import messages
-from .models import CustomUser
+from .models import *
 from django.contrib.auth.decorators import login_required
 
 
@@ -195,3 +195,6 @@ def profile_edit_view(request):
 
         return redirect("profile")
     return render(request, "core/profile_edit.html", context)
+
+
+

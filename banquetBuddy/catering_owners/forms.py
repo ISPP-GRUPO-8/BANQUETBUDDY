@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import CateringCompany, CateringService, Menu
+from .models import CateringCompany, CateringService, Menu, Offer
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -50,4 +50,10 @@ class MenuForm(forms.ModelForm):
             'diet_restrictions': forms.TextInput(attrs={'class': 'form-control'}),
             'cateringservice': forms.Select(attrs={'class': 'form-control'}),
         }
+  
+  
+class OfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ['title', 'description', 'requirements', 'location']
 
