@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import CateringCompany
+from .models import CateringCompany, CateringService, Menu
 
 class CateringCompanyForm(forms.ModelForm):
     def clean_cif(self):
@@ -30,3 +30,17 @@ class CateringCompanyForm(forms.ModelForm):
             "price_plan": forms.Select(attrs={"class": "rounded-input"}),
             "verification_document": forms.FileInput(attrs={"class": "rounded-input"}),
         }
+        
+
+class MenuForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(MenuForm, self).__init__(*args, **kwargs)
+        if user and hasattr(user, 'CateringCompanyusername'):
+            self.fields['cateringservice'].queryset = CateringService.objects.filter(cateringcompany=user.CateringCompanyusername)
+            self.fields['cateringservice'].label_from_instance = lambda obj: "%s" % obj.name
+
+    class Meta:
+        model = Menu
+        fields = ['name', 'description', 'diet_restrictions', 'cateringservice']
+
+

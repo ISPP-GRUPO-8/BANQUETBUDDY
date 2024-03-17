@@ -25,6 +25,25 @@
         </div>
       </div>
     </div>
+    
+    {% if catering_company %}
+    <div class="container my-5">
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+          <div class="card" style="background-color: #02483e">
+            <div class="card-body">
+              <h2 class="card-title text-center text-white">Gestión</h2>
+              <ul class="list-group list-group-flush rounded">
+                <li class="list-group-item">
+                  <a href="{% url 'list_menus' %}" class="text-decoration-none"> Mis menus </a>
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
     {% if catering_company %}
     <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
     <div class="col-md-6">

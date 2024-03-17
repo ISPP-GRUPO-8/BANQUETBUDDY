@@ -41,6 +41,10 @@ class CateringService(models.Model):
     capacity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return self.name
+
+
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
