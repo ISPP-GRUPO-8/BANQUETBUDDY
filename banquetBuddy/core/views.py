@@ -11,6 +11,7 @@ from .models import CustomUser
 from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from random import sample
 
 
 
@@ -60,7 +61,19 @@ def is_catering_company(request):
     return res
 
 def home(request):
-    return render(request, "core/home.html")
+
+    context = {}
+
+    offers = Offer.objects.all()  
+    random_offers = sample(list(offers), 4)
+
+    caterings = CateringService.objects.all()  
+    random_caterings = sample(list(caterings), 4)
+
+    context = {'offers': random_offers, 'caterings': random_caterings}
+
+
+    return render(request, "core/home.html", context)   
 
 def is_particular(request):
     try:
@@ -208,4 +221,7 @@ def listar_caterings_home(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
+
+
+
 
