@@ -53,6 +53,18 @@ class EmployeeOfferListViewTest(TestCase):
         request.user = AnonymousUser()
         response = employee_offer_list(request)
         self.assertEqual(response.status_code, 302)  # Redirect to login page
+
+    def test_employee_offer_list_view(self):
+        request = self.factory.get(reverse('employeeOfferList'))
+        request.user = self.user
+        response = employee_offer_list(request)  # Cambio aquí
+        self.assertEqual(response.status_code, 200)
+
+    def test_employee_offer_list_view_with_anonymous_user(self):
+        request = self.factory.get(reverse('employeeOfferList'))
+        request.user = AnonymousUser()
+        response = employee_offer_list(request)  # Cambio aquí
+        self.assertEqual(response.status_code, 302)
         
     def tearDown(self) -> None:
         self.user.delete()
