@@ -1,23 +1,92 @@
 {% extends 'core/base.html' %}
-{% load static %}
+
 {% block content %}
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Catering Company</title>
-</head>
-
-<body>
-  <h1>Edit Catering Company</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-  </form>
-</body>
-
-</html>
-
-
+<div class="container mt-4 mb-4">
+  <div class="container mt-3">
+    {% if messages %}
+    <div class="container mt-3">
+        <div class="alert alert-danger" id="messageAlert" role="alert">
+            <ul class="list-unstyled mb-0">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            document.getElementById('messageAlert').style.display = 'none';
+        }, 4000); // 4 segundos
+    </script>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+          <form method="post" enctype="multipart/form-data">
+            <div class="card" style="background-color: #02483e">
+              <h2 class="mt-4 mb-3 text-white text-center">Edit Profile</h2>
+              <div class="container">
+                {% csrf_token %}
+                <div class="form-group text-white">
+                    <label for="id_name">Name:</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group text-white">
+                    <label for="id_address">Address:</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        {% for error in form.address.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group text-white">
+                    <label for="id_phone_number">Phone Number:</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        {% for error in form.phone_number.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group text-white">
+                    <label for="id_cif">CIF:</label>
+                    {{ form.cif }}
+                    {% if form.cif.errors %}
+                        {% for error in form.cif.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group text-white">
+                    <label for="id_price_plan">Price Plan:</label>
+                    {{ form.price_plan }}
+                    {% if form.price_plan.errors %}
+                        {% for error in form.price_plan.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group text-white">
+                    <label for="id_verification_document">Verification Document:</label>
+                    {{ form.verification_document }}
+                    {% if form.verification_document.errors %}
+                        {% for error in form.verification_document.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary" style="background-color: #54bfaf">Save Profile</button>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

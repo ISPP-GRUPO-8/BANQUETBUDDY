@@ -3,7 +3,7 @@ from catering_employees.models import Employee
 from catering_particular.models import Particular
 
 from catering_owners.models import CateringCompany
-from .forms import EmailAuthenticationForm, ParticularForm, CateringCompanyForm, EmployeeForm, CustomUserCreationForm
+from .forms import EmailAuthenticationForm, CustomUserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect

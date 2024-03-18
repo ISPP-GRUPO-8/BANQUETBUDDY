@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CustomUser, Offer
+from .models import CustomUser
 
 
 class EmailAuthenticationForm(AuthenticationForm):

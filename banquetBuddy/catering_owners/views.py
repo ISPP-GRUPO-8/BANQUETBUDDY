@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 
-from core.models import  Offer, CateringService
+from .models import  Offer, CateringService
 from django.contrib.auth.decorators import login_required
 from core.forms import CustomUserCreationForm
 from .models import CateringCompany, Menu, Plate
@@ -100,10 +100,10 @@ def catering_profile_edit(request):
         form = CateringCompanyForm(request.POST, request.FILES, instance=catering_company)
         if form.is_valid():
             form.save()
-            messages.success(request, "Perfil actualizado exitosamente")
+            messages.success(request, "Profile updated successfully")
             return redirect("profile")
         else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")
+            messages.error(request, "Plase, correct the errors in the form.")
     else:
         form = CateringCompanyForm(instance=catering_company)
 
