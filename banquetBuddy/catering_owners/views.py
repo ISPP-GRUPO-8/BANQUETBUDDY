@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 
-from core.models import  Offer, CateringService
+from catering_owners.models import  Offer, CateringService
 from django.contrib.auth.decorators import login_required
 from core.forms import CustomUserCreationForm
 from .models import CateringCompany, Menu, Plate
