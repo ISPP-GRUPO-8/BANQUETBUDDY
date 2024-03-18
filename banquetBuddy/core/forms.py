@@ -5,6 +5,7 @@ from .models import CustomUser
 from catering_owners.models import Offer
 
 
+
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
         widget=forms.TextInput(

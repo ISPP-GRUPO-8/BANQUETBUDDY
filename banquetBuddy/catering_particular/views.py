@@ -51,12 +51,14 @@ def obtener_filtros(request):
         "cocina": request.GET.get("cocina", ""),
         "precio_maximo": request.GET.get("precio_maximo", ""),
         "num_invitados": request.GET.get("num_invitados", ""),
+        "ciudad": request.GET.get("ciudad", ""),
     }
 
     limpiar_filtros = {
         "limpiar_cocina": request.GET.get("limpiar_cocina", None),
         "limpiar_precio": request.GET.get("limpiar_precio", None),
         "limpiar_invitados": request.GET.get("limpiar_invitados", None),
+        "limpiar_ciudad": request.GET.get("limpiar_ciudad", None),
     }
 
     return filtros, limpiar_filtros
@@ -93,6 +95,10 @@ def aplicar_filtros(caterings, filtros, limpiar_filtros):
         caterings = caterings.filter(capacity__gte=filtros["num_invitados"])
     else:
         filtros["num_invitados"] = ""
+    if filtros["ciudad"] and not limpiar_filtros["limpiar_ciudad"]:
+        caterings = caterings.filter(Q(location__icontains=filtros["ciudad"]))
+    else:
+        filtros["ciudad"] = ""
 
     return caterings, filtros
 
@@ -105,6 +111,9 @@ def listar_caterings(request):
     if not is_particular(request):
         return HttpResponseForbidden("You are not a particular")
     caterings = CateringService.objects.all()
+
+    for catering in caterings:
+        print(catering.location)
 
     # Obtener tipos de cocina únicos
     tipos_cocina = (
@@ -144,9 +153,9 @@ def catering_detail(request, catering_id):
     context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
         return HttpResponseForbidden("No eres cliente")
-    catering = get_object_or_404(CateringService, id = catering_id)
-    context['catering'] = catering
-    return render(request, 'catering_detail.html', context)
+    catering = get_object_or_404(CateringService, id=catering_id)
+    context["catering"] = catering
+    return render(request, "catering_detail.html", context)
 
 
 @login_required
@@ -155,18 +164,16 @@ def booking_process(request, catering_id):
     request.session['catering_service_id'] = cateringservice.id
     catering = get_object_or_404(CateringCompany, user_id = cateringservice.cateringcompany_id)
 
-    eventos = Event.objects.filter(cateringservice_id = catering.user_id)
+    eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
-    
+
     for evento in eventos:
         highlighted_dates.append(evento.date)
     # Obtener el menú para el catering actual
-    highlighted_dates_str = [date.strftime('%Y-%m-%d') for date in highlighted_dates]
-
-    
+    highlighted_dates_str = [date.strftime("%Y-%m-%d") for date in highlighted_dates]
 
     menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
-    
+
     # Coloca el menú dentro del contexto correctamente
     context = {'cateringservice': cateringservice,'catering': catering, 'menus': menus,'dates' : highlighted_dates_str}
     if request.method == 'POST':
@@ -178,31 +185,37 @@ def booking_process(request, catering_id):
 
         # Validación y lógica de reserva aquí
         if not selected_menu:
-            messages.error(request, 'Please select a menu')
-            context['form_error_menu'] = True
-             
+            messages.error(request, "Please select a menu")
+            context["form_error_menu"] = True
+
         if not (event_date and number_guests and selected_menu):
-            messages.error(request, 'Please complete all fields')
-            context['form_error'] = True  # Agregar marcador para mostrar mensajes de error
+            messages.error(request, "Please complete all fields")
+            context["form_error"] = (
+                True  # Agregar marcador para mostrar mensajes de error
+            )
 
         if int(number_guests) > cateringservice.capacity:
-            messages.error(request, 'Number of guests exceeds the catering capacity')
-            context['form_error_capacity'] = True
+            messages.error(request, "Number of guests exceeds the catering capacity")
+            context["form_error_capacity"] = True
 
         # Validar que la fecha no esté en el pasado y sea al menos un día en el futuro
         today = datetime.now().date()
-        selected_date = datetime.strptime(event_date, '%Y-%m-%d').date()
+        selected_date = datetime.strptime(event_date, "%Y-%m-%d").date()
 
         if selected_date < today:
-            messages.error(request, 'The event date cannot be in the past')
-            context['form_error_date'] = True
+            messages.error(request, "The event date cannot be in the past")
+            context["form_error_date"] = True
         elif selected_date == today:
-            messages.error(request, 'Reservations must be made at least one day before the event')
-            context['form_error_date'] = True
+            messages.error(
+                request, "Reservations must be made at least one day before the event"
+            )
+            context["form_error_date"] = True
 
-        if Event.objects.filter(cateringservice=cateringservice, date=event_date).exists():
-            messages.error(request, 'The selected date is already booked')
-            context['form_error_date_selected'] = True
+        if Event.objects.filter(
+            cateringservice=cateringservice, date=event_date
+        ).exists():
+            messages.error(request, "The selected date is already booked")
+            context["form_error_date_selected"] = True
 
         # Verificar si hay errores en el formulario y, si los hay, volver a renderizar la página con los errores
         if any(key in context for key in ['form_error', 'form_error_capacity', 'form_error_date','form_error_date_selected']):
