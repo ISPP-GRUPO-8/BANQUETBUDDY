@@ -14,5 +14,7 @@ urlpatterns = [
     path('logout/',logout_view, name = 'logout'),
     path('register_choice', elegir_registro, name='register_choice'),
     path('profile', profile_view, name='profile'),
-    path('profile-edit', profile_edit_view, name='profile_edit'),
+    path('profile-edit', profile_edit_view, name='profile_edit'),    
+
+
 ]

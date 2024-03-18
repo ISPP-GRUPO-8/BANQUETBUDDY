@@ -41,6 +41,10 @@ class CateringService(models.Model):
     capacity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return self.name
+
+
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
@@ -119,6 +123,3 @@ class JobApplication(models.Model):
     date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
 
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')
