@@ -198,15 +198,16 @@ def profile_edit_view(request):
         return redirect("profile")
     return render(request, "core/profile_edit.html", context)
 
-from django.shortcuts import render
-
-
+@login_required
 def error_report(request):
     if request.method == 'POST':
         form = ErrorForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
             message = form.cleaned_data['message']
+            reporter_email = form.cleaned_data['reporter_email']
+            error_type = form.cleaned_data['error_type']
             
             email = 'banquetbuddyoficial@gmail.com'
 
@@ -218,7 +219,9 @@ def error_report(request):
             else:
                 client_type = "Catering Company"
 
-            contenido_correo = f'Nombre: {name}\nClient Type: {client_type}\nMensaje: {message}'
+            error_type_display = dict(form.fields['error_type'].choices)[error_type]
+
+            contenido_correo = f'Name: {name} {surname} | Client Type: {client_type} | Contact Mail: {reporter_email} | Error type: {error_type_display} | Mensaje: {message}'
             
             subject = 'Error Report'
             message = contenido_correo
