@@ -5,6 +5,7 @@ from catering_particular import views
 from .views import *
 
 urlpatterns = [
+    path('<int:catering_id>/book/', booking_process, name='booking_process'),
     path('caterings_contratados', catering_contratados, name='catering_contratados'),
     path('', views.listar_caterings, name='listar_caterings'),
     path('<int:catering_id>/', views.catering_detail, name='catering_detail'),

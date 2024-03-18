@@ -1,5 +1,4 @@
 from decimal import Decimal
-
 import os
 from django.test import TestCase
 from django.urls import reverse
@@ -169,6 +168,14 @@ class ViewTests(TestCase):
 
         # Verifica que el queryset filtrado tenga el tamaño esperado (1 en este caso)
         self.assertEqual(filtered_queryset.count(), 1)
+
+
+    def test_profile_edit_view_get(self):
+        # Prueba GET request a la vista
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_profile_edit'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile_company_edit.html')
         
     def tearDown(self) -> None:
         self.user.delete()

@@ -8,7 +8,7 @@ from faker.providers import person, address
 import random
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
-from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, TaskEmployee
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task
 from catering_particular.models import Particular
 
 
