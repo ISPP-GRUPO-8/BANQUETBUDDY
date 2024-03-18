@@ -62,34 +62,6 @@ def is_catering_company(request):
         res = False
     return res
 
-def home(request):
-    return render(request, "core/home.html")
-
-def is_particular(request):
-    try:
-        particular = Particular.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_employee(request):
-    try:
-        employee = Employee.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_catering_company(request):
-    try:
-        catering_company = CateringCompany.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
