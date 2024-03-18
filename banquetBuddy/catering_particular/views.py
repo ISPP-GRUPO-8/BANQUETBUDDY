@@ -3,9 +3,9 @@ from core.models import BookingState
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from .forms import ParticularForm
 from core.forms import CustomUserCreationForm
 from catering_owners.models import *
+from .forms import ParticularForm
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
@@ -312,7 +312,7 @@ def booking_process(request, catering_id):
 
         # Puedes agregar más lógica según sea necesario
 
-        return HttpResponse(f'Reservation confirmed for {catering.name} by {user.username}, on {event_date} with {number_guests} guests. {menu.name}')
+        return redirect('/')
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, 'booking_process.html', context)

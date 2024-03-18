@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BanquetBuddy</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light" id="main-navbar">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'core/images/logo-sin-letras.png' %}" width="50" height="auto" alt="Logo" loading="lazy">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Caterings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subscription-plans">Plan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Calendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url 'offer_list' %}>Offers</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated %}
+                    <form class="form-inline my-2 my-lg-0">
+                        <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
+                    </form>
+                {% endif %}
+                <form class="form-inline my-2 my-lg-0" style="position: relative;">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-icon">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
+                </form>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="text-decoration-none">
+                        <i class="fas fa-user"></i>
+                    </a>
+                {% endif %}
+            </div>
+            
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col contact-container text-center">
+                    <a href="/contact" class="text-decoration-none">
+                        <p class="text-white text-lg">Contact</p>
+                        <i class="fas fa-envelope icon-lg"></i>
+                    </a>
+                </div> 
+                <div class="col about-us-container text-center">
+                    <a href="/about-us" class="text-decoration-none">
+                        <p class="text-white text-lg">About Us</p>
+                        <i class="fas fa-info-circle icon-lg"></i>
+                    </a>
+                </div>
+                <div class="col faq-container text-center">
+                    <a href="/faq" target="_blank" class="text-decoration-none">
+                        <p class="text-white text-lg">FAQ</p>
+                        <i class="fas fa-question icon-lg"></i>
+                    </a>
+                </div>
+                <div class="col social-medias-container text-center">
+                    <a href="https://www.instagram.com/banquetbuddy_oficial/" target="_blank" class="text-decoration-none">
+                        <p class="text-white text-lg">Instagram</p>
+                        <i class="fab fa-instagram icon-lg"></i>
+                    </a>
+                </div>
+                <div class="col social-medias-container text-center">
+                    <a href="https://www.facebook.com/profile.php?id=61557219530468" target="_blank" class="text-decoration-none">
+                        <p class="text-white text-lg">Facebook</p>
+                        <i class="fab fa-facebook-f icon-lg"></i>
+                    </a>
+                </div>
+                <div class="col social-medias-container text-center">
+                    <a href="https://twitter.com/banquetbuddy" target="_blank" class="text-decoration-none">
+                        <p class="text-white text-lg">X</p>
+                        <i class="fa-brands fa-x-twitter icon-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'core/scripts.js' %}"></script>
+</body>
+</html>

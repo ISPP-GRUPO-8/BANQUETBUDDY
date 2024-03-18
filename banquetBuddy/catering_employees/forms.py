@@ -61,3 +61,4 @@ class EmployeeFilterForm(forms.Form):
             queryset = queryset.filter(employee__skills__icontains=skills)
 
         return queryset
+    

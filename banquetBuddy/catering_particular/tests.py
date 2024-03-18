@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from core.models import CustomUser
+from catering_owners.models import *
 from catering_owners.models import CateringCompany, CateringService
 from .views import *
 from catering_particular.models import *
@@ -136,6 +137,57 @@ class CateringReviewTestCase(TestCase):
         response = self.client.post(reverse('add_review', kwargs={'catering_id': 999}), {'description': 'Test review description', 'rating': 5})
         self.assertEqual(response.status_code, 404)
 
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+
+    
+        self.client = Client()
+
+    def test_booking_process(self):
+        self.client.login(username='testuser2', password='testpassword2')
+        catering_id = self.catering_service.id
+        url = reverse('booking_process', kwargs={'catering_id': catering_id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(url, {'event_date': '2026-03-11', 'number_guests': '50', 'selected_menu': '1'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Event.objects.filter(cateringservice=self.catering_service, date='2026-03-11', number_guests=50).exists())
+
+    def test_invalid_booking_process(self):
+        self.client.login(username='testuser2', password='testpassword2')
+        catering_id = self.catering_service.id
+        url = reverse('booking_process', kwargs={'catering_id': catering_id})
+
+        response = self.client.post(url, {'event_date': '2024-03-11', 'number_guests': '1000', 'menu_selected': '1'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Event.objects.filter(cateringservice=self.catering_service).exists())
+
+        response = self.client.post(url, {'event_date': '2024-03-11', 'number_guests': '10', 'menu_selected': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Event.objects.filter(cateringservice=self.catering_service).exists())
+
+        response = self.client.post(url, {'event_date': '2020-03-11', 'number_guests': '10', 'menu_selected': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Event.objects.filter(cateringservice=self.catering_service).exists())
+
+    def test_unauthorized_access(self):
+        catering_id = self.catering_service.id
+        url = reverse('booking_process', kwargs={'catering_id': catering_id})
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
 class FiltrosTest(TestCase):
     def setUp(self):
