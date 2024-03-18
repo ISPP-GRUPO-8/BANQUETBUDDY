@@ -7,6 +7,8 @@ from .forms import EmailAuthenticationForm, CustomUserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .forms import ErrorForm
 
 from django.contrib import messages
 from .models import *
@@ -195,6 +197,45 @@ def profile_edit_view(request):
 
         return redirect("profile")
     return render(request, "core/profile_edit.html", context)
+
+from django.shortcuts import render
+
+
+def error_report(request):
+    if request.method == 'POST':
+        form = ErrorForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            
+            email = 'banquetbuddyoficial@gmail.com'
+
+            client_type = ""
+            if is_particular:
+                client_type = "Particular"
+            elif is_employee:
+                client_type = "Employee"
+            else:
+                client_type = "Catering Company"
+
+            contenido_correo = f'Nombre: {name}\nClient Type: {client_type}\nMensaje: {message}'
+            
+            subject = 'Error Report'
+            message = contenido_correo
+            from_email = 'banquetbuddyoficial@gmail.com' 
+            to_email = [email] 
+
+            send_mail(subject, message, from_email, to_email, html_message=message)
+
+            return redirect("/")
+        else:
+            print(form.errors)
+    else:
+        form = ErrorForm()
+
+    return render(request, 'core/error_report.html', {'form': form})
+
+
 
 
 

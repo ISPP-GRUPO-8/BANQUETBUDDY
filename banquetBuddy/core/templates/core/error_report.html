@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportar Error</title>
+    <!-- Agrega el enlace al archivo CSS de Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Reportar Error</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Nombre -->
+            <div class="form-group">
+                <label for="id_nombre">Nombre:</label>
+                <input type="text" class="form-control" id="id_nombre" name="name" required>
+            </div>
+            <!-- Mensaje -->
+            <div class="form-group">
+                <label for="id_mensaje">Mensaje:</label>
+                <textarea class="form-control" id="id_mensaje" name="message" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+    <!-- Agrega el enlace al archivo JavaScript de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}
