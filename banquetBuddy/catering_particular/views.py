@@ -6,7 +6,7 @@ from catering_owners.models import CateringService
 from .forms import ParticularForm
 from core.forms import CustomUserCreationForm
 from django.shortcuts import render, get_object_or_404
-from catering_owners.models import CateringCompany, CateringService
+from catering_owners.models import *
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from core.views import *
@@ -43,7 +43,7 @@ def register_particular(request):
         {"user_form": user_form, "particular_form": particular_form},
     )
 
-  @login_required
+@login_required
 def catering_contratados(request):
     context = {}
     particular = get_object_or_404(Particular, user=request.user)
