@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<head>
+<head> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BanquetBuddy</title>
@@ -22,11 +23,9 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
                     {% if request.user.is_authenticated %}
-                        {% if is_particular %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/caterings">Caterings</a>
-                            </li>
-                        {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/caterings">Caterings</a>
+                    </li>
                     {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
@@ -37,6 +36,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Calendar</a>
                     </li>
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url 'offer_list' %}>Offers</a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated and request.user.EmployeeUsername %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/employeeOfferList">Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/JobApplicationList">Offers applied</a>
+                    </li>
+                    {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
                     <form class="form-inline my-2 my-lg-0">

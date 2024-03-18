@@ -1,21 +1,20 @@
 import os
-from django.core.files import File
 import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
+django.setup()
+from django.core.files import File
 from django.utils import timezone
 from faker.providers import person, address
 import random
 from django.conf import settings
+from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task
+from catering_particular.models import Particular
 
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
-django.setup()
 
 from faker import Faker
-from core.models import (CuisineType, CuisineTypeModel, CustomUser, Particular, CateringCompany, Employee, Message,
-                          CateringService, Event, Plate, Task, Menu, Review,
-                          EmployeeWorkService, Offer, JobApplication)
+from core.models import *
 from random import randint, choice
-
 faker = Faker(['es_ES'])
 faker.add_provider(person)
 faker.add_provider(address)

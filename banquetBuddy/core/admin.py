@@ -1,19 +1,8 @@
 from django.contrib import admin
+from catering_employees.models import Employee, Message
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task
+from catering_particular.models import Particular
 from .models import *
 
 # Register your models here.
-admin.site.register(Particular)
-admin.site.register(CateringCompany)
-admin.site.register(Employee)
-admin.site.register(Message)
-admin.site.register(CateringService)
-admin.site.register(Event)
-admin.site.register(Task)
-admin.site.register(Menu)
-admin.site.register(Review)
-admin.site.register(EmployeeWorkService)
-admin.site.register(Offer)
-admin.site.register(JobApplication)
 admin.site.register(CustomUser)
-admin.site.register(Plate)
-admin.site.register(CuisineTypeModel)

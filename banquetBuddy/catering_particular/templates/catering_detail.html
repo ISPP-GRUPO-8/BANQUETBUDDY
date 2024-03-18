@@ -1,7 +1,4 @@
-{% extends 'core/base.html' %}
-{% load static %}
-
-{% block content %}
+{% extends 'core/base.html' %} {% load static %} {% block content %}
 <div class="container mt-4">
     <h1>{{ catering.name }}</h1>
     <p><strong>Descripción:</strong> {{ catering.description }}</p>
@@ -11,9 +8,8 @@
     {% if catering.cateringcompany.logo %}
     <img src="data:image/png;base64,{{ catering.cateringcompany.logo }}" class="img-fluid" alt="Logo">
     {% endif %}
-
-
-
-    <!-- Aquí puedes agregar más detalles según tu modelo -->
+    {% if is_particular %}
+        <a href="{% url 'booking_process' catering.id %}" class="btn btn-primary">Book</a>
+    {% endif %}
 </div>
 {% endblock %}
