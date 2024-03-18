@@ -1,0 +1,21 @@
+name: "Definición de funcionalidad"
+description: "Define una nueva característica para este proyecto."
+title: "[Feature]"
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # **🚀 Nueva funcionalidad**
+  - type: textarea
+    attributes:
+      label: "Descripción de la funcionalidad. (Misma descripción que en el product backlog)"
+      description: "Proporciona una descripción clara y concisa de lo que implica la funcionalidad."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Contexto adicional"
+      description: "Añade cualquier otro contexto o información adicional sobre el problema aquí."
+    validations:
+      required: false

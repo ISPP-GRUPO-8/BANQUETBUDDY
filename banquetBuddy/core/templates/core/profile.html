@@ -2,7 +2,11 @@
 {% load static %}
 {% block content %}
 
+
 <div class="container my-5">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
   <div class="row justify-content-center mb-4">
     <div class="col-md-6">
       <div class="card" style="background-color: #02483e">
@@ -25,6 +29,25 @@
         </div>
       </div>
     </div>
+    
+    {% if catering_company %}
+    <div class="container my-5">
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+          <div class="card" style="background-color: #02483e">
+            <div class="card-body">
+              <h2 class="card-title text-center text-white">Gestión</h2>
+              <ul class="list-group list-group-flush rounded">
+                <li class="list-group-item">
+                  <a href="{% url 'list_menus' %}" class="text-decoration-none"> Mis menus </a>
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
     {% if catering_company %}
     <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
     <div class="col-md-6">
@@ -68,7 +91,18 @@
     </div>
     {% endif %}
   </div>
- 
+  {% if catering_company %}
+  <div class="row justify-content-center">
+    <a href="{% url 'catering_profile_edit' %}" class="text-decoration-none">
+      <button
+        class="btn btn-rounded text-white"
+        style="background-color: #54bfaf"
+      >
+        Editar perfil
+      </button>
+    </a>
+  </div>
+  {% else %}
   <div class="row justify-content-center">
     <a href="{% url 'profile_edit' %}" class="text-decoration-none">
       <button
@@ -79,6 +113,7 @@
       </button>
     </a>
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}
