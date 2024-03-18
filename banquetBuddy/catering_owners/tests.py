@@ -1,27 +1,19 @@
-
 from decimal import Decimal
-
 import os
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from catering_employees.forms import EmployeeFilterForm
 from catering_employees.models import Employee
-from catering_owners.models import CateringCompany, CateringService, JobApplication, Offer
-
-from core.forms import CustomUserCreationForm
-from .forms import CateringCompanyForm
-from core.models import CustomUser
-from phonenumbers import PhoneNumber, parse, is_valid_number
-
-from django.test import TestCase, Client
-from django.urls import reverse
-from core.models import CustomUser, BookingState
-from datetime import datetime, timedelta
-from core.models import CustomUser
 from catering_owners.models import *
 from .views import *
 from catering_particular.models import Particular
+
+from core.forms import CustomUserCreationForm
+from .forms import CateringCompanyForm
+from core.models import CustomUser, BookingState
+from phonenumbers import PhoneNumber, parse, is_valid_number
+from datetime import datetime, timedelta
 
 class CateringBookTestCase(TestCase):
     def setUp(self):

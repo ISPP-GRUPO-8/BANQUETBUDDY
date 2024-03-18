@@ -1,14 +1,18 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from core.models import *
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from catering_owners.models import *
+from django.shortcuts import render, get_object_or_404, HttpResponse,redirect
+from django.contrib import messages
+from catering_owners.models import CateringService
 from .forms import ParticularForm
 from core.forms import CustomUserCreationForm
+from django.contrib import messages
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
 from datetime import datetime
+
+# Create your views here.
 
 @login_required
 def my_books(request):
@@ -58,8 +62,6 @@ def book_edit(request, event_id):
         return render(request, 'my_books.html', context)
 
     return render(request, 'book_edit.html', context)
-
-# Create your views here.
 
 
 def register_particular(request):
@@ -271,4 +273,3 @@ def booking_process(request, catering_id):
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, 'booking_process.html', context)
-

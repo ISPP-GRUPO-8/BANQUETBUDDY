@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-from .models import CustomUser
+from .models import CustomUser, Offer
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -31,3 +31,4 @@ class CustomUserCreationForm(UserCreationForm):
             "password1",
             "password2",
         ]
+
