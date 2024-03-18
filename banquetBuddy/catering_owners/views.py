@@ -114,8 +114,18 @@ def catering_profile_edit(request):
 ######### Ofertas #########
 ###########################
 
+
+@login_required
 def offer_list(request):
-    offers = Offer.objects.all() 
+    
+    current_user = request.user
+    
+    try:
+        catering_company = CateringCompany.objects.get(user= current_user)
+    except CateringCompany.DoesNotExist:
+        return render(request, 'error_catering.html')
+    
+    offers = Offer.objects.filter(cateringservice__cateringcompany=catering_company)
     return render(request, 'offers/offer_list.html', {'offers': offers})
 
 @login_required
