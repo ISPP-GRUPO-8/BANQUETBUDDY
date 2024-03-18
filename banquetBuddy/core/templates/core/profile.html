@@ -2,7 +2,11 @@
 {% load static %}
 {% block content %}
 
+
 <div class="container my-5">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
   <div class="row justify-content-center mb-4">
     <div class="col-md-6">
       <div class="card" style="background-color: #02483e">
@@ -87,7 +91,18 @@
     </div>
     {% endif %}
   </div>
- 
+  {% if catering_company %}
+  <div class="row justify-content-center">
+    <a href="{% url 'catering_profile_edit' %}" class="text-decoration-none">
+      <button
+        class="btn btn-rounded text-white"
+        style="background-color: #54bfaf"
+      >
+        Editar perfil
+      </button>
+    </a>
+  </div>
+  {% else %}
   <div class="row justify-content-center">
     <a href="{% url 'profile_edit' %}" class="text-decoration-none">
       <button
@@ -98,6 +113,7 @@
       </button>
     </a>
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}
