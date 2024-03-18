@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomUser
-from catering_owners.models import  CateringService
+from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -208,3 +208,4 @@ def listar_caterings_home(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
+

@@ -109,6 +109,11 @@ class ListarCateringsHomeTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Catering Service")
 
+    def tearDown(self) -> None:
+        self.user_particular.delete()
+        self.particular.delete()
+        self.catering_service.delete()
+
 
     
     
