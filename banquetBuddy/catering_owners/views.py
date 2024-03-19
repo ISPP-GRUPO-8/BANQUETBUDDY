@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CateringCompany
 from .forms import OfferForm,CateringCompanyForm, MenuForm
+
 from core.forms import CustomUserCreationForm
 from django.contrib import messages
 from core.models import *
 from django.contrib.auth.decorators import login_required
 from catering_owners.models import *
 from datetime import datetime
-from .models import CateringCompany, Menu, Plate
+from .models import CateringCompany, Menu, Plate, Offer, CateringService
 
 @login_required
 def catering_books(request):
@@ -150,10 +151,10 @@ def catering_profile_edit(request):
         form = CateringCompanyForm(request.POST, request.FILES, instance=catering_company)
         if form.is_valid():
             form.save()
-            messages.success(request, "Perfil actualizado exitosamente")
+            messages.success(request, "Profile updated successfully")
             return redirect("profile")
         else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")
+            messages.error(request, "Plase, correct the errors in the form.")
     else:
         form = CateringCompanyForm(instance=catering_company)
 
@@ -164,8 +165,18 @@ def catering_profile_edit(request):
 ######### Ofertas #########
 ###########################
 
+
+@login_required
 def offer_list(request):
-    offers = Offer.objects.all() 
+    
+    current_user = request.user
+    
+    try:
+        catering_company = CateringCompany.objects.get(user= current_user)
+    except CateringCompany.DoesNotExist:
+        return render(request, 'error_catering.html')
+    
+    offers = Offer.objects.filter(cateringservice__cateringcompany=catering_company)
     return render(request, 'offers/offer_list.html', {'offers': offers})
 
 @login_required

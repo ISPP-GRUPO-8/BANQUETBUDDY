@@ -5,6 +5,7 @@ from .models import CateringCompany, CateringService, Menu, Offer
 
 
 class CateringCompanyForm(forms.ModelForm):
+    
     def clean_cif(self):
         cif = self.cleaned_data.get('cif')
         # Expresión regular para validar el formato del CIF
@@ -25,13 +26,22 @@ class CateringCompanyForm(forms.ModelForm):
         model = CateringCompany
         fields = ["name", "address", "phone_number", "cif","price_plan", "verification_document"]
         widgets = {
-                "name": forms.TextInput(attrs={"placeholder": "Company name", "class": "rounded-input"}),
-                "address": forms.TextInput(attrs={"placeholder": "Company's address", "class": "rounded-input"}),
-                "phone_number": forms.TextInput(attrs={"placeholder": "Phone number", "class": "rounded-input"}),
-                "cif": forms.TextInput(attrs={"placeholder": "Ex: A1234567J", "class": "rounded-input"}),
-                "price_plan": forms.Select(attrs={"class": "rounded-input"}),
-                "verification_document": forms.FileInput(attrs={"class": "rounded-input"}),
+                "name": forms.TextInput(attrs={"placeholder": "Company name", "class": "form-control"}),
+                "address": forms.TextInput(attrs={"placeholder": "Company's address", "class": "form-control"}),
+                "phone_number": forms.TextInput(attrs={"placeholder": "Phone number", "class": "form-control"}),
+                "cif": forms.TextInput(attrs={"placeholder": "Ex: A1234567J", "class": "form-control"}),
+                "price_plan": forms.Select(attrs={"class": "form-control"}),
+                "verification_document": forms.FileInput(attrs={"class": "form-control"}),
         }
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields["name"].required = True
+            self.fields["address"].required = False
+            self.fields["phone_number"].required = True
+            self.fields["cif"].required = False
+            self.fields["price_plan"].required = True
+            self.fields["verification_document"].required = False
 
 
 class MenuForm(forms.ModelForm):
