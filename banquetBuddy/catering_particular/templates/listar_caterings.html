@@ -3,22 +3,32 @@
 
 {% block content %}
 
-
-<div class="container mt-4">
+<style>
+    .card {
+        height: 400px
+    }
+    .card img {
+        /* Establece un tamaño fijo para todas las imágenes dentro de las tarjetas */
+        width: 100%; /* Esto asegura que la imagen ocupe todo el ancho de su contenedor */
+        height: 200px; /* Establece la altura deseada para todas las imágenes */
+        object-fit: cover; /* Esto asegura que la imagen se ajuste dentro del contenedor manteniendo su relación de aspecto */
+    }
+</style>
+<div class="container mt-3">
     <h1 class="mb-4">Listado de Caterings</h1>
     <div class="row">
         {% for catering in caterings %}
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ catering.name }}</h5>
-                        <p class="card-text">{{ catering.description }}</p>
-                        <p class="card-text">Ubicación: {{ catering.location }}</p>
-                        <p class="card-text">Capacidad: {{ catering.capacity }}</p>
-                        <p class="card-text">Precio: {{ catering.price }}</p>
-                        <a href="{% url 'catering_detail' catering.id %}" class="btn btn-primary">Ver detalles</a>
+            <div class="col-md-4">
+                <a href="{% url 'catering_detail' catering.id %}" class="card-link">
+                    <div class="card mb-4 rounded-lg shadow">
+                        <img src="/media/{{ catering.cateringcompany.logo }}" alt="Logo de {{ catering.name }}">
+                        <div class="card-body text-dark">
+                            <hr style="border-top: 2px solid black; width: 50%;">
+                            <h5 class="card-title" style="text-align: center;">{{ catering.name }}</h5>
+                            <p class="card-text" style="text-align: center;">{{ catering.service_description }}</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% endfor %}
     </div>
