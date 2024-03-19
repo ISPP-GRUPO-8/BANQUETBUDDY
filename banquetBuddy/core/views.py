@@ -14,9 +14,6 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from random import sample
 
-
-
-
 def get_user_type(user):
     if hasattr(user, 'ParticularUsername'):
         return "Particular"
@@ -26,7 +23,6 @@ def get_user_type(user):
         return "Employee"
     else:
         return "Unknown"
-    
 
 def home(request):
     context={}
