@@ -16,17 +16,25 @@ from django.contrib.auth.decorators import login_required
 
 
 def get_user_type(user):
-    if hasattr(user, 'ParticularUsername'):
+    try:
+        particular = Particular.objects.get(user_id=user.id)
         return "Particular"
-    elif hasattr(user, 'CateringCompanyusername'):
+    except Particular.DoesNotExist:
+        pass
+
+    try:
+        catering_company = CateringCompany.objects.get(user_id=user.id)
         return "Catering Company"
-    elif hasattr(user, 'EmployeeUsername'):
+    except CateringCompany.DoesNotExist:
+        pass
+
+    try:
+        employee = Employee.objects.get(user_id=user.id)
         return "Employee"
-    else:
-        return "Unknown"
+    except Employee.DoesNotExist:
+        pass
 
-
-
+    return "Unknown"
 
 def home(request):
     context={}
@@ -211,13 +219,7 @@ def error_report(request):
             
             email = 'banquetbuddyoficial@gmail.com'
 
-            client_type = ""
-            if is_particular:
-                client_type = "Particular"
-            elif is_employee:
-                client_type = "Employee"
-            else:
-                client_type = "Catering Company"
+            client_type = get_user_type(request.user)
 
             error_type_display = dict(form.fields['error_type'].choices)[error_type]
 
@@ -231,12 +233,11 @@ def error_report(request):
             send_mail(subject, message, from_email, to_email, html_message=message)
 
             return redirect("/")
-        else:
-            print(form.errors)
     else:
         form = ErrorForm()
 
     return render(request, 'core/error_report.html', {'form': form})
+
 
 
 
