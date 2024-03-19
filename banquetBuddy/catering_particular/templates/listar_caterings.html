@@ -123,6 +123,34 @@
       </div>
     </div>
 
+    <!-- Filtro por número de invitados -->
+    <div class="form-group">
+      <label for="ciudad">Location:</label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          id="ciudad"
+          name="ciudad"
+          placeholder="City or Postcode"
+          value="{{ ciudad }}"
+        />
+        <!-- Botón para eliminar filtro -->
+        {% if ciudad %}
+        <div class="input-group-append">
+          <button
+            type="submit"
+            name="limpiar_ciudad"
+            value="1"
+            class="btn btn-sm btn-danger"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
     <!-- Botón para aplicar filtros -->
     <div class="d-flex justify-content-center">
       <button type="submit" class="btn btn-primary">Filter</button>

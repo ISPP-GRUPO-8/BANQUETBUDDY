@@ -5,13 +5,19 @@
 
 <div class="container mt-4">
     <h1>Edit Event: {{ event.name }}</h1>
-    <form method="post" action="/particular/{{ event.id }}/edit">
+    <form method="post" action="{% url 'book_edit' event.id %}">
         {% csrf_token %}
 
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">{{ message }}</div>
             {% endfor %}
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
         {% endif %}
 
         <div class="form-group">
@@ -30,32 +36,62 @@
                 {% for menu in menus %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
-                      <div class="card-body flex-fill d-flex flex-column">
-                        <h5 class="card-title">{{ menu.name }}</h5>
-                        <p class="card-text">{{ menu.description }}</p>
-                        <p class="card-text"><strong>Plates:</strong></p>
-                        <ul class="list-unstyled">
-                          {% for plate in menu.plates %}
-                            <li>{{ plate }}</li>
-                          {% endfor %}
-                        </ul>
-                        <div class="mt-auto">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                              <button type="button" class="btn btn-sm btn-outline-success">Select</button>
+                        <div class="card-body flex-fill d-flex flex-column">
+                            <h5 class="card-title">{{ menu.name }}</h5>
+                            <p class="card-text">{{ menu.description }}</p>
+                            <div class="mt-auto">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-success select-menu {% if event.menu_id == menu.id %}selected{% endif %}" data-menu-id="{{ menu.id }}">Select</button>
+                                </div>
                             </div>
-                            <small class="text-muted">{{ menu.price }}</small>
-                          </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
+                </div>
                 {% endfor %}
-              </div>
+                <input type="hidden" name="selected_menu" id="selected_menu" value="{{ event.menu_id }}">
+            </div>
+            </br>
         </div>
 
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </form>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const selectButtons = document.querySelectorAll('.select-menu');
+
+      selectButtons.forEach(button => {
+          button.addEventListener('click', function () {
+              const menuId = this.getAttribute('data-menu-id');
+              document.getElementById('selected_menu').value = menuId;
+          });
+      });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectButtons = document.querySelectorAll('.select-menu');
+
+    selectButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Remover la clase 'selected' de todos los botones
+            selectButtons.forEach(btn => btn.classList.remove('selected'));
+
+            // Agregar la clase 'selected' al botón seleccionado
+            this.classList.add('selected');
+
+            const menuId = this.getAttribute('data-menu-id');
+            document.getElementById('selected_menu').value = menuId;
+        });
+    });
+});
+</script>
+<style>
+  .selected {
+    background-color: #28a745; /* Cambia el color de fondo cuando el botón está seleccionado */
+    color: #fff; /* Cambia el color del texto cuando el botón está seleccionado */
+}
+
+</style>
+
 {% endblock %}
+
