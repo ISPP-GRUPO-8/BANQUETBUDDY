@@ -1,15 +1,75 @@
 import re
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from django.contrib import messages
-from catering_owners.models import CateringService
+from django.contrib.auth.decorators import login_required
+from catering_owners.models import *
 from .forms import ParticularForm
 from core.forms import CustomUserCreationForm
-from catering_owners.models import CateringCompany, CateringService, Menu, Event
-from django.contrib import messages
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
 from datetime import datetime
+
+@login_required
+def my_books(request):
+    user = request.user
+    events = Event.objects.filter(particular_id = user.id)
+    context = {'events': events}
+    return render(request, 'my_books.html', context)
+
+@login_required
+def book_cancel(request, event_id):
+    user = request.user
+    events = Event.objects.filter(particular_id = user.id)
+    context = {'events': events}
+    event = get_object_or_404(Event, id = event_id)
+    if user.id == event.particular_id:
+        event.booking_state = BookingState.CANCELLED
+        event.save()
+    return render(request, 'my_books.html', context)
+
+@login_required
+def book_edit(request, event_id):
+    context = {}
+    event = get_object_or_404(Event, id = event_id)
+    events = Event.objects.filter(particular_id = request.user.id)
+    catering_service = get_object_or_404(CateringService, id = event.cateringservice_id)
+    catering = get_object_or_404(CateringCompany, user_id = catering_service.cateringcompany_id)
+    menus = Menu.objects.filter(cateringcompany_id = catering.user_id)
+    context["menus"] = menus
+    context["event"] = event
+
+    if request.method == "POST":
+        date = request.POST.get('date')
+        number_guests = request.POST.get('number_guests')
+        menu = request.POST.get('selected_menu')
+
+        context["date"] = date
+        context["number_guests"] = number_guests
+        context["menu"] = menu
+        context["events"] = events
+
+        if number_guests == '0':
+            context['error'] = "The number of guests can not be 0."
+            return render(request, 'book_edit.html', context)
+        
+        date2 = datetime.strptime(date, '%Y-%m-%d').date()
+
+        if datetime.now().date() > date2:
+            context['error'] = "The selected date cannot be in the past."
+            return render(request, 'book_edit.html', context)
+
+        event.date = date
+        event.number_guests = number_guests
+        event.menu = Menu.objects.get(id = menu)
+        event.booking_state = BookingState.CONTRACT_PENDING
+        event.details = f'Reservation for {number_guests} guests'
+        event.save()
+
+        return render(request, 'my_books.html', context)
+
+    return render(request, 'book_edit.html', context)
 
 # Create your views here.
 
@@ -156,7 +216,6 @@ def catering_detail(request, catering_id):
 @login_required
 def booking_process(request, catering_id):
     cateringservice = get_object_or_404(CateringService, id=catering_id)
-    print(cateringservice.cateringcompany_id)
     catering = get_object_or_404(
         CateringCompany, user_id=cateringservice.cateringcompany_id
     )
@@ -185,7 +244,6 @@ def booking_process(request, catering_id):
         number_guests = request.POST.get("number_guests")
         selected_menu = request.POST.get("selected_menu")
 
-        print(selected_menu)
         # Validación y lógica de reserva aquí
         if not selected_menu:
             messages.error(request, "Please select a menu")
