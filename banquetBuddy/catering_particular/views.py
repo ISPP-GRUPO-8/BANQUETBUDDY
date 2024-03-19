@@ -1,15 +1,17 @@
-import re
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from django.contrib import messages
+from core.models import BookingState
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
+from core.forms import CustomUserCreationForm
 from catering_owners.models import *
 from .forms import ParticularForm
-from core.forms import CustomUserCreationForm
-from django.shortcuts import render, get_object_or_404
+import re
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
 from datetime import datetime
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def my_books(request):
@@ -203,14 +205,55 @@ def listar_caterings(request):
 
 def catering_detail(request, catering_id):
     context = {}
-    context["is_particular"] = is_particular(request)
-    context["is_employee"] = is_employee(request)
-    context["is_catering_company"] = is_catering_company(request)
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    
+    reviews_list = Review.objects.filter(cateringservice_id=catering_id).order_by('-date')
+    
+    paginator = Paginator(reviews_list, 3)  # Muestra 3 reviews por página
+    page = request.GET.get('page')
+
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+
+    context['reviews'] = reviews
     if not is_particular(request):
         return HttpResponseForbidden("No eres cliente")
     catering = get_object_or_404(CateringService, id=catering_id)
     context["catering"] = catering
     return render(request, "catering_detail.html", context)
+
+def catering_review(request, catering_id):
+    catering = get_object_or_404(CateringService, id=catering_id)
+    user = request.user
+    particular = Particular.objects.filter(user_id=user.id)
+
+    if particular:
+        context = {'catering': catering, 'particular':particular}
+
+        if request.method == 'POST':
+            description = request.POST.get('description')
+            rating = request.POST.get('rating')
+
+            review = Review.objects.create(
+                cateringservice=catering,
+                particular=Particular.objects.get(user=user),
+                date=datetime.now().date(),
+                description=description,
+                rating=rating
+            )
+
+            url_catering = reverse('catering_detail', args=[catering.id])
+            return redirect(url_catering)
+    else:
+        return redirect("/")
+
+    return render(request, 'catering_review.html', context)
 
 
 @login_required

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from core.models import CustomUser
 from catering_owners.models import *
 from .views import *
-from catering_particular.models import Particular
+from catering_particular.models import *
 
 class BookTestCase(TestCase):
     def setUp(self):
@@ -211,8 +211,7 @@ class CateringViewsTestCase(TestCase):
         # Verificar que la respuesta contiene el nombre del servicio de catering
         self.assertContains(response, self.catering_service.name)
 
-
-class BookingProcessTestCase(TestCase):
+class CateringReviewTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(
             username="testuser", email="test@example.com", password="testpassword"
@@ -228,7 +227,7 @@ class BookingProcessTestCase(TestCase):
             service_description="Test service description",
             price_plan="BASE",
         )
-
+    
         self.particular = Particular.objects.create(
             user=self.user1,
             phone_number="123456789",
@@ -246,6 +245,40 @@ class BookingProcessTestCase(TestCase):
             price=100.00,
         )
 
+    def test_catering_review_view(self):
+        self.client.login(username='testuser2', password='testpassword2')
+        catering_id = self.catering_service.id
+
+        description = 'Test review description'
+        rating = 5
+
+        url = reverse('add_review', kwargs={'catering_id': catering_id})
+        response = self.client.post(url, {
+            'description': description,
+            'rating': rating,
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Review.objects.filter(description = 'Test review description').exists())
+
+
+    def test_catering_review_view_unauthenticated(self):
+        response = self.client.get(reverse('add_review', kwargs={'catering_id': self.catering_service.id}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/', response.url)
+
+
+    def test_catering_review_view_invalid_rating(self):
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.post(reverse('add_review', kwargs={'catering_id': self.catering_service.id}), {'description': 'Test review description', 'rating': 6})
+        self.assertFalse(Review.objects.filter(description='Test review description').exists())
+        
+
+    def test_catering_review_view_invalid_catering_id(self):
+        self.client.login(username='testuser2', password='testpassword2')
+        response = self.client.post(reverse('add_review', kwargs={'catering_id': 999}), {'description': 'Test review description', 'rating': 5})
+        self.assertEqual(response.status_code, 404)
+
         self.menu = Menu.objects.create(
             id=1,
             cateringservice=self.catering_service,
@@ -257,6 +290,8 @@ class BookingProcessTestCase(TestCase):
 
         self.client = Client()
 
+
+class BookingProcessTestCase(TestCase):
     def test_booking_process(self):
         self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
