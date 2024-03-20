@@ -122,3 +122,4 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
+

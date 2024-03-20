@@ -9,6 +9,8 @@ from core.forms import CustomUserCreationForm
 from catering_owners.models import JobApplication, Employee
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -63,8 +65,11 @@ def employee_applications(request, offer_id):
     context = {'applicants': applicants, 'offer': offer, 'filter_form': filter_form}
     return render(request, "applicants_list.html", context)
 
+
+
 @login_required
 def employee_offer_list(request):
+    context = {}
 
     current_user = request.user
     offers = Offer.objects.all()
@@ -74,8 +79,15 @@ def employee_offer_list(request):
     except Employee.DoesNotExist:
         return render(request, 'error_employee.html')
     
+    search = ''
+    offers = Offer.objects.all()
+    if request.method == 'POST':
+        search = request.POST.get("search", "") 
+        if search:
+            offers = Offer.objects.filter(Q(title__icontains=search))
+        
     applications = {offer.id: offer.job_applications.filter(employee=employee).exists() for offer in offers}
-    context = {'offers': offers, 'applications': applications}
+    context = {'offers': offers, 'applications': applications, 'search':search}
     
     return render(request, "employee_offer_list.html", context)
 

@@ -6,6 +6,7 @@ from core.models import CustomUser
 from catering_owners.models import Offer, JobApplication, CateringService, CateringCompany, CateringService, Menu, Event, BookingState, CateringCompany, Particular
 from .views import employee_offer_list, application_to_offer
 from django.urls import reverse
+from datetime import date
 
 # Create your tests here.
 
@@ -52,6 +53,18 @@ class EmployeeOfferListViewTest(TestCase):
         request.user = AnonymousUser()
         response = employee_offer_list(request)
         self.assertEqual(response.status_code, 302)  # Redirect to login page
+
+    def test_employee_offer_list_view(self):
+        request = self.factory.get(reverse('employeeOfferList'))
+        request.user = self.user
+        response = employee_offer_list(request)  # Cambio aquí
+        self.assertEqual(response.status_code, 200)
+
+    def test_employee_offer_list_view_with_anonymous_user(self):
+        request = self.factory.get(reverse('employeeOfferList'))
+        request.user = AnonymousUser()
+        response = employee_offer_list(request)  # Cambio aquí
+        self.assertEqual(response.status_code, 302)
         
     def tearDown(self) -> None:
         self.user.delete()
@@ -222,12 +235,39 @@ class EmployeeApplicationsListTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
         self.employee = Employee.objects.create(user=self.user, phone_number='123456789', profession='Developer', experience='2 years', skills='Python, Django', location='Somewhere')
+        self.user_catering = CustomUser.objects.create_user(
+            username='testuser2',
+            password='12345',
+            email='prueba@gmail.com'
+            )
+        
+        self.catering_company = CateringCompany.objects.create(
+            user=self.user_catering, name='Test Catering Company',
+            address='Test Address', phone_number='987654321',
+            cif='123456789A', is_verified=True,
+            price_plan='Basic'
+            )
+        
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.catering_company,
+            name='Test Catering Service',
+            description='Test Description',
+            location='Test Location',
+            capacity=100, price=100.00
+            )
+        self.offer = Offer.objects.create(
+            cateringservice=self.catering_service ,
+            title='Test Offer',
+            description='Test Description',
+            requirements='Test Requirements',
+            location='Test Location'
+            )
 
     def test_employee_applications_list_authenticated_employee(self):
         
         self.client.force_login(self.user)
         
-        job_application = JobApplication.objects.create(employee=self.employee, job_title='Developer', company='Example Inc.')
+        job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, date_application=date.today())
         
         # Hacemos una solicitud GET a la vista
         response = self.client.get(reverse('JobApplicationList'))

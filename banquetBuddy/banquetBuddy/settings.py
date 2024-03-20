@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'catering_owners',
     'catering_employees',
+
 ]
 
 MIDDLEWARE = [
