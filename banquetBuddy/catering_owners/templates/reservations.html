@@ -9,30 +9,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Reservations</title>
+    <style>
+        body {
+            font-family:  Verdana, Geneva, Tahoma, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333333;
+        }
+        h1 {
+            margin-top: 50px;
+            color: #02483E;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #dddddd;
+            width: auto;
+            white-space: nowrap;
+            font-size: 1em;
+        }
+        th {
+            background-color: #02483E;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+        tr:hover {
+            background-color: #e2e2e2;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+
+        @media screen and (max-width: 450px) {
+            td, th {
+                font-size: 0.5em; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 600px) and (min-width: 451px) {
+            td, th {
+                font-size: 0.7em; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 450px) {
+            h1 {
+                font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+    </style>
 </head>
 <body>
 
   <h1>Event Reservations</h1>
 
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Booking State</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for reservation in reservations %}
+  <div class="table-container">
+    <table>
+      <thead>
         <tr>
-          <td>{{ reservation.name }}</td>
-          <td>{{ reservation.date }}</td>
-          <td>{{ reservation.booking_state }}</td>
-          <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Booking State</th>
+          <th>Action</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for reservation in reservations %}
+          <tr>
+            <td>{{ reservation.name }}</td>
+            <td>{{ reservation.date }}</td>
+            {% if reservation.booking_state == "CONTRACT_PENDING" %}
+            <td>CONTRACT PENDING</td>
+            {% else %}
+            <td>{{ reservation.booking_state}}</td>
+            {% endif %}
+            <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
 </body>
 </html>
