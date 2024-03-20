@@ -68,8 +68,8 @@
                     {% if is_catering_company %}
                         <a class="nav-link" href="{% url 'catering_books' %}">Books</a> 
                     {% endif %}
+                {% endif %}
                 {% if request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'my_books' %}">Books</a>
                     <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                     </a>
