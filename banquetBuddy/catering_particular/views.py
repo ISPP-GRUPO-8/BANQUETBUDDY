@@ -169,9 +169,6 @@ def listar_caterings(request):
         return HttpResponseForbidden("You are not a particular")
     caterings = CateringService.objects.all()
 
-    for catering in caterings:
-        print(catering.location)
-
     # Obtener tipos de cocina únicos
     tipos_cocina = (
         CateringCompany.objects.values_list("cuisine_types__type", flat=True)
@@ -348,7 +345,7 @@ def booking_process(request, catering_id):
 
         # Puedes agregar más lógica según sea necesario
 
-        return redirect("/")
+        return redirect('my_books')
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, "booking_process.html", context)
