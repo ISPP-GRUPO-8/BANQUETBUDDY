@@ -1,0 +1,55 @@
+name: BanquetBuddy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    pull_request:
+      - main
+      - develop
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        pyversion: '3.10.0'
+
+      services:
+      postgres:
+        image: postgres:16.2
+        env:
+          POSTGRES_USER: ispp
+          POSTGRES_PASSWORD: ispp
+          POSTGRES_DB: ispp
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      steps:
+      - name: Checkout code
+      uses: actions/checkout@v2
+
+      - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10.0'
+
+      - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+      - name: Run migrations
+        run: |
+          cd banquetbuddy
+          python manage.py makemigrations
+          python manage.py migrate
+      - name: Run tests
+      run: |
+        python manage.py test
+
+
