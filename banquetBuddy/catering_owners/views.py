@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
+from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event
 from django.contrib.auth.decorators import login_required
 from core.forms import CustomUserCreationForm
 from .models import CateringCompany, Menu, Plate
 from core.models import *
+from django.db.models import Min
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import datetime,date
 from django.utils.dateformat import DateFormat
 import calendar
 
@@ -87,11 +88,30 @@ def view_reservation(request, event_id,catering_service_id):
         return HttpResponseForbidden("You don't have permission to view this reservation.")
 
 @login_required
+def catering_calendar_preview(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    if request.method == 'POST':
+            form = CateringServiceFilterForm(catering_company, request.POST)
+            if form.is_valid():
+                selected_catering_service = form.cleaned_data.get('catering_service')
+                if selected_catering_service:
+                    return redirect('catering_calendar', year=datetime.now().year, month=datetime.now().month, catering_service_id=selected_catering_service.id)
+    else:
+        form = CateringServiceFilterForm(catering_company)
+
+    context = {
+        'form': form,
+        'year': datetime.now().year,
+        'month': datetime.now().month
+    }
+
+    return render(request, 'catering_calendar_home.html', context)
+
+@login_required
 def catering_calendar_view(request, catering_service_id,month,year):
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
     if request.user == catering_service.cateringcompany.user:  
         month = min(max(int(month), 1), 12)  # Asegurarse de que el mes esté en el rango válido (1-12)
-
         month_name = DateFormat(datetime(year, month, 1)).format('F')
 
     # Obtener el calendario del mes y los días con eventos
@@ -100,12 +120,20 @@ def catering_calendar_view(request, catering_service_id,month,year):
             cateringservice=catering_service,
             date__year=year,
             date__month=month
-    ).values_list('date__day', flat=True)
-
+        ).values_list('date__day', flat=True)
+        
+        num_events = events.count()   
+        next_event_date = Event.objects.filter(
+            cateringservice=catering_service,
+            date__gte=date.today()  # Solo eventos futuros
+        ).aggregate(next_event=Min('date'))['next_event']
+        if next_event_date is None:
+            next_event_date = "No upcoming events"
+        else:
+            next_event_date = next_event_date.strftime("%Y-%m-%d")
     # Generar una lista de días con eventos para resaltar en el calendario
+         
         event_days = set(events)
-
-
         return render(request, 'calendar.html', {
             'catering_name': catering_service.name,
             'catering_service_id':catering_service_id,
@@ -113,8 +141,11 @@ def catering_calendar_view(request, catering_service_id,month,year):
             'month': month,
             'month_name':month_name,
             'cal': cal,
-            'event_days': event_days
+            'event_days': event_days,
+            'next_event_date': next_event_date,
+            'num_events': num_events
         })
+    
     else:
         return HttpResponseForbidden("You don't have permission to view this calendar.")
     

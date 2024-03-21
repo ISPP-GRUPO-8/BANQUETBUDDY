@@ -34,7 +34,7 @@
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Calendar</a>
+                        <a class="nav-link" href={% url 'catering_calendar_preview' %}>Calendar</a>
                     </li>
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">

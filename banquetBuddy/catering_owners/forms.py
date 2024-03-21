@@ -110,3 +110,12 @@ class EmployeeFilterForm(forms.Form):
             queryset = queryset.filter(employee__skills__icontains=skills)
 
         return queryset
+    
+
+class CateringServiceFilterForm(forms.Form):
+    def __init__(self, catering_company, *args, **kwargs):
+        super(CateringServiceFilterForm, self).__init__(*args, **kwargs)
+        self.fields['catering_service'] = forms.ModelChoiceField(
+            queryset=CateringService.objects.filter(cateringcompany=catering_company),
+            required=False
+        )
