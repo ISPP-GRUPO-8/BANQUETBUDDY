@@ -45,7 +45,7 @@ jobs:
 
       - name: Run migrations
         run: |
-          cd banquetbuddy
+          cd banquetBuddy
           python manage.py makemigrations
           python manage.py migrate
 
