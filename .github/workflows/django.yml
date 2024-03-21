@@ -51,4 +51,5 @@ jobs:
 
       - name: Run tests
         run: |
+          cd banquetBuddy
           python manage.py test
