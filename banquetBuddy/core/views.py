@@ -70,6 +70,39 @@ def is_catering_company(request):
         res = False
     return res
 
+def is_catering_company_not_subscribed(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user,price_plan="NO_SUBSCRIBED")
+        res = True
+    except:
+        res = False
+    return res
+
+
+def is_catering_company_basic(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user,price_plan="BASIC")
+        res = True
+    except:
+        res = False
+    return res
+
+def is_catering_company_premium(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user,price_plan="PREMIUM")
+        res = True
+    except:
+        res = False
+    return res
+
+def is_catering_company_premium_pro(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user,price_plan="PREMIUM_PRO")
+        res = True
+    except:
+        res = False
+    return res
+
 
 def about_us(request):
     return render(request, "core/aboutus.html")
