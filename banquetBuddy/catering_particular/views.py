@@ -376,7 +376,7 @@ def payment_completed(request):
         particular= get_object_or_404(Particular, user = request.user),
         name=f'Reservation for {catering_service.cateringcompany.name} by {request.user.username}',
         date=request.session['event_date'],
-        details=f'Reservation for {request.session['number_guests']} guests',
+        details=f'Reservation for {request.session["number_guests"]} guests',
         menu = menu,
         booking_state=BookingState.CONTRACT_PENDING,
         number_guests=request.session['number_guests']
