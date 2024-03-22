@@ -103,10 +103,11 @@ def application_to_offer(request, offer_id):
     
     if JobApplication.objects.filter(employee=employee, offer=offer):
         return render(request, 'error_employee_already_applied.html')
+    elif not employee.curriculum:
+        return render(request, 'error_employee_curriculum.html')
     else:
         JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
-    
-    return render(request, "application_success.html")
+        return render(request, "application_success.html")
 
 @login_required
 def employee_applications_list(request):

@@ -56,13 +56,11 @@
                     <td>{{ applicant.employee.profession }}</td>
                     <td>{{ applicant.employee.experience }}</td>
                     <td>{{ applicant.employee.skills }}</td>
-                    <td>
-                        {% if applicant.curriculum %}
-                        <a href="{{ applicant.curriculum.url }}">View Curriculum</a>
-                        {% else %}
-                        No Curriculum Available
-                        {% endif %}
-                    </td>
+                    {% if applicant.employee.curriculum %}
+                        <td><a href="{{ applicant.employee.curriculum.url }}" target="_blank">{{ applicant.employee.curriculum.name }}</a></td>
+                    {% else %}
+                        <td>No hay currículum adjunto</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
