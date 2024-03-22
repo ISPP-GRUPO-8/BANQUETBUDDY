@@ -21,19 +21,6 @@
         border-radius: 5px;
     }
 
-    .apply{
-        display: block;
-        width: 25%;
-        padding: 0.5%;
-        background-color: #02483E;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 2%;
-        margin-left: 65%;
-        margin-right: 10%;
-    }
-
     .applications {
         display: block;
         width: 25%;
@@ -63,6 +50,17 @@
         padding: 0.5%;
         background-color: red; 
         color: black;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 2%;
+    }
+
+    .application {
+        display: block;
+        width: 27%;
+        padding: 0.5%;
+        background-color: #02483E; 
+        color: white;
         border-radius: 5px;
         cursor: pointer;
         margin-top: 2%;
@@ -113,12 +111,6 @@
             <h4>{{ offer.location }}</h4>
             <p>{{ offer.description }}</p>
             <!-- Aquí puedes agregar más detalles de la oferta -->
-            {% if user.is_authenticated and not user.CateringCompanyusername %}
-            <form action="{% url 'apply_offer' offer.id %}" method="post">
-                {% csrf_token %}
-                <button class="apply" type="submit">Apply</button>
-            </form>
-            {% endif %}
             {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
                 <div class="row justify-content-end">
                     <div class="col-xs-12 col-sm-4">
@@ -131,6 +123,12 @@
                         <form action="{% url 'delete_offer' offer.id %}" method="post">
                             {% csrf_token %}
                             <button class="delete" type="submit">Delete</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <form action="{% url 'applicants' offer.id %}" method="get">
+                            {% csrf_token %}
+                            <button class="application" type="submit">Applications</button>
                         </form>
                     </div>
                 </div>
