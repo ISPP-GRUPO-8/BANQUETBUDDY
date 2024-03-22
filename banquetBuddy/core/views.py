@@ -12,11 +12,12 @@ from catering_owners.forms import CateringCompanyForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-
 from django.contrib import messages
-from .models import *
+from .models import CustomUser
+from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
+from random import sample
 
 def get_user_type(user):
     if hasattr(user, 'ParticularUsername'):
@@ -27,12 +28,17 @@ def get_user_type(user):
         return "Employee"
     else:
         return "Unknown"
-
-
-
-
+      
 def home(request):
     context={}
+    offers = Offer.objects.all()  
+    random_offers = sample(list(offers), 4)
+
+    caterings = CateringService.objects.all()  
+    random_caterings = sample(list(caterings), 4)
+    
+    context['offers'] = random_offers
+    context['caterings'] = random_caterings
     context['is_particular'] = is_particular(request)
     context['is_employee'] = is_employee(request)
     context['is_catering_company'] = is_catering_company(request)
@@ -171,7 +177,22 @@ def profile_edit_view(request):
         user.save()
 
         return redirect("profile")
+
     return render(request, "core/profile_edit.html", context)
+
+def listar_caterings_home(request):
+    context = {}
+    busqueda = ''
+    caterings = CateringService.objects.all()
+    busqueda = request.POST.get("buscar", "") 
+    if busqueda:
+        caterings = CateringService.objects.filter(name__icontains=busqueda)
+
+    context['buscar'] = busqueda    
+    context['caterings'] = caterings
+    return render(request, 'listar_caterings.html', context)
+
+
 
 
 

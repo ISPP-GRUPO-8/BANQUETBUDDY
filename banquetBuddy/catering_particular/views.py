@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect, reverse
+from core.models import BookingState
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from catering_owners.models import CateringService
-from .forms import ParticularForm
+from django.urls import reverse
 from core.forms import CustomUserCreationForm
-from catering_owners.models import CateringCompany, CateringService, Menu, Event
-from django.contrib import messages
+from catering_owners.models import *
+from .forms import ParticularForm
+import re
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
@@ -15,6 +17,67 @@ from decimal import Decimal
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+@login_required
+def my_books(request):
+    user = request.user
+    events = Event.objects.filter(particular_id = user.id)
+    context = {'events': events}
+    return render(request, 'my_books.html', context)
+
+@login_required
+def book_cancel(request, event_id):
+    user = request.user
+    events = Event.objects.filter(particular_id = user.id)
+    context = {'events': events}
+    event = get_object_or_404(Event, id = event_id)
+    if user.id == event.particular_id:
+        event.booking_state = BookingState.CANCELLED
+        event.save()
+    return render(request, 'my_books.html', context)
+
+@login_required
+def book_edit(request, event_id):
+    context = {}
+    event = get_object_or_404(Event, id = event_id)
+    events = Event.objects.filter(particular_id = request.user.id)
+    catering_service = get_object_or_404(CateringService, id = event.cateringservice_id)
+    catering = get_object_or_404(CateringCompany, user_id = catering_service.cateringcompany_id)
+    menus = Menu.objects.filter(cateringcompany_id = catering.user_id)
+    context["menus"] = menus
+    context["event"] = event
+
+    if request.method == "POST":
+        date = request.POST.get('date')
+        number_guests = request.POST.get('number_guests')
+        menu = request.POST.get('selected_menu')
+
+        context["date"] = date
+        context["number_guests"] = number_guests
+        context["menu"] = menu
+        context["events"] = events
+
+        if number_guests == '0':
+            context['error'] = "The number of guests can not be 0."
+            return render(request, 'book_edit.html', context)
+        
+        date2 = datetime.strptime(date, '%Y-%m-%d').date()
+
+        if datetime.now().date() > date2:
+            context['error'] = "The selected date cannot be in the past."
+            return render(request, 'book_edit.html', context)
+
+        event.date = date
+        event.number_guests = number_guests
+        event.menu = Menu.objects.get(id = menu)
+        event.booking_state = BookingState.CONTRACT_PENDING
+        event.details = f'Reservation for {number_guests} guests'
+        event.save()
+
+        return render(request, 'my_books.html', context)
+
+    return render(request, 'book_edit.html', context)
 
 # Create your views here.
 
@@ -148,14 +211,55 @@ def listar_caterings(request):
 
 def catering_detail(request, catering_id):
     context = {}
-    context["is_particular"] = is_particular(request)
-    context["is_employee"] = is_employee(request)
-    context["is_catering_company"] = is_catering_company(request)
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    
+    reviews_list = Review.objects.filter(cateringservice_id=catering_id).order_by('-date')
+    
+    paginator = Paginator(reviews_list, 3)  # Muestra 3 reviews por página
+    page = request.GET.get('page')
+
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+
+    context['reviews'] = reviews
     if not is_particular(request):
         return HttpResponseForbidden("No eres cliente")
     catering = get_object_or_404(CateringService, id=catering_id)
     context["catering"] = catering
     return render(request, "catering_detail.html", context)
+
+def catering_review(request, catering_id):
+    catering = get_object_or_404(CateringService, id=catering_id)
+    user = request.user
+    particular = Particular.objects.filter(user_id=user.id)
+
+    if particular:
+        context = {'catering': catering, 'particular':particular}
+
+        if request.method == 'POST':
+            description = request.POST.get('description')
+            rating = request.POST.get('rating')
+
+            review = Review.objects.create(
+                cateringservice=catering,
+                particular=Particular.objects.get(user=user),
+                date=datetime.now().date(),
+                description=description,
+                rating=rating
+            )
+
+            url_catering = reverse('catering_detail', args=[catering.id])
+            return redirect(url_catering)
+    else:
+        return redirect("/")
+
+    return render(request, 'catering_review.html', context)
 
 
 @login_required
@@ -163,6 +267,7 @@ def booking_process(request, catering_id):
     cateringservice = get_object_or_404(CateringService, id=catering_id)
     request.session['catering_service_id'] = cateringservice.id
     catering = get_object_or_404(CateringCompany, user_id = cateringservice.cateringcompany_id)
+    user = request.user
 
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []

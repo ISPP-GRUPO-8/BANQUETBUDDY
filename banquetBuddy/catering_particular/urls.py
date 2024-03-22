@@ -1,15 +1,19 @@
 from django.urls import path
-from . import views
 from core.views import *
-from catering_particular import views
-from .views import booking_process
+from catering_particular.views import *
 
 urlpatterns = [
+    path('my_books', my_books, name='my_books'),
+    path('my_books/<int:event_id>/edit', book_edit, name='book_edit'),
+    path('my_books/<int:event_id>/cancel', book_cancel, name='book_cancel'),
+    path('', listar_caterings, name='listar_caterings'),
+    path('<int:catering_id>/', catering_detail, name='catering_detail'), 
     path('<int:catering_id>/book/', booking_process, name='booking_process'),
-    path('', views.listar_caterings, name='listar_caterings'),
-    path('<int:catering_id>/', views.catering_detail, name='catering_detail'),
-    path('register_particular',views.register_particular,name='register_particular'),
-    path('process/', views.payment_process, name='process'),
-    path('completed/', views.payment_completed, name='completed'),
-    path('canceled/', views.payment_canceled, name='canceled'),
+    path('', listar_caterings, name='listar_caterings'),
+    path('<int:catering_id>/', catering_detail, name='catering_detail'),
+    path('register_particular',register_particular,name='register_particular'),
+    path('process/', payment_process, name='process'),
+    path('completed/', payment_completed, name='completed'),
+    path('canceled/', payment_canceled, name='canceled'),
+    path('<int:catering_id>/review', catering_review, name='add_review'),
 ]
