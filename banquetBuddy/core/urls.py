@@ -13,6 +13,9 @@ urlpatterns = [
     path('register_choice', elegir_registro, name='register_choice'),
     path('profile', profile_view, name='profile'),
     path('profile-edit', profile_edit_view, name='profile_edit'),    
+    path('reset_password/', reset_password, name='reset_password'),
+    path('reset_password/<str:token>/', reset_password_confirm, name='reset_password_confirm'),
+    path('reset_password_complete/', reset_password_complete, name='reset_password_complete'),
 
 
 ]
