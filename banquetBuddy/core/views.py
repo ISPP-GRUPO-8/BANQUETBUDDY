@@ -4,6 +4,11 @@ from catering_particular.models import Particular
 
 from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm, CustomUserCreationForm
+
+from catering_particular.forms import ParticularForm
+from catering_employees.forms import EmployeeForm
+from catering_owners.forms import CateringCompanyForm
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -26,6 +31,14 @@ def get_user_type(user):
       
 def home(request):
     context={}
+    offers = Offer.objects.all()  
+    random_offers = sample(list(offers), 4)
+
+    caterings = CateringService.objects.all()  
+    random_caterings = sample(list(caterings), 4)
+    
+    context['offers'] = random_offers
+    context['caterings'] = random_caterings
     context['is_particular'] = is_particular(request)
     context['is_employee'] = is_employee(request)
     context['is_catering_company'] = is_catering_company(request)
@@ -57,46 +70,6 @@ def is_catering_company(request):
         res = False
     return res
 
-def home(request):
-
-    context = {}
-
-    offers = Offer.objects.all()  
-    random_offers = sample(list(offers), 4)
-
-    caterings = CateringService.objects.all()  
-    random_caterings = sample(list(caterings), 4)
-
-    context = {'offers': random_offers, 'caterings': random_caterings}
-
-
-    return render(request, "core/home.html", context)   
-
-def is_particular(request):
-    try:
-        particular = Particular.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_employee(request):
-    try:
-        employee = Employee.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_catering_company(request):
-    try:
-        catering_company = CateringCompany.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
