@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
+from django.shortcuts import render, get_object_or_404, HttpResponse, redirect, reverse
 from core.models import BookingState
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,6 +11,12 @@ from django.http import HttpResponseForbidden
 from core.views import *
 from django.db.models import Q
 from datetime import datetime
+import stripe
+from django.conf import settings
+from decimal import Decimal
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
@@ -259,11 +265,9 @@ def catering_review(request, catering_id):
 @login_required
 def booking_process(request, catering_id):
     cateringservice = get_object_or_404(CateringService, id=catering_id)
-    catering = get_object_or_404(
-        CateringCompany, user_id=cateringservice.cateringcompany_id
-    )
+    request.session['catering_service_id'] = cateringservice.id
+    catering = get_object_or_404(CateringCompany, user_id = cateringservice.cateringcompany_id)
     user = request.user
-    particular = get_object_or_404(Particular, user_id=user.id)
 
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
@@ -276,16 +280,13 @@ def booking_process(request, catering_id):
     menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
 
     # Coloca el menú dentro del contexto correctamente
-    context = {
-        "cateringservice": cateringservice,
-        "catering": catering,
-        "menus": menus,
-        "dates": highlighted_dates_str,
-    }
-    if request.method == "POST":
-        event_date = request.POST.get("event_date")
-        number_guests = request.POST.get("number_guests")
-        selected_menu = request.POST.get("selected_menu")
+    context = {'cateringservice': cateringservice,'catering': catering, 'menus': menus,'dates' : highlighted_dates_str}
+    if request.method == 'POST':
+        event_date = request.POST.get('event_date')
+        request.session['event_date'] = event_date
+        number_guests = request.POST.get('number_guests')
+        request.session['number_guests'] = number_guests
+        selected_menu = request.POST.get('selected_menu')
 
         # Validación y lógica de reserva aquí
         if not selected_menu:
@@ -333,22 +334,62 @@ def booking_process(request, catering_id):
         ):
             return render(request, "booking_process.html", context)
 
-        menu = Menu.objects.get(id=selected_menu)
-        # Crear el evento y hacer la reserva
-        event = Event.objects.create(
-            cateringservice=cateringservice,
-            particular=particular,
-            name=f"Reservation for {catering.name} by {user.username}",
-            date=event_date,
-            details=f"Reservation for {number_guests} guests",
-            menu=menu,
-            booking_state=BookingState.CONTRACT_PENDING,
-            number_guests=number_guests,
-        )
-
         # Puedes agregar más lógica según sea necesario
 
-        return redirect("/")
+        return payment_process(request, cateringservice.id, selected_menu, number_guests, event_date)
 
     # Si no es una solicitud POST, renderizar la página con el formulario
-    return render(request, "booking_process.html", context)
+    return render(request, 'booking_process.html', context)
+
+def payment_process(request, catering_service_id, selected_menu, number_guests, event_date):
+    catering_service = get_object_or_404(CateringService, id=catering_service_id)
+    request.session['selected_menu'] = selected_menu
+    if request.method == 'POST':
+        success_url = request.build_absolute_uri(
+            reverse('completed'))
+        cancel_url = request.build_absolute_uri(
+            reverse('canceled'))
+        # Stripe checkout session data
+        session_data = {
+        'mode': 'payment',
+        'success_url': success_url,
+        'cancel_url': cancel_url,
+        'line_items': []
+        }
+        # add order items to the Stripe checkout session
+        session_data['line_items'].append({
+            'price_data': {
+            'unit_amount': int(catering_service.price * int(number_guests) * Decimal('100')),
+            'currency': 'eur',
+            'product_data': {
+                'name': f"{catering_service.cateringcompany.name} - {catering_service.name} - {number_guests} guests - {selected_menu} - {event_date}",
+            },
+        },
+            'quantity': 1,
+        })
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+    else:
+        return render(request, 'payment/process.html', locals())
+    
+def payment_completed(request):
+    menu = Menu.objects.get(id = request.session['selected_menu'])
+    catering_service_id = request.session['catering_service_id']
+    catering_service = get_object_or_404(CateringService, id = catering_service_id)
+        # Crear el evento y hacer la reserva
+    event = Event.objects.create(
+        cateringservice=catering_service,
+        particular= get_object_or_404(Particular, user = request.user),
+        name=f'Reservation for {catering_service.cateringcompany.name} by {request.user.username}',
+        date=request.session['event_date'],
+        details=f'Reservation for {request.session["number_guests"]} guests',
+        menu = menu,
+        booking_state=BookingState.CONTRACT_PENDING,
+        number_guests=request.session['number_guests']
+    )
+    return render(request, 'payment/completed.html')
+
+def payment_canceled(request):
+    return render(request, 'payment/canceled.html')
