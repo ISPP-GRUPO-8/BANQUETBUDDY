@@ -323,8 +323,16 @@ def booking_process(request, catering_id):
             context["form_error_date_selected"] = True
 
         # Verificar si hay errores en el formulario y, si los hay, volver a renderizar la página con los errores
-        if any(key in context for key in ['form_error', 'form_error_capacity', 'form_error_date','form_error_date_selected']):
-            return render(request, 'booking_process.html', context)
+        if any(
+            key in context
+            for key in [
+                "form_error",
+                "form_error_capacity",
+                "form_error_date",
+                "form_error_date_selected",
+            ]
+        ):
+            return render(request, "booking_process.html", context)
 
         # Puedes agregar más lógica según sea necesario
 

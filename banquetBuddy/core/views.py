@@ -132,8 +132,13 @@ def profile_view(request):
 
 @login_required
 def profile_edit_view(request):
-    context = {}
-    context["user"] = request.user
+    context = {"user": request.user}
+
+    is_employee = hasattr(request.user, 'EmployeeUsername')
+    if is_employee:
+        employee_instance = Employee.objects.get(user = request.user)
+    else:
+        employee_instance = None
 
     if request.method == "POST":
         email = request.POST.get("email", "")
@@ -168,14 +173,25 @@ def profile_edit_view(request):
             messages.error(request, "El nombre de usuario ya está en uso")
             return render(request, "core/profile_edit.html", context)
 
+        if is_employee:
+            curriculum_file = request.FILES.get("curriculum")
+            if curriculum_file:
+                if not curriculum_file.name.endswith('.pdf'):
+                    messages.error(request, "Por favor, carga solo archivos PDF")
+                    return render(request, "core/profile_edit.html", context)
+                if employee_instance.curriculum:
+                    employee_instance.curriculum.delete()
+                employee_instance.curriculum = curriculum_file
+                employee_instance.save()
+
         user = request.user
         user.email = email
         user.first_name = first_name
         user.username = username
         user.last_name = last_name
-
         user.save()
 
+        messages.success(request, "Perfil actualizado correctamente")
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)

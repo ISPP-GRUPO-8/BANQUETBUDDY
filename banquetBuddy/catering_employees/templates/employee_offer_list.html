@@ -38,13 +38,18 @@
     .offerTitle {
         font-weight: bold;
     }
-    .apply-button {
+    .button-appearance {
         background-color: #02483E;
         color: white;
         padding: 5px 10px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+    .button-appearance:hover {
+        background-color: #01352e;
     }
 
 </style>
@@ -63,18 +68,19 @@
             <h4>{{ offer.location }}</h4>
             <p>{{ offer.description }}</p>
             {% if applications|get_value:offer.id %}
-            <p style="color: red;">You've already applied for this offer</p>
-        {% else %}
-             <button class="apply-button" onclick="applyToOffer({{ offer.id }})">Apply</button>
-        {% endif %}
+                <p style="color: red;">You've already applied for this offer</p>
+            {% else %}
+                <button class="button-appearance" onclick="applyToOffer({{ offer.id }})">Apply</button>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
-    <script>
-        function applyToOffer(offerId) {
-            window.location.href = "/employeeApplication/" + offerId;
-        }
-    </script>
 </body>
+
+<script>
+function applyToOffer(offerId) {
+    window.location.href = "/employeeApplication/" + offerId;
+}
+</script>
 </html>
 {% endblock %}
