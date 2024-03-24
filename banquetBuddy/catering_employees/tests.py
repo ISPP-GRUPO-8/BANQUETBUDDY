@@ -7,6 +7,7 @@ from catering_owners.models import Offer, JobApplication, CateringService, Cater
 from .views import employee_offer_list, application_to_offer
 from django.urls import reverse
 from datetime import date
+from django.core.files.base import ContentFile
 
 # Create your tests here.
 
@@ -74,6 +75,8 @@ class EmployeeOfferListViewTest(TestCase):
         
 class ApplicationToOfferViewTest(TestCase):
     def setUp(self):
+        file_content = b'Contenido de prueba del archivo'
+        false_file = ContentFile(file_content, name='archivo_prueba.txt')
         self.factory = RequestFactory()
         self.user = CustomUser.objects.create_user(
             username='testuser',
@@ -87,7 +90,8 @@ class ApplicationToOfferViewTest(TestCase):
             experience='5 years',
             skills='Testing skills',
             english_level='ALTO',
-            location='Test Location'
+            location='Test Location',
+            curriculum=false_file
             )
         
         self.catering_company = CateringCompany.objects.create(

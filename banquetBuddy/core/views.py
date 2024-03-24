@@ -18,6 +18,10 @@ from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from random import sample
+from django.utils import timezone
+from datetime import datetime, timedelta
+from catering_owners.models import Notification
+from catering_owners.models import Event
 
 def get_user_type(user):
     if hasattr(user, 'ParticularUsername'):
@@ -99,7 +103,15 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                # Redireccionar a la página de inicio o a otra página deseada
+                
+                #Comprueba si se deben crear notificaciones
+                try:
+                    particular_username = request.user.ParticularUsername
+                    is_particular = True
+                except:
+                    is_particular = False
+                if is_particular:
+                    send_notifications_next_events_particular(request)
                 return redirect("/")
         # Si el formulario no es válido, renderiza el formulario con los errores
     else:
@@ -207,6 +219,33 @@ def listar_caterings_home(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
+
+def notification_view(request):
+    
+    current_user = request.user
+    notifications = Notification.objects.filter(user=current_user, has_been_read=False)
+    for notification in notifications:
+        notification.has_been_read = True
+        notification.save()
+    context = {'notifications' : notifications}
+    
+    return render(request, 'core/notifications.html', context)
+
+#Notification check functions
+
+def send_notifications_next_events_particular(request):
+    current_user = request.user
+    Notification.objects.filter(user=current_user, has_been_read=True).delete()
+    week_after = timezone.now() + timedelta(days=7)
+    next_events = Event.objects.filter(date__lte=week_after, particular__user=current_user)
+    
+    for event in next_events:
+        
+        if not event.notified_to_particular:
+            message = f"Your event is prepared for {event.date}. ¡Don't forget to get ready!"
+            Notification.objects.create(user=current_user, message=message, event=event)
+            event.notified_to_particular = True
+            event.save()
 
 
 
