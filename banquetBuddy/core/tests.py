@@ -1,10 +1,11 @@
-from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import CustomUser
-from catering_owners.models import CateringCompany, CateringService
+from .models import CustomUser, BookingState
+from .views import notification_view
+from catering_owners.models import CateringCompany, CateringService, Notification, Event, Menu
 from catering_particular.models import Particular
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
+from datetime import datetime
 
 
 
@@ -113,6 +114,68 @@ class ListarCateringsHomeTests(TestCase):
         self.user_particular.delete()
         self.particular.delete()
         self.catering_service.delete()
+        
+class NotificationViewTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user1 = CustomUser.objects.create_user(username='testuser', password='testpassword', email='test1@gmail.com')
+        self.user2 = CustomUser.objects.create_user(username='testuser2', password='testpassword', email='test2@gmail.com')
+        self.company = CateringCompany.objects.create(
+            user=self.user2,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test service description',
+            location='Test location',
+            capacity=100,
+            price=100.00
+        )
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        self.notification1 = Notification.objects.create(user=self.user1, has_been_read=False, message='Test notification 1', event=self.event)
+    
+    def test_notification_view(self):
+        # Simula una solicitud GET al view
+        request = self.factory.get(reverse('notifications'))
+        request.user = self.user1
+        
+        # Llama a la vista
+        response = notification_view(request)
+        
+        # Verifica que se haya llamado a la plantilla correcta
+        self.assertEqual(response.status_code, 200)
+        
+        # Verifica que las notificaciones no leídas se hayan marcado como leídas
+        self.notification1.refresh_from_db()
+        self.assertTrue(self.notification1.has_been_read)
 
 
     

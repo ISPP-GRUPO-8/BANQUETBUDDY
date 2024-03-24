@@ -105,7 +105,12 @@ def login_view(request):
                 login(request, user)
                 
                 #Comprueba si se deben crear notificaciones
-                if request.user.ParticularUsername:
+                try:
+                    particular_username = request.user.ParticularUsername
+                    is_particular = True
+                except:
+                    is_particular = False
+                if is_particular:
                     send_notifications_next_events_particular(request)
                 return redirect("/")
         # Si el formulario no es válido, renderiza el formulario con los errores
