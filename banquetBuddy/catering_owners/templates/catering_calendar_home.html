@@ -1,4 +1,3 @@
-
 {% extends 'core/base.html' %}
 {% load static %}
 
@@ -11,27 +10,70 @@
     <title>Select Catering Service</title>
 
     <style>
-        select {
-            width: 100%;
-            padding: 0.5rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
+        body {
+            font-family:  Verdana, Geneva, Tahoma, sans-serif;
+            
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #013b2a;
         }
-        button {
-            padding: 0.5rem 1rem;
+        h1{
+        text-align: center;
+        font-size: 35px;
+        } 
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .form-container select {
+            width: 100%;
+            padding: 10px;
             font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #02483E;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #013b2a;
+        }
+        @media screen and (max-width: 450px) {
+            h1 {
+                font-size: 25px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 600px) and (min-width: 451px) {
+            h1 {
+                font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Select a Catering Service</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Apply Filter</button>
-    </form>
+    <div class="form-container">
+        <h1>Select a Catering Service</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Apply Filter</button>
+        </form>
+    </div>
 </body>
 </html>
 {% endblock %}
