@@ -6,7 +6,6 @@ from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee
 
-
 class CateringCompany(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='CateringCompanyusername')
     name = models.CharField(max_length=255)
@@ -131,3 +130,9 @@ class Notification(models.Model):
     message = models.TextField()
     has_been_read = models.BooleanField(default=False)
 
+class RecommendationLetter(models.Model): 
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    catering = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name = 'catering')
+    description = models.CharField(max_length=255)
+    date = models.DateField()
+    
