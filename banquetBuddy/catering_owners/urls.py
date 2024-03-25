@@ -32,8 +32,8 @@ urlpatterns = [
     path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
+    path('my_bookings/',my_bookings_preview, name='my_bookings'),
 ]
-
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

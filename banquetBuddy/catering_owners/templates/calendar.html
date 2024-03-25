@@ -21,6 +21,7 @@
             max-width: 800px;
             margin: 0 auto;
             overflow: hidden;
+            padding: 15px;
         }
         .calendar-table {
             width: 100%;
@@ -118,6 +119,11 @@
                 font-size: 10px; /* Cambio de tamaño de fuente en dispositivos pequeños */
             }
         }
+        .zero-day {
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, #02483E 5px, #02483E 10px);
+            background-size: auto 100%;
+        }
+
     </style>
 </head>
 
@@ -130,21 +136,25 @@
         </div>
         <table class="calendar-table">
             <tr>
-                <th>Lun</th>
-                <th>Mar</th>
-                <th>Mie</th>
-                <th>Jue</th>
-                <th>Vie</th>
-                <th>Sab</th>
-                <th>Dom</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
             </tr>
             {% for week in cal %}
                 <tr>
                     {% for day in week %}
-                        {% if day in event_days %}
-                            <td><a href="{% url 'reservations_for_day' catering_service_id=catering_service_id year=year month=month day=day %}" class="event-day-button">{{ day }}</a></td>
+                        {% if day == 0 %}
+                            <td class="zero-day"></td>
                         {% else %}
-                            <td>{{ day }}</td>
+                            {% if day in event_days %}
+                                <td><a href="{% url 'reservations_for_day' catering_service_id=catering_service_id year=year month=month day=day %}" class="event-day-button">{{ day }}</a></td>
+                            {% else %}
+                                <td>{{ day }}</td>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </tr>

@@ -108,6 +108,23 @@ def catering_calendar_preview(request):
     return render(request, 'catering_calendar_home.html', context)
 
 @login_required
+def my_bookings_preview(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    if request.method == 'POST':
+            form = CateringServiceFilterForm(catering_company, request.POST)
+            if form.is_valid():
+                selected_catering_service = form.cleaned_data.get('catering_service')
+                if selected_catering_service:
+                    return redirect('view_reservations',catering_service_id=selected_catering_service.id)
+    else:
+        form = CateringServiceFilterForm(catering_company)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'catering_calendar_home.html', context)
+@login_required
 def catering_calendar_view(request, catering_service_id,month,year):
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
     if request.user == catering_service.cateringcompany.user:  

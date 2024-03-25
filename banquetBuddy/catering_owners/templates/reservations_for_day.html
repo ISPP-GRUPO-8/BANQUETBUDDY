@@ -70,14 +70,14 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <h5 class="card-title">{{ reservation.name }}</h5>
-                    <p class="card-text"><span class="field-name">Fecha:</span> {{ reservation.date }}</p>
-                    <p class="card-text"><span class="field-name">Detalles:</span> {{ reservation.details }}</p>
+                    <p class="card-text"><span class="field-name">Date:</span> {{ reservation.date }}</p>
+                    <p class="card-text"><span class="field-name">Details:</span> {{ reservation.details }}</p>
                     {% if reservation.booking_state == "CONTRACT_PENDING" %}
-                    <p class="card-text"><span class="field-name">Booking state:</span> Contract pending</p>
+                    <p class="card-text"><span class="field-name">Booking State:</span> Contract pending</p>
                     {% else %}
-                    <p class="card-text"><span class="field-name">Booking state:</span> {{ reservation.booking_state }}</p>
+                    <p class="card-text"><span class="field-name">Booking State:</span> {{ reservation.booking_state }}</p>
                     {% endif %}
-                    <p class="card-text"><span class="field-name">Número de invitados:</span> {{ reservation.number_guests }}</p>
+                    <p class="card-text"><span class="field-name">Guests Number:</span> {{ reservation.number_guests }}</p>
                 </div>
             </div>
         </div>
