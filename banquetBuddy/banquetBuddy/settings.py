@@ -47,13 +47,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.ProtectCurriculumMiddleware',
 ]
 
 ROOT_URLCONF = "banquetBuddy.urls"
@@ -150,11 +151,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/images/logos"),
 ]
 
-# Configuración para manejar archivos de medios
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51OvizxD9TmIUzfvMF88OWTD25G6N3pvtYLdxwlN6LeYDmvFWLGAPUck5EJdpuKsVq1Y7pXJ3AvpCIT7KKPqPm8gl00DKrw7abp'
+STRIPE_SECRET_KEY = 'sk_test_51OvizxD9TmIUzfvMeNMZmtR2wwOstpKMFHm6vtSFXrIrfUDnrBMip7rTblbpbSeofcCBrwBdlrJ4Xos7TQ5a3CvE004zNaXTHT'
+STRIPE_API_VERSION = '2022-08-01'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Media root
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

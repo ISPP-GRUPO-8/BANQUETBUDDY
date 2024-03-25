@@ -4,6 +4,11 @@ from catering_particular.models import Particular
 
 from catering_owners.models import CateringCompany
 from .forms import EmailAuthenticationForm, CustomUserCreationForm
+
+from catering_particular.forms import ParticularForm
+from catering_employees.forms import EmployeeForm
+from catering_owners.forms import CateringCompanyForm
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -11,9 +16,15 @@ from django.core.mail import send_mail
 from .forms import ErrorForm
 
 from django.contrib import messages
-from .models import *
+from .models import CustomUser
+from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
+from random import sample
+from django.utils import timezone
+from datetime import datetime, timedelta
+from catering_owners.models import Notification
+from catering_owners.models import Event
 
 def get_user_type(user):
     try:
@@ -38,6 +49,14 @@ def get_user_type(user):
 
 def home(request):
     context={}
+    offers = Offer.objects.all()  
+    random_offers = sample(list(offers), 4)
+
+    caterings = CateringService.objects.all()  
+    random_caterings = sample(list(caterings), 4)
+    
+    context['offers'] = random_offers
+    context['caterings'] = random_caterings
     context['is_particular'] = is_particular(request)
     context['is_employee'] = is_employee(request)
     context['is_catering_company'] = is_catering_company(request)
@@ -69,34 +88,6 @@ def is_catering_company(request):
         res = False
     return res
 
-def home(request):
-    return render(request, "core/home.html")
-
-def is_particular(request):
-    try:
-        particular = Particular.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_employee(request):
-    try:
-        employee = Employee.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
-    
-
-def is_catering_company(request):
-    try:
-        catering_company = CateringCompany.objects.get(user = request.user)
-        res = True
-    except:
-        res = False
-    return res
 
 def about_us(request):
     return render(request, "core/aboutus.html")
@@ -126,7 +117,15 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                # Redireccionar a la página de inicio o a otra página deseada
+                
+                #Comprueba si se deben crear notificaciones
+                try:
+                    particular_username = request.user.ParticularUsername
+                    is_particular = True
+                except:
+                    is_particular = False
+                if is_particular:
+                    send_notifications_next_events_particular(request)
                 return redirect("/")
         # Si el formulario no es válido, renderiza el formulario con los errores
     else:
@@ -159,8 +158,13 @@ def profile_view(request):
 
 @login_required
 def profile_edit_view(request):
-    context = {}
-    context["user"] = request.user
+    context = {"user": request.user}
+
+    is_employee = hasattr(request.user, 'EmployeeUsername')
+    if is_employee:
+        employee_instance = Employee.objects.get(user = request.user)
+    else:
+        employee_instance = None
 
     if request.method == "POST":
         email = request.POST.get("email", "")
@@ -195,15 +199,27 @@ def profile_edit_view(request):
             messages.error(request, "El nombre de usuario ya está en uso")
             return render(request, "core/profile_edit.html", context)
 
+        if is_employee:
+            curriculum_file = request.FILES.get("curriculum")
+            if curriculum_file:
+                if not curriculum_file.name.endswith('.pdf'):
+                    messages.error(request, "Por favor, carga solo archivos PDF")
+                    return render(request, "core/profile_edit.html", context)
+                if employee_instance.curriculum:
+                    employee_instance.curriculum.delete()
+                employee_instance.curriculum = curriculum_file
+                employee_instance.save()
+
         user = request.user
         user.email = email
         user.first_name = first_name
         user.username = username
         user.last_name = last_name
-
         user.save()
 
+        messages.success(request, "Perfil actualizado correctamente")
         return redirect("profile")
+
     return render(request, "core/profile_edit.html", context)
 
 @login_required
@@ -238,6 +254,44 @@ def error_report(request):
 
     return render(request, 'core/error_report.html', {'form': form})
 
+def listar_caterings_home(request):
+    context = {}
+    busqueda = ''
+    caterings = CateringService.objects.all()
+    busqueda = request.POST.get("buscar", "") 
+    if busqueda:
+        caterings = CateringService.objects.filter(name__icontains=busqueda)
+
+    context['buscar'] = busqueda    
+    context['caterings'] = caterings
+    return render(request, 'listar_caterings.html', context)
+
+def notification_view(request):
+    
+    current_user = request.user
+    notifications = Notification.objects.filter(user=current_user, has_been_read=False)
+    for notification in notifications:
+        notification.has_been_read = True
+        notification.save()
+    context = {'notifications' : notifications}
+    
+    return render(request, 'core/notifications.html', context)
+
+#Notification check functions
+
+def send_notifications_next_events_particular(request):
+    current_user = request.user
+    Notification.objects.filter(user=current_user, has_been_read=True).delete()
+    week_after = timezone.now() + timedelta(days=7)
+    next_events = Event.objects.filter(date__lte=week_after, particular__user=current_user)
+    
+    for event in next_events:
+        
+        if not event.notified_to_particular:
+            message = f"Your event is prepared for {event.date}. ¡Don't forget to get ready!"
+            Notification.objects.create(user=current_user, message=message, event=event)
+            event.notified_to_particular = True
+            event.save()
 
 
 

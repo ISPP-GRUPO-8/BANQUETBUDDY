@@ -1,6 +1,8 @@
 from django.urls import path
-from django.urls import path
+from django.urls import path, include
 from core.views import *
+
+
 
 urlpatterns = [
     path('', home, name='home'),
@@ -13,5 +15,6 @@ urlpatterns = [
     path('register_choice', elegir_registro, name='register_choice'),
     path('profile', profile_view, name='profile'),
     path('profilex-edit', profile_edit_view, name='profile_edit'),
-    path('error-report', error_report, name='error-report')    
+    path('error-report', error_report, name='error-report'),
+    path('notifications', notification_view, name='notifications'),     
 ]

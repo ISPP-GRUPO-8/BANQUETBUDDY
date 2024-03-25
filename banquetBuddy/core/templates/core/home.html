@@ -2,20 +2,115 @@
 {% load static %}
 
 {% block content %}
-{% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-{% endfor %}
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image">
-            </div>
-            {% if not request.user.is_authenticated %}
-            <div class="col-12 text-center mt-4 btn-container">
-                <a href="/login" class="btn btn-login mr-3">Log in</a>
-                <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
-            </div>         
-            {% endif %}        
-        </div>
+<div class="container mt-4">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+  {% if request.user.is_authenticated and request.user.ParticularUsername %}
+  <form method="post" action="{% url 'listar_caterings' %}" id="miFormulario" class="mb-4">
+    {% csrf_token %}
+    <div class="input-group">
+      <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." id="search" name="search"
+        value="{{ search }}" />
+      <div class="input-group-append">
+        <button class="btn btn-primary  mb-3" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
+  </form>
+  <div class="container mt-4">
+    <div class="row">
+      {% for catering in caterings %}
+      <div class="col-md-3">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ catering.name }}</h5>
+            <p class="card-text">Location: {{ catering.location }}</p>
+            <p class="card-text">Capacity: {{ catering.capacity }} person</p>
+            <p class="card-text">Price: {{ catering.price }} €/person</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+<div class="container mt-4">
+  {% if request.user.is_authenticated and request.user.EmployeeUsername %}
+  <form method="post" action="{% url 'employeeOfferList' %}" id="miFormulario" class="mb-4">
+    {% csrf_token %}
+    <div class="input-group">
+      <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." id="search" name="search"
+        value="{{ search }}" />
+      <div class="input-group-append">
+        <button class="btn btn-primary  mb-3" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="container mt-4">
+    <div class="row">
+      {% for offer in offers %}
+      <div class="col-md-3">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ offer.title }}</h5>
+            <p class="card-text">{{ offer.description }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12 text-center">
+      <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image img-fluid"
+        style="max-width: 200px;">
+    </div>
+  </div>
+</div>
+
+
+{% if not request.user.is_authenticated %}
+<div class="col-12 text-center mt-4 btn-container">
+  <a href="/login" class="btn btn-login mr-3">Log in</a>
+  <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+</div>
+{% endif %}
+
 {% endblock %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buscar = document.getElementById('buscar');
+    buscar.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.keyCode === 13) {
+        event.preventDefault();
+        if (buscar.value.trim() !== '') {
+          document.getElementById('miFormulario').submit();
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .large-search-box {
+    height: 50px;
+    /* Ajusta según sea necesario */
+    font-size: 1.2rem;
+    /* Ajusta según sea necesario */
+  }
+
+  .btn-custom {
+    background-color: #02483E;
+    color: white;
+    border-color: #02483E;
+  }
+</style>
