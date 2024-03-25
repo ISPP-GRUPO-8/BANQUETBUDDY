@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% extends 'offers/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    label {
+        display: block;
+        margin-top: 3%;
+    }
+
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .list {
+        margin-right: 8%;
+        margin-left: 8%;
+        margin-bottom: 3%;
+    }
+    .notification {
+        margin-top: 3%;
+    }
+
+    hr {
+        margin-top: 3%;
+    }
+
+    .notificationTitle {
+        font-weight: bold;
+    }
+
+</style>
+    <h1 style="margin-top: 2%;">Notifications</h1>
+    <div class="list">
+            
+        {% for notification in notifications %}
+        <div class="notification">
+            <h2 class="notificationTitle">{{ notification.event.name }}</h2>
+            <h4>{{ notification.message }}</h4>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
+
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event
+
+
+
 from django.contrib.auth.decorators import login_required
 from core.forms import CustomUserCreationForm
 from .models import CateringCompany, Menu, Plate
@@ -266,6 +270,15 @@ def catering_profile_edit(request):
 
     context["form"] = form
     return render(request, "profile_company_edit.html", context)
+
+
+@login_required
+def catering_unsuscribe(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    catering_company.price_plan = "NO_SUBSCRIBED"
+    catering_company.save()
+    return redirect("profile")
+
 
 ###########################
 ######### Ofertas #########

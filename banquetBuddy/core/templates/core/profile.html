@@ -5,7 +5,7 @@
 
 <div class="container my-5">
   {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
   {% endfor %}
   <div class="row justify-content-center mb-4">
     <div class="col-md-6">
@@ -25,11 +25,21 @@
             <li class="list-group-item">
               <strong>Last Name:</strong> {{ user.last_name }}
             </li>
+            {% if user.EmployeeUsername %}
+              <li class="list-group-item">
+                <strong>Currículum:</strong>
+                {% if user.EmployeeUsername.curriculum %}
+                  <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
+                {% else %}
+                  No hay currículum adjunto
+                {% endif %}
+              </li>
+            {% endif %}
           </ul>
         </div>
       </div>
     </div>
-    
+
     {% if catering_company %}
     <div class="container my-5">
       <div class="row justify-content-center mb-4">
@@ -44,7 +54,6 @@
                 <li class="list-group-item">
                   <a href="{% url 'my_bookings' %}" class="text-decoration-none"> My bookings </a>
                 </li>
-                
               </ul>
             </div>
           </div>

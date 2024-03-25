@@ -2,7 +2,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
+
 from .views import *
+
 
 from . import views
 from core.views import home
@@ -33,6 +35,7 @@ urlpatterns = [
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
     path('my_bookings/',my_bookings_preview, name='my_bookings'),
+    path('catering_unsuscribe/', catering_unsuscribe, name='catering_unsuscribe'),
 ]
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:
