@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from .views import create_offer,offer_list,apply_offer,delete_offer,edit_offer, confirm_delete_offer
+from .views import catering_unsuscribe, create_offer,offer_list,apply_offer,delete_offer,edit_offer, confirm_delete_offer
 
 from . import views
 from core.views import home
@@ -24,5 +24,6 @@ urlpatterns = [
     path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
+    path('catering_unsuscribe/', catering_unsuscribe, name='catering_unsuscribe'),
 ]
 

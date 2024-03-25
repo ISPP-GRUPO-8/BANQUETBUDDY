@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from catering_employees.models import Employee
 from catering_particular.models import Particular
@@ -94,6 +95,9 @@ def about_us(request):
 
 
 def subscription_plans(request):
+    if is_catering_company(request):
+        catering_company = CateringCompany.objects.get(user=request.user)
+        return render(request, "core/subscriptionsplans.html", {"price_plan": catering_company.price_plan})
     return render(request, "core/subscriptionsplans.html")
 
 
