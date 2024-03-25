@@ -14,7 +14,7 @@ class Employee(models.Model):
     skills = models.CharField(max_length=255)
     english_level = models.CharField(max_length=50, choices=EnglishLevel.choices, default="NINGUNO")
     location = models.CharField(max_length=255)
-    curriculum = models.BinaryField(blank=True, null=True)
+    curriculum = models.FileField(upload_to='curriculums/', blank=True, null=True)
     recommendation_letter = models.BinaryField(blank=True, null=True)
 
 class Message(models.Model):

@@ -9,6 +9,11 @@ urlpatterns = [
     path('', listar_caterings, name='listar_caterings'),
     path('<int:catering_id>/', catering_detail, name='catering_detail'), 
     path('<int:catering_id>/book/', booking_process, name='booking_process'),
+    path('', listar_caterings, name='listar_caterings'),
+    path('<int:catering_id>/', catering_detail, name='catering_detail'),
+    path('register_particular',register_particular,name='register_particular'),
+    path('process/', payment_process, name='process'),
+    path('completed/', payment_completed, name='completed'),
+    path('canceled/', payment_canceled, name='canceled'),
     path('<int:catering_id>/review', catering_review, name='add_review'),
-    path('register_particular',register_particular,name='register_particular')
 ]

@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 {% load static %}
+
+<style>
+    .bell i {
+    position: relative; 
+    right: 1cm; 
+}
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-vyQ7N3S2F+Dd2jhN07XSyZ6R1ZSeznM57XjLSeV/DtBrJrE8c3H0RFuytWI3jGX5UJi+g8PXTPX/gqThXx1PEw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <html lang="en">
 <head> 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -51,6 +61,11 @@
                     {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
+                    <div class="bell">
+                    <a href="{% url 'notifications' %}">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                    </div>
                     <form class="form-inline my-2 my-lg-0">
                         <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
                     </form>

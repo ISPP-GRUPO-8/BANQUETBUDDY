@@ -12,6 +12,7 @@
       <div class="card" style="background-color: #02483e">
         <div class="card-body">
           <h2 class="card-title text-center text-white">Perfil de Usuario</h2>
+
           <ul class="list-group list-group-flush rounded">
             <li class="list-group-item">
               <strong>Email:</strong> {{ user.email }}
@@ -25,6 +26,16 @@
             <li class="list-group-item">
               <strong>Apellido:</strong> {{ user.last_name }}
             </li>
+            {% if user.EmployeeUsername %}
+              <li class="list-group-item">
+                <strong>Currículum:</strong>
+                {% if user.EmployeeUsername.curriculum %}
+                  <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
+                {% else %}
+                  No hay currículum adjunto
+                {% endif %}
+              </li>
+            {% endif %}
           </ul>
         </div>
       </div>
