@@ -44,8 +44,14 @@
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Calendar</a>
+                        <a class="nav-link" href={% url 'catering_calendar_preview' %}>Calendar</a>
                     </li>
+
+                    {% if is_particular %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
+                        </li>
+                    {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href={% url 'offer_list' %}>Offers</a>
@@ -113,6 +119,24 @@
                         <i class="fas fa-question icon-lg"></i>
                     </a>
                 </div>
+
+                            <!-- Columna para Política de Privacidad -->
+            <div class="col text-center">
+                <a href="{% url 'privacy_policy' %}" class="text-decoration-none">
+                    <p class="text-white text-lg">Privacy</p>
+                    <i class="fas fa-lock icon-lg"></i>
+                </a>
+            </div>
+
+            <!-- Columna para Términos y Condiciones -->
+            <div class="col text-center">
+                <a href="{% url 'terms_and_conditions' %}" class="text-decoration-none">
+                    <p class="text-white text-lg">Terms</p>
+                    <i class="fas fa-file-contract icon-lg"></i>
+                </a>
+            </div>
+
+
                 <div class="col social-medias-container text-center">
                     <a href="https://www.instagram.com/banquetbuddy_oficial/" target="_blank" class="text-decoration-none">
                         <p class="text-white text-lg">Instagram</p>

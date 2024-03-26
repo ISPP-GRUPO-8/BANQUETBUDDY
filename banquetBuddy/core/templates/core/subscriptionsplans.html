@@ -8,43 +8,49 @@
         margin-bottom: 50px;
         margin-top: 20px;
     }
+
     .col-md-4 {
-        display:inline-block;
-        background-color:#f3f3f3;
-        max-width:300px;
-        border-radius:10px;
-        margin-bottom:50px;
+        display: inline-block;
+        background-color: #f3f3f3;
+        max-width: 300px;
+        border-radius: 10px;
+        margin-bottom: 50px;
         margin-right: 5%;
         box-shadow: 0px 2px 5px #ddd;
     }
+
     .price_tag {
         margin-top: 10px;
-        font-size:160%;
+        font-size: 160%;
     }
+
     .feature_list {
         margin-top: 10px;
         list-style: none;
     }
+
     .head {
         font-weight: bold;
         margin-top: 5%;
-        font-size:150%;
-        text-align:left;
+        font-size: 150%;
+        text-align: left;
     }
+
     ul {
         list-style: none;
-        text-align:left
+        text-align: left
     }
+
     .title {
         text-align: center;
         margin-bottom: 5%;
         margin-top: 2%;
     }
+
     .plan-btn {
         margin-bottom: 20px;
         bottom: 10px;
     }
-
 </style>
 <div class="container">
     <div class="row">
@@ -55,45 +61,50 @@
         </div>
     </div>
 </div>
-<div class="container" >
+<div class="container">
     <div class="row">
         <div class="col-md-4">
             <div class="head">
                 <span>Basic</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
                 <span class="price">
                     <span class="currency">9</span>
                     <span class="cent">.99</span>
                     <span class="sign">€</span>
                     <span class="month">/MON</span>
                 </span>
-            </div>                          
+            </div>
             <div class="feature_list" style="margin-top: 15%;">
                 <ul>
                     <li>✔ Company Publication</li>
                     <li>✔ Chat with Customers</li>
                     <li>✔ Insights Panel</li>
                 </ul>
-                </div>
-                <div class="plan-btn" style="margin-top:20% ;">
-                    <button type="button" href="" class="btn btn-dark">Get ready</button>
-                </div>
-            
+            </div>
+            {% if price_plan == "BASE" %}
+            <div class="plan-btn" style="margin-top:30% ;">
+                <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
+                        class="text-decoration-none text-light">Cancelar subscripción</a></button>
+            </div>
+            {%else%}
+            <div class="plan-btn" style="margin-top:30% ;">
+                <button type="button" href="" class="btn btn-dark">Get ready</button>
+            </div>
+            {%endif %}
         </div>
-        
         <div class="col-md-4">
             <div class="head">
                 <span>Premium</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
                 <span class="price">
                     <span class="currency">19</span>
                     <span class="cent">.99</span>
                     <span class="sign">€</span>
                     <span class="month">/MON</span>
                 </span>
-            </div>                           
+            </div>
             <div class="feature_list" style="margin-top: 8%;">
                 <ul>
                     <li>✔ Company Publication</li>
@@ -103,23 +114,29 @@
                     <li>✔ Reports and Proposals</li>
                 </ul>
             </div>
-            <div class="plan-btn" style="margin-top:10% ;">
-                    <button type="button" href="" class="btn btn-dark">Get ready</button>
+            {% if price_plan == "PREMIUM" %}
+            <div class="plan-btn" style="margin-top:20% ;">
+                <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
+                        class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
+            {%else%}
+            <div class="plan-btn" style="margin-top:20% ;">
+                <button type="button" href="" class="btn btn-dark">Get ready</button>
+            </div>
+            {%endif %}
         </div>
-
         <div class="col-md-4">
             <div class="head">
                 <span>Pro</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
                 <span class="price">
-                <span class="currency">29</span>
-                <span class="cent">.99</span>
-                <span class="sign">€</span>
-                <span class="month">/MON</span>
+                    <span class="currency">29</span>
+                    <span class="cent">.99</span>
+                    <span class="sign">€</span>
+                    <span class="month">/MON</span>
                 </span>
-            </div>                       
+            </div>
             <div class="feature_list">
                 <ul>
                     <li>✔ Company Publication</li>
@@ -130,10 +147,16 @@
                     <li>✔ Employee hiring</li>
                 </ul>
             </div>
-            <div class="plan-btn">
+            {% if price_plan == "PREMIUM_PRO" %}
+            <div class="plan-btn" style="margin-top:15% ;">
+                <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
+                        class="text-decoration-none text-light">Cancelar subscripción</a></button>
+            </div>
+            {%else%}
+            <div class="plan-btn" style="margin-top:15% ;">
                 <button type="button" href="" class="btn btn-dark">Get ready</button>
-            </div>  
+            </div>
+            {%endif %}
         </div>
-    </div>  
-</div>
-{% endblock %}
+    </div>
+    {% endblock %}
