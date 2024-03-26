@@ -100,6 +100,16 @@
                   {% endfor %}
                 </div>
               </div>
+              <!-- Casilla de Política de Privacidad -->
+           <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacyPolicy"
+                  required
+                  oninvalid="this.setCustomValidity('Please accept the Privacy Policy and Terms and Conditions to continue')"
+                  oninput="this.setCustomValidity('')"
+                  title="Check this box to indicate that you accept the Privacy Policy and Terms and Conditions">
+            <label class="form-check-label" for="privacyPolicy">I accept the <a href="{% url 'privacy_policy' %}">Privacy Policy</a> and <a href="{% url 'terms_and_conditions' %}">Terms and Conditions</a>
+            </label>
+          </div>
               <button type="submit" class="btn btn-primary">Sign Up</button>
             </form>
           </div>
