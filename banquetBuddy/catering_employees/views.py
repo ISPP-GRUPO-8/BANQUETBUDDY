@@ -9,6 +9,8 @@ from core.forms import CustomUserCreationForm
 from catering_owners.models import JobApplication, Employee
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -16,14 +18,22 @@ def register_employee(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST)
         employee_form = EmployeeForm(request.POST)
-
+        
+        curriculum_file = request.FILES.get("curriculum")
+        if curriculum_file:
+            if not curriculum_file.name.endswith('.pdf'):
+                messages.error(request, "Por favor, carga solo archivos PDF")
+                return render(request, "core/registro_empleado.html", {"user_form": user_form, "employee_form": employee_form},)
+            
         if user_form.is_valid() and employee_form.is_valid():
-
+            
             user = user_form.save()
 
             employee_profile = employee_form.save(commit=False)
             employee_profile.user = user
+            employee_profile.curriculum = curriculum_file
             employee_profile.save()
+            
             messages.success(request, "Registration successful!")
 
             return redirect("home")
@@ -55,8 +65,11 @@ def employee_applications(request, offer_id):
     context = {'applicants': applicants, 'offer': offer, 'filter_form': filter_form}
     return render(request, "applicants_list.html", context)
 
+
+
 @login_required
 def employee_offer_list(request):
+    context = {}
 
     current_user = request.user
     offers = Offer.objects.all()
@@ -66,8 +79,15 @@ def employee_offer_list(request):
     except Employee.DoesNotExist:
         return render(request, 'error_employee.html')
     
+    search = ''
+    offers = Offer.objects.all()
+    if request.method == 'POST':
+        search = request.POST.get("search", "") 
+        if search:
+            offers = Offer.objects.filter(Q(title__icontains=search))
+        
     applications = {offer.id: offer.job_applications.filter(employee=employee).exists() for offer in offers}
-    context = {'offers': offers, 'applications': applications}
+    context = {'offers': offers, 'applications': applications, 'search':search}
     
     return render(request, "employee_offer_list.html", context)
 
@@ -83,10 +103,11 @@ def application_to_offer(request, offer_id):
     
     if JobApplication.objects.filter(employee=employee, offer=offer):
         return render(request, 'error_employee_already_applied.html')
+    elif not employee.curriculum:
+        return render(request, 'error_employee_curriculum.html')
     else:
         JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
-    
-    return render(request, "application_success.html")
+        return render(request, "application_success.html")
 
 @login_required
 def employee_applications_list(request):
