@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .card {
+        height: 400px
+    }
+
+</style>
+
+<div class="container mt-3">
+    <h1 class="mb-4">Listado de services</h1>
+    <hr />
+
+    {% if messages %} 
+      {% for message in messages %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+      {% endfor %} 
+    {% endif %}
+    <hr />
+
+    <a href="{% url 'create_service' %}">
+        <button class="btn btn-primary mb-3" >
+            Create a new service
+        </button>
+    </a>
+  
+    <div class="row">
+    {% for service in services %}
+    <div class="col-md-4">
+            <div class="card mb-4 rounded-lg shadow">
+                <h5 class="card-title mt-4" style="text-align: center;">{{ service.name }}</h5>
+                <div class="card-body text-dark">
+                    <hr style="border-top: 2px solid black; width: 50%;">
+                    <p class="card-text" style="text-align: center;">{{ service.description }}</p>
+                    <p class="card-text" style="text-align: center;">{{ service.location }}</p>
+                    <p class="card-text" style="text-align: center;">{{ service.capacity }} guests</p>
+                    <p class="card-text" style="text-align: center;">{{ service.price }} €</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+      {% empty %}
+        <div>No service services available.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}
+
