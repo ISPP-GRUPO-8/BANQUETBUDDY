@@ -5,17 +5,11 @@
   <head>
     <meta charset="UTF-8" />
     <title>Catering Register</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   </head>
   <body>
     <div class="container mt-4 mb-4">
-      <div
-        class="row d-flex align-items-center justify-content-center"
-        style="height: 80vh"
-      >
+      <div class="row d-flex align-items-center justify-content-center" style="height: 80vh">
         <div class="col-md-7 mx-auto">
           <div class="register-form">
             <h2 class="register-heading"><u>Sign Up</u></h2>
@@ -86,6 +80,19 @@
                   {% endfor %}
                 </div>
               </div>
+
+            <!-- Casilla de Política de Privacidad -->
+           <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacyPolicy"
+                  required
+                  oninvalid="this.setCustomValidity('Please accept the Privacy Policy and Terms and Conditions to continue')"
+                  oninput="this.setCustomValidity('')"
+                  title="Check this box to indicate that you accept the Privacy Policy and Terms and Conditions">
+            <label class="form-check-label" for="privacyPolicy">I accept the <a href="{% url 'privacy_policy' %}">Privacy Policy</a> and <a href="{% url 'terms_and_conditions' %}">Terms and Conditions</a>
+            </label>
+          </div>
+
+
               <button type="submit" class="btn btn-primary">Sign Up</button>
             </form>
           </div>
@@ -111,15 +118,15 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      overflow: hidden; /* Evita que los elementos desborden del contenedor */
+      overflow: hidden;
     }
 
     .rounded-input {
       border-radius: 10px;
       border: 1px solid #ccc;
       padding: 8px;
-      width: 90%; /* Establece el ancho en porcentaje */
-      margin: 0 auto; /* Centra horizontalmente */
+      width: 90%;
+      margin: 0 auto;
     }
 
     .register-heading {
@@ -134,8 +141,9 @@
       width: 30%;
       border-radius: 10px;
     }
+
     .alert.alert-danger {
-    font-size: 12px; /* Tamaño de la fuente más pequeño */
+      font-size: 12px;
     }
   </style>
 </html>
