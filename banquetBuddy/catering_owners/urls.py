@@ -73,6 +73,9 @@ urlpatterns = [
     path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
     path("services/", get_catering_services, name="services"),
     path("create_service/", create_catering_service, name="create_service"),
+    path("update_service/<int:service_id>/", update_catering_service, name="update_service"),
+    path('delete_service/<int:service_id>/', delete_service, name='delete_service'),
+    path('confirm_delete_service/<int:service_id>/', confirm_delete_service, name='confirm_delete_service'),
 ]
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:

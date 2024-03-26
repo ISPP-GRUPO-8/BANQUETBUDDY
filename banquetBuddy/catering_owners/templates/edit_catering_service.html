@@ -28,19 +28,19 @@ input[type="text"], textarea {
 
 </style>
 
-<form method="POST" action="{% url 'create_service' %}">
+<form method="POST" action="{% url 'update_service' service.id %}">
     {% csrf_token %}
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br>
+    <input type="text" id="name" name="name"  value="{{ service.name }}" required><br>
     <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea><br>
+    <textarea id="description" name="description" required>{{ service.description }} </textarea><br>
     <label for="location">Location:</label>
-    <textarea id="location" name="location" required></textarea><br>
+    <textarea id="location" name="location" required>{{ service.location }} </textarea><br>
     <label for="price">Price:</label>
-    <input type="text" id="price" name="price" required><br>
+    <input type="text" id="price" name="price" value="{{ service.price }}" required><br>
     <label for="capacity">Capacity:</label>
-    <input type="text" id="capacity" name="capacity" required><br>
-    <input type="submit" value="Create">
+    <input type="text" id="capacity" name="capacity" value="{{ service.capacity }}" required><br>
+    <input type="submit" value="Update">
 </form>
 
 

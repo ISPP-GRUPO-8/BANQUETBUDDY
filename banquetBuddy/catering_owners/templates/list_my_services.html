@@ -7,11 +7,28 @@
     .card {
         height: 400px
     }
-
+    .btn-create {
+        display: block;
+        width: 80%;
+        padding: 0.5%;
+        background-color: #02483E;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 4%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    .btn-create:hover {
+    color: white; 
+    text-decoration: none !important;
+}
+</style>
 </style>
 
 <div class="container mt-3">
-    <h1 class="mb-4">Listado de services</h1>
+    <h1 class="mb-4">Services list</h1>
     <hr />
 
     {% if messages %} 
@@ -19,10 +36,9 @@
         <div class="alert alert-danger" role="alert">{{ message }}</div>
       {% endfor %} 
     {% endif %}
-    <hr />
 
     <a href="{% url 'create_service' %}">
-        <button class="btn btn-primary mb-3" >
+        <button class="btn btn-create mb-4" >
             Create a new service
         </button>
     </a>
@@ -39,12 +55,24 @@
                     <p class="card-text" style="text-align: center;">{{ service.capacity }} guests</p>
                     <p class="card-text" style="text-align: center;">{{ service.price }} €</p>
                 </div>
+                <div class="card-footer" style="text-align: center;">
+                  <a href="{% url 'update_service' service.id %}">
+                      <button class="btn btn-info">
+                        Edit
+                      </button>
+                  </a>
+                  <a href="{% url 'delete_service' service.id %}">
+                    <button class="btn btn-danger">
+                        Delete
+                    </button>
+                </a>
+              </div>
             </div>
         </a>
     </div>
 
       {% empty %}
-        <div>No service services available.</div>
+        <div>No services available.</div>
       {% endfor %}
     </div>
   </div>

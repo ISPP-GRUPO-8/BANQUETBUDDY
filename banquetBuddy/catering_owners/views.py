@@ -450,6 +450,8 @@ def get_catering_services(request):
 
 @login_required
 def create_catering_service(request):
+    context={}
+    context["is_catering_company"] = is_catering_company(request)
     if request.method == "POST":
         form = CateringServiceForm(request.POST)
         if form.is_valid():
@@ -461,4 +463,42 @@ def create_catering_service(request):
             return redirect("services")
     else:
         form = CateringServiceForm()
-    return render(request, "create_catering_service.html", {"form": form})
+        context["form"] = form
+    return render(request, "create_catering_service.html", context)
+
+@login_required
+def update_catering_service(request, service_id):
+    context={}
+    context["is_catering_company"] = is_catering_company(request)
+    catering_service = get_object_or_404(CateringService, id=service_id)
+
+    if catering_service.cateringcompany.user != request.user:
+        return HttpResponseForbidden("No tienes permiso para actualizar este servicio.")
+
+    if request.method == "POST":
+        form = CateringServiceForm(request.POST, instance=catering_service)
+        if form.is_valid():
+            form.save()
+            return redirect("services")
+    else:
+        form = CateringServiceForm(instance=catering_service)
+    context["form"] = form
+    context["service"] = catering_service
+    return render(request, "edit_catering_service.html", context)
+
+@login_required
+def delete_service(request, service_id):
+    context={}
+    context["is_catering_company"] = is_catering_company(request)
+    service = get_object_or_404(CateringService, pk=service_id)
+    context["service"] = service
+    return render(request, "delete_service.html", context)
+
+@login_required
+def confirm_delete_service(request, service_id):
+    if request.method == "POST":
+        service = get_object_or_404(CateringService, pk=service_id)
+        service.delete()
+        return redirect("services")  
+    else:
+        return redirect("services")  
