@@ -46,6 +46,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href={% url 'catering_calendar_preview' %}>Calendar</a>
                     </li>
+
+                    {% if is_particular %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
+                        </li>
+                    {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href={% url 'offer_list' %}>Offers</a>

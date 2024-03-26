@@ -1,6 +1,9 @@
-from django.urls import path
+from django.urls import path, include
+from . import views
 from core.views import *
-from catering_particular.views import *
+from .views import *
+
+
 
 urlpatterns = [
     path('my_books', my_books, name='my_books'),
@@ -9,6 +12,7 @@ urlpatterns = [
     path('', listar_caterings, name='listar_caterings'),
     path('<int:catering_id>/', catering_detail, name='catering_detail'), 
     path('<int:catering_id>/book/', booking_process, name='booking_process'),
+    path('caterings_contratados', catering_contratados, name='catering_contratados'),
     path('', listar_caterings, name='listar_caterings'),
     path('<int:catering_id>/', catering_detail, name='catering_detail'),
     path('register_particular',register_particular,name='register_particular'),
