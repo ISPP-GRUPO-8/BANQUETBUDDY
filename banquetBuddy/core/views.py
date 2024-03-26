@@ -11,7 +11,7 @@ from catering_owners.forms import CateringCompanyForm
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from .forms import ErrorForm
 
@@ -23,8 +23,9 @@ from django.db.models import Q
 from random import sample
 from django.utils import timezone
 from datetime import datetime, timedelta
-from catering_owners.models import Notification
+from catering_owners.models import NotificationEvent
 from catering_owners.models import Event
+
 
 def get_user_type(user):
     try:
@@ -118,14 +119,22 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 
-                #Comprueba si se deben crear notificaciones
+                #Comprueba si el usuario es particular o empresa
                 try:
                     particular_username = request.user.ParticularUsername
                     is_particular = True
                 except:
                     is_particular = False
+                try:
+                    company_username = request.user.CateringCompanyusername
+                    is_company = True
+                except:
+                    is_company = False
+                    
                 if is_particular:
                     send_notifications_next_events_particular(request)
+                elif is_company:
+                    send_notifications_next_events_catering_company(request)
                 return redirect("/")
         # Si el formulario no es válido, renderiza el formulario con los errores
     else:
@@ -269,7 +278,7 @@ def listar_caterings_home(request):
 def notification_view(request):
     
     current_user = request.user
-    notifications = Notification.objects.filter(user=current_user, has_been_read=False)
+    notifications = NotificationEvent.objects.filter(user=current_user, has_been_read=False)
     for notification in notifications:
         notification.has_been_read = True
         notification.save()
@@ -281,7 +290,7 @@ def notification_view(request):
 
 def send_notifications_next_events_particular(request):
     current_user = request.user
-    Notification.objects.filter(user=current_user, has_been_read=True).delete()
+    NotificationEvent.objects.filter(user=current_user, has_been_read=True).delete()
     week_after = timezone.now() + timedelta(days=7)
     next_events = Event.objects.filter(date__lte=week_after, particular__user=current_user)
     
@@ -289,8 +298,23 @@ def send_notifications_next_events_particular(request):
         
         if not event.notified_to_particular:
             message = f"Your event is prepared for {event.date}. ¡Don't forget to get ready!"
-            Notification.objects.create(user=current_user, message=message, event=event)
+            NotificationEvent.objects.create(user=current_user, message=message, event=event)
             event.notified_to_particular = True
+            event.save()
+            
+def send_notifications_next_events_catering_company(request):
+    current_user = request.user
+    NotificationEvent.objects.filter(user=current_user, has_been_read=True).delete()
+    week_after = timezone.now() + timedelta(days=7)
+    catering_company = get_object_or_404(CateringCompany, user=current_user)
+    next_events = Event.objects.filter(date__lte=week_after, cateringservice__cateringcompany=catering_company)
+    
+    for event in next_events:
+        
+        if not event.notified_to_catering_company:
+            message = f"There is an upcoming event on {event.date}. ¡Make sure everything is prepared!"
+            NotificationEvent.objects.create(user=current_user, message=message, event=event)
+            event.notified_to_catering_company = True
             event.save()
 
 

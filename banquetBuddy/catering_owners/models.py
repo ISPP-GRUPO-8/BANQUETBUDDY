@@ -125,7 +125,7 @@ class JobApplication(models.Model):
     date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
     
-class Notification(models.Model):
+class NotificationEvent(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
     message = models.TextField()
