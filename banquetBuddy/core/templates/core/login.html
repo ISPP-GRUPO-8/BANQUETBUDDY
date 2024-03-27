@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar sesión</title>
+    <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <style>
@@ -14,78 +14,71 @@
         height: 100%;
         margin: 0;
         font-family: Arial, sans-serif;
-      }
-  
+    }
+
     .login-form {
         background-color: #54bfaf;
         padding: 20px;
-        height: 100%; /* Ajusta la altura según sea necesario */
+        height: 100%;
         width: 100%;
-        border-radius: 35px; /* Opcional para esquinas redondeadas */
-        text-align: center; /* Centra el contenido horizontalmente */
-        
-        /* Añade estas líneas para centrar verticalmente el contenido */
+        border-radius: 35px;
+        text-align: center;
         display: flex;
         flex-direction: column;
         justify-content: center;
     }
+
     .rounded-input {
-        border-radius: 10px; /* Ajusta el valor según tu preferencia */
-        /* Otros estilos opcionales */
-        border: 1px solid #ccc; /* Agrega un borde para mejorar la apariencia */
-        padding: 8px; /* Espacio interior para el texto */
-        /* Puedes añadir más estilos según tus necesidades */
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 8px;
     }
-    
+
     .login-heading {
-        padding-bottom: 40px; /* Agrega espacio alrededor del texto "Iniciar sesión" */
+        padding-bottom: 40px;
     }
-    
-    .btn{
+
+    .btn {
         background-color: #02483E;
         color: white;
         border: none;
         cursor: pointer;
         width: 30%;
         border-radius: 10px;
-      }
+        margin-bottom: 20px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #035D48;
+    }
+
+    .forgot-password {
+        margin-top: 10px;
+        color: #ffffff;
+    }
 </style>
 <body>
 
 <div class="container">
-    <div class="row d-flex align-items-center" style="height: 80vh;" >
+    <div class="row d-flex align-items-center" style="height: 80vh;">
         <div class="col-md-6 mx-auto text-center">
             <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image">
         </div>
-        <div class="col-md-6"  style = "height: 40%;">
+        <div class="col-md-6">
             <div class="login-form">
-                <h2 class ="login-heading">Login</h2>
+                <h2 class="login-heading">Login</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <div class = "row">
-                        <div class = "col-3">
-                        </div>
-                        <div class ="col-6">
-                            <div class="form-group">
-                                {{ form.username }}
-                            </div>
-                        </div>
-                        <div class = "col-3">
-                        </div>
+                    <div class="form-group">
+                        {{ form.username }}
                     </div>
-                    <div class = "row">
-                        <div class = "col-3">
-                        </div>
-                        <div class ="col-6">
-                            <div class="form-group">
-                                {{ form.password }}
-                        </div>
-                        <div class = "col-3">
-                        </div>
-                </div>
-                </div>
+                    <div class="form-group">
+                        {{ form.password }}
+                    </div>
                     <button type="submit" class="btn btn-primary">Sign in</button>
                 </form>
+                <a href="{% url 'reset_password' %}" class="forgot-password">Forgot your password?</a>
             </div>
         </div>
     </div>
