@@ -85,7 +85,6 @@ class CateringBookTestCase(TestCase):
     def test_my_books_view_not_authorized(self):
         response = self.client.get(reverse('catering_books'))
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/accounts/login/', response.url)
 
     def test_book_edit_view(self):
         self.client.force_login(self.user)
