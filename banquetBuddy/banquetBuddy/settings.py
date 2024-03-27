@@ -16,9 +16,9 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_URL = 'http:localhost:8000' 
-#Sustituimos la siguiente línea por la que sigue a continuación cuando se despliegue en producción
-#BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
+BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
+#Sustituimos la siguiente línea por la que sigue a continuación cpara probar en local
+#BASE_URL = 'http:localhost:8000' 
 
 DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
 
