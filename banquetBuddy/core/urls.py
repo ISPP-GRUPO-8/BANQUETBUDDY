@@ -23,6 +23,5 @@ urlpatterns = [
     path('notifications', notification_view, name='notifications'), 
     path('privacy-policy/', privacy_policy, name='privacy_policy'),
     path('terms-and-conditions/', terms_and_conditions, name='terms_and_conditions'),
-
     
 ]

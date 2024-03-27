@@ -6,6 +6,10 @@
     position: relative; 
     right: 1cm; 
 }
+    .notifications_not_read{
+    position: relative; 
+    right: 1cm; 
+    }
 
 </style>
 
@@ -70,6 +74,7 @@
                     <div class="bell">
                     <a href="{% url 'notifications' %}">
                         <i class="fas fa-bell"></i>
+                        <span class="notifications_not_read">{{ notification_number }}</span>
                     </a>
                     </div>
                     <form class="form-inline my-2 my-lg-0">

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from .views import notification_view
 from catering_employees.models import Employee
 from .models import CustomUser, BookingState
-from catering_owners.models import CateringCompany, CateringService, Notification, Event, Menu
+from catering_owners.models import CateringCompany, CateringService, NotificationEvent, Event, Menu
 from catering_particular.models import Particular
 from django.test import TestCase, Client
 from django.core import mail
@@ -361,7 +361,7 @@ class NotificationViewTest(TestCase):
             booking_state = BookingState.CONTRACT_PENDING,
             number_guests = 23
         )
-        self.notification1 = Notification.objects.create(user=self.user1, has_been_read=False, message='Test notification 1', event=self.event)
+        self.notification1 = NotificationEvent.objects.create(user=self.user1, has_been_read=False, message='Test notification 1', event=self.event)
     
     def test_notification_view(self):
         # Simula una solicitud GET al view
