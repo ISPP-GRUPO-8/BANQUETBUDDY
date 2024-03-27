@@ -1,14 +1,14 @@
 from decimal import Decimal
 import os
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from catering_particular.models import Particular
 from catering_employees.forms import EmployeeFilterForm
 from catering_employees.models import Employee
 from catering_owners.models import *
 from .views import *
 from catering_particular.models import Particular
-
 from core.forms import CustomUserCreationForm
 from .forms import CateringCompanyForm
 from core.models import CustomUser, BookingState
@@ -325,3 +325,92 @@ class ViewTests(TestCase):
         self.offer.delete()
         self.employee.delete()
         self.job_application.delete()
+
+
+class CateringViewsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
+        self.user2 = CustomUser.objects.create_user(username='test_user2', password='test_password2')
+        
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+        self.catering_company2 = CateringCompany.objects.create(
+            user=self.user2,
+            name='Catering Company 2'
+        )
+        self.catering_service = CateringService.objects.create(
+            name='Test Catering',
+            cateringcompany=self.catering_company,
+            description='Test description',
+            location='Test location',
+            capacity=100,
+            price=500.00
+        )
+        self.particular = Particular.objects.create(user=self.user)
+        self.menu = Menu.objects.create(name='Test Menu')
+        self.event_date = datetime.now().date()
+        self.event = Event.objects.create(
+            cateringservice=self.catering_service,
+            particular=self.particular,
+            menu=self.menu,
+            name='Test Event',
+            date=self.event_date,
+            details='Test details',
+            booking_state=BookingState.choices[0][0],
+            number_guests=10
+        )
+
+    def test_view_reservations_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('view_reservations', kwargs={'catering_service_id': self.catering_service.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reservations.html')
+
+    def test_view_reservation_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('view_reservation', kwargs={'catering_service_id': self.catering_service.pk, 'event_id': self.event.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'view_reservation.html')
+
+    def test_catering_calendar_view_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'calendar.html')
+
+    def test_reservations_for_day_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('reservations_for_day', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month, 'day': self.event_date.day}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reservations_for_day.html')
+
+    def test_next_month_view_authenticated(self):
+        # Prueba para avanzar al mes siguiente en el calendario cuando el usuario está autenticado
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('next_month', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 302)
+        next_month_date = self.event_date.replace(day=1) + timedelta(days=32)  # Obtener la fecha del mes siguiente
+        self.assertRedirects(response, reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': next_month_date.year, 'month': next_month_date.month}))
+
+    def test_prev_month_view_authenticated(self):
+        # Prueba para retroceder al mes anterior en el calendario cuando el usuario está autenticado
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('prev_month', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 302)
+        prev_month_date = self.event_date.replace(day=1) - timedelta(days=1)  # Obtener la fecha del mes anterior
+        self.assertRedirects(response, reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': prev_month_date.year, 'month': prev_month_date.month}))
+
+    def test_permission_denied(self):
+        # Intentar acceder a las vistas protegidas sin iniciar sesión
+        self.client.force_login(self.user2)
+        response_view_reservations = self.client.get(reverse('view_reservations', kwargs={'catering_service_id': self.catering_service.pk}))
+        response_view_reservation = self.client.get(reverse('view_reservation', kwargs={'catering_service_id': self.catering_service.pk, 'event_id': self.event.pk}))
+        response_catering_calendar = self.client.get(reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        response_reservations_for_day = self.client.get(reverse('reservations_for_day', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month, 'day': self.event_date.day}))
+
+        # Verificar si se devuelve un error de permiso
+        self.assertEqual(response_view_reservations.status_code, 403)
+        self.assertEqual(response_view_reservation.status_code, 403)
+        self.assertEqual(response_catering_calendar.status_code, 403)
+        self.assertEqual(response_reservations_for_day.status_code, 403)
