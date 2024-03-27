@@ -1,10 +1,7 @@
-from django.conf import settings
 from django.urls import path
 from . import views
 from core.views import home
-from django.urls import path, include
-from .views import *
-
+from django.conf import settings
 
 urlpatterns = [
     path('applicants/<int:offer_id>/', views.employee_applications, name='applicants'),
@@ -18,14 +15,13 @@ urlpatterns = [
     path('', home, name='home'),
     path('register_company', views.register_company, name='register_company'),
     path('catering_profile_edit', views.catering_profile_edit, name='catering_profile_edit'),
-    path('catering_books', catering_books, name='catering_books'),
-    path('catering_books/<int:event_id>/edit', book_catering_edit, name='catering_books_edit'),
-    path('catering_books/<int:event_id>/cancel', book_catering_cancel, name='catering_books_cancel'),
+    path('catering_books', views.catering_books, name='catering_books'),
+    path('catering_books/<int:event_id>/edit', views.book_catering_edit, name='catering_books_edit'),
+    path('catering_books/<int:event_id>/cancel', views.book_catering_cancel, name='catering_books_cancel'),
     path('list_menus/', views.list_menus, name='list_menus'),
     path('add_menu/', views.add_menu, name='add_menu'),
     path('edit_menu/<int:menu_id>/', views.edit_menu, name='edit_menu'),
     path('delete_menu/<int:menu_id>/', views.delete_menu, name='delete_menu'),
-    path('catering_profile_edit', views.catering_profile_edit, name='catering_profile_edit'),
     path('create_offer', views.create_offer, name='create_offer'),
     path('offer_list', views.offer_list, name='offer_list'),
     path('apply_offer/<int:offer_id>/', views.apply_offer, name='apply_offer'),
