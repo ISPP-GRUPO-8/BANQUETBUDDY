@@ -1,4 +1,12 @@
-{% extends 'core/base.html' %} {% load static %} {% block content %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  #curriculum {
+    color: black;
+  }
+</style>
 
 <div class="container mt-4 mb-4">
   <div class="row justify-content-center">
@@ -7,12 +15,16 @@
         <div class="card-body">
           <h2 class="card-title text-center text-white">Editar Perfil</h2>
           {% if messages %}
-          <div class="alert alert-danger text-center" role="alert">
-            {% for message in messages %} {{ message }} {% endfor %}
-          </div>
+            {% for message in messages %}
+              {% if message.tags == 'error' %}
+                <div class="alert alert-danger text-center" role="alert">
+                  {{ message }}
+                </div>
+              {% endif %}
+            {% endfor %}
           {% endif %}
 
-          <form method="post" action="{% url 'profile_edit' %}" id="userForm">
+          <form method="post" action="{% url 'profile_edit' %}" id="userForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
               <label for="email" class="text-white">Correo Electrónico:</label>
@@ -26,9 +38,7 @@
               />
             </div>
             <div class="form-group">
-              <label for="username" class="text-white"
-                >Nombre de Usuario:</label
-              >
+              <label for="username" class="text-white">Nombre de Usuario:</label>
               <input
                 type="text"
                 class="form-control"
@@ -60,19 +70,23 @@
                 name="last_name"
               />
             </div>
+            {% if user.EmployeeUsername %}
+              <div class="form-group">
+                <label for="curriculum" class="text-white">Currículum:</label>
+                {% if user.EmployeeUsername.curriculum %}
+                  <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
+                {% else %}
+                  No hay currículum adjunto
+                {% endif %}
+                <input type="file" class="form-control-file" id="curriculum" name="curriculum">
+              </div>
+            {% endif %}
+          
+            <div class="text-center mt-3">
+              <button type="submit" class="btn btn-primary" style="background-color: #54bfaf">Guardar cambios</button>
+            </div>
           </form>
         </div>
-      </div>
-      <div class="text-center mt-3">
-        <!-- Botón fuera del formulario pero dentro del div col-md-6 -->
-        <button
-          type="submit"
-          form="userForm"
-          class="btn btn-primary"
-          style="background-color: #54bfaf"
-        >
-          Guardar cambios
-        </button>
       </div>
     </div>
   </div>

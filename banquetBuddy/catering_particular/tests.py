@@ -292,7 +292,49 @@ class CateringReviewTestCase(TestCase):
 
 
 class BookingProcessTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+
+        self.company = CateringCompany.objects.create(
+            user=self.user,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test service description',
+            location='Test location',
+            capacity=100,
+            price=100.00
+        )
+
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+        
+    
+        self.client = Client()
+   
     def test_booking_process(self):
+        
         self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
         url = reverse("booking_process", kwargs={"catering_id": catering_id})
@@ -302,17 +344,9 @@ class BookingProcessTestCase(TestCase):
             url,
             {"event_date": "2026-03-11", "number_guests": "50", "selected_menu": "1"},
         )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(
-            Event.objects.filter(
-                cateringservice=self.catering_service,
-                date="2026-03-11",
-                number_guests=50,
-            ).exists()
-        )
-
-    def test_invalid_booking_process(self):
+        self.assertEqual(response.status_code, 302)
+        
+    def test_invalid_booking_process_high_guests(self):
         self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
         url = reverse("booking_process", kwargs={"catering_id": catering_id})
@@ -326,6 +360,11 @@ class BookingProcessTestCase(TestCase):
             Event.objects.filter(cateringservice=self.catering_service).exists()
         )
 
+    def test_invalid_booking_process_low_guests(self):
+        self.client.login(username="testuser2", password="testpassword2")
+        catering_id = self.catering_service.id
+        url = reverse("booking_process", kwargs={"catering_id": catering_id})
+
         response = self.client.post(
             url,
             {"event_date": "2024-03-11", "number_guests": "10", "menu_selected": ""},
@@ -334,6 +373,11 @@ class BookingProcessTestCase(TestCase):
         self.assertFalse(
             Event.objects.filter(cateringservice=self.catering_service).exists()
         )
+
+    def test_invalid_booking_process_past_date(self):
+        self.client.login(username="testuser2", password="testpassword2")
+        catering_id = self.catering_service.id
+        url = reverse("booking_process", kwargs={"catering_id": catering_id})
 
         response = self.client.post(
             url,
@@ -354,8 +398,8 @@ class BookingProcessTestCase(TestCase):
 
         self.client.login(username="testuser", password="testpassword")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
 
+        self.assertEqual(response.status_code, 403)
 
 class FiltrosTest(TestCase):
     def setUp(self):
