@@ -8,7 +8,7 @@ from faker.providers import person, address
 import random
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
-from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, TaskEmployee
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, TaskEmployee, RecommendationLetter
 from catering_particular.models import Particular
 
 
@@ -234,7 +234,6 @@ def create_employees(num_employees):
             english_level=employee_data[_]['english_level'],
             location=faker.address(),
             curriculum=None, 
-            recommendation_letter=None 
         )
 
 
@@ -382,7 +381,7 @@ def create_events(num_events):
             name=faker.word(),
             date=faker.date_between(start_date='today', end_date='+1y'),
             details=events_details[_],
-            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED']),
+            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED','FINALIZED']),
             number_guests=randint(20, 200)
         )
 
@@ -601,6 +600,35 @@ def create_job_applications(num_applications):
 def create_cuisine_types():
     for cuisine in CuisineType.choices:
         CuisineTypeModel.objects.get_or_create(type=cuisine[0])
+        
+recommendation_descriptions = [
+    "El empleado demostró una habilidad excepcional para trabajar en equipo, destacándose por su compromiso y dedicación en cada proyecto.",
+    "Durante su tiempo con nosotros, el empleado mostró una actitud proactiva y una capacidad innata para resolver problemas de manera eficiente.",
+    "Recomiendo encarecidamente al empleado, quien ha demostrado una excelente capacidad de liderazgo y habilidades interpersonales, contribuyendo significativamente al éxito de nuestro equipo.",
+    "El desempeño del empleado fue sobresaliente en todas las áreas, mostrando una gran iniciativa y creatividad en la resolución de problemas.",
+    "El empleado es altamente confiable y demuestra un alto nivel de integridad en todas sus interacciones profesionales.",
+    "Destaco la capacidad del empleado para adaptarse rápidamente a nuevos entornos y desafíos, demostrando una notable flexibilidad y capacidad de aprendizaje.",
+    "El empleado es extremadamente eficiente y meticuloso en su trabajo, asegurando siempre la entrega de resultados de alta calidad dentro de los plazos establecidos.",
+    "El compromiso del empleado con la excelencia y su constante búsqueda de la mejora continua lo hacen un activo valioso para cualquier equipo.",
+    "Durante su tiempo con nosotros, el empleado demostró una ética de trabajo excepcional y una capacidad para superar expectativas en todas las tareas asignadas.",
+    "Recomiendo al empleado sin reservas, ya que su actitud positiva y su enfoque orientado a resultados lo convierten en un miembro invaluable de cualquier equipo."
+]
+        
+def create_recommendation_letters(num_recommendations):
+    employees = Employee.objects.all()
+    caterings = CateringCompany.objects.all()
+    for _ in range(num_recommendations):
+        employee=choice(employees)
+        catering = choice(caterings) 
+        description = choice(recommendation_descriptions)
+        date = faker.date_this_decade()
+        # Crea la carta de recomendación
+        RecommendationLetter.objects.create(
+            employee=employee,
+            catering=catering,
+            description=description,
+            date=date
+    )
 
 def populate_database():
     truncate_all_tables()
@@ -618,6 +646,7 @@ def populate_database():
     create_employee_work_services(10)
     create_offers(10)
     create_job_applications(10)
+    create_recommendation_letters(10)
 
 if __name__ == "__main__":
     populate_database()
