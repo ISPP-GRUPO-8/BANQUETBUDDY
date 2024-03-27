@@ -34,3 +34,18 @@ class CustomUserCreationForm(UserCreationForm):
             "password2",
         ]
 
+ERROR_CHOICES = [
+    ('bug', 'Bug/Error'),
+    ('feature_request', 'Feature Request'),
+    ('usability_issue', 'Usability Issue'),
+    ('other', 'Other'),
+]
+
+class ErrorForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    surname = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    error_type = forms.ChoiceField(choices=ERROR_CHOICES)
+    reporter_email = forms.EmailField()
+
+

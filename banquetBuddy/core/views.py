@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from catering_employees.models import Employee
 from catering_particular.models import Particular
@@ -12,6 +13,9 @@ from catering_owners.forms import CateringCompanyForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .forms import ErrorForm
+
 from django.contrib import messages
 from .models import CustomUser
 from catering_owners.models import  CateringService, Offer
@@ -24,15 +28,26 @@ from catering_owners.models import Notification
 from catering_owners.models import Event
 
 def get_user_type(user):
-    if hasattr(user, 'ParticularUsername'):
+    try:
+        particular = Particular.objects.get(user_id=user.id)
         return "Particular"
-    elif hasattr(user, 'CateringCompanyusername'):
+    except Particular.DoesNotExist:
+        pass
+
+    try:
+        catering_company = CateringCompany.objects.get(user_id=user.id)
         return "Catering Company"
-    elif hasattr(user, 'EmployeeUsername'):
+    except CateringCompany.DoesNotExist:
+        pass
+
+    try:
+        employee = Employee.objects.get(user_id=user.id)
         return "Employee"
-    else:
-        return "Unknown"
-      
+    except Employee.DoesNotExist:
+        pass
+
+    return "Unknown"
+
 def home(request):
     context={}
     offers = Offer.objects.all()  
@@ -80,6 +95,9 @@ def about_us(request):
 
 
 def subscription_plans(request):
+    if is_catering_company(request):
+        catering_company = CateringCompany.objects.get(user=request.user)
+        return render(request, "core/subscriptionsplans.html", {"price_plan": catering_company.price_plan})
     return render(request, "core/subscriptionsplans.html")
 
 
@@ -208,6 +226,38 @@ def profile_edit_view(request):
 
     return render(request, "core/profile_edit.html", context)
 
+@login_required
+def error_report(request):
+    if request.method == 'POST':
+        form = ErrorForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            surname = form.cleaned_data['surname']
+            message = form.cleaned_data['message']
+            reporter_email = form.cleaned_data['reporter_email']
+            error_type = form.cleaned_data['error_type']
+            
+            email = 'banquetbuddyoficial@gmail.com'
+
+            client_type = get_user_type(request.user)
+
+            error_type_display = dict(form.fields['error_type'].choices)[error_type]
+
+            contenido_correo = f'Name: {name} {surname} | Client Type: {client_type} | Contact Mail: {reporter_email} | Error type: {error_type_display} | Mensaje: {message}'
+            
+            subject = 'Error Report'
+            message = contenido_correo
+            from_email = 'banquetbuddyoficial@gmail.com' 
+            to_email = [email] 
+
+            send_mail(subject, message, from_email, to_email, html_message=message)
+
+            return redirect("/")
+    else:
+        form = ErrorForm()
+
+    return render(request, 'core/error_report.html', {'form': form})
+
 def listar_caterings_home(request):
     context = {}
     busqueda = ''
@@ -248,6 +298,11 @@ def send_notifications_next_events_particular(request):
             event.save()
 
 
+def privacy_policy(request):
+    return render(request, 'core/privacy_policy.html')
+
+def terms_and_conditions(request):
+    return render(request, 'core/terms_and_conditions.html')
 
 
 
