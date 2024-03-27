@@ -3,11 +3,13 @@ from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse
 from .models import Employee
 from core.models import CustomUser
-from catering_owners.models import Offer, JobApplication, CateringService, CateringCompany, CateringService, Menu, Event, BookingState, CateringCompany, Particular
+from catering_owners.models import Offer, JobApplication, CateringService, CateringCompany, CateringService, Menu, Event, BookingState, CateringCompany, NotificationJobApplication
 from .views import employee_offer_list, application_to_offer
 from django.urls import reverse
 from datetime import date
 from django.core.files.base import ContentFile
+from django.db.models.signals import post_save
+from .signals import notify_employee_on_state_change
 
 # Create your tests here.
 
@@ -223,3 +225,42 @@ class EmployeeApplicationsListTestCase(TestCase):
     def tearDown(self) -> None:
         self.user.delete()
         self.employee.delete()
+        
+class TestNotifyEmployeeOnStateChange(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='test_user', password='test_password')
+        self.user_catering = CustomUser.objects.create_user(
+            username='testuser2',
+            password='12345',
+            email='prueba@gmail.com'
+            )
+        
+        self.catering_company = CateringCompany.objects.create(
+            user=self.user_catering, name='Test Catering Company',
+            address='Test Address', phone_number='987654321',
+            cif='123456789A', is_verified=True,
+            price_plan='Basic'
+            )
+        
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.catering_company,
+            name='Test Catering Service',
+            description='Test Description',
+            location='Test Location',
+            capacity=100, price=100.00
+            )
+        self.offer = Offer.objects.create(
+            cateringservice=self.catering_service ,
+            title='Test Offer',
+            description='Test Description',
+            requirements='Test Requirements',
+            location='Test Location'
+            )
+        self.employee = Employee.objects.create(user=self.user, phone_number='123456789', profession='Developer', experience='2 years', skills='Python, Django', location='Somewhere')
+        self.job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, state='PENDING')
+    
+    def test_notify_employee_state(self):
+        self.job_application.state = 'PENDING'
+        self.job_application.save()
+        notification = NotificationJobApplication.objects.filter(user=self.user, job_application=self.job_application).count()
+        assert notification is not 0
