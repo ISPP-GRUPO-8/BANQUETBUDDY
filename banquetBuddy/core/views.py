@@ -1,4 +1,4 @@
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect
 from catering_employees.models import Employee
 from catering_particular.models import Particular
@@ -24,7 +24,7 @@ from django.db.models import Q
 from random import sample
 from django.utils import timezone
 from datetime import datetime, timedelta
-from catering_owners.models import NotificationEvent
+from catering_owners.models import NotificationEvent, NotificationJobApplication
 from catering_owners.models import Event
 
 
@@ -56,6 +56,10 @@ def home(request):
 
     caterings = CateringService.objects.all()  
     random_caterings = sample(list(caterings), 4)
+    
+    if request.user.is_authenticated:
+        notifications = NotificationEvent.objects.filter(user=request.user, has_been_read=False).count() + NotificationJobApplication.objects.filter(user=request.user, has_been_read=False).count()
+        context['notification_number'] = notifications
     
     context['offers'] = random_offers
     context['caterings'] = random_caterings
@@ -282,12 +286,19 @@ def listar_caterings_home(request):
 def notification_view(request):
     
     current_user = request.user
-    notifications = NotificationEvent.objects.filter(user=current_user, has_been_read=False)
-    for notification in notifications:
-        notification.has_been_read = True
-        notification.save()
+    try:
+        employee = Employee.objects.get(user=current_user)
+        notifications = NotificationJobApplication.objects.filter(user=current_user, has_been_read=False)
+        # for notification in notifications:
+        #     notification.has_been_read = True
+        #     notification.save()
+    except Employee.DoesNotExist:
+        notifications = NotificationEvent.objects.filter(user=current_user, has_been_read=False)
+        for notification in notifications:
+            notification.has_been_read = True
+            notification.save()
     context = {'notifications' : notifications}
-    
+        
     return render(request, 'core/notifications.html', context)
 
 #Notification check functions
@@ -327,6 +338,7 @@ def privacy_policy(request):
 
 def terms_and_conditions(request):
     return render(request, 'core/terms_and_conditions.html')
+
 
 
 

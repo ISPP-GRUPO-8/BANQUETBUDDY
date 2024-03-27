@@ -130,4 +130,10 @@ class NotificationEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
     message = models.TextField()
     has_been_read = models.BooleanField(default=False)
+    
+class NotificationJobApplication(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='employee_receiver')
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application')
+    message = models.TextField()
+    has_been_read = models.BooleanField(default=False)
 
