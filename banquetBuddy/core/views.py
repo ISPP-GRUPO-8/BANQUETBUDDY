@@ -289,9 +289,9 @@ def notification_view(request):
     try:
         employee = Employee.objects.get(user=current_user)
         notifications = NotificationJobApplication.objects.filter(user=current_user, has_been_read=False)
-        # for notification in notifications:
-        #     notification.has_been_read = True
-        #     notification.save()
+        for notification in notifications:
+            notification.has_been_read = True
+            notification.save()
     except Employee.DoesNotExist:
         notifications = NotificationEvent.objects.filter(user=current_user, has_been_read=False)
         for notification in notifications:
