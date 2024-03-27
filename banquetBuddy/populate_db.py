@@ -234,7 +234,6 @@ def create_employees(num_employees):
             english_level=employee_data[_]['english_level'],
             location=faker.address(),
             curriculum=None, 
-            recommendation_letter=None 
         )
 
 
