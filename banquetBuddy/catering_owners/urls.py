@@ -40,6 +40,7 @@ urlpatterns = [
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
     path('my_bookings/',my_bookings_preview, name='my_bookings'),
     path('catering_unsuscribe/', catering_unsuscribe, name='catering_unsuscribe'),
+    path('service/<int:service_id>/employees', list_employee, name='list_employee')
 ]
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:

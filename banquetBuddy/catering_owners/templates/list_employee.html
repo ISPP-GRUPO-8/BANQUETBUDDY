@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <!-- Agregar enlaces a Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>List Employee</h1>
+        <ul class="list-group">
+            {% for employee in employees %}
+                <li class="list-group-item">
+                    <h3>{{ employee.user }}</h3>
+                    <p>Email: {{ employee.user.email }}</p>
+                    <p>Nombre: {{ employee.user.first_name }}</p>
+                    <!-- Agregar más detalles aquí si es necesario -->
+                    <button type="button" class="btn btn-primary btn-add-recommendation">Añadir Carta de Recomendación</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- Agregar enlaces a Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

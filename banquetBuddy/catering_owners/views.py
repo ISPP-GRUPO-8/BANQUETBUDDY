@@ -412,3 +412,14 @@ def apply_offer(request, offer_id):
         form = OfferForm()
 
     return render(request, 'offers/offer_list.html', {'form': form, 'offer': offer})
+
+@login_required
+def list_employee(request, service_id):
+    catering_service = get_object_or_404(CateringService, id=service_id)
+    tasks = Task.objects.filter(cateringservice = catering_service)
+
+    employees = []
+    for t in tasks:
+        employees = t.employees.all()
+
+    return render(request, 'list_employee.html', {'employees': employees})
