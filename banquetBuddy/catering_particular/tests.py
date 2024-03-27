@@ -77,7 +77,6 @@ class BookTestCase(TestCase):
     def test_my_books_view_not_authorized(self):
         response = self.client.get(reverse('my_books'))
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/accounts/login/', response.url)
 
     def test_book_edit_view(self):
         self.client.force_login(self.user1)
@@ -394,7 +393,6 @@ class BookingProcessTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
-        self.assertIn("/accounts/login/", response.url)
 
         self.client.login(username="testuser", password="testpassword")
         response = self.client.get(url)

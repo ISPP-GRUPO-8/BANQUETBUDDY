@@ -44,7 +44,7 @@ class CateringCompanyForm(forms.ModelForm):
             self.fields["cif"].required = False
             self.fields["price_plan"].required = True
             self.fields["verification_document"].required = False
-            
+
 
 class MenuForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):

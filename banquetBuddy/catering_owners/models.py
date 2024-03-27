@@ -131,3 +131,6 @@ class Notification(models.Model):
     message = models.TextField()
     has_been_read = models.BooleanField(default=False)
 
+class TaskEmployee(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')

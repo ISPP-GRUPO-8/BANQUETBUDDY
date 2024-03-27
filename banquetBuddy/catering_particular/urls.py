@@ -2,8 +2,8 @@ from django.urls import path, include
 from . import views
 from core.views import *
 from .views import *
-
-
+from . import views
+from catering_particular.views import *
 
 urlpatterns = [
     path('my_books', my_books, name='my_books'),
