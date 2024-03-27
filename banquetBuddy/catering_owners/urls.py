@@ -9,7 +9,7 @@ from .views import *
 from . import views
 from core.views import home
 from django.urls import path, include
-
+from .views import *
 
 
 urlpatterns = [
@@ -23,6 +23,10 @@ urlpatterns = [
     path('catering-calendar/<int:catering_service_id>/<int:year>/<int:month>/<int:day>/', reservations_for_day, name='reservations_for_day'),
     path('', home, name='home'),
     path('register_company', views.register_company, name='register_company'),
+    path('catering_profile_edit', views.catering_profile_edit, name='catering_profile_edit'),
+    path('catering_books', catering_books, name='catering_books'),
+    path('catering_books/<int:event_id>/edit', book_catering_edit, name='catering_books_edit'),
+    path('catering_books/<int:event_id>/cancel', book_catering_cancel, name='catering_books_cancel'),
     path('list_menus/', views.list_menus, name='list_menus'),
     path('add_menu/', views.add_menu, name='add_menu'),
     path('edit_menu/<int:menu_id>/', views.edit_menu, name='edit_menu'),
