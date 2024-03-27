@@ -47,13 +47,15 @@ class CateringService(models.Model):
 
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
-    particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
+    particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='particular')
     menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
     date = models.DateField()
     details = models.TextField()
     booking_state = models.CharField(max_length=50, choices=BookingState.choices)  
     number_guests = models.IntegerField()
+    notified_to_particular = models.BooleanField(default=False)
+    notified_to_catering_company = models.BooleanField(default=False)
 
 class Task(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
@@ -122,4 +124,10 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
+    
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
+    message = models.TextField()
+    has_been_read = models.BooleanField(default=False)
 
