@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_URL = 'http:localhost:8000' 
 #Sustituimos la siguiente línea por la que sigue a continuación cuando se despliegue en producción
-#BASE_URL = 'https://banquetbuddy.pythonanywhere.com//'
+#BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
 
 DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
 
