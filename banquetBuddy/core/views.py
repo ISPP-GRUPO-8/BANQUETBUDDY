@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from catering_employees.models import Employee
 from catering_particular.models import Particular
@@ -89,11 +90,74 @@ def is_catering_company(request):
     return res
 
 
+
+def home(request):
+    context={}
+    context['is_particular'] = is_particular(request)
+    context['is_employee'] = is_employee(request)
+    context['is_catering_company'] = is_catering_company(request)
+    return render(request, "core/home.html", context)
+
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+
+def is_particular(request):
+    try:
+        particular = Particular.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_employee(request):
+    try:
+        employee = Employee.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+    
+
+def is_catering_company(request):
+    try:
+        catering_company = CateringCompany.objects.get(user = request.user)
+        res = True
+    except:
+        res = False
+    return res
+
 def about_us(request):
     return render(request, "core/aboutus.html")
 
 
 def subscription_plans(request):
+    if is_catering_company(request):
+        catering_company = CateringCompany.objects.get(user=request.user)
+        return render(request, "core/subscriptionsplans.html", {"price_plan": catering_company.price_plan})
     return render(request, "core/subscriptionsplans.html")
 
 
@@ -219,7 +283,7 @@ def profile_edit_view(request):
 
         messages.success(request, "Perfil actualizado correctamente")
         return redirect("profile")
-
+      
     return render(request, "core/profile_edit.html", context)
 
 @login_required
@@ -294,6 +358,11 @@ def send_notifications_next_events_particular(request):
             event.save()
 
 
+def privacy_policy(request):
+    return render(request, 'core/privacy_policy.html')
+
+def terms_and_conditions(request):
+    return render(request, 'core/terms_and_conditions.html')
 
 
 
