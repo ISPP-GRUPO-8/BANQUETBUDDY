@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+
+    .row {
+        text-align: center;
+    }
+    .text {
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 7%
+    }
+
+    .butYes {
+        text-align: center;
+        display: block;
+        width: 40%;
+        padding: 0.5%;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 30%;
+        margin-bottom: 2%;
+        background-color: #cb3234
+
+    }
+
+    .butNo {
+        text-align: center;
+        display: block;
+        width: 40%;
+        padding: 0.5%;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 30%;
+        background-color: #02483E
+    }
+</style>
+<h1 style="text-align: center;">Confirm</h1>
+<h3 style="text-align: center;">Are you sure that you want to delete this service?"{{ service.name }}"?</h3>
+    <form action="{% url 'confirm_delete_service' service.id %}" method="post">
+        {% csrf_token %}
+        <input class="butYes" type="submit" href="{% url 'confirm_delete_service' service.id %}" value="Yes, delete">
+    </form>
+
+    <button class="butNo" onclick="window.location.href='{% url 'services' %}'">Cancel</button>
+{% endblock %}
