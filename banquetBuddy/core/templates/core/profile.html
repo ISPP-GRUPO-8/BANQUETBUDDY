@@ -116,15 +116,19 @@
   </div>
   {% else %}
   <div class="row justify-content-center">
-    <a href="{% url 'profile_edit' %}" class="text-decoration-none">
-      <button
-        class="btn btn-rounded text-white"
-        style="background-color: #54bfaf"
-      >
-        Edit profile
-      </button>
+    <a href="{% url 'profile_edit' %}" class="text-decoration-none mr-2">
+        <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
+            Edit profile
+        </button>
     </a>
-  </div>
+
+    <a href="{% url 'my_recommendation_letters' user.id %}" class="text-decoration-none ml-2">
+        <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
+            Recommendation letters
+        </button>
+    </a>
+</div>
+
   {% endif %}
 </div>
 

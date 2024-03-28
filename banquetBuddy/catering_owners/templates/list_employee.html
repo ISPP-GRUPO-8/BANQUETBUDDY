@@ -23,8 +23,8 @@
                 <li class="list-group-item">
                     <h3>{{ employee.user }}</h3>
                     <p>Email: {{ employee.user.email }}</p>
-                    <p>Name: {{ employee.user.first_name }}</p>
-                    <!-- Agregar más detalles aquí si es necesario -->
+                    <p>Name: {{ employee.user.first_name }} {{ employee.user.last_name }}</p>
+                    <p>Profession: {{ employee.profession }} </p>
                     {% if employee.user.id not in recommendations_dict %}
                         <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee.user.id %}">
                             <button type="button" class="btn btn-primary btn-add-recommendation">Add Recommendation Letter</button>
