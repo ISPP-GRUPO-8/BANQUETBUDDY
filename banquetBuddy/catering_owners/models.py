@@ -6,7 +6,6 @@ from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee
 
-
 class CateringCompany(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='CateringCompanyusername')
     name = models.CharField(max_length=255)
@@ -47,13 +46,15 @@ class CateringService(models.Model):
 
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
-    particular = models.ForeignKey(Particular, on_delete=models.CASCADE)
+    particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='particular')
     menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
     date = models.DateField()
     details = models.TextField()
     booking_state = models.CharField(max_length=50, choices=BookingState.choices)  
     number_guests = models.IntegerField()
+    notified_to_particular = models.BooleanField(default=False)
+    notified_to_catering_company = models.BooleanField(default=False)
 
 class Task(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
@@ -122,4 +123,25 @@ class JobApplication(models.Model):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='job_applications')
     date_application = models.DateField(auto_now_add=True)
     state = models.CharField(max_length=50, choices=ApplicationState.choices)  
+    
+class NotificationEvent(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
+    message = models.TextField()
+    has_been_read = models.BooleanField(default=False)
+    
+class NotificationJobApplication(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='employee_receiver')
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application')
+    message = models.TextField()
+    has_been_read = models.BooleanField(default=False)
 
+class RecommendationLetter(models.Model): 
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    catering = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name = 'catering')
+    description = models.CharField(max_length=255)
+    date = models.DateField()
+
+class TaskEmployee(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')

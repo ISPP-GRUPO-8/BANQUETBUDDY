@@ -5,7 +5,7 @@ from core.models import EnglishLevel
 class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
-        fields = ["phone_number", "profession", "experience", "skills"]
+        fields = ["phone_number", "profession", "experience", "skills", "curriculum"]
         widgets = {
             "phone_number": forms.TextInput(
                 attrs={"placeholder": "Número de teléfono", "class": "rounded-input"}
@@ -18,6 +18,9 @@ class EmployeeForm(forms.ModelForm):
             ),
             "skills": forms.TextInput(
                 attrs={"placeholder": "Habilidades", "class": "rounded-input"}
+            ),
+            "curriculum": forms.FileInput(
+                attrs={"class": "rounded-input"}
             ),
         }
 

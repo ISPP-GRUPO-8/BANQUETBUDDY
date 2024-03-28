@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
@@ -32,6 +32,7 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    FINALIZED = 'FINALIZED', 'Finalized'
 
 class EnglishLevel(models.TextChoices):
     C2 = 'C2', 'C2'
