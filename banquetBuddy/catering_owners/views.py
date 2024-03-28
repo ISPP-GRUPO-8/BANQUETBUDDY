@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
+
 from core.views import is_catering_company
 from .forms import (
     CateringServiceFilterForm,
@@ -11,17 +11,80 @@ from .forms import (
 )
 from django.http import HttpResponseForbidden
 from .models import Offer, CateringService, Event
+
 from django.contrib.auth.decorators import login_required
 from core.forms import CustomUserCreationForm
 from .models import CateringCompany, Menu, Plate
 from core.models import *
 from django.db.models import Min
 from django.contrib import messages
+from core.models import *
 from django.contrib.auth.decorators import login_required
+
 from datetime import datetime, date
+
+from catering_owners.models import *
 from django.utils.dateformat import DateFormat
 import calendar
+from .models import CateringCompany, Menu, Plate, Offer, CateringService
 
+
+
+@login_required
+def catering_books(request):
+    user = request.user
+    catering_company = get_object_or_404(CateringCompany, user=user)
+    catering_services = CateringService.objects.filter(cateringcompany_id=catering_company.user_id)
+    events = Event.objects.filter(cateringservice__in=catering_services)
+    context = {'events': events}
+    return render(request, 'particular_books.html', context)
+
+@login_required
+def book_catering_cancel(request, event_id):
+    user = request.user
+    catering_company = get_object_or_404(CateringCompany, user=user)
+    catering_service = CateringService.objects.filter(cateringcompany=catering_company)
+    event = get_object_or_404(Event, id=event_id)
+    
+    for service in catering_service:
+        if user == service.cateringcompany.user:
+            event.booking_state = BookingState.CANCELLED
+            event.save()
+    
+    return redirect("catering_books") 
+
+@login_required
+def book_catering_edit(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    catering_company = get_object_or_404(CateringCompany, user=request.user)
+    menus = Menu.objects.filter(cateringcompany=catering_company)
+    context = {'event': event, 'menus': menus}
+
+    if request.method == "POST":
+        date = request.POST.get('date')
+        number_guests = request.POST.get('number_guests')
+        menu = request.POST.get('selected_menu')
+
+        if number_guests == '0':
+            context['error'] = "The number of guests can not be 0."
+            return render(request, 'catering_book_edit.html', context)
+        
+        date2 = datetime.strptime(date, '%Y-%m-%d').date()
+
+        if datetime.now().date() > date2:
+            context['error'] = "The selected date cannot be in the past."
+            return render(request, 'catering_book_edit.html', context)
+
+        event.date = date
+        event.number_guests = number_guests
+        event.menu = Menu.objects.get(id=int(menu))
+        event.booking_state = BookingState.CONTRACT_PENDING
+        event.details = f'Reservation for {number_guests} guests'
+        event.save()
+
+        return redirect("catering_books")
+
+    return render(request, 'catering_book_edit.html', context)
 
 def register_company(request):
     if request.method == "POST":
@@ -47,7 +110,6 @@ def register_company(request):
         "registro_company.html",
         {"user_form": user_form, "company_form": company_form},
     )
-
 
 @login_required
 def list_menus(request):
@@ -305,7 +367,6 @@ def delete_menu(request, menu_id):
     else:
         return redirect("list_menus")
 
-
 @login_required
 def catering_profile_edit(request):
     context = {}
@@ -429,7 +490,6 @@ def apply_offer(request, offer_id):
             )  # Redirigir de vuelta a la lista de ofertas después de aplicar
     else:
         form = OfferForm()
-
     return render(request, "offers/offer_list.html", {"form": form, "offer": offer})
 
 
@@ -502,3 +562,4 @@ def confirm_delete_service(request, service_id):
         return redirect("services")  
     else:
         return redirect("services")  
+

@@ -6,6 +6,10 @@
     position: relative; 
     right: 1cm; 
 }
+    .notifications_not_read{
+    position: relative; 
+    right: 1cm; 
+    }
 
 </style>
 
@@ -73,14 +77,28 @@
                     <div class="bell">
                     <a href="{% url 'notifications' %}">
                         <i class="fas fa-bell"></i>
+                        <span class="notifications_not_read">{{ notification_number }}</span>
                     </a>
                     </div>
                     <form class="form-inline my-2 my-lg-0">
                         <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
                     </form>
                 {% endif %}
+                <form class="form-inline my-2 my-lg-0" style="position: relative;">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-icon">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
+                </form>
+                {% if user.is_authenticated %}
+                    {% if is_particular %}
+                        <a class="nav-link" href="{% url 'my_books' %}">Books</a>
+                    {% endif %}
+                    {% if is_catering_company %}
+                        <a class="nav-link" href="{% url 'catering_books' %}">Books</a> 
+                    {% endif %}
+                {% endif %}
                 {% if request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'my_books' %}">Books</a>
                     <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                     </a>

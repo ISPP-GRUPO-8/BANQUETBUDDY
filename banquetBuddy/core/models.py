@@ -32,6 +32,7 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    FINALIZED = 'FINALIZED', 'Finalized'
 
 class EnglishLevel(models.TextChoices):
     C2 = 'C2', 'C2'

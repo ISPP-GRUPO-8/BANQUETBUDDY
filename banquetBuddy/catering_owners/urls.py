@@ -9,7 +9,7 @@ from .views import *
 from . import views
 from core.views import home
 from django.urls import path, include
-
+from .views import *
 
 urlpatterns = [
     path("applicants/<int:offer_id>/", employee_applications, name="applicants"),
