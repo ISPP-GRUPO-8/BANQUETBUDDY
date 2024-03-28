@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from catering_employees.models import Employee
 from catering_particular.models import Particular
 
-from catering_owners.models import CateringCompany
+from catering_owners.models import CateringCompany, CateringService
 from .forms import EmailAuthenticationForm, CustomUserCreationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -59,18 +59,27 @@ def is_catering_company(request):
 
 def home(request):
 
-    context = {}
+    proCatering = CateringCompany.objects.filter(price_plan='PREMIUM_PRO')
+    print(len(proCatering))
+
+    services_list = []
+
+    for company in proCatering:
+        company_services = CateringService.objects.filter(cateringcompany=company)
+        for service in company_services:
+            services_list.append(service)
+
+    services = sample(list(services_list), int(len(services_list)/2))
+        
 
     offers = Offer.objects.all()  
     random_offers = sample(list(offers), 4)
 
-    caterings = CateringService.objects.all()  
-    random_caterings = sample(list(caterings), 4)
-
-    context = {'offers': random_offers, 'caterings': random_caterings}
+    context = {'services': services, 'offers': random_offers}
 
 
-    return render(request, "core/home.html", context)   
+    return render(request, "core/home.html", context)  
+
 
 def is_particular(request):
     try:

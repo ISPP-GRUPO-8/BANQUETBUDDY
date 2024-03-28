@@ -18,14 +18,14 @@
   </form>
   <div class="container mt-4">
     <div class="row">
-      {% for catering in caterings %}
+      {% for service in services %}
       <div class="col-md-3">
         <div class="card mb-4">
           <div class="card-body">
-            <h5 class="card-title">{{ catering.name }}</h5>
-            <p class="card-text">Location: {{ catering.location }}</p>
-            <p class="card-text">Capacity: {{ catering.capacity }} person</p>
-            <p class="card-text">Price: {{ catering.price }} €/person</p>
+            <h5 class="card-title">{{ service.name }}</h5>
+            <p class="card-text">Location: {{ service.location }}</p>
+            <p class="card-text">Capacity: {{ service.capacity }} people</p>
+            <p class="card-text">Price: {{ service.price }} €/person</p>
           </div>
         </div>
       </div>
