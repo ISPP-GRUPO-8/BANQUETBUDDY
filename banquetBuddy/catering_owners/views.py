@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event
@@ -416,10 +416,43 @@ def apply_offer(request, offer_id):
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
+    user = request.user
+    owner = CateringCompany.objects.get(user_id = user.id)
     tasks = Task.objects.filter(cateringservice = catering_service)
 
     employees = []
     for t in tasks:
-        employees = t.employees.all()
+        employees.extend(t.employees.all())
+    
+    recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
 
-    return render(request, 'list_employee.html', {'employees': employees})
+    recommendations_dict = {}
+    for recommendation in recommendations:
+        recommendations_dict[recommendation.employee_id] = recommendation
+    
+    return render(request, 'list_employee.html', {'employees': employees, 'service': catering_service, 'recommendations_dict': recommendations_dict})
+
+@login_required
+def create_recommendation_letter(request, employee_id, service_id):
+    catering_service = get_object_or_404(CateringService, id=service_id)
+    employee = get_object_or_404(Employee, user_id = employee_id)
+    user = request.user
+    owner = CateringCompany.objects.get(user_id = user.id)
+
+    if owner:
+        context = {"employee": employee, "owner": owner, "service": catering_service}
+
+        if request.method == "POST":
+            description = request.POST.get("description")
+
+            recommendation_letter = RecommendationLetter.objects.create(
+                employee=employee,
+                catering=owner,
+                description=description,
+                date=datetime.now().date()
+            )
+            return redirect("list_employee", service_id=service_id)
+    else:
+        return HttpResponseForbidden("You don't have permission to do this.")
+    
+    return render(request, "recommendation_letter.html", context)

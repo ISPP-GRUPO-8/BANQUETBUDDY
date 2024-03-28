@@ -9,6 +9,11 @@
     <title>Employee List</title>
     <!-- Agregar enlaces a Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .already-recommended {
+            color: orange;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -18,9 +23,15 @@
                 <li class="list-group-item">
                     <h3>{{ employee.user }}</h3>
                     <p>Email: {{ employee.user.email }}</p>
-                    <p>Nombre: {{ employee.user.first_name }}</p>
+                    <p>Name: {{ employee.user.first_name }}</p>
                     <!-- Agregar más detalles aquí si es necesario -->
-                    <button type="button" class="btn btn-primary btn-add-recommendation">Añadir Carta de Recomendación</button>
+                    {% if employee.user.id not in recommendations_dict %}
+                        <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee.user.id %}">
+                            <button type="button" class="btn btn-primary btn-add-recommendation">Add Recommendation Letter</button>
+                        </a>
+                    {% else %}
+                        <p class="already-recommended">Already recommended for this employee</p>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
