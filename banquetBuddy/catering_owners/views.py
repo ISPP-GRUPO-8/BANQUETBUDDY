@@ -473,7 +473,7 @@ def update_catering_service(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
 
     if catering_service.cateringcompany.user != request.user:
-        return HttpResponseForbidden("No tienes permiso para actualizar este servicio.")
+        return HttpResponseForbidden("You must be logged in as catering company to update a service.")
 
     if request.method == "POST":
         form = CateringServiceForm(request.POST, instance=catering_service)
@@ -489,6 +489,8 @@ def update_catering_service(request, service_id):
 @login_required
 def delete_service(request, service_id):
     context={}
+    if(not is_catering_company(request)):
+        return HttpResponseForbidden("You must be logged in as catering company to delete a service.")
     context["is_catering_company"] = is_catering_company(request)
     service = get_object_or_404(CateringService, pk=service_id)
     context["service"] = service
@@ -496,6 +498,8 @@ def delete_service(request, service_id):
 
 @login_required
 def confirm_delete_service(request, service_id):
+    if(not is_catering_company(request)):
+        return HttpResponseForbidden("You must be logged in as catering company to delete a service.")
     if request.method == "POST":
         service = get_object_or_404(CateringService, pk=service_id)
         service.delete()
