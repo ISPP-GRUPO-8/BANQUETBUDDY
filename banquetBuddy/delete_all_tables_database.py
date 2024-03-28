@@ -36,9 +36,9 @@ def delete_all_tables(dbname, user, password, host):
         print(f"Ocurrió un error: {e}")
 
 # Configuración de conexión a la base de datos
-dbname = "ispp"
-user = "ispp"
-password = "ispp"
-host = "localhost"
+dbname = "banquetbuddy$default"
+user = "banquetbuddy"
+password = "ISPP_grupo8"
+host = "banquetbuddy.mysql.pythonanywhere-services.com"
 
 delete_all_tables(dbname, user, password, host)

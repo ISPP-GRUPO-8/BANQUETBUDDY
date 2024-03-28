@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-oe0$c66l3=!r-4uq*c45axvjq90v!-n5e!dtq)+b)*bpil@nf$"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['banquetbuddys2.pythonanywhere.com']
 
 
 # Application definition
@@ -86,13 +86,13 @@ WSGI_APPLICATION = "banquetBuddy.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ispp",
-        "USER": "ispp",
-        "PASSWORD": "ispp",
-        "HOST": "localhost",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'banquetbuddys2$default',
+        'USER': 'banquetbuddys2',
+        'PASSWORD': 'ISPP_grupo8',
+        'HOST': 'banquetbuddys2.mysql.pythonanywhere-services.com',
+        'CHARSET': 'utf8',
     },
 }
 
