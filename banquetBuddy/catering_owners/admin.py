@@ -14,4 +14,3 @@ admin.site.register(Offer)
 admin.site.register(JobApplication)
 admin.site.register(Plate)
 admin.site.register(CuisineTypeModel)
-

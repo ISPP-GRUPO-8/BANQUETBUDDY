@@ -290,7 +290,9 @@ def booking_process(request, catering_id):
         CateringCompany, user_id=cateringservice.cateringcompany_id
     )
     user = request.user
-
+    if not is_particular(request):
+        return HttpResponseForbidden("You are not a particular")
+    
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
 
@@ -370,10 +372,8 @@ def booking_process(request, catering_id):
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, "booking_process.html", context)
 
-
-def payment_process(
-    request, catering_service_id, selected_menu, number_guests, event_date
-):
+@login_required
+def payment_process(request, catering_service_id, selected_menu, number_guests, event_date):
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
     request.session["selected_menu"] = selected_menu
     if request.method == "POST":
