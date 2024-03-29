@@ -20,7 +20,7 @@ class PricePlan(models.TextChoices):
 
 class ApplicationState(models.TextChoices):
     PENDING = 'PENDING', 'Pending'
-    IN_REVIEW = 'IN_REVIEW', 'In Review'
+    REJECTED = 'REJECTED', 'Rejected'
     ACCEPTED = 'ACCEPTED', 'Accepted'
 
 class Priority(models.TextChoices):

@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
@@ -538,11 +539,36 @@ def create_reviews(num_reviews):
 def create_employee_work_services(num_relations):
     employees = Employee.objects.all()
     services = CateringService.objects.all()
+
     for _ in range(num_relations):
-        EmployeeWorkService.objects.create(
-            employee=choice(employees),
-            cateringservice=choice(services)
+        if not employees or not services:
+            break
+
+        employee = random.choice(employees)
+        service = random.choice(services)
+
+        # Generar fechas de inicio y fin de manera aleatoria
+        start_date = timezone.now().date() - timedelta(days=random.randint(0, 30))
+        end_date = start_date + timedelta(days=random.randint(30, 180))
+
+        # Verificar si existe una superposición de fechas
+        overlapping_assignments = EmployeeWorkService.objects.filter(
+            employee=employee,
+            cateringservice=service,
+            end_date__gte=start_date,
+            start_date__lte=end_date
         )
+
+        # Si no hay superposición, crear la asignación
+        if not overlapping_assignments.exists():
+            EmployeeWorkService.objects.create(
+                employee=employee,
+                cateringservice=service,
+                start_date=start_date,
+                end_date=end_date
+            )
+
+
 
 offers = [
     {
@@ -627,7 +653,7 @@ def create_job_applications(num_applications):
             employee=choice(employees),
             offer=choice(offers),
             date_application=faker.date_between(start_date='-5d', end_date='today'),
-            state=choice(['PENDING', 'IN_REVIEW', 'ACCEPTED'])
+            state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
         )
 
 
@@ -678,7 +704,7 @@ def populate_database():
     create_tasks(10)
     create_plates()
     create_reviews(10)
-    create_employee_work_services(10)
+    create_employee_work_services(100)
     create_offers(10)
     create_job_applications(10)
     create_recommendation_letters(10)
