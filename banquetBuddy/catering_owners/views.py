@@ -1,4 +1,10 @@
+from urllib.parse import urlencode
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
+from django.urls import reverse
+from django.db.models import F
+
+
 
 from core.views import is_catering_company
 from .forms import (
@@ -8,6 +14,7 @@ from .forms import (
     CateringCompanyForm,
     MenuForm,
     EmployeeFilterForm,
+    PlateForm,
 )
 from django.http import HttpResponseForbidden
 from .models import Offer, CateringService, Event
@@ -565,5 +572,115 @@ def confirm_delete_service(request, service_id):
         service.delete()
         return redirect("services")  
     else:
-        return redirect("services")  
+        return redirect("services") 
+
+
+@login_required
+def list_plates(request):
+    catering_company = get_object_or_404(CateringCompany, user=request.user)
+    plates_query = Plate.objects.filter(cateringcompany=catering_company)
+
+    # Filtrar los platos si se proporciona menu_id
+    menu_id = request.GET.get('menu_id')
+    if menu_id:
+        if menu_id == 'none':
+            plates_query = plates_query.filter(menu__isnull=True)
+        else:
+            try:
+                menu_id_int = int(menu_id)
+                plates_query = plates_query.filter(menu__id=menu_id_int)
+            except ValueError:
+                pass
+
+    # Guardar los parámetros del filtro en la sesión
+    request.session['plate_filter'] = {'menu_id': menu_id}
+
+    # Manejar la ordenación
+    sort_by = request.GET.get('sort', 'name')
+    order = request.GET.get('order', 'asc')
+    if sort_by not in ['name', 'menu', 'price']:
+        sort_by = 'name'
+    if order == 'desc':
+        plates_query = plates_query.order_by('-' + sort_by)
+    else:
+        plates_query = plates_query.order_by(sort_by)
+
+    # Paginación
+    paginator = Paginator(plates_query, 10)
+    page_number = request.GET.get('page')
+    plates = paginator.get_page(page_number)
+
+    # Obtener todos los menús para el filtro
+    menus = Menu.objects.filter(cateringcompany=catering_company).values('id', 'name').distinct()
+
+    return render(request, 'list_plates.html', {
+        'plates': plates,
+        'menus': menus,
+        'selected_menu_id': menu_id
+    })
+
+@login_required
+def delete_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        plate.delete()
+        messages.success(request, "Plate removed successfully.")
+        
+        # Recuperar los parámetros de filtro de la sesión y redireccionar
+        filter_params = request.session.get('plate_filter', {})
+        return redirect(f"{reverse('list_plates')}?{urlencode(filter_params)}")
+
+    else:
+        return redirect("list_plates")
+
+
+
+
+
+
+
+ 
+    
+@login_required
+def add_plate(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    if request.method == "POST":
+        form = PlateForm(request.user, request.POST)
+        if form.is_valid():
+            plate = form.save(commit=False)
+            plate.cateringcompany = catering_company
+            plate.save()
+            messages.success(request, "Plate created successfully.")
+            return redirect("list_plates")
+    else:
+        form = PlateForm(request.user)
+
+    return render(request, "add_plate.html", {"form": form})
+
+@login_required
+def edit_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        form = PlateForm(request.user, request.POST, instance=plate)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Plate updated successfully.")
+            return redirect("list_plates")
+    else:
+        form = PlateForm(request.user, instance=plate)
+    return render(request, "edit_plate.html", {"form": form})
+
+
+@login_required
+def delete_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        plate.delete()
+        messages.success(request, "Plate removed successfully.")
+        # Recuperar y utilizar los parámetros de filtro de la sesión
+        filter_params = request.session.get('plate_filter', {})
+        return redirect(f"{reverse('list_plates')}?{urlencode(filter_params)}")
+    else:
+        return redirect("list_plates")
+
 
