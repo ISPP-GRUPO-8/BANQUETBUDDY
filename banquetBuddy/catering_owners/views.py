@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium_pro
+from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium, is_catering_company_premium_pro
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 from core.views import is_catering_company
 from .forms import (
@@ -174,19 +174,23 @@ def view_reservation(request, event_id, catering_service_id):
 @login_required
 def catering_calendar_preview(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    if request.method == "POST":
-        form = CateringServiceFilterForm(catering_company, request.POST)
-        if form.is_valid():
-            selected_catering_service = form.cleaned_data.get("catering_service")
-            if selected_catering_service:
-                return redirect(
-                    "catering_calendar",
-                    year=datetime.now().year,
-                    month=datetime.now().month,
-                    catering_service_id=selected_catering_service.id,
-                )
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.method == "POST":
+            form = CateringServiceFilterForm(catering_company, request.POST)
+            if form.is_valid():
+                selected_catering_service = form.cleaned_data.get("catering_service")
+                if selected_catering_service:
+                    return redirect(
+                        "catering_calendar",
+                        year=datetime.now().year,
+                        month=datetime.now().month,
+                        catering_service_id=selected_catering_service.id,
+                    )
+        else:
+            form = CateringServiceFilterForm(catering_company)
     else:
-        form = CateringServiceFilterForm(catering_company)
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     context = {"form": form, "year": datetime.now().year, "month": datetime.now().month}
 
@@ -218,34 +222,35 @@ def my_bookings_preview(request):
 @login_required
 def catering_calendar_view(request, catering_service_id, month, year):
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        month = min(
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            month = min(
             max(int(month), 1), 12
-        )  # Asegurarse de que el mes esté en el rango válido (1-12)
-        month_name = DateFormat(datetime(year, month, 1)).format("F")
+            )  # Asegurarse de que el mes esté en el rango válido (1-12)
+            month_name = DateFormat(datetime(year, month, 1)).format("F")
 
         # Obtener el calendario del mes y los días con eventos
-        cal = calendar.monthcalendar(year, month)
-        events = Event.objects.filter(
+            cal = calendar.monthcalendar(year, month)
+            events = Event.objects.filter(
             cateringservice=catering_service, date__year=year, date__month=month
-        ).values_list("date__day", flat=True)
+            ).values_list("date__day", flat=True)
 
-        num_events = events.count()
-        next_event_date = Event.objects.filter(
-            cateringservice=catering_service,
-            date__gte=date.today(),  # Solo eventos futuros
-        ).aggregate(next_event=Min("date"))["next_event"]
-        if next_event_date is None:
-            next_event_date = "No upcoming events"
-        else:
-            next_event_date = next_event_date.strftime("%Y-%m-%d")
+            num_events = events.count()
+            next_event_date = Event.objects.filter(
+                cateringservice=catering_service,
+                date__gte=date.today(),  # Solo eventos futuros
+            ).aggregate(next_event=Min("date"))["next_event"]
+            if next_event_date is None:
+                next_event_date = "No upcoming events"
+            else:
+                next_event_date = next_event_date.strftime("%Y-%m-%d")
         # Generar una lista de días con eventos para resaltar en el calendario
 
-        event_days = set(events)
-        return render(
-            request,
-            "calendar.html",
-            {
+            event_days = set(events)
+            return render(
+                request,
+                "calendar.html",
+                {
                 "catering_name": catering_service.name,
                 "catering_service_id": catering_service_id,
                 "year": year,
@@ -255,48 +260,59 @@ def catering_calendar_view(request, catering_service_id, month, year):
                 "event_days": event_days,
                 "next_event_date": next_event_date,
                 "num_events": num_events,
-            },
+                },
         )
-
+        else:
+            return HttpResponseForbidden("You don't have permission to view this calendar.")
     else:
-        return HttpResponseForbidden("You don't have permission to view this calendar.")
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
+    
 
 
 @login_required
 def reservations_for_day(request, catering_service_id, year, month, day):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        selected_date = datetime(year, month, day)
-        reservations = Event.objects.filter(
-            cateringservice=catering_service, date=selected_date
-        )
-        return render(
-            request,
-            "reservations_for_day.html",
-            {
-                "catering_service": catering_service,
-                "selected_date": selected_date,
-                "reservations": reservations,
-            },
-        )
-    else:
-        return HttpResponseForbidden(
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            selected_date = datetime(year, month, day)
+            reservations = Event.objects.filter(
+                cateringservice=catering_service, date=selected_date
+            )
+            return render(
+                request,
+                "reservations_for_day.html",
+                {
+                    "catering_service": catering_service,
+                    "selected_date": selected_date,
+                    "reservations": reservations,
+                },
+            )
+        else:
+            return HttpResponseForbidden(
             "You don't have permission to view this day reservations."
         )
+    else:
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
 
 def next_month_view(request, catering_service_id, year, month):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        next_month = int(month) + 1
-        next_year = int(year)
-        if next_month > 12:
-            next_month = 1
-            next_year += 1
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            next_month = int(month) + 1
+            next_year = int(year)
+            if next_month > 12:
+                next_month = 1
+                next_year += 1
+        else:
+            return HttpResponseForbidden(
+                "You don't have permission to manipulate this calendar."
+            )
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to manipulate this calendar."
-        )
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     return redirect(
         "catering_calendar",
@@ -308,16 +324,18 @@ def next_month_view(request, catering_service_id, year, month):
 
 def prev_month_view(request, catering_service_id, year, month):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        prev_month = int(month) - 1
-        prev_year = int(year)
-        if prev_month < 1:
-            prev_month = 12
-            prev_year -= 1
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            prev_month = int(month) - 1
+            prev_year = int(year)
+            if prev_month < 1:
+                prev_month = 12
+                prev_year -= 1
+        else:
+            return HttpResponseForbidden("You don't have permission to manipulate this calendar.")
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to manipulate this calendar."
-        )
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     return redirect(
         "catering_calendar",

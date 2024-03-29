@@ -333,10 +333,11 @@ class CateringViewsTest(TestCase):
         self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
         self.user2 = CustomUser.objects.create_user(username='test_user2', password='test_password2')
         
-        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company',price_plan = "PREMIUM_PRO")
         self.catering_company2 = CateringCompany.objects.create(
             user=self.user2,
-            name='Catering Company 2'
+            name='Catering Company 2',
+            price_plan = "PREMIUM"
         )
         self.catering_service = CateringService.objects.create(
             name='Test Catering',
