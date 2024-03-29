@@ -580,10 +580,6 @@ def list_employee(request, service_id):
     employees = []
     for t in tasks:
         employees.extend(t.employees.all())
-        print(t.id)
-    
-    for e in employees:
-        print(e)
     
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
 
