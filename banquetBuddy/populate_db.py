@@ -393,19 +393,32 @@ def create_plates():
 
 
 
+event_names = [
+    "Recepción Jardín Botánico",
+    "Cena Panorámica Urbana",
+    "Fiesta Temática Musical",
+    "Buffet Dulces Sueños",
+    "Degustación Vinos y Quesos",
+    "Celebración Familiar Divertida",
+    "Boda Playa Paradisíaca",
+    "Cena de Gala Elegante",
+    "Inauguración Empresarial Internacional",
+    "Fiesta Sorpresa Nocturna"
+]
+
 def create_events(num_events):
     services = CateringService.objects.all()
     particulars = Particular.objects.all()
     menus = Menu.objects.all()
-    for _ in range(num_events):
+    for i in range(num_events):
         menu = choice(menus) if menus else None
         Event.objects.create(
             cateringservice=choice(services),
             particular=choice(particulars),
             menu=menu,
-            name=faker.word(),
+            name=event_names[i % len(event_names)],  # Utiliza el nombre del evento correspondiente
             date=faker.date_between(start_date='today', end_date='+1y'),
-            details=events_details[_],
+            details=events_details[i % len(events_details)],
             booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED','FINALIZED']),
             number_guests=randint(20, 200)
         )
