@@ -18,14 +18,22 @@ def register_employee(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST)
         employee_form = EmployeeForm(request.POST)
-
+        
+        curriculum_file = request.FILES.get("curriculum")
+        if curriculum_file:
+            if not curriculum_file.name.endswith('.pdf'):
+                messages.error(request, "Por favor, carga solo archivos PDF")
+                return render(request, "core/registro_empleado.html", {"user_form": user_form, "employee_form": employee_form},)
+            
         if user_form.is_valid() and employee_form.is_valid():
-
+            
             user = user_form.save()
 
             employee_profile = employee_form.save(commit=False)
             employee_profile.user = user
+            employee_profile.curriculum = curriculum_file
             employee_profile.save()
+            
             messages.success(request, "Registration successful!")
 
             return redirect("home")
@@ -95,10 +103,11 @@ def application_to_offer(request, offer_id):
     
     if JobApplication.objects.filter(employee=employee, offer=offer):
         return render(request, 'error_employee_already_applied.html')
+    elif not employee.curriculum:
+        return render(request, 'error_employee_curriculum.html')
     else:
         JobApplication.objects.create(employee=employee, offer=offer, state='PENDING')
-    
-    return render(request, "application_success.html")
+        return render(request, "application_success.html")
 
 @login_required
 def employee_applications_list(request):
