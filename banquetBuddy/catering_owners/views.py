@@ -465,14 +465,19 @@ def edit_offer(request, offer_id):
     else:
         return redirect("offer_list")
 
-
+@login_required
 def delete_offer(request, offer_id):
     offer = get_object_or_404(Offer, pk=offer_id)
+    if request.user != offer.cateringservice.cateringcompany.user:
+        return HttpResponseForbidden("You don't have permission to delete this offer.")
     return render(request, "offers/delete_offer.html", {"offer": offer})
 
 
 @login_required
 def confirm_delete_offer(request, offer_id):
+    offer = get_object_or_404(Offer, pk=offer_id)
+    if request.user != offer.cateringservice.cateringcompany.user:
+        return HttpResponseForbidden("You don't have permission to delete this offer.")
     if request.method == "POST":
         offer = get_object_or_404(Offer, pk=offer_id)
         offer.delete()
