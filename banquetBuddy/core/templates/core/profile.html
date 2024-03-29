@@ -122,7 +122,7 @@
           </button>
         </a>
 
-        {% if employee %}
+        {% if request.user.EmployeeUsername %}
         <a href="{% url 'my_recommendation_letters' user.id %}" class="text-decoration-none ml-2">
           <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
             Recommendation letters
