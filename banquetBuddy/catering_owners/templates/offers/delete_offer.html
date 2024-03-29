@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+    .row {
+        text-align: center;
+    }
+    .text {
+        text-align: center;
+        margin-top: 4%;
+        margin-bottom: 7%
+    }
+
+    .butYes {
+        text-align: center;
+        display: block;
+        width: 40%;
+        padding: 0.5%;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 30%;
+        margin-bottom: 2%;
+        background-color: #cb3234
+
+    }
+
+    .butNo {
+        text-align: center;
+        display: block;
+        width: 40%;
+        padding: 0.5%;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-left: 30%;
+        background-color: #02483E
+  
+    }
+
+</style>
+<h3 class="text">Are you sure you want to delete the offer "{{ offer.title }}"?</h3>
+            <form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
+                {% csrf_token %}
+                <button class="butYes" type="submit" href="{% url 'offer_list' %}"> Yes</button>
+            </form>
+            <a href="{% url 'offer_list' %}" class="butNo">No</a>
+
+
+{% endblock %}

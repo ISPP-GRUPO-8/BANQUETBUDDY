@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-8 col-lg-16">
+            <form method="get" action="{% url 'applicants' offer.id %}" class="form-inline" enctype="multipart/form-data">
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        English level:
+                    </div>
+                    <div class="col">
+                        {{ filter_form.english_level }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.profession }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.experience }}
+                    </div>
+                    <div class="col">
+                        {{ filter_form.skills }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Applicant List</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">English Level</th>
+                    <th scope="col">Profession</th>
+                    <th scope="col">Experience</th>
+                    <th scope="col">Skills</th>
+                    <th scope="col">Curriculum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicant in applicants %}
+                <tr>
+                    <td>{{ applicant.employee.english_level }}</td>
+                    <td>{{ applicant.employee.profession }}</td>
+                    <td>{{ applicant.employee.experience }}</td>
+                    <td>{{ applicant.employee.skills }}</td>
+                    {% if applicant.employee.curriculum %}
+                        <td><a href="{{ applicant.employee.curriculum.url }}" target="_blank">{{ applicant.employee.curriculum.name }}</a></td>
+                    {% else %}
+                        <td>No hay currículum adjunto</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFOnpDljFH8zYZVp0LN37AUaRB1 EjwRsYH/@IcsVQTsNznExv0m0MzQK8L" crossorigin="anonymous"></script>
+</body>
+
+
+{% endblock %}
