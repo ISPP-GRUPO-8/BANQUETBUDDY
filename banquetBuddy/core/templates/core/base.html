@@ -50,9 +50,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
-                        <a class="nav-link" href={% url 'catering_calendar_preview' %}>Calendar</a>
+                        <a class="nav-link" href="{% url 'catering_calendar_preview' %}">Calendar</a>
                     </li>
+                    {% endif %}
 
                     {% if is_particular %}
                         <li class="nav-item">
@@ -92,10 +94,7 @@
                 </form>
                 {% if user.is_authenticated %}
                     {% if is_particular %}
-                        <a class="nav-link" href="{% url 'my_books' %}">Books</a>
-                    {% endif %}
-                    {% if is_catering_company %}
-                        <a class="nav-link" href="{% url 'catering_books' %}">Books</a> 
+                        <a class="nav-link" href="{% url 'my_books' %}">My Books</a>
                     {% endif %}
                 {% endif %}
                 {% if request.user.is_authenticated %}
