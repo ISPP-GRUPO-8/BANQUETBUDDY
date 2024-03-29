@@ -87,9 +87,12 @@
                 <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
+            {% elif price_plan == "PREMIUM_PRO" or price_plan == "PREMIUM"%}
+
             {%else%}
             <div class="plan-btn" style="margin-top:30% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'change_of_plan_Base' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>
@@ -119,9 +122,12 @@
                 <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
+            {%elif price_plan == "PREMIUM_PRO"%}
+
             {%else%}
             <div class="plan-btn" style="margin-top:20% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'change_of_plan_Premium' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>
@@ -153,8 +159,9 @@
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
             {%else%}
-            <div class="plan-btn" style="margin-top:15% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+            <div class="plan-btn" style="margin-top:20% ;">
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'change_of_plan_Pro' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>
