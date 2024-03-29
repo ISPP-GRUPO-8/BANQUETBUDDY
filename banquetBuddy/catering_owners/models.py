@@ -73,7 +73,7 @@ class Task(models.Model):
         ]
 
 class Menu(models.Model):
-    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True )
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True)
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='menus')
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -82,6 +82,8 @@ class Menu(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ('cateringcompany', 'name',)
 
 class Plate(models.Model):
     cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='plates', null=True, blank=True)
@@ -89,7 +91,6 @@ class Plate(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='plates_images/', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -141,7 +142,3 @@ class RecommendationLetter(models.Model):
     catering = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name = 'catering')
     description = models.CharField(max_length=255)
     date = models.DateField()
-
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')

@@ -8,7 +8,7 @@ from faker.providers import person, address
 import random
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
-from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, TaskEmployee, RecommendationLetter
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
 
 
@@ -326,44 +326,68 @@ menus_restrictions = [
     "Sin azúcar: diseñado para aquellos que desean reducir su consumo de azúcar, este menú ofrece postres y platos sin azúcares añadidos."
 ]
 
-def create_menus(num_menus):
+def create_menus():
     companies = CateringCompany.objects.all()
+
     for company in companies:
-        for _ in range(num_menus):
-            menu = Menu.objects.create(
-                cateringcompany=company,
-                name=choice(menus_name),
-                description=choice(menus_descriptions),
-                diet_restrictions=choice(menus_restrictions)
-            )
+        available_menu_names = list(menus_name)
+        num_menus_to_create = min(len(available_menu_names), random.randint(1, len(available_menu_names)))
+
+        # Obtén todos los servicios de catering de la compañía actual
+        company_services = CateringService.objects.filter(cateringcompany=company)
+
+        for _ in range(num_menus_to_create):
+            name = choice(available_menu_names)
+            available_menu_names.remove(name)
+
+            description = choice(menus_descriptions)
+            diet_restrictions = choice(menus_restrictions)
+
+            if company_services:
+                # Elige al azar uno de los servicios de catering de esta compañía
+                catering_service = choice(company_services)
+
+                Menu.objects.create(
+                    cateringcompany=company,
+                    cateringservice=catering_service,
+                    name=name,
+                    description=description,
+                    diet_restrictions=diet_restrictions
+                )
+            else:
+                # Si la compañía no tiene servicios de catering, crea el menú sin asociarlo a un servicio específico
+                Menu.objects.create(
+                    cateringcompany=company,
+                    name=name,
+                    description=description,
+                    diet_restrictions=diet_restrictions
+                )
+
 
 def create_plates():
-    plate_images = [
-        "plate1.JPG",  
-        "plate2.JPG",
-        "plate3.JPG",  
-        "plate4.JPG",
-        "plate5.JPG",  
-        "plate6.JPG",
-    ]
     for menu in Menu.objects.all():
+        # Inicializa un conjunto para llevar un registro de los platos ya agregados a este menú
+        existing_plate_names = set()
+
         num_plates = randint(2, 5)
         for _ in range(num_plates):
-            plate_image_filename = choice(plate_images)
-            plate_image_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'plates', plate_image_filename)
+            plate_name = generate_plate_name()
 
-            if os.path.exists(plate_image_path):
-                with open(plate_image_path, 'rb') as f:
-                    try:
-                        Plate.objects.create(
-                            menu=menu,
-                            name=generate_plate_name(),
-                            description=generate_plate_description(),
-                            price=faker.random_number(digits=2),
-                            image=File(f, name=plate_image_filename)
-                        )
-                    except Exception as e:
-                        print(f"Error al crear plato: {e}")
+            # Verifica si el plato ya existe en este menú y, de ser así, continúa con el siguiente
+            if plate_name in existing_plate_names:
+                continue
+
+            existing_plate_names.add(plate_name)
+            plate_description = generate_plate_description(plate_name)
+
+            Plate.objects.create(
+                menu=menu,
+                cateringcompany=menu.cateringcompany,  # Asigna la compañía de catering propietaria del menú
+                name=plate_name,
+                description=plate_description,
+                price=faker.random_number(digits=2)
+            )
+
            
 
 
@@ -461,8 +485,19 @@ def generate_plate_name():
     plate_names = ['Ensalada César', 'Tacos al Pastor', 'Paella Valenciana', 'Pasta Carbonara', 'Risotto de Setas', 'Curry de Pollo']
     return choice(plate_names)  # Esto selecciona un nombre de plato al azar de la lista
 
-def generate_plate_description():
-    return faker.text(max_nb_chars=200)
+def generate_plate_description(plate_name):
+    descriptions = {
+        'Ensalada César': 'Clásica ensalada con lechuga romana, crutones, parmesano y nuestro aderezo César casero.',
+        'Tacos al Pastor': 'Sabrosos tacos rellenos de carne al pastor marinada, piña, cebolla y cilantro, servidos con salsa verde.',
+        'Paella Valenciana': 'Auténtica paella española con arroz, mariscos frescos, pollo, chorizo y una mezcla de hierbas aromáticas.',
+        'Pasta Carbonara': 'Deliciosa pasta con una cremosa salsa carbonara, tocino crujiente, yema de huevo y queso parmesano.',
+        'Risotto de Setas': 'Cremoso risotto italiano con una variedad de setas, ajo, vino blanco y queso parmesano.',
+        'Curry de Pollo': 'Pollo tierno cocinado en una rica salsa de curry con especias, servido con arroz basmati aromático.'
+    }
+
+    # Devuelve la descripción si el nombre del plato se encuentra en el diccionario, de lo contrario, devuelve una descripción genérica
+    return descriptions.get(plate_name, 'Delicioso plato preparado con ingredientes frescos y de alta calidad.')
+
 
 
 
@@ -638,7 +673,7 @@ def populate_database():
     create_employees(10)
     create_messages(5)
     create_catering_services(10)
-    create_menus(10)
+    create_menus()
     create_events(10)
     create_tasks(10)
     create_plates()
