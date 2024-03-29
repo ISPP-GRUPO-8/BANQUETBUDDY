@@ -70,7 +70,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12 text-center">
-      <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image img-fluid"
+      <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image img-fluid" id="logo"
         style="max-width: 200px;">
     </div>
   </div>
@@ -84,8 +84,6 @@
 </div>
 {% endif %}
 
-{% endblock %}
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const buscar = document.getElementById('buscar');
@@ -97,6 +95,27 @@
         }
       }
     });
+  });
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var logo = document.getElementById('logo');
+    var lastMouseX = 0;
+    
+    function rotateLogo(event) {
+      var speed = Math.abs(event.clientX - lastMouseX);
+      logo.style.transitionDuration = '0s';
+      logo.style.transform = 'rotateY(' + (speed * 2) + 'deg)';
+      lastMouseX = event.clientX;
+    }
+    
+    logo.addEventListener('mouseleave', function(event) {
+      logo.style.transitionDuration = '0.3s';
+      logo.style.transform = 'rotateY(0deg)';
+    });
+    
+    logo.addEventListener('mousemove', rotateLogo);
+    
+    logo.style.transform = 'rotateY(360deg)';
   });
 </script>
 
@@ -113,4 +132,10 @@
     color: white;
     border-color: #02483E;
   }
+  
+  #logo {
+    transition: transform 0.8s ease-in-out;
+  }
 </style>
+
+{% endblock %}
