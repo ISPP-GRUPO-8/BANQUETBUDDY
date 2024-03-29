@@ -8,7 +8,7 @@ from faker.providers import person, address
 import random
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
-from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, TaskEmployee, RecommendationLetter
+from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
 
 
@@ -636,7 +636,8 @@ def create_task_employee():
     if employees and tasks:
         for t in tasks:
             random_employee = random.choice(employees)
-            task_employee = TaskEmployee.objects.create(task=t, employee=random_employee)
+            t.employees.add(random_employee)
+            t.save()
             employees.remove(random_employee)
 
 def populate_database():

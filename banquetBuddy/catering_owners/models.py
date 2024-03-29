@@ -141,7 +141,3 @@ class RecommendationLetter(models.Model):
     catering = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name = 'catering')
     description = models.CharField(max_length=255)
     date = models.DateField()
-
-class TaskEmployee(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='task_employees')
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='task_employees')
