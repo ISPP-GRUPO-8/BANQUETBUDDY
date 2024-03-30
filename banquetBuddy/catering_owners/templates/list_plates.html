@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">My Plates</h2>
+            <a href="{% url 'add_plate' %}" class="btn btn-primary">Add New Plate</a>
+
+            <!-- Filtro de menús -->
+<!-- Filtro de menús -->
+            <form method="get" class="form-inline my-2 my-lg-0">
+                <select name="menu_id" class="form-control mr-sm-2">
+                    <option value="">All Menus</option>
+                    <option value="none" {% if request.GET.menu_id == 'none' %}selected{% endif %}>Not associated</option>
+                    {% for menu in menus %}
+                        <option value="{{ menu.id }}" {% if request.GET.menu_id == menu.id|stringformat:"s" %}selected{% endif %}>{{ menu.name }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
+            </form>
+            
+
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th><a href="?sort=name&order={% if request.GET.sort == 'name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Name ↑↓</a></th>
+                        <th><a href="?sort=menu&order={% if request.GET.sort == 'menu' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Menu ↑↓</a></th>
+                        <th>Description</th>
+                        <th><a href="?sort=price&order={% if request.GET.sort == 'price' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Price ↑↓</a></th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                
+                
+                <tbody>
+                    {% for plate in plates %}
+                    <tr>
+                        <td>{{ plate.name }}</td>
+                        <td>{% if plate.menu %}{{ plate.menu.name }}{% else %}Not associated{% endif %}</td>
+                        <td>{{ plate.description }}</td>
+                        <td>{{ plate.price }}</td>
+                        <td>
+                            <a href="{% url 'edit_plate' plate.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                            <form method="post" action="{% url 'delete_plate' plate.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No plates found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Paginación -->
+            <nav aria-label="Plate pagination">
+                <ul class="pagination justify-content-center">
+                    {% if plates.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+
+                    {% for num in plates.paginator.page_range %}
+                    {% if plates.number == num %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if plates.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">Last</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

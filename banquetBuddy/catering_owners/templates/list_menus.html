@@ -6,7 +6,77 @@
     .custom-border {
         border-color: #02483E !important; /* Cambia el color verde aquí */
     }
+
+    
+    #floating-button-container {
+        position: fixed;
+        top: 50px; /* Ajusta la distancia desde la parte inferior */
+        right: 12%;
+        z-index: 1000;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Agrega sombra al botón */
+    }
+
+    @media screen and (max-width: 768px) {
+        #floating-button-container {
+            display: none;
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 15px;
+        }
+    }
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+        p {
+            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        #floating-button-container {
+            right: 4%; /* Ajusta la distancia desde el lado derecho */
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 15px;
+        }
+        h5 {
+            font-size: 17px;
+        }
+    }
+    @media screen and (max-width: 450px) {
+        p {
+            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        #floating-button-container {
+            right: 2%; /* Ajusta la distancia desde el lado derecho */
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 13px;
+        }
+        h5 {
+            font-size: 14.5px;
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var addButton = document.querySelector('.btn.btn-success');
+        var floatingButton = document.getElementById('floating-button-container');
+
+        function toggleFloatingButton() {
+            if (addButton && addButton.getBoundingClientRect().top < 0) {
+                floatingButton.style.display = 'block';
+            } else {
+                floatingButton.style.display = 'none';
+            }
+        }
+
+        toggleFloatingButton();
+
+        window.addEventListener('scroll', function() {
+            toggleFloatingButton();
+        });
+    });
+</script>
 
 {% if messages %}
 <div class="container mt-3">
@@ -33,7 +103,7 @@
     <div class="row justify-content-end mb-4">
         <div class="col-md-2">
             <a href="{% url 'add_menu' %}" class="text-decoration-none">
-                <button class="btn btn-success btn-block" style="background-color: #02483E;">
+                <button class="btn btn-success btn-block small-font" style="background-color: #02483E;">
                     <i class="bi bi-plus-circle"></i> Add menu
                 </button>
             </a>
@@ -46,36 +116,32 @@
             <div class="card rounded-3 border custom-border">
                 <div class="card-body">
                     <h5 class="card-title" style="color: #02483E;">{{ menu.name }}</h5>
-                    <p class="card-text">{{ menu.description }}</p>
+                    <p class="card-text small-font">{{ menu.description }}</p>
                 </div>
                 <div class="card-footer">
                     <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary mr-2"><i class="bi bi-pencil"></i></button>
+                        <button type="submit" class="btn btn-primary mr-2 small-font"><i class="bi bi-pencil"></i></button>
                     </form>
                     <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                        <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
                     </form>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col">
-            <p>No menus available.</p>
+            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available.</p>
         </div>
         {% endfor %}
     </div>
-
-    <div class="row justify-content-end mt-3 mb-4">
-        <div class="col-md-2">
-            <a href="{% url 'add_menu' %}" class="text-decoration-none">
-                <button class="btn btn-success btn-block" style="background-color: #02483E">
-                    <i class="bi bi-plus-circle"></i> Add menu
-                </button>
-            </a>
-        </div>
+    <div id="floating-button-container">
+        <a href="{% url 'add_menu' %}" class="text-decoration-none">
+            <button class="btn btn-success small-font" style="background-color: #02483E;">
+                <i class="bi bi-plus-circle"></i> Add menu
+            </button>
+        </a>
     </div>
 </div>
-
 {% endblock %}

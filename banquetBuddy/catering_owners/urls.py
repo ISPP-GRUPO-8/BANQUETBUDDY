@@ -73,6 +73,11 @@ urlpatterns = [
     path("update_service/<int:service_id>/", update_catering_service, name="update_service"),
     path('delete_service/<int:service_id>/', delete_service, name='delete_service'),
     path('confirm_delete_service/<int:service_id>/', confirm_delete_service, name='confirm_delete_service'),
+    path('plates/', views.list_plates, name='list_plates'),
+    path('plates/add/', views.add_plate, name='add_plate'),
+    path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
+    path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
+
 ]
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
 if settings.DEBUG:

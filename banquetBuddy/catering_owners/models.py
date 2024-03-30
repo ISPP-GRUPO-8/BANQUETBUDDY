@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from catering_particular.models import Particular
@@ -5,6 +6,7 @@ from core.models import ApplicationState, AssignmentState, BookingState, CustomU
 from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee
+from django.db.models import CheckConstraint
 
 class CateringCompany(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True, related_name='CateringCompanyusername')
@@ -73,7 +75,7 @@ class Task(models.Model):
         ]
 
 class Menu(models.Model):
-    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True )
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='menus', null=True, blank=True)
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='menus')
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -82,6 +84,8 @@ class Menu(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ('cateringcompany', 'name',)
 
 class Plate(models.Model):
     cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='plates', null=True, blank=True)
@@ -89,7 +93,6 @@ class Plate(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='plates_images/', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -110,6 +113,34 @@ class Review(models.Model):
 class EmployeeWorkService(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_work_services')
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='employee_work_services')
+
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            # Restricción de comprobación para asegurarse de que start_date es siempre anterior a end_date
+            CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
+
+            # Restricción de unicidad para evitar que el mismo empleado sea asignado al mismo servicio en fechas superpuestas
+            models.UniqueConstraint(
+                fields=['employee', 'cateringservice'],
+                name='unique_employee_service',
+                condition=models.Q(end_date__isnull=True) | models.Q(end_date__gte=models.F('start_date'))
+            )
+        ]
+
+
+    def current_status(self):
+        today = timezone.now().date()
+        if self.end_date and today > self.end_date:
+            return 'Terminado'
+        elif today >= self.start_date:
+            return 'Activo'
+
+
+    def __str__(self):
+        return f"{self.employee} en {self.cateringservice} ({self.current_status()})"
 
 class Offer(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='offers')
