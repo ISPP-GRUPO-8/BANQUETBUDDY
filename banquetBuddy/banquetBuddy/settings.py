@@ -16,6 +16,21 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
+#Sustituimos la siguiente línea por la que sigue a continuación cpara probar en local
+#BASE_URL = 'http:localhost:8000' 
+
+DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
+
+# Configuración para enviar correos electrónicos
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'banquetbuddyoficial@gmail.com'
+EMAIL_HOST_PASSWORD = 'zsqt bsae cayb atuk'
+DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
