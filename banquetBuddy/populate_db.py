@@ -223,19 +223,28 @@ employee_data = [
     }
 ]
 
+
 def create_employees(num_employees):
-    for _ in range(num_employees):
-        user = CustomUser.objects.create_user(username=employee_data[_]['username'], password= employee_data[_]['password'],email=faker.email())
-        Employee.objects.create(
+    for i in range(num_employees):
+        user = CustomUser.objects.create_user(username=employee_data[i]['username'], password= employee_data[i]['password'],email=faker.email())
+        employee = Employee.objects.create(
             user=user,
             phone_number=faker.phone_number(),
             profession=choice(['Chef', 'Camarero', 'Pastelero']),
-            experience=employee_data[_]['experience'],
-            skills=employee_data[_]['skill'],
-            english_level=employee_data[_]['english_level'],
+            experience=employee_data[i]['experience'],
+            skills=employee_data[i]['skill'],
+            english_level=employee_data[i]['english_level'],
             location=faker.address(),
-            curriculum=None, 
+            curriculum=None
         )
+        
+        curriculum_filename = 'curriculum.pdf'
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', curriculum_filename)
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                employee.curriculum = File(f, name=curriculum_filename)
+                employee.save()
 
 
 messages_content = [
