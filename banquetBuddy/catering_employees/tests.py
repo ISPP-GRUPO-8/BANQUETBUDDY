@@ -1,12 +1,15 @@
+from asyncio import Task
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse
+
 from .models import Employee
+from catering_particular.models import Particular
 from core.models import CustomUser
-from catering_owners.models import Offer, JobApplication, CateringService, CateringCompany, CateringService, Menu, Event, BookingState, CateringCompany, NotificationJobApplication
+from catering_owners.models import *
 from .views import employee_offer_list, application_to_offer
 from django.urls import reverse
-from datetime import date
+from datetime import datetime, timedelta, date
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save
 from .signals import notify_employee_on_state_change
@@ -264,3 +267,114 @@ class TestNotifyEmployeeOnStateChange(TestCase):
         self.job_application.save()
         notification = NotificationJobApplication.objects.filter(user=self.user, job_application=self.job_application).count()
         assert notification is not 0
+
+class EmployeeRecommendationLetterTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+        self.user2 = CustomUser.objects.create_user(username='testuser3', email='test3@example.com', password='testpassword3')
+        self.user3 = CustomUser.objects.create_user(username='testuser4', email='test4@example.com', password='testpassword4')
+
+
+        self.company = CateringCompany.objects.create (
+            user=self.user,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+
+        self.employee = Employee.objects.create (
+            user=self.user2,
+            phone_number='123456789',
+            profession='Tester',
+            experience='5 years',
+            skills='Testing skills',
+            english_level='ALTO',
+            location='Test Location'
+        )
+
+        self.employee2 = Employee.objects.create (
+            user=self.user3,
+            phone_number='123456789',
+            profession='Tester',
+            experience='5 years',
+            skills='Testing skills',
+            english_level='ALTO',
+            location='Test Location'
+        )
+
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test Description',
+            location='Test Location',
+            capacity=100, price=100.00
+            )
+        
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        expiration_date = datetime.now().date() + timedelta(days=1)
+        self.task = Task.objects.create(
+            event=self.event,
+            cateringservice=self.catering_service,
+            cateringcompany=self.company,
+            description='Test Task Description',
+            assignment_date=datetime.now().date(),
+            assignment_state='COMPLETED',
+            expiration_date=expiration_date,
+            priority='HIGH'
+        )
+        self.task.employees.add(self.employee)
+
+
+        self.recommendation = RecommendationLetter.objects.create(
+            employee = self.employee,
+            catering = self.company,
+            description = 'Test Recommendation Letter Description',
+            date = datetime.now().date()
+        )
+    
+    def test_my_recommendation_letters_view_authenticated(self):
+        self.client.force_login(self.user2)
+        response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_other_recommendation_letters_view(self):
+        self.client.force_login(self.user3)
+        response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        self.assertEqual(response.status_code, 403)
+
+    def test_no_employee_recommendation_letters_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        self.assertEqual(response.status_code, 403)
+    
+    def test_my_recommendation_letters_view_unauthenticated(self):
+        response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        self.assertEqual(response.status_code, 302)

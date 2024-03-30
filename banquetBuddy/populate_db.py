@@ -703,6 +703,16 @@ def create_recommendation_letters(num_recommendations):
             description=description,
             date=date
     )
+def create_task_employee():
+    employees = list(Employee.objects.all())
+    tasks = list(Task.objects.all())
+
+    if employees and tasks:
+        for t in tasks:
+            random_employee = random.choice(employees)
+            t.employees.add(random_employee)
+            t.save()
+            employees.remove(random_employee)
 
 def populate_database():
     truncate_all_tables()
@@ -721,6 +731,7 @@ def populate_database():
     create_offers(10)
     create_job_applications(10)
     create_recommendation_letters(10)
+    create_task_employee()
 
 if __name__ == "__main__":
     populate_database()
