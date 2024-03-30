@@ -94,8 +94,7 @@
                   {% endif %}
                 </li>
                 <li class="list-group-item">
-                  <strong>Verification state:</strong> {% if catering_company.is_verified %} Empresa verificada {% else
-                  %} Empresa no verificada {% endif %}<br>
+                  <strong>Verification state:</strong> {% if catering_company.is_verified %} Empresa verificada {% else %} Empresa no verificada {% endif %}<br>
                   {% if not catering_company.is_verified %}
                   <small>The verification process will take place in the next business days</small>
                   {% endif %}

@@ -58,7 +58,6 @@ urlpatterns = [
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
     path('my_bookings/',my_bookings_preview, name='my_bookings'),
-    path('catering_unsuscribe/', catering_unsuscribe, name='catering_unsuscribe'),
     path('service/<int:service_id>/employees', list_employee, name='list_employee'),
     path('service/<int:service_id>/employees/<int:employee_id>/recommendation_letter', create_recommendation_letter, name='recommendation_letter'),
     path("services/", get_catering_services, name="services"),
@@ -70,6 +69,21 @@ urlpatterns = [
     path('plates/add/', views.add_plate, name='add_plate'),
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
+
+    # CAMBIO DE PLAN
+    path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
+
+    path('process_base/', payment_process_base, name='process_base'),
+    path('completed_base/', payment_completed_base, name='completed_base'),
+
+    path('process_premium/', payment_process_premium, name='process_premium'),
+    path('completed_premium/', payment_completed_premium, name='completed_premium'),
+
+    path('process_pro/', payment_process_pro, name='process_pro'),
+    path('completed_pro/', payment_completed_pro, name='completed_pro'),
+
+    path('canceled/', payment_canceled, name='canceled'),
+
 
 ]
 
