@@ -1,16 +1,156 @@
 from decimal import Decimal
 import os
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from catering_particular.models import Particular
 from catering_employees.forms import EmployeeFilterForm
 from catering_employees.models import Employee
-from catering_owners.models import CateringCompany, CateringService, JobApplication, Offer
-
+from catering_owners.models import *
+from .views import *
+from catering_particular.models import Particular
 from core.forms import CustomUserCreationForm
 from .forms import CateringCompanyForm
-from core.models import CustomUser
+from core.models import CustomUser, BookingState
 from phonenumbers import PhoneNumber, parse, is_valid_number
+from datetime import datetime, timedelta
+
+class CateringBookTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+
+        self.company = CateringCompany.objects.create(
+            user=self.user,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test service description',
+            location='Test location',
+            capacity=100,
+            price=100.00
+        )
+
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+        
+        self.menu2 = Menu.objects.create(
+            id = 2,
+            cateringservice=self.catering_service,
+            name='Test Menu 2',
+            description='Test menu description 2',
+            diet_restrictions='Test diet restrictions 2'
+        )
+        self.catering_service.menus.add(self.menu2)
+
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+    
+        self.client = Client()
+
+    def test_my_books_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_books'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'particular_books.html')
+    
+    def test_my_books_view_not_authorized(self):
+        response = self.client.get(reverse('catering_books'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_book_edit_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_books_edit', args=[self.event.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'catering_book_edit.html')
+
+        response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
+            'date': '2024-04-15',
+            'number_guests': '10',
+            'selected_menu': self.menu2.id, 
+        })
+        self.assertEqual(response.status_code, 302)
+        edited_event = Event.objects.get(id=self.event.id)
+        self.assertEqual(edited_event.date.strftime('%Y-%m-%d'), '2024-04-15')
+        self.assertEqual(edited_event.number_guests, 10)
+        self.assertEqual(edited_event.menu, self.menu2)
+        self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
+    
+    def test_book_edit_view_incomplete_form(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_books_edit', args=[self.event.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'catering_book_edit.html')
+
+        response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
+            'date': '2024-03-15',
+            'number_guests': '0',
+            'selected_menu': self.menu2.id,
+        })
+        self.assertEqual(response.status_code, 200)
+
+        edited_event = Event.objects.get(id=self.event.id)
+        self.assertEqual(edited_event.date, self.event.date) 
+        self.assertEqual(edited_event.number_guests, self.event.number_guests)  
+        self.assertEqual(edited_event.menu, self.event.menu) 
+        self.assertEqual(edited_event.booking_state, self.event.booking_state)  
+
+    def test_book_edit_view_past_date(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_books_edit', args=[self.event.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'catering_book_edit.html')
+
+        past_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+        response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
+            'date': past_date,
+            'number_guests': '10',
+            'selected_menu': self.menu2.id,
+        })
+        
+        self.assertEqual(response.status_code, 200)
+
+        edited_event = Event.objects.get(id=self.event.id)
+        self.assertEqual(edited_event.date, self.event.date) 
+        self.assertEqual(edited_event.number_guests, self.event.number_guests)  
+        self.assertEqual(edited_event.menu, self.event.menu) 
+        self.assertEqual(edited_event.booking_state, self.event.booking_state)
+
+    
+    def test_book_cancel_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_books_cancel', args=[self.event.id]))
+        self.assertEqual(response.status_code, 302)
+        canceled_event = Event.objects.get(id=self.event.id)
+        self.assertEqual(canceled_event.booking_state, BookingState.CANCELLED)
 
 class RegisterCompanyTestCase(TestCase):
     def test_register_company_view(self):
@@ -184,3 +324,204 @@ class ViewTests(TestCase):
         self.offer.delete()
         self.employee.delete()
         self.job_application.delete()
+
+
+class CateringViewsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
+        self.user2 = CustomUser.objects.create_user(username='test_user2', password='test_password2')
+        
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company',price_plan = "PREMIUM_PRO")
+        self.catering_company2 = CateringCompany.objects.create(
+            user=self.user2,
+            name='Catering Company 2',
+            price_plan = "PREMIUM"
+        )
+        self.catering_service = CateringService.objects.create(
+            name='Test Catering',
+            cateringcompany=self.catering_company,
+            description='Test description',
+            location='Test location',
+            capacity=100,
+            price=500.00
+        )
+        self.particular = Particular.objects.create(user=self.user)
+        self.menu = Menu.objects.create(name='Test Menu')
+        self.event_date = datetime.now().date()
+        self.event = Event.objects.create(
+            cateringservice=self.catering_service,
+            particular=self.particular,
+            menu=self.menu,
+            name='Test Event',
+            date=self.event_date,
+            details='Test details',
+            booking_state=BookingState.choices[0][0],
+            number_guests=10
+        )
+
+    def test_view_reservations_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('view_reservations', kwargs={'catering_service_id': self.catering_service.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reservations.html')
+
+    def test_view_reservation_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('view_reservation', kwargs={'catering_service_id': self.catering_service.pk, 'event_id': self.event.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'view_reservation.html')
+
+    def test_catering_calendar_view_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'calendar.html')
+
+    def test_reservations_for_day_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('reservations_for_day', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month, 'day': self.event_date.day}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reservations_for_day.html')
+
+    def test_next_month_view_authenticated(self):
+        # Prueba para avanzar al mes siguiente en el calendario cuando el usuario está autenticado
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('next_month', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 302)
+        next_month_date = self.event_date.replace(day=1) + timedelta(days=32)  # Obtener la fecha del mes siguiente
+        self.assertRedirects(response, reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': next_month_date.year, 'month': next_month_date.month}))
+
+    def test_prev_month_view_authenticated(self):
+        # Prueba para retroceder al mes anterior en el calendario cuando el usuario está autenticado
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('prev_month', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        self.assertEqual(response.status_code, 302)
+        prev_month_date = self.event_date.replace(day=1) - timedelta(days=1)  # Obtener la fecha del mes anterior
+        self.assertRedirects(response, reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': prev_month_date.year, 'month': prev_month_date.month}))
+
+    def test_permission_denied(self):
+        # Intentar acceder a las vistas protegidas sin iniciar sesión
+        self.client.force_login(self.user2)
+        response_view_reservations = self.client.get(reverse('view_reservations', kwargs={'catering_service_id': self.catering_service.pk}))
+        response_view_reservation = self.client.get(reverse('view_reservation', kwargs={'catering_service_id': self.catering_service.pk, 'event_id': self.event.pk}))
+        response_catering_calendar = self.client.get(reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month}))
+        response_reservations_for_day = self.client.get(reverse('reservations_for_day', kwargs={'catering_service_id': self.catering_service.pk, 'year': self.event_date.year, 'month': self.event_date.month, 'day': self.event_date.day}))
+
+        # Verificar si se devuelve un error de permiso
+        self.assertEqual(response_view_reservations.status_code, 403)
+        self.assertEqual(response_view_reservation.status_code, 403)
+        self.assertEqual(response_catering_calendar.status_code, 403)
+        self.assertEqual(response_reservations_for_day.status_code, 403)
+
+class RecommendationLetterTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+        self.user2 = CustomUser.objects.create_user(username='testuser3', email='test3@example.com', password='testpassword3')
+
+
+        self.company = CateringCompany.objects.create (
+            user=self.user,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+
+        self.employee = Employee.objects.create (
+            user=self.user2,
+            phone_number='123456789',
+            profession='Tester',
+            experience='5 years',
+            skills='Testing skills',
+            english_level='ALTO',
+            location='Test Location'
+        )
+
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test Description',
+            location='Test Location',
+            capacity=100, price=100.00
+            )
+        
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        expiration_date = datetime.now().date() + timedelta(days=1)
+        self.task = Task.objects.create(
+            event=self.event,
+            cateringservice=self.catering_service,
+            cateringcompany=self.company,
+            description='Test Task Description',
+            assignment_date=datetime.now().date(),
+            assignment_state='COMPLETED',
+            expiration_date=expiration_date,
+            priority='HIGH'
+        )
+        self.task.employees.add(self.employee)
+
+
+        self.recommendation = RecommendationLetter.objects.create(
+            employee = self.employee,
+            catering = self.company,
+            description = 'Test Recommendation Letter Description',
+            date = datetime.now().date()
+        )
+
+    def test_list_employee_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('list_employee', args=[self.catering_service.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'list_employee.html')
+
+    def test_recommendation_letter_creation_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]), {
+            'description': 'Description',
+        })
+        self.assertEqual(response.status_code, 302) 
+        self.assertTrue(RecommendationLetter.objects.filter(employee=self.employee).exists())
+
+    def test_recommendation_letter_creation_unauthenticated(self):
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]))
+        self.assertEqual(response.status_code, 403)
+
+    def test_recommendation_letter_get_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]))
+        self.assertEqual(response.status_code, 200)  
+
+
+
+
+
+

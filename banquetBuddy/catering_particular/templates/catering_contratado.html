@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-white" style="background-color: #02483e;">
+            {% for event in events %}
+                {{ event.name }} - {{ event.cateringservice.name }} - {{ event.cateringservice.cateringcompany.name }}
+            {% endfor %}
+        </div>
+        <div class="card-body">
+            {% for event in events %}
+                <h5 class="card-title">{{ event.name }}</h5>
+                <p class="card-text">
+                    <strong>Catering Service:</strong> {{ event.cateringservice.name }}<br>
+                    <strong>Catering Company:</strong> {{ event.cateringservice.cateringcompany.name }}<br>
+                    <strong>Details:</strong> {{ event.details }}<br>
+                    <strong>Date:</strong> {{ event.date }}<br>
+                    <strong>Number of Guests:</strong> {{ event.number_guests }}<br>
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

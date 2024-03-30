@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Your Recommendations</h1>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for recommendation, catering_company in recommendation_dict.items %}
+        <div class="col mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title mb-0">{{ catering_company.name }}</h5>
+                    <p class="card-text mt-3">{{ recommendation.description }}</p>
+                    <div class="text-muted mt-auto">{{ recommendation.date }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

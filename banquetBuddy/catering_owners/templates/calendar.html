@@ -1,0 +1,170 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Calendar</title>
+    <style>
+        body {
+            font-family:  Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #f9f9f9;
+            color: #013b2a;
+        }
+        h1{
+            font-size: 35px;
+        }
+        .calendar-container {
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            padding: 15px;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .calendar-table th, .calendar-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ced4da;
+        }
+        .calendar-table th {
+            background-color: #02483E;
+            color: #fff;
+        }
+        .calendar-table td {
+            background-color: #fff;
+            position: relative;
+        }
+        .calendar-table td.event-day {
+            background-color: yellow;
+        }
+        .calendar-table a {
+            text-decoration: none;
+            color: #02483E;
+            border-radius: 4px;
+            padding: 10px 20px;
+            background-color: #02483E;
+            color: #fff;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+        .calendar-table a:hover {
+            background-color: #013b2a;
+        }
+        .calendar-container .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .calendar-container .navigation a {
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: #02483E;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Agregar transición de color de fondo */
+        }
+
+        .calendar-container .navigation a:hover {
+            background-color: #041611; /* Cambia el color de fondo al pasar el ratón por encima */
+        }
+        .calendar-container .info {
+            margin-top: 20px;
+            color: #02483E;
+        }
+        .calendar-table td .event-day-button {
+            position: absolute; /* Añade posición absoluta */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            border-radius: 4px;
+            background-color: #FFD700; /* Cambia el color de fondo al que desees */
+            color: #02483E; /* Cambia el color del texto al que desees */
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar-table td .event-day-button:hover {
+            background-color: #FFA500; /* Cambia el color de fondo al que desees */
+        }
+        @media screen and (max-width: 600px) and (min-width: 451px) {
+            h1 {
+                font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 450px) {
+                h1 {
+                    font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+                }
+        }
+        @media screen and (max-width: 600px) and (min-width: 451px) {
+            td, th, p, a {
+                font-size: 14px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 450px) {
+            td, th, p, a {
+                font-size: 10px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        .zero-day {
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, #02483E 5px, #02483E 10px);
+            background-size: auto 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center; margin-bottom: 30px; margin-top: 30px;">Events on {{ month_name }}/{{ year }} for {{ catering_name }}</h1>
+    <div class="calendar-container">
+        <div class="navigation">
+            <a href="{% url 'prev_month' catering_service_id=catering_service_id year=year month=month %}">Previous Month</a>
+            <a href="{% url 'next_month' catering_service_id=catering_service_id year=year month=month %}">Next Month</a>
+        </div>
+        <table class="calendar-table">
+            <tr>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
+            </tr>
+            {% for week in cal %}
+                <tr>
+                    {% for day in week %}
+                        {% if day == 0 %}
+                            <td class="zero-day"></td>
+                        {% else %}
+                            {% if day in event_days %}
+                                <td><a href="{% url 'reservations_for_day' catering_service_id=catering_service_id year=year month=month day=day %}" class="event-day-button">{{ day }}</a></td>
+                            {% else %}
+                                <td>{{ day }}</td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="info">
+            <p>Next Event: {{ next_event_date }}</p>
+            <p>Number of events this month: {{ num_events }}</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

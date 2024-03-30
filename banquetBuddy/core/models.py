@@ -1,11 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
+from banquetBuddy import settings
+from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
 
 # Create your models here.
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    reset_password_token = models.CharField(max_length=255, blank=True, null=True)
+
+    def generate_reset_password_token(self):
+        token = get_random_string(length=32)
+
+        # Asignar el token al usuario
+        self.reset_password_token = token
+        self.save()
+
 
 class AssignmentState(models.TextChoices):
     PENDING = 'PENDING', 'Pending'
@@ -20,7 +33,7 @@ class PricePlan(models.TextChoices):
 
 class ApplicationState(models.TextChoices):
     PENDING = 'PENDING', 'Pending'
-    IN_REVIEW = 'IN_REVIEW', 'In Review'
+    REJECTED = 'REJECTED', 'Rejected'
     ACCEPTED = 'ACCEPTED', 'Accepted'
 
 class Priority(models.TextChoices):
@@ -32,6 +45,7 @@ class BookingState(models.TextChoices):
     CONFIRMED = 'CONFIRMED', 'Confirmed'
     CONTRACT_PENDING = 'CONTRACT_PENDING', 'Contract Pending'
     CANCELLED = 'CANCELLED', 'Cancelled'
+    FINALIZED = 'FINALIZED', 'Finalized'
 
 class EnglishLevel(models.TextChoices):
     C2 = 'C2', 'C2'

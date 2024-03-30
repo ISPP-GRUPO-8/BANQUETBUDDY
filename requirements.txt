@@ -2,8 +2,7 @@ Django==4.2.7
 djangorestframework==3.14.0
 Pillow==10.1.0
 psycopg2==2.9.9
-stripe==7.7.0
 django-phonenumber-field[phonenumbers]
 faker==23.3.0
 coverage==7.4.3
-
+stripe==4.0.2
