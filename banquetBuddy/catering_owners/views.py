@@ -100,12 +100,11 @@ def register_company(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST, request.FILES)
         company_form = CateringCompanyForm(request.POST, request.FILES)
-        print(company_form)
         if user_form.is_valid() and company_form.is_valid():
             user = user_form.save()
             company_profile = company_form.save(commit=False)
             company_profile.user = user
-            company_profile.price_plan = "NO_SUBSCRIBED"
+            company_profile.price_plan = PricePlan.NO_SUBSCRIBED
             company_profile.save()
             messages.success(request, "Registration successful!")
             # Redirigir al usuario a la página de inicio después del registro exitoso
