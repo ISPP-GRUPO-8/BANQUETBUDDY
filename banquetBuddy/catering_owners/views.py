@@ -1,10 +1,13 @@
+from decimal import Decimal
 from urllib.parse import urlencode
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.db.models import F
-
-
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_version = settings.STRIPE_API_VERSION
 
 from core.views import is_catering_company
 from .forms import (
@@ -33,7 +36,7 @@ from datetime import datetime, date
 from catering_owners.models import *
 from django.utils.dateformat import DateFormat
 import calendar
-from .models import CateringCompany, Menu, Plate, Offer, CateringService
+from .models import CateringCompany, Menu, Plate, Offer, CateringService, PricePlan
 
 
 
@@ -408,25 +411,121 @@ def catering_unsuscribe(request):
     return redirect("profile")
 
 @login_required
-def change_of_plan_Base(request):
+def payment_process_base(request):
+        success_url = request.build_absolute_uri(reverse("completed_base"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"BASE PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_base(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    catering_company.price_plan = "BASE"
+    catering_company.price_plan = PricePlan.BASE
     catering_company.save()
-    return redirect("profile")
+    return render(request, "payment/completed.html")
 
 @login_required
-def change_of_plan_Premium(request):
+def payment_process_premium(request):
+        success_url = request.build_absolute_uri(reverse("completed_premium"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        1999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"PREMIUM PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_premium(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    catering_company.price_plan = "PREMIUM"
+    catering_company.price_plan = PricePlan.PREMIUM
     catering_company.save()
-    return redirect("profile")
+    return render(request, "payment/completed.html")
 
 @login_required
-def change_of_plan_Pro(request):
+def payment_process_pro(request):
+        success_url = request.build_absolute_uri(reverse("completed_pro"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        2999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"PREMIUM PRO PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_pro(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    catering_company.price_plan = "PREMIUM_PRO"
+    catering_company.price_plan = PricePlan.PREMIUM_PRO
     catering_company.save()
-    return redirect("profile")
+    return render(request, "payment/completed.html")
+
+def payment_canceled(request):
+    return render(request, "payment/canceled.html")
 
 
 ###########################

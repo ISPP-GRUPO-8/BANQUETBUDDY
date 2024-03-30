@@ -73,10 +73,7 @@ urlpatterns = [
         name="confirm_delete_offer",
     ),
     path("my_bookings/", my_bookings_preview, name="my_bookings"),
-    path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
-    path("catering_change_of_plan_Base/", change_of_plan_Base, name="change_of_plan_Base"),
-    path("change_of_plan_Premium/", change_of_plan_Premium, name="change_of_plan_Premium"),
-    path("change_of_plan_Pro/", change_of_plan_Pro, name="change_of_plan_Pro"),
+
     path("services/", get_catering_services, name="services"),
     path("create_service/", create_catering_service, name="create_service"),
     path("update_service/<int:service_id>/", update_catering_service, name="update_service"),
@@ -86,6 +83,21 @@ urlpatterns = [
     path('plates/add/', views.add_plate, name='add_plate'),
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
+
+    # CAMBIO DE PLAN
+    path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
+
+    path('process_base/', payment_process_base, name='process_base'),
+    path('completed_base/', payment_completed_base, name='completed_base'),
+
+    path('process_premium/', payment_process_premium, name='process_premium'),
+    path('completed_premium/', payment_completed_premium, name='completed_premium'),
+
+    path('process_pro/', payment_process_pro, name='process_pro'),
+    path('completed_pro/', payment_completed_pro, name='completed_pro'),
+
+    path('canceled/', payment_canceled, name='canceled'),
+
 
 ]
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
