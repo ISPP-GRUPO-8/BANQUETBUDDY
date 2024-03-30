@@ -11,7 +11,7 @@ jobs:
     - name: Set up Python 3.x
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x' # Set this to your Python version
+        python-version: '3.x' 
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: SonarCloud Scan
