@@ -26,14 +26,15 @@
               <strong>Last Name:</strong> {{ user.last_name }}
             </li>
             {% if user.EmployeeUsername %}
-              <li class="list-group-item">
-                <strong>Currículum:</strong>
-                {% if user.EmployeeUsername.curriculum %}
-                  <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
-                {% else %}
-                  No hay currículum adjunto
-                {% endif %}
-              </li>
+            <li class="list-group-item">
+              <strong>Currículum:</strong>
+              {% if user.EmployeeUsername.curriculum %}
+              <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{
+                user.EmployeeUsername.curriculum.name }}</a>
+              {% else %}
+              No hay currículum adjunto
+              {% endif %}
+            </li>
             {% endif %}
           </ul>
         </div>
@@ -52,6 +53,9 @@
                   <a href="{% url 'list_menus' %}" class="text-decoration-none"> My menus </a>
                 </li>
                 <li class="list-group-item">
+                  <a href="{% url 'list_plates' %}" class="text-decoration-none"> My plates </a>
+                </li>
+                <li class="list-group-item">
                   <a href="{% url 'my_bookings' %}" class="text-decoration-none"> My bookings </a>
                 </li>
               </ul>
@@ -60,72 +64,77 @@
         </div>
         {% endif %}
 
-    {% if catering_company %}
-    <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
-    <div class="col-md-6">
-      <div class="card" style="background-color: #02483e">
-        <div class="card-body">
-          <h2 class="card-title text-center text-white">Company data</h2>
-          <ul class="list-group list-group-flush rounded">
-            <li class="list-group-item">
-              <strong>Company name:</strong> {{ catering_company.name }}
-            </li>
-            <li class="list-group-item">
-              <strong>Address:</strong> {{ catering_company.address }}
-            </li>
-            <li class="list-group-item">
-              <strong>Phone number:</strong> {{ catering_company.phone_number }}
-            </li>
-            <li class="list-group-item">
-              <strong>CIF:</strong> {{ catering_company.cif }}
-            </li>
-            <!-- Mostrar el documento de verificación de la empresa -->
-            <li class="list-group-item">
-              <strong>Verification Document:</strong>
-              {% if catering_company.verification_document %}
-                <a href="{{ catering_company.verification_document.url }}" target="_blank">{{ catering_company.verification_document.name }}</a>
-              {% else %}
-                There is no associated verification document.
-              {% endif %}
-            </li>
-            <li class="list-group-item">
-              <strong>Verification state:</strong> {% if catering_company.is_verified %} Empresa verificada {% else %} Empresa no verificada {% endif %}<br>
-              {% if not catering_company.is_verified %}
-              <small>The verification process will take place in the next business days</small>
-              {% endif %}
-            </li>
-            <li class="list-group-item">
-              <strong>Price plan:</strong> {{ catering_company.price_plan }}
-            </li>
-          </ul>
+        {% if catering_company %}
+        <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
+        <div class="col-md-6">
+          <div class="card" style="background-color: #02483e">
+            <div class="card-body">
+              <h2 class="card-title text-center text-white">Company data</h2>
+              <ul class="list-group list-group-flush rounded">
+                <li class="list-group-item">
+                  <strong>Company name:</strong> {{ catering_company.name }}
+                </li>
+                <li class="list-group-item">
+                  <strong>Address:</strong> {{ catering_company.address }}
+                </li>
+                <li class="list-group-item">
+                  <strong>Phone number:</strong> {{ catering_company.phone_number }}
+                </li>
+                <li class="list-group-item">
+                  <strong>CIF:</strong> {{ catering_company.cif }}
+                </li>
+                <!-- Mostrar el documento de verificación de la empresa -->
+                <li class="list-group-item">
+                  <strong>Verification Document:</strong>
+                  {% if catering_company.verification_document %}
+                  <a href="{{ catering_company.verification_document.url }}" target="_blank">{{
+                    catering_company.verification_document.name }}</a>
+                  {% else %}
+                  There is no associated verification document.
+                  {% endif %}
+                </li>
+                <li class="list-group-item">
+                  <strong>Verification state:</strong> {% if catering_company.is_verified %} Empresa verificada {% else
+                  %} Empresa no verificada {% endif %}<br>
+                  {% if not catering_company.is_verified %}
+                  <small>The verification process will take place in the next business days</small>
+                  {% endif %}
+                </li>
+                <li class="list-group-item">
+                  <strong>Price plan:</strong> {{ catering_company.price_plan }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
+        {% endif %}
       </div>
-    </div>
-    {% endif %}
-  </div>
-  {% if catering_company %}
-  <div class="row justify-content-center">
-    <a href="{% url 'catering_profile_edit' %}" class="text-decoration-none">
-      <button
-        class="btn btn-rounded text-white"
-        style="background-color: #54bfaf"
-      >
-        Edit profile
-      </button>
-    </a>
-  </div>
-  {% else %}
-  <div class="row justify-content-center">
-    <a href="{% url 'profile_edit' %}" class="text-decoration-none">
-      <button
-        class="btn btn-rounded text-white"
-        style="background-color: #54bfaf"
-      >
-        Edit profile
-      </button>
-    </a>
-  </div>
-  {% endif %}
-</div>
+      {% if catering_company %}
+      <div class="row justify-content-center">
+        <a href="{% url 'catering_profile_edit' %}" class="text-decoration-none">
+          <button class="btn btn-rounded text-white" style="background-color: #54bfaf">
+            Edit profile
+          </button>
+        </a>
+      </div>
+      {% else %}
+      <div class="row justify-content-center">
+        <a href="{% url 'profile_edit' %}" class="text-decoration-none mr-2">
+          <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
+            Edit profile
+          </button>
+        </a>
 
-{% endblock %}
+        {% if request.user.EmployeeUsername %}
+        <a href="{% url 'my_recommendation_letters' user.id %}" class="text-decoration-none ml-2">
+          <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
+            Recommendation letters
+          </button>
+        </a>
+        {% endif %}
+      </div>
+
+      {% endif %}
+    </div>
+
+    {% endblock %}

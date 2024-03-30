@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect
+from banquetBuddy import settings
 from catering_employees.models import Employee
 from catering_particular.models import Particular
 
@@ -20,6 +21,13 @@ from django.contrib import messages
 from .models import CustomUser
 from catering_owners.models import  CateringService, Offer
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import send_mail
+from django.conf import settings
+from django.urls import reverse
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import update_session_auth_hash
+
 from django.db.models import Q
 from random import sample
 from django.utils import timezone
@@ -375,6 +383,68 @@ def listar_caterings_home(request):
     context['buscar'] = busqueda    
     context['caterings'] = caterings
     return render(request, 'listar_caterings.html', context)
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            # Check if the email belongs to an existing user
+            try:
+                user = CustomUser.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                user = None
+            if user:
+                # Generate password reset token and send email
+                user.generate_reset_password_token()
+                send_reset_password_email(user.email, user.reset_password_token)
+                messages.success(request, 'An email has been sent with instructions to reset your password.')
+                return redirect('reset_password')
+            else:
+                messages.error(request, 'There is no user with this email address.')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'core/reset_password.html', {'form': form})
+
+def send_reset_password_email(email, token):
+    subject = 'Reset Password'
+    message = f'Go to the following link to reset your password:\n\n{settings.BASE_URL}/reset_password/{token}'
+    sender = settings.DEFAULT_FROM_EMAIL
+    recipient = [email]
+    send_mail(subject, message, sender, recipient)
+
+def reset_password_confirm(request, token):
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('reset_password_confirm', token=token)
+        else:
+            try:
+                # Find user with provided token
+                user = CustomUser.objects.get(reset_password_token=token)
+                user.set_password(password1)
+                user.reset_password_token = None
+                user.save()
+                if request.user.is_authenticated:
+                    update_session_auth_hash(request, user)
+                messages.success(request, 'Your password has been successfully reset.')
+                return redirect('login')
+            except CustomUser.DoesNotExist:
+                messages.error(request, 'The password reset token is invalid.')
+                return redirect('reset_password')
+    else:
+        try:
+            # Find user with provided token
+            user = CustomUser.objects.get(reset_password_token=token)
+            return render(request, 'core/reset_password_confirm.html', {'token': token})
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'The password reset token is invalid.')
+            return redirect('reset_password')
+        
+def reset_password_complete(request):
+   return redirect(reverse('login'))
 
 def notification_view(request):
     
