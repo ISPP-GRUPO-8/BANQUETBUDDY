@@ -6,3 +6,4 @@ django-phonenumber-field[phonenumbers]
 faker==23.3.0
 coverage==7.4.3
 stripe==4.0.2
+auto-changelog

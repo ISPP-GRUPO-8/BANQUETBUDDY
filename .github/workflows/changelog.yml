@@ -1,0 +1,36 @@
+name: Generate Changelog
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Generate Changelog
+        run: |
+          git fetch --unshallow || true
+          auto-changelog --unreleased
+          mkdir -p changelogs/$GITHUB_REF_NAME/
+          mv CHANGELOG.md changelogs/$GITHUB_REF_NAME/
+          sed -i 's/New Features/Features Commits/' changelogs/$GITHUB_REF_NAME/CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add changelogs/
+          git commit -m "Update changelog for release $GITHUB_REF_NAME"
+          git push origin main
