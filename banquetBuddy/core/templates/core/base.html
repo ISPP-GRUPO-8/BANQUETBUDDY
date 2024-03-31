@@ -48,9 +48,11 @@
                         <a class="nav-link" href="/services">Services</a>
                     </li>
                     {% endif %}
+                    {% if is_catering_company or not user.is_authenticated%}
                     <li class="nav-item">
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
+                    {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'catering_calendar_preview' %}">Calendar</a>
@@ -94,13 +96,13 @@
                     <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
                 </form>
                 {% if request.user.is_authenticated %}
-                    {% if request.user.ParticularUsername %}
+                    {% comment %} {% if request.user.ParticularUsername %}
                         <a class="nav-link" href="{% url 'my_books' %}">My Books</a>
                         <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                         {{ user.username }}
                         </a>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
                     {% if request.user.EmployeeUsername %}
                         <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fa-solid fa-user-tie"></i>
