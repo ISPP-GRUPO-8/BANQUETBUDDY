@@ -14,6 +14,7 @@ from .forms import CateringCompanyForm
 from core.models import CustomUser, BookingState
 from phonenumbers import PhoneNumber, parse, is_valid_number
 from datetime import datetime, timedelta
+from django.core.files import File
 
 class CateringBookTestCase(TestCase):
     def setUp(self):
@@ -265,6 +266,13 @@ class ViewTests(TestCase):
         )
         self.offer = Offer.objects.create(title="Oferta de prueba", description="Descripción de prueba", requirements="Requisitos de prueba", location="Ubicación de prueba",cateringservice= self.catering_service)
         self.employee = Employee.objects.create(user=CustomUser.objects.create(username="usuario_prueba", email= 'estoesunaprueba@gmail.com'), phone_number="1234567890", profession="Chef", experience="5 years", skills="Culinary skills", english_level="C2", location="Ubicación de prueba")
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
+                
         self.job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, date_application="2023-11-14", state="APLICADO")
 
     def test_get_applicants(self):
@@ -333,10 +341,11 @@ class CateringViewsTest(TestCase):
         self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
         self.user2 = CustomUser.objects.create_user(username='test_user2', password='test_password2')
         
-        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company',price_plan = "PREMIUM_PRO")
         self.catering_company2 = CateringCompany.objects.create(
             user=self.user2,
-            name='Catering Company 2'
+            name='Catering Company 2',
+            price_plan = "PREMIUM"
         )
         self.catering_service = CateringService.objects.create(
             name='Test Catering',
@@ -413,3 +422,120 @@ class CateringViewsTest(TestCase):
         self.assertEqual(response_view_reservation.status_code, 403)
         self.assertEqual(response_catering_calendar.status_code, 403)
         self.assertEqual(response_reservations_for_day.status_code, 403)
+
+class RecommendationLetterTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+        self.user2 = CustomUser.objects.create_user(username='testuser3', email='test3@example.com', password='testpassword3')
+
+
+        self.company = CateringCompany.objects.create (
+            user=self.user,
+            name='Test Catering Company',
+            phone_number='123456789',
+            service_description='Test service description',
+            price_plan='BASE'
+        )
+
+        self.particular = Particular.objects.create(
+            user=self.user1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
+
+        self.employee = Employee.objects.create (
+            user=self.user2,
+            phone_number='123456789',
+            profession='Tester',
+            experience='5 years',
+            skills='Testing skills',
+            english_level='ALTO',
+            location='Test Location'
+        )
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
+
+        self.catering_service = CateringService.objects.create(
+            cateringcompany=self.company,
+            name='Test Catering Service',
+            description='Test Description',
+            location='Test Location',
+            capacity=100, price=100.00
+            )
+        
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        expiration_date = datetime.now().date() + timedelta(days=1)
+        self.task = Task.objects.create(
+            event=self.event,
+            cateringservice=self.catering_service,
+            cateringcompany=self.company,
+            description='Test Task Description',
+            assignment_date=datetime.now().date(),
+            assignment_state='COMPLETED',
+            expiration_date=expiration_date,
+            priority='HIGH'
+        )
+        self.task.employees.add(self.employee)
+
+
+        self.recommendation = RecommendationLetter.objects.create(
+            employee = self.employee,
+            catering = self.company,
+            description = 'Test Recommendation Letter Description',
+            date = datetime.now().date()
+        )
+
+    def test_list_employee_view(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('list_employee', args=[self.catering_service.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'list_employee.html')
+
+    def test_recommendation_letter_creation_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]), {
+            'description': 'Description',
+        })
+        self.assertEqual(response.status_code, 302) 
+        self.assertTrue(RecommendationLetter.objects.filter(employee=self.employee).exists())
+
+    def test_recommendation_letter_creation_unauthenticated(self):
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]))
+        self.assertEqual(response.status_code, 403)
+
+    def test_recommendation_letter_get_authenticated(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]))
+        self.assertEqual(response.status_code, 200)  
+
+
+
+
+
+
