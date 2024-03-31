@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
-from .models import CateringCompany, CateringService, Menu, Offer
+from .models import CateringCompany, CateringService, Menu, Offer, Plate
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -30,7 +30,6 @@ class CateringCompanyForm(forms.ModelForm):
             "address",
             "phone_number",
             "cif",
-            "price_plan",
             "verification_document",
         ]
         widgets = {
@@ -46,8 +45,6 @@ class CateringCompanyForm(forms.ModelForm):
             "cif": forms.TextInput(
                 attrs={"placeholder": "Ex: A1234567J", "class": "form-control"}
             ),
-            "price_plan": forms.Select(attrs={"class": "form-control"}),
-            "verification_document": forms.FileInput(attrs={"class": "form-control"}),
         }
 
         def __init__(self, *args, **kwargs):
@@ -56,7 +53,6 @@ class CateringCompanyForm(forms.ModelForm):
             self.fields["address"].required = False
             self.fields["phone_number"].required = True
             self.fields["cif"].required = False
-            self.fields["price_plan"].required = True
             self.fields["verification_document"].required = False
 
 
@@ -177,4 +173,26 @@ class CateringServiceForm(forms.ModelForm):
             "location": forms.TextInput(attrs={"class": "form-control"}),
             "capacity": forms.NumberInput(attrs={"class": "form-control"}),
             "price": forms.NumberInput(attrs={"class": "form-control"}),
+        }
+
+from django import forms
+from .models import Plate, Menu
+
+class PlateForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(PlateForm, self).__init__(*args, **kwargs)
+        if user and hasattr(user, "CateringCompanyusername"):
+            self.fields["menu"].queryset = Menu.objects.filter(
+                cateringcompany=user.CateringCompanyusername
+            )
+            self.fields["menu"].label_from_instance = lambda obj: "%s" % obj.name
+
+    class Meta:
+        model = Plate
+        fields = ["name", "description", "price", "menu"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            "price": forms.NumberInput(attrs={"class": "form-control"}),
+            "menu": forms.Select(attrs={"class": "form-control"}),
         }

@@ -1,4 +1,19 @@
+from urllib.parse import urlencode
+
 from django.shortcuts import render, redirect, get_object_or_404
+from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium, is_catering_company_premium_pro
+from .forms import OfferForm,CateringCompanyForm, MenuForm
+from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
+from django.http import HttpResponseForbidden;
+from .models import  Offer, CateringService,Event
+from urllib.parse import urlencode
+from django.core.paginator import Paginator
+from django.urls import reverse
+from django.db.models import F
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_SECRET_KEY
+stripe.api_version = settings.STRIPE_API_VERSION
 
 from core.views import is_catering_company
 from .forms import (
@@ -8,6 +23,7 @@ from .forms import (
     CateringCompanyForm,
     MenuForm,
     EmployeeFilterForm,
+    PlateForm,
 )
 from django.http import HttpResponseForbidden
 from .models import Offer, CateringService, Event
@@ -26,7 +42,7 @@ from datetime import datetime, date
 from catering_owners.models import *
 from django.utils.dateformat import DateFormat
 import calendar
-from .models import CateringCompany, Menu, Plate, Offer, CateringService
+from .models import CateringCompany, Menu, Plate, Offer, CateringService, PricePlan
 
 
 
@@ -90,11 +106,11 @@ def register_company(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST, request.FILES)
         company_form = CateringCompanyForm(request.POST, request.FILES)
-
         if user_form.is_valid() and company_form.is_valid():
             user = user_form.save()
             company_profile = company_form.save(commit=False)
             company_profile.user = user
+            company_profile.price_plan = PricePlan.NO_SUBSCRIBED
             company_profile.save()
             messages.success(request, "Registration successful!")
             # Redirigir al usuario a la página de inicio después del registro exitoso
@@ -173,19 +189,23 @@ def view_reservation(request, event_id, catering_service_id):
 @login_required
 def catering_calendar_preview(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    if request.method == "POST":
-        form = CateringServiceFilterForm(catering_company, request.POST)
-        if form.is_valid():
-            selected_catering_service = form.cleaned_data.get("catering_service")
-            if selected_catering_service:
-                return redirect(
-                    "catering_calendar",
-                    year=datetime.now().year,
-                    month=datetime.now().month,
-                    catering_service_id=selected_catering_service.id,
-                )
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.method == "POST":
+            form = CateringServiceFilterForm(catering_company, request.POST)
+            if form.is_valid():
+                selected_catering_service = form.cleaned_data.get("catering_service")
+                if selected_catering_service:
+                    return redirect(
+                        "catering_calendar",
+                        year=datetime.now().year,
+                        month=datetime.now().month,
+                        catering_service_id=selected_catering_service.id,
+                    )
+        else:
+            form = CateringServiceFilterForm(catering_company)
     else:
-        form = CateringServiceFilterForm(catering_company)
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     context = {"form": form, "year": datetime.now().year, "month": datetime.now().month}
 
@@ -217,34 +237,35 @@ def my_bookings_preview(request):
 @login_required
 def catering_calendar_view(request, catering_service_id, month, year):
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        month = min(
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            month = min(
             max(int(month), 1), 12
-        )  # Asegurarse de que el mes esté en el rango válido (1-12)
-        month_name = DateFormat(datetime(year, month, 1)).format("F")
+            )  # Asegurarse de que el mes esté en el rango válido (1-12)
+            month_name = DateFormat(datetime(year, month, 1)).format("F")
 
         # Obtener el calendario del mes y los días con eventos
-        cal = calendar.monthcalendar(year, month)
-        events = Event.objects.filter(
+            cal = calendar.monthcalendar(year, month)
+            events = Event.objects.filter(
             cateringservice=catering_service, date__year=year, date__month=month
-        ).values_list("date__day", flat=True)
+            ).values_list("date__day", flat=True)
 
-        num_events = events.count()
-        next_event_date = Event.objects.filter(
-            cateringservice=catering_service,
-            date__gte=date.today(),  # Solo eventos futuros
-        ).aggregate(next_event=Min("date"))["next_event"]
-        if next_event_date is None:
-            next_event_date = "No upcoming events"
-        else:
-            next_event_date = next_event_date.strftime("%Y-%m-%d")
+            num_events = events.count()
+            next_event_date = Event.objects.filter(
+                cateringservice=catering_service,
+                date__gte=date.today(),  # Solo eventos futuros
+            ).aggregate(next_event=Min("date"))["next_event"]
+            if next_event_date is None:
+                next_event_date = "No upcoming events"
+            else:
+                next_event_date = next_event_date.strftime("%Y-%m-%d")
         # Generar una lista de días con eventos para resaltar en el calendario
 
-        event_days = set(events)
-        return render(
-            request,
-            "calendar.html",
-            {
+            event_days = set(events)
+            return render(
+                request,
+                "calendar.html",
+                {
                 "catering_name": catering_service.name,
                 "catering_service_id": catering_service_id,
                 "year": year,
@@ -254,48 +275,59 @@ def catering_calendar_view(request, catering_service_id, month, year):
                 "event_days": event_days,
                 "next_event_date": next_event_date,
                 "num_events": num_events,
-            },
+                },
         )
-
+        else:
+            return HttpResponseForbidden("You don't have permission to view this calendar.")
     else:
-        return HttpResponseForbidden("You don't have permission to view this calendar.")
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
+    
 
 
 @login_required
 def reservations_for_day(request, catering_service_id, year, month, day):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        selected_date = datetime(year, month, day)
-        reservations = Event.objects.filter(
-            cateringservice=catering_service, date=selected_date
-        )
-        return render(
-            request,
-            "reservations_for_day.html",
-            {
-                "catering_service": catering_service,
-                "selected_date": selected_date,
-                "reservations": reservations,
-            },
-        )
-    else:
-        return HttpResponseForbidden(
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            selected_date = datetime(year, month, day)
+            reservations = Event.objects.filter(
+                cateringservice=catering_service, date=selected_date
+            )
+            return render(
+                request,
+                "reservations_for_day.html",
+                {
+                    "catering_service": catering_service,
+                    "selected_date": selected_date,
+                    "reservations": reservations,
+                },
+            )
+        else:
+            return HttpResponseForbidden(
             "You don't have permission to view this day reservations."
         )
+    else:
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
 
 def next_month_view(request, catering_service_id, year, month):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        next_month = int(month) + 1
-        next_year = int(year)
-        if next_month > 12:
-            next_month = 1
-            next_year += 1
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            next_month = int(month) + 1
+            next_year = int(year)
+            if next_month > 12:
+                next_month = 1
+                next_year += 1
+        else:
+            return HttpResponseForbidden(
+                "You don't have permission to manipulate this calendar."
+            )
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to manipulate this calendar."
-        )
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     return redirect(
         "catering_calendar",
@@ -307,16 +339,18 @@ def next_month_view(request, catering_service_id, year, month):
 
 def prev_month_view(request, catering_service_id, year, month):
     catering_service = CateringService.objects.get(pk=catering_service_id)
-    if request.user == catering_service.cateringcompany.user:
-        prev_month = int(month) - 1
-        prev_year = int(year)
-        if prev_month < 1:
-            prev_month = 12
-            prev_year -= 1
+    if (is_catering_company_premium(request) or is_catering_company_premium_pro(request)):
+        if request.user == catering_service.cateringcompany.user:
+            prev_month = int(month) - 1
+            prev_year = int(year)
+            if prev_month < 1:
+                prev_month = 12
+                prev_year -= 1
+        else:
+            return HttpResponseForbidden("You don't have permission to manipulate this calendar.")
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to manipulate this calendar."
-        )
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
     return redirect(
         "catering_calendar",
@@ -399,6 +433,123 @@ def catering_unsuscribe(request):
     catering_company.save()
     return redirect("profile")
 
+@login_required
+def payment_process_base(request):
+        success_url = request.build_absolute_uri(reverse("completed_base"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"BASE PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_base(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    catering_company.price_plan = PricePlan.BASE
+    catering_company.save()
+    return render(request, "payment/completed.html")
+
+@login_required
+def payment_process_premium(request):
+        success_url = request.build_absolute_uri(reverse("completed_premium"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        1999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"PREMIUM PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_premium(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    catering_company.price_plan = PricePlan.PREMIUM
+    catering_company.save()
+    return render(request, "payment/completed.html")
+
+@login_required
+def payment_process_pro(request):
+        success_url = request.build_absolute_uri(reverse("completed_pro"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        2999
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"PREMIUM PRO PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+
+def payment_completed_pro(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    catering_company.price_plan = PricePlan.PREMIUM_PRO
+    catering_company.save()
+    return render(request, "payment/completed.html")
+
+def payment_canceled(request):
+    return render(request, "payment/canceled.html")
+
 
 ###########################
 ######### Ofertas #########
@@ -413,67 +564,74 @@ def offer_list(request):
     try:
         catering_company = CateringCompany.objects.get(user=current_user)
     except CateringCompany.DoesNotExist:
-        return render(request, "error_catering.html")
-
-    offers = Offer.objects.filter(cateringservice__cateringcompany=catering_company)
-    return render(request, "offers/offer_list.html", {"offers": offers})
-
+        return render(request, 'error_catering.html')
+    if is_catering_company_premium_pro(request) is True:
+        offers = Offer.objects.filter(cateringservice__cateringcompany=catering_company)
+        return render(request, 'offers/offer_list.html', {'offers': offers})
+    else:
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
 @login_required
 def create_offer(request):
     catering_company = request.user.CateringCompanyusername
     catering_services = CateringService.objects.filter(cateringcompany=catering_company)
-
-    if request.method == "POST":
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            offer = form.save(commit=False)
-            offer.cateringservice = CateringService.objects.get(
-                pk=request.POST["catering_service"]
-            )  # Obtener el CateringService seleccionado en el formulario
-            offer.save()
-            return redirect("offer_list")
+    if is_catering_company_premium_pro(request) is True:
+        if request.method == 'POST':
+            form = OfferForm(request.POST)
+            if form.is_valid():
+                offer = form.save(commit=False)
+                offer.cateringservice = CateringService.objects.get(pk=request.POST['catering_service'])  # Obtener el CateringService seleccionado en el formulario
+                offer.save()
+                return redirect('offer_list')
+        else:
+            messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+            form = OfferForm()
     else:
-        form = OfferForm()
-
-    return render(
-        request,
-        "offers/create_offer.html",
-        {"form": form, "catering_services": catering_services},
-    )
-
+        return redirect('subscription_plans')
+    
+    return render(request, 'offers/create_offer.html', {'form': form, 'catering_services': catering_services})
 
 @login_required
-def edit_offer(request, offer_id):
-    offer = get_object_or_404(Offer, pk=offer_id)
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == "POST":
-            form = OfferForm(request.POST, instance=offer)
-            if form.is_valid():
-                form.save()
-                return redirect("offer_list")
+def edit_offer(request, offer_id): 
+    offer = get_object_or_404(Offer, pk=offer_id) 
+    if is_catering_company_premium_pro(request) is True:
+        if request.user == offer.cateringservice.cateringcompany.user:
+            if request.method == 'POST':
+                form = OfferForm(request.POST, instance=offer)
+                if form.is_valid():
+                    form.save()
+                    return redirect('offer_list')  
+            else:
+                form = OfferForm(instance=offer)
+            return render(request, 'offers/edit_offer.html', {'form': form, 'offer': offer})
         else:
-            form = OfferForm(instance=offer)
-        return render(request, "offers/edit_offer.html", {"form": form, "offer": offer})
+            return redirect('offer_list')
     else:
-        return redirect("offer_list")
-
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
 def delete_offer(request, offer_id):
-    offer = get_object_or_404(Offer, pk=offer_id)
-    return render(request, "offers/delete_offer.html", {"offer": offer})
-
+    if is_catering_company_premium_pro(request) is True:
+        offer = get_object_or_404(Offer, pk=offer_id)
+        return render(request, 'offers/delete_offer.html', {'offer': offer})
+    else:
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
 
 @login_required
 def confirm_delete_offer(request, offer_id):
-    if request.method == "POST":
-        offer = get_object_or_404(Offer, pk=offer_id)
-        offer.delete()
-        return redirect("offer_list")
+    if is_catering_company_premium_pro(request) is True:
+        if request.method == 'POST':
+            offer = get_object_or_404(Offer, pk=offer_id)
+            offer.delete()
+            return redirect('offer_list')
+        else:
+            return redirect('offer_list')
     else:
-        return redirect("offer_list")
-
-
+        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
+        return redirect('subscription_plans')
+    
 def apply_offer(request, offer_id):
     offer = get_object_or_404(Offer, pk=offer_id)
 
@@ -490,7 +648,7 @@ def apply_offer(request, offer_id):
             )  # Redirigir de vuelta a la lista de ofertas después de aplicar
     else:
         form = OfferForm()
-    return render(request, "offers/offer_list.html", {"form": form, "offer": offer})
+    return render(request, "offers/offer_list.html", {"form": form, "offer": offer}) 
 
 
 ###########################
@@ -565,5 +723,159 @@ def confirm_delete_service(request, service_id):
         service.delete()
         return redirect("services")  
     else:
-        return redirect("services")  
+        return redirect("services") 
 
+
+@login_required
+def list_plates(request):
+    catering_company = get_object_or_404(CateringCompany, user=request.user)
+    plates_query = Plate.objects.filter(cateringcompany=catering_company)
+
+    # Filtrar los platos si se proporciona menu_id
+    menu_id = request.GET.get('menu_id')
+    if menu_id:
+        if menu_id == 'none':
+            plates_query = plates_query.filter(menu__isnull=True)
+        else:
+            try:
+                menu_id_int = int(menu_id)
+                plates_query = plates_query.filter(menu__id=menu_id_int)
+            except ValueError:
+                pass
+
+    # Guardar los parámetros del filtro en la sesión
+    request.session['plate_filter'] = {'menu_id': menu_id}
+
+    # Manejar la ordenación
+    sort_by = request.GET.get('sort', 'name')
+    order = request.GET.get('order', 'asc')
+    if sort_by not in ['name', 'menu', 'price']:
+        sort_by = 'name'
+    if order == 'desc':
+        plates_query = plates_query.order_by('-' + sort_by)
+    else:
+        plates_query = plates_query.order_by(sort_by)
+
+    # Paginación
+    paginator = Paginator(plates_query, 10)
+    page_number = request.GET.get('page')
+    plates = paginator.get_page(page_number)
+
+    # Obtener todos los menús para el filtro
+    menus = Menu.objects.filter(cateringcompany=catering_company).values('id', 'name').distinct()
+
+    return render(request, 'list_plates.html', {
+        'plates': plates,
+        'menus': menus,
+        'selected_menu_id': menu_id
+    })
+
+@login_required
+def delete_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        plate.delete()
+        messages.success(request, "Plate removed successfully.")
+        
+        # Recuperar los parámetros de filtro de la sesión y redireccionar
+        filter_params = request.session.get('plate_filter', {})
+        return redirect(f"{reverse('list_plates')}?{urlencode(filter_params)}")
+
+    else:
+        return redirect("list_plates")
+
+
+
+
+
+
+
+ 
+    
+@login_required
+def add_plate(request):
+    catering_company = CateringCompany.objects.get(user=request.user)
+    if request.method == "POST":
+        form = PlateForm(request.user, request.POST)
+        if form.is_valid():
+            plate = form.save(commit=False)
+            plate.cateringcompany = catering_company
+            plate.save()
+            messages.success(request, "Plate created successfully.")
+            return redirect("list_plates")
+    else:
+        form = PlateForm(request.user)
+
+    return render(request, "add_plate.html", {"form": form})
+
+@login_required
+def edit_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        form = PlateForm(request.user, request.POST, instance=plate)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Plate updated successfully.")
+            return redirect("list_plates")
+    else:
+        form = PlateForm(request.user, instance=plate)
+    return render(request, "edit_plate.html", {"form": form})
+
+
+@login_required
+def delete_plate(request, plate_id):
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if request.method == "POST":
+        plate.delete()
+        messages.success(request, "Plate removed successfully.")
+        # Recuperar y utilizar los parámetros de filtro de la sesión
+        filter_params = request.session.get('plate_filter', {})
+        return redirect(f"{reverse('list_plates')}?{urlencode(filter_params)}")
+    else:
+        return redirect("list_plates")
+
+
+@login_required
+def list_employee(request, service_id):
+    catering_service = get_object_or_404(CateringService, id=service_id)
+    user = request.user
+    owner = CateringCompany.objects.get(user_id = user.id)
+    tasks = Task.objects.filter(cateringservice = catering_service)
+
+    employees = []
+    for t in tasks:
+        employees.extend(t.employees.all())
+    
+    recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
+
+    recommendations_dict = {}
+    for recommendation in recommendations:
+        recommendations_dict[recommendation.employee_id] = recommendation
+    
+    return render(request, 'list_employee.html', {'employees': employees, 'service': catering_service, 'recommendations_dict': recommendations_dict})
+
+@login_required
+def create_recommendation_letter(request, employee_id, service_id):
+    catering_service = get_object_or_404(CateringService, id=service_id)
+    employee = get_object_or_404(Employee, user_id = employee_id)
+    
+    user = request.user
+    try:
+        owner = CateringCompany.objects.get(user_id = user.id)
+        if owner:
+            context = {"employee": employee, "owner": owner, "service": catering_service}
+
+            if request.method == "POST":
+                description = request.POST.get("description")
+
+                recommendation_letter = RecommendationLetter.objects.create(
+                    employee=employee,
+                    catering=owner,
+                    description=description,
+                    date=datetime.now().date()
+                )
+                return redirect("list_employee", service_id=service_id)
+    except:
+        return HttpResponseForbidden("You don't have permission to do this.")
+
+    return render(request, "recommendation_letter.html", context)

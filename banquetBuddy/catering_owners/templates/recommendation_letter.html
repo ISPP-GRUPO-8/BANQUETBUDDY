@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>New Recommendation: {{ employee.user.first_name }}</h1>
+
+    <form method="post" action="{% url 'recommendation_letter' service_id=service.id employee_id=employee.user.id %}">
+        {% csrf_token %}
+
+        {% if form_error %}
+            <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" name="description" class="form-control {% if form_error %}is-invalid{% endif %}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm Letter</button>
+    </form>
+</div>
+
+{% endblock %}
