@@ -14,6 +14,7 @@ from .forms import CateringCompanyForm
 from core.models import CustomUser, BookingState
 from phonenumbers import PhoneNumber, parse, is_valid_number
 from datetime import datetime, timedelta
+from django.core.files import File
 
 class CateringBookTestCase(TestCase):
     def setUp(self):
@@ -265,6 +266,13 @@ class ViewTests(TestCase):
         )
         self.offer = Offer.objects.create(title="Oferta de prueba", description="Descripción de prueba", requirements="Requisitos de prueba", location="Ubicación de prueba",cateringservice= self.catering_service)
         self.employee = Employee.objects.create(user=CustomUser.objects.create(username="usuario_prueba", email= 'estoesunaprueba@gmail.com'), phone_number="1234567890", profession="Chef", experience="5 years", skills="Culinary skills", english_level="C2", location="Ubicación de prueba")
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
+                
         self.job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, date_application="2023-11-14", state="APLICADO")
 
     def test_get_applicants(self):
@@ -447,6 +455,12 @@ class RecommendationLetterTest(TestCase):
             english_level='ALTO',
             location='Test Location'
         )
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
 
         self.catering_service = CateringService.objects.create(
             cateringcompany=self.company,

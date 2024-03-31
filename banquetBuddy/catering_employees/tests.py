@@ -1,4 +1,6 @@
 from asyncio import Task
+import os
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse
@@ -13,6 +15,7 @@ from datetime import datetime, timedelta, date
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save
 from .signals import notify_employee_on_state_change
+from django.core.files import File
 
 # Create your tests here.
 
@@ -80,8 +83,6 @@ class EmployeeOfferListViewTest(TestCase):
         
 class ApplicationToOfferViewTest(TestCase):
     def setUp(self):
-        file_content = b'Contenido de prueba del archivo'
-        false_file = ContentFile(file_content, name='archivo_prueba.txt')
         self.factory = RequestFactory()
         self.user = CustomUser.objects.create_user(
             username='testuser',
@@ -95,9 +96,14 @@ class ApplicationToOfferViewTest(TestCase):
             experience='5 years',
             skills='Testing skills',
             english_level='ALTO',
-            location='Test Location',
-            curriculum=false_file
+            location='Test Location'
             )
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
         
         self.catering_company = CateringCompany.objects.create(
             user=self.user,
@@ -152,6 +158,15 @@ class ApplicationToOfferViewTest(TestCase):
         response = application_to_offer(request, self.offer.id)
         self.assertEqual(response.status_code, 200)  # Renders error template for already applied
         
+    def test_application_to_offer_view_no_curriculum(self):
+        self.employee.curriculum.delete()
+
+        request = self.factory.get(reverse('application_to_offer', args=[self.offer.id]))
+        request.user = self.user
+        response = application_to_offer(request, self.offer.id)
+
+        self.assertEqual(response.status_code, 200)
+        
     def tearDown(self) -> None:
         self.user.delete()
         self.catering_company.delete()
@@ -163,6 +178,13 @@ class EmployeeApplicationsListTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
         self.employee = Employee.objects.create(user=self.user, phone_number='123456789', profession='Developer', experience='2 years', skills='Python, Django', location='Somewhere')
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
+                
         self.user_catering = CustomUser.objects.create_user(
             username='testuser2',
             password='12345',
@@ -260,13 +282,20 @@ class TestNotifyEmployeeOnStateChange(TestCase):
             location='Test Location'
             )
         self.employee = Employee.objects.create(user=self.user, phone_number='123456789', profession='Developer', experience='2 years', skills='Python, Django', location='Somewhere')
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
+                
         self.job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, state='PENDING')
     
     def test_notify_employee_state(self):
         self.job_application.state = 'PENDING'
         self.job_application.save()
         notification = NotificationJobApplication.objects.filter(user=self.user, job_application=self.job_application).count()
-        assert notification is not 0
+        assert notification != 0
 
 class EmployeeRecommendationLetterTest(TestCase):
     def setUp(self):
@@ -301,6 +330,12 @@ class EmployeeRecommendationLetterTest(TestCase):
             english_level='ALTO',
             location='Test Location'
         )
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee.curriculum.save('curriculum.pdf', File(f))
 
         self.employee2 = Employee.objects.create (
             user=self.user3,
@@ -311,6 +346,12 @@ class EmployeeRecommendationLetterTest(TestCase):
             english_level='ALTO',
             location='Test Location'
         )
+        
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        
+        if os.path.exists(curriculum_path):
+            with open(curriculum_path, 'rb') as f:
+                self.employee2.curriculum.save('curriculum.pdf', File(f))
 
         self.catering_service = CateringService.objects.create(
             cateringcompany=self.company,

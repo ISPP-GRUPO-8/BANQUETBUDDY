@@ -29,7 +29,7 @@
             <li class="list-group-item">
               <strong>Currículum:</strong>
               {% if user.EmployeeUsername.curriculum %}
-              <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{user.EmployeeUsername.curriculum.name }}</a>
+              <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
               {% else %}
               No hay currículum adjunto
               {% endif %}

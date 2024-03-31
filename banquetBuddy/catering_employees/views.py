@@ -92,6 +92,7 @@ def employee_offer_list(request):
     
     return render(request, "employee_offer_list.html", context)
 
+@login_required
 def application_to_offer(request, offer_id):
     
     current_user = request.user
