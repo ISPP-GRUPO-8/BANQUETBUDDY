@@ -1,11 +1,4 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-
-
-from .views import *
-
-
 from . import views
 from core.views import home
 from django.urls import path, include
@@ -53,27 +46,20 @@ urlpatterns = [
     path('catering_books', catering_books, name='catering_books'),
     path('catering_books/<int:event_id>/edit', book_catering_edit, name='catering_books_edit'),
     path('catering_books/<int:event_id>/cancel', book_catering_cancel, name='catering_books_cancel'),
-    path("list_menus/", views.list_menus, name="list_menus"),
-    path("add_menu/", views.add_menu, name="add_menu"),
-    path("edit_menu/<int:menu_id>/", views.edit_menu, name="edit_menu"),
-    path("delete_menu/<int:menu_id>/", views.delete_menu, name="delete_menu"),
-    path(
-        "catering_profile_edit",
-        views.catering_profile_edit,
-        name="catering_profile_edit",
-    ),
-    path("create_offer", create_offer, name="create_offer"),
-    path("offer_list", offer_list, name="offer_list"),
-    path("apply_offer/<int:offer_id>/", apply_offer, name="apply_offer"),
-    path("delete_offer/<int:offer_id>/", delete_offer, name="delete_offer"),
-    path("edit_offer/<int:offer_id>/", edit_offer, name="edit_offer"),
-    path(
-        "confirm_delete_offer/<int:offer_id>/",
-        confirm_delete_offer,
-        name="confirm_delete_offer",
-    ),
-    path("my_bookings/", my_bookings_preview, name="my_bookings"),
-    path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
+    path('list_menus/', views.list_menus, name='list_menus'),
+    path('add_menu/', views.add_menu, name='add_menu'),
+    path('edit_menu/<int:menu_id>/', views.edit_menu, name='edit_menu'),
+    path('delete_menu/<int:menu_id>/', views.delete_menu, name='delete_menu'),
+    path('catering_profile_edit', views.catering_profile_edit, name='catering_profile_edit'),
+    path('create_offer', create_offer, name='create_offer'),
+    path('offer_list', offer_list, name='offer_list'),
+    path('apply_offer/<int:offer_id>/', apply_offer, name='apply_offer'),
+    path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
+    path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
+    path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
+    path('my_bookings/',my_bookings_preview, name='my_bookings'),
+    path('service/<int:service_id>/employees', list_employee, name='list_employee'),
+    path('service/<int:service_id>/employees/<int:employee_id>/recommendation_letter', create_recommendation_letter, name='recommendation_letter'),
     path("services/", get_catering_services, name="services"),
     path("create_service/", create_catering_service, name="create_service"),
     path("update_service/<int:service_id>/", update_catering_service, name="update_service"),
@@ -84,8 +70,27 @@ urlpatterns = [
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
 
+    # CAMBIO DE PLAN
+    path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
+
+    path('process_base/', payment_process_base, name='process_base'),
+    path('completed_base/', payment_completed_base, name='completed_base'),
+
+    path('process_premium/', payment_process_premium, name='process_premium'),
+    path('completed_premium/', payment_completed_premium, name='completed_premium'),
+
+    path('process_pro/', payment_process_pro, name='process_pro'),
+    path('completed_pro/', payment_completed_pro, name='completed_pro'),
+
+    path('canceled/', payment_canceled, name='canceled'),
+
+
 ]
+
 # Configuración para servir archivos estáticos y de medios durante el desarrollo
+from django.conf import settings
+from django.conf.urls.static import static
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

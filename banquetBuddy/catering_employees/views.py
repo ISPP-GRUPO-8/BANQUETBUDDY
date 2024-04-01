@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from catering_owners.models import Offer, JobApplication
+from catering_owners.models import CateringCompany, Offer, JobApplication, RecommendationLetter
 from .models import Employee
 from .forms import EmployeeFilterForm, EmployeeForm
 
@@ -10,6 +10,7 @@ from catering_owners.models import JobApplication, Employee
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 
 
 # Create your views here.
@@ -91,6 +92,7 @@ def employee_offer_list(request):
     
     return render(request, "employee_offer_list.html", context)
 
+@login_required
 def application_to_offer(request, offer_id):
     
     current_user = request.user
@@ -122,3 +124,24 @@ def employee_applications_list(request):
     context = {'applications': applications}
     
     return render(request, "application_employee_list.html", context)
+
+@login_required
+def my_recommendation_letters(request, employee_id):
+    user = request.user
+    try:
+        employee = Employee.objects.get(user=user)
+        if employee.user.id != employee_id:
+            return HttpResponseForbidden("You are not allowed to access this.")
+    except Employee.DoesNotExist:
+        return HttpResponseForbidden("You are not allowed to access this.")
+        
+    recommendations = RecommendationLetter.objects.filter(employee_id=employee_id)
+    
+    recommendation_dict = {}
+    for recommendation in recommendations:
+        catering_company = CateringCompany.objects.get(user_id=recommendation.catering_id)
+        recommendation_dict[recommendation] = catering_company
+    
+    context = {'recommendation_dict': recommendation_dict}
+
+    return render(request, "my_recommendation_letters.html", context)
