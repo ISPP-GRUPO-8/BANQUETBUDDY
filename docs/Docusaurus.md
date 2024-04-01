@@ -1,0 +1,1 @@
+https://docusaurus-banquet-buddy.vercel.app/
