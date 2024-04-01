@@ -608,12 +608,15 @@ def edit_offer(request, offer_id):
         else:
             return redirect('offer_list')
     else:
-        messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
-        return redirect('subscription_plans')
+        return redirect("offer_list")
 
+    
+@login_required
 def delete_offer(request, offer_id):
     if is_catering_company_premium_pro(request) is True:
         offer = get_object_or_404(Offer, pk=offer_id)
+        if request.user != offer.cateringservice.cateringcompany.user:
+            return HttpResponseForbidden("You don't have permission to delete this offer.")
         return render(request, 'offers/delete_offer.html', {'offer': offer})
     else:
         messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
@@ -622,7 +625,10 @@ def delete_offer(request, offer_id):
 @login_required
 def confirm_delete_offer(request, offer_id):
     if is_catering_company_premium_pro(request) is True:
-        if request.method == 'POST':
+        offer = get_object_or_404(Offer, pk=offer_id)
+        if request.user != offer.cateringservice.cateringcompany.user:
+            return HttpResponseForbidden("You don't have permission to delete this offer.")
+        if request.method == "POST":
             offer = get_object_or_404(Offer, pk=offer_id)
             offer.delete()
             return redirect('offer_list')
