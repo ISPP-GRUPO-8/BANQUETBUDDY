@@ -1,28 +1,42 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
+    * {
+        font-family: 'Acme', sans-serif;
+    }
+    h2{
+        font-size: 45px;
+        font-family: Acme;
+    }
+    header {
+        font-family: inherit; /* Hereda la fuente del elemento padre */
+        /* Otros estilos para el encabezado */
+    }
 
+    /* Estilos específicos para el pie de página (footer) */
+    footer {
+        font-family: inherit; /* Hereda la fuente del elemento padre */
+        /* Otros estilos para el pie de página */
+    }
+    .btn {
+        font-size: 15px; 
+    }
     body {
         background-color: #54bfaf; /* Color verde claro */
     }
-    .table {
-        background-color: white !important; /* Anula el color de fondo de la tabla */
-        border-radius: 1%;
+    .card {
+        margin-bottom: 20px; /* Espacio entre las tarjetas */
     }
-
-    h2 {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    .card-title {
+        font-family: 'Acme', sans-serif;
         color: #02483E;
     }
-    th {
-        color: #02483E;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-    }
-    td {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-size: 14px;
+    .card-text {
+        font-family: 'Acme', sans-serif;
+        color: #5C5C5C;
     }
     .add-plate-btn {
         background-color: #ffffff;
@@ -34,57 +48,70 @@
         background-color: #02483E;
         border-color: #02483E;
     }
-    
+    .btn-edit {
+        color: #ffffff;
+        background-color: orange;
+        border-color: orange;
+    }
+    .btn-edit:hover {
+        background-color: rgb(195, 148, 62);
+        border-color: rgb(195, 148, 62);
+    }
+    select.form-control {
+        font-size: 15px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+    }
     @media screen and (max-width: 600px) and (min-width: 451px) {
-        td {
-            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        .card-text {
+            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
         }
-        th, li {
-            font-size: 14px;
-        }
-        h2{
-            font-size: 27px;
+        .card-title {
+            font-size: 16px; /* Tamaño de fuente para los títulos en dispositivos pequeños */
         }
         .btn {
-            font-size: 12px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+            font-size: 14px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+        }
+        select.form-control {
+            font-size: 13px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+        }
+        h2{
+            font-size: 40px;
+        }
+    }
+    @media screen and (max-width: 451px) {
+        .card-text {
+            font-size: 12px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        .card-title {
+            font-size: 15px; /* Tamaño de fuente para los títulos en dispositivos pequeños */
+        }
+        .btn {
+            font-size: 12.5px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
         }
         select.form-control {
             font-size: 12px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
         }
+        h2{
+            font-size: 35px;
+        }
     }
-    @media screen and (max-width: 451px) {
-        td {
-            font-size: 10.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        th, li {
-            font-size: 12.5px;
-        }
-        .btn {
-            font-size: 11px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
-        }
-        select.form-control {
-            font-size: 11px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
-        }
 
-    }
-    
 </style>
+
 <div class="container my-5">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
 
     <div class="container mt-4 mb-4">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-md-6">
-                <h2 class="mb-4">My Plates</h2>
-            </div>
-            <div class="col-md-6 text-md-right mb-4">
-                <a href="{% url 'add_plate' %}" class="btn btn-primary add-plate-btn">Add New Plate</a>
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6 text-center">
+                <h2 class="mb-0" style="color: #02483E;">My Plates</h2>
             </div>
         </div>
 
+        <div class="mt-2 right justify-content-center" style="text-align: center;">
+            <a href="{% url 'add_plate' %}" class="btn btn-primary add-plate-btn">Add New Plate</a>
+        </div>
         <!-- Filtro de menús -->
         <form method="get" class="form-inline my-2 my-lg-0">
             <select name="menu_id" class="form-control mr-sm-2">
@@ -97,51 +124,41 @@
             <button class="btn btn-primary add-plate-btn my-2 my-sm-0" type="submit">Filter</button>
         </form>
 
-        <div class="table-responsive">
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th><a href="?sort=name&order={% if request.GET.sort == 'name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Name ↑↓</a></th>
-                        <th><a href="?sort=menu&order={% if request.GET.sort == 'menu' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Menu ↑↓</a></th>
-                        <th>Description</th>
-                        <th><a href="?sort=price&order={% if request.GET.sort == 'price' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Price ↑↓</a></th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    {% for plate in plates %}
-                    <tr>
-                        <td>{{ plate.name }}</td>
-                        <td>{% if plate.menu %}{{ plate.menu.name }}{% else %}Not associated{% endif %}</td>
-                        <td>{{ plate.description }}</td>
-                        <td>{{ plate.price }}</td>
-                        <td>
-                            <form action="{% url 'edit_plate' plate.id %}" method="get" style="display: inline;">
+        <div class="row mt-4">
+            {% for plate in plates %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plate.name }}</h5>
+                        <p class="card-text">Menu: {% if plate.menu %}{{ plate.menu.name }}{% else %}Not associated{% endif %}</p>
+                        <p class="card-text">{{ plate.description }}</p>
+                        <p class="card-text">Price: {{ plate.price }}</p>
+                        <div class="btn-group" role="group" aria-label="Actions">
+                            <form action="{% url 'edit_plate' plate.id %}" method="get">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-primary mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                                <button type="submit" class="btn btn-edit mr-2"><i class="bi bi-pencil"></i> Edit</button>
                             </form>
-                            <form method="post" action="{% url 'delete_plate' plate.id %}" style="display: inline;">
+                            <form method="post" action="{% url 'delete_plate' plate.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i> Delete</button>
                             </form>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">No plates found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-md-12">
+                <p>No plates found.</p>
+            </div>
+            {% endfor %}
         </div>
 
         <!-- Paginación -->
         <nav aria-label="Plate pagination">
             <ul class="pagination justify-content-center">
                 {% if plates.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}"><</a></li>
                 {% endif %}
 
                 {% for num in plates.paginator.page_range %}
@@ -153,11 +170,12 @@
                 {% endfor %}
 
                 {% if plates.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">Last</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">></a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">>></a></li>
                 {% endif %}
             </ul>
         </nav>
     </div>
 </div>
+
 {% endblock %}
