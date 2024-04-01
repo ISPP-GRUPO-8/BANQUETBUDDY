@@ -1,31 +1,103 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+
+<style>
+
+    body {
+        background-color: #54bfaf; /* Color verde claro */
+    }
+    .table {
+        background-color: white !important; /* Anula el color de fondo de la tabla */
+        border-radius: 1%;
+    }
+
+    h2 {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: #02483E;
+    }
+    th {
+        color: #02483E;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    td {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 14px;
+    }
+    .add-plate-btn {
+        background-color: #ffffff;
+        border-color: #02483E;
+        color: #02483E;
+    }
+
+    .add-plate-btn:hover {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+    
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+        td {
+            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        th, li {
+            font-size: 14px;
+        }
+        h2{
+            font-size: 27px;
+        }
+        .btn {
+            font-size: 12px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+        }
+        select.form-control {
+            font-size: 12px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+        }
+    }
+    @media screen and (max-width: 451px) {
+        td {
+            font-size: 10.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        th, li {
+            font-size: 12.5px;
+        }
+        .btn {
+            font-size: 11px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+        }
+        select.form-control {
+            font-size: 11px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+        }
+
+    }
+    
+</style>
 <div class="container my-5">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
-  
-<div class="container mt-4 mb-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h2 class="text-center mb-4">My Plates</h2>
-            <a href="{% url 'add_plate' %}" class="btn btn-primary">Add New Plate</a>
 
-            <!-- Filtro de menús -->
-<!-- Filtro de menús -->
-            <form method="get" class="form-inline my-2 my-lg-0">
-                <select name="menu_id" class="form-control mr-sm-2">
-                    <option value="">All Menus</option>
-                    <option value="none" {% if request.GET.menu_id == 'none' %}selected{% endif %}>Not associated</option>
-                    {% for menu in menus %}
-                        <option value="{{ menu.id }}" {% if request.GET.menu_id == menu.id|stringformat:"s" %}selected{% endif %}>{{ menu.name }}</option>
-                    {% endfor %}
-                </select>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Filter</button>
-            </form>
-            
+    <div class="container mt-4 mb-4">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-md-6">
+                <h2 class="mb-4">My Plates</h2>
+            </div>
+            <div class="col-md-6 text-md-right mb-4">
+                <a href="{% url 'add_plate' %}" class="btn btn-primary add-plate-btn">Add New Plate</a>
+            </div>
+        </div>
 
+        <!-- Filtro de menús -->
+        <form method="get" class="form-inline my-2 my-lg-0">
+            <select name="menu_id" class="form-control mr-sm-2">
+                <option value="">All Menus</option>
+                <option value="none" {% if request.GET.menu_id == 'none' %}selected{% endif %}>Not associated</option>
+                {% for menu in menus %}
+                    <option value="{{ menu.id }}" {% if request.GET.menu_id == menu.id|stringformat:"s" %}selected{% endif %}>{{ menu.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary add-plate-btn my-2 my-sm-0" type="submit">Filter</button>
+        </form>
+
+        <div class="table-responsive">
             <table class="table mt-4">
                 <thead>
                     <tr>
@@ -37,7 +109,6 @@
                     </tr>
                 </thead>
                 
-                
                 <tbody>
                     {% for plate in plates %}
                     <tr>
@@ -46,12 +117,14 @@
                         <td>{{ plate.description }}</td>
                         <td>{{ plate.price }}</td>
                         <td>
-                            <a href="{% url 'edit_plate' plate.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                            <form action="{% url 'edit_plate' plate.id %}" method="get" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                            </form>
                             <form method="post" action="{% url 'delete_plate' plate.id %}" style="display: inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
                             </form>
-                            
                         </td>
                     </tr>
                     {% empty %}
@@ -61,30 +134,30 @@
                     {% endfor %}
                 </tbody>
             </table>
-
-            <!-- Paginación -->
-            <nav aria-label="Plate pagination">
-                <ul class="pagination justify-content-center">
-                    {% if plates.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}">Previous</a></li>
-                    {% endif %}
-
-                    {% for num in plates.paginator.page_range %}
-                    {% if plates.number == num %}
-                    <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                    {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if plates.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">Next</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">Last</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Plate pagination">
+            <ul class="pagination justify-content-center">
+                {% if plates.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}">Previous</a></li>
+                {% endif %}
+
+                {% for num in plates.paginator.page_range %}
+                {% if plates.number == num %}
+                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if plates.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">Last</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
 {% endblock %}
