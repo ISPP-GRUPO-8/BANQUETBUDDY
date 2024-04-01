@@ -23,13 +23,14 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'core/images/Logo-sin-nombre.png' %}">
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light" id="main-navbar">
             <a class="navbar-brand" href="/">
-                <img src="{% static 'core/images/logo-sin-letras.png' %}" width="50" height="auto" alt="Logo" loading="lazy">
+                <img src="{% static 'core/images/Logo-sin-nombre.png' %}" width="70" height="auto" alt="Logo" loading="lazy">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -47,16 +48,18 @@
                         <a class="nav-link" href="/services">Services</a>
                     </li>
                     {% endif %}
+                    {% if is_catering_company or not user.is_authenticated%}
                     <li class="nav-item">
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
+                    {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'catering_calendar_preview' %}">Calendar</a>
                     </li>
                     {% endif %}
 
-                    {% if is_particular %}
+                    {% if request.user.is_authenticated and request.user.ParticularUsername %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
                         </li>
@@ -92,15 +95,26 @@
                     </button>
                     <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
                 </form>
-                {% if user.is_authenticated %}
-                    {% if is_particular %}
-                        <a class="nav-link" href="{% url 'my_books' %}">My Books</a>
-                    {% endif %}
-                {% endif %}
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="text-decoration-none">
+                    {% comment %} {% if request.user.ParticularUsername %}
+                        <a class="nav-link" href="{% url 'my_books' %}">My Books</a>
+                        <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
-                    </a>
+                        {{ user.username }}
+                        </a>
+                    {% endif %} {% endcomment %}
+                    {% if request.user.EmployeeUsername %}
+                        <a href="{% url 'profile' %}" class="text-decoration-none">
+                        <i class="fa-solid fa-user-tie"></i>
+                        {{ user.username }}
+                        </a>
+                    {% endif %}
+                    {% if request.user.CateringCompanyusername %}
+                        <a href="{% url 'profile' %}" class="text-decoration-none">
+                        <i class="fa-solid fa-utensils"></i>
+                        {{ user.username }}
+                        </a>
+                    {% endif %}
                 {% endif %}
             </div>
             

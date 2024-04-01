@@ -52,6 +52,18 @@
         bottom: 10px;
     }
 </style>
+{% if messages %}
+<div class="container mt-3">
+    <div class="alert alert-success" id="messageAlert" role="alert">
+        <ul class="list-unstyled mb-0">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -87,9 +99,12 @@
                 <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
+            {% elif price_plan == "PREMIUM_PRO" or price_plan == "PREMIUM"%}
+
             {%else%}
             <div class="plan-btn" style="margin-top:30% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_base' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>
@@ -119,9 +134,12 @@
                 <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
+            {%elif price_plan == "PREMIUM_PRO"%}
+
             {%else%}
             <div class="plan-btn" style="margin-top:20% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_premium' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>
@@ -153,8 +171,9 @@
                         class="text-decoration-none text-light">Cancelar subscripción</a></button>
             </div>
             {%else%}
-            <div class="plan-btn" style="margin-top:15% ;">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
+            <div class="plan-btn" style="margin-top:20% ;">
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_pro' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%endif %}
         </div>

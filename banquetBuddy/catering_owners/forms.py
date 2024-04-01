@@ -30,7 +30,6 @@ class CateringCompanyForm(forms.ModelForm):
             "address",
             "phone_number",
             "cif",
-            "price_plan",
             "verification_document",
         ]
         widgets = {
@@ -46,8 +45,6 @@ class CateringCompanyForm(forms.ModelForm):
             "cif": forms.TextInput(
                 attrs={"placeholder": "Ex: A1234567J", "class": "form-control"}
             ),
-            "price_plan": forms.Select(attrs={"class": "form-control"}),
-            "verification_document": forms.FileInput(attrs={"class": "form-control"}),
         }
 
         def __init__(self, *args, **kwargs):
@@ -56,7 +53,6 @@ class CateringCompanyForm(forms.ModelForm):
             self.fields["address"].required = False
             self.fields["phone_number"].required = True
             self.fields["cif"].required = False
-            self.fields["price_plan"].required = True
             self.fields["verification_document"].required = False
 
 
