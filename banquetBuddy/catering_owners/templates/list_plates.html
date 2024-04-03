@@ -1,67 +1,14 @@
 {% extends 'core/base.html' %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
-    * {
-        font-family: 'Acme', sans-serif;
-    }
-    h2{
-        font-size: 45px;
-        font-family: Acme;
-    }
-    header {
-        font-family: inherit; /* Hereda la fuente del elemento padre */
-        /* Otros estilos para el encabezado */
-    }
-
-    /* Estilos específicos para el pie de página (footer) */
-    footer {
-        font-family: inherit; /* Hereda la fuente del elemento padre */
-        /* Otros estilos para el pie de página */
-    }
-    .btn {
-        font-size: 15px; 
-    }
-    body {
-        background-color: #54bfaf; /* Color verde claro */
-    }
-    .card {
-        margin-bottom: 20px; /* Espacio entre las tarjetas */
-        border-radius: 6%;
-    }
-    .card-title {
-        font-family: 'Acme', sans-serif;
-        color: #02483E;
-    }
-    .card-text {
-        font-family: 'Acme', sans-serif;
-        color: #5C5C5C;
-    }
-    .add-plate-btn {
-        background-color: #ffffff;
-        border-color: #02483E;
-        color: #02483E;
-    }
-
-    .add-plate-btn:hover {
-        background-color: #02483E;
-        border-color: #02483E;
-    }
-    .btn-edit {
-        color: #ffffff;
-        background-color: orange;
-        border-color: orange;
-    }
-    .btn-edit:hover {
-        background-color: rgb(195, 148, 62);
-        border-color: rgb(195, 148, 62);
-        color: #ffffff;
-    }
-    select.form-control {
-        font-size: 15px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
-    }
+    
     @media screen and (max-width: 600px) and (min-width: 451px) {
         .card-text {
             font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
@@ -100,9 +47,22 @@
 </style>
 
 <div class="container my-5">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
+    {% if messages %}
+    <div class="container mt-3">
+        <div class="alert alert-success" id="messageAlert" role="alert">
+            <ul class="list-unstyled mb-0">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            document.getElementById('messageAlert').style.display = 'none';
+        }, 4000); // 4 segundos
+    </script>
+    {% endif %}
 
     <div class="container mt-4 mb-4">
         <div class="row justify-content-center align-items-center mb-4">
@@ -112,7 +72,7 @@
         </div>
 
         <div class="mt-2 right justify-content-center" style="text-align: center;">
-            <a href="{% url 'add_plate' %}" class="btn btn-primary add-plate-btn">Add New Plate</a>
+            <a href="{% url 'add_plate' %}" class="btn btn-primary btn-add">Add New Plate</a>
         </div>
         <!-- Filtro de menús -->
         <form method="get" class="form-inline my-2 my-lg-0">
@@ -123,7 +83,7 @@
                     <option value="{{ menu.id }}" {% if request.GET.menu_id == menu.id|stringformat:"s" %}selected{% endif %}>{{ menu.name }}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-primary add-plate-btn my-2 my-sm-0" type="submit">Filter</button>
+            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit">Filter</button>
         </form>
 
         <div class="row mt-4">

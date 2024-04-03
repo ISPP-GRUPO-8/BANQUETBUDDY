@@ -1,20 +1,12 @@
 {% extends 'core/base.html' %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
 {% block content %}
-<style>
-    .btn-primary-custom {
-        background-color: #ffffff; /* Fondo blanco */
-        color: #02483e; /* Letra verde */
-        border-color: #02483e; /* Borde verde */
-    }
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
-    /* Estilo al pasar el ratón sobre el botón */
-    .btn-primary-custom:hover {
-        background-color: #02483e; /* Fondo verde */
-        color: #ffffff; /* Letra blanca */
-        border-color: #02483e; /* Borde verde */
-    }
-</style>
 <div class="container mt-4 mb-4">
     <div class="row justify-content-center">
         <div class="col-md-6">

@@ -1,6 +1,11 @@
 {% extends 'core/base.html' %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
     .custom-border {
@@ -103,7 +108,7 @@
     <div class="row justify-content-end mb-4">
         <div class="col-md-2">
             <a href="{% url 'add_menu' %}" class="text-decoration-none">
-                <button class="btn btn-success btn-block small-font" style="background-color: #02483E;">
+                <button class="btn btn-add btn-block small-font">
                     <i class="bi bi-plus-circle"></i> Add menu
                 </button>
             </a>
@@ -121,7 +126,7 @@
                 <div class="card-footer">
                     <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                        <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
                     </form>
                     <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
