@@ -11,6 +11,10 @@
     right: 1cm; 
     }
 
+    header {
+        background-color: white;
+    }
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-vyQ7N3S2F+Dd2jhN07XSyZ6R1ZSeznM57XjLSeV/DtBrJrE8c3H0RFuytWI3jGX5UJi+g8PXTPX/gqThXx1PEw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -43,12 +47,12 @@
                         </li>
                     {% endif %}
 
-                    {% if is_catering_company %}
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href="/services">Services</a>
                     </li>
                     {% endif %}
-                    {% if is_catering_company or not user.is_authenticated%}
+                    {% if request.user.CateringCompanyusername or not user.is_authenticated%}
                     <li class="nav-item">
                         <a class="nav-link" href="/subscription-plans">Plan</a>
                     </li>
@@ -119,6 +123,7 @@
             </div>
             
         </nav>
+        {% block extra_css %}{% endblock %}
     </header>
 
     <main>

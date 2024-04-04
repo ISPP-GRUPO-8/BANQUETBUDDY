@@ -763,7 +763,7 @@ def list_plates(request):
         plates_query = plates_query.order_by(sort_by)
 
     # Paginación
-    paginator = Paginator(plates_query, 10)
+    paginator = Paginator(plates_query, 9)
     page_number = request.GET.get('page')
     plates = paginator.get_page(page_number)
 
