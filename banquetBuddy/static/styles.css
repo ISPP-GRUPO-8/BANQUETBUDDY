@@ -1,0 +1,89 @@
+
+/* Estilos para botones --------------------------------------------------------------------------*/
+
+.btn {
+    font-size: 15px; 
+}
+
+.btn-primary-custom {
+    background-color: #ffffff; /* Fondo blanco */
+    color: #02483e; /* Letra verde */
+    border-color: #02483e; /* Borde verde */
+}
+
+/* Estilo al pasar el ratón sobre el botón */
+.btn-primary-custom:hover {
+    background-color: #02483e; /* Fondo verde */
+    color: #ffffff; /* Letra blanca */
+    border-color: #02483e; /* Borde verde */
+}
+.btn-add {
+    background-color: #ffffff;
+    border-color: #02483E;
+    color: #02483E;
+}
+
+.btn-add:hover {
+    background-color: #02483E;
+    border-color: #02483E;
+    color: #ffffff;
+}
+.btn-edit {
+    color: #ffffff;
+    background-color: orange;
+    border-color: orange;
+}
+.btn-edit:hover {
+    background-color: rgb(195, 148, 62);
+    border-color: rgb(195, 148, 62);
+    color: #ffffff;
+}
+/* Estilos para cuerpo ----------------------------------------------------------------------------*/
+
+body {
+    background-color: #54bfaf; /* Color verde claro */
+}  
+* {
+    font-family: 'Acme', sans-serif;
+}
+h2{
+    font-size: 45px;
+    font-family: Acme;
+}
+header {
+    font-family: inherit; /* Hereda la fuente del elemento padre */
+    /* Otros estilos para el encabezado */
+}
+
+/* Estilos específicos para el pie de página (footer) */
+footer {
+    font-family: inherit; /* Hereda la fuente del elemento padre */
+    /* Otros estilos para el pie de página */
+}
+
+
+
+/* Estilos para formularios -------------------------------------------------------------------------------------*/
+.form-group label, .form-group input, .form-group select, h2 {
+    font-family: 'Acme', sans-serif;
+}
+select.form-control {
+    font-size: 15px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+} 
+/* Estilos para tarjetas ---------------------------------------------------------------------------------------------------- */
+
+
+.card {
+    margin-bottom: 20px; /* Espacio entre las tarjetas */
+    border-radius: 6%;
+}
+.card-title {
+    font-family: 'Acme', sans-serif;
+    color: #02483E;
+}
+.card-text {
+    font-family: 'Acme', sans-serif;
+    color: #5C5C5C;
+}
+
+
