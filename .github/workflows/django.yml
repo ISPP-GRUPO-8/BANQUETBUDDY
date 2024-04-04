@@ -12,7 +12,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,7 +48,8 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           cd banquetBuddy
-          python manage.py test
+          coverage run --source='.' manage.py test
+          coverage xml
