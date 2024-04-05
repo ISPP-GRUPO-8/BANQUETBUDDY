@@ -32,7 +32,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Comprobación completa del repositorio
+          fetch-depth: 0  
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -50,8 +50,15 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
 
-      - name: Run tests with coverage
-        run: |
-          cd banquetBuddy
-          coverage run --source='.' manage.py test
-          coverage xml -o ../coverage-reports/coverage.xml --omit '*/tests/*'
+          - name: Run tests with coverage
+          run: |
+            cd banquetBuddy
+            coverage run --source='.' manage.py test
+            coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
+        
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage-reports/coverage.xml
+        
