@@ -61,4 +61,9 @@ jobs:
         with:
           name: coverage-report
           path: coverage-reports/coverage.xml
+      
+      - name: Fix Code Coverage Paths
+        run: |
+          sed -i 's/\/home\/runner\/work\/BANQUETBUDDY\/BANQUETBUDDY\//\/github\/workspace\//g' coverage.xml
+        
         
