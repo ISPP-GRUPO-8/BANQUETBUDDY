@@ -53,3 +53,4 @@ jobs:
           cd banquetBuddy
           coverage run --source='.' manage.py test
           coverage xml -o ../coverage-reports/coverage.xml --omit '*/tests/*'
+        
