@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.10.12']
-
     services:
       postgres:
         image: postgres:16.2
@@ -50,12 +49,12 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
 
-          - name: Run tests with coverage
-          run: |
-            cd banquetBuddy
-            coverage run --source='.' manage.py test
-            coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
-        
+      - name: Run tests with coverage
+        run: |
+          cd banquetBuddy
+          coverage run --source='.' manage.py test
+          coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
         with:
@@ -65,5 +64,3 @@ jobs:
       - name: Fix Code Coverage Paths
         run: |
           sed -i 's/\/home\/runner\/work\/BANQUETBUDDY\/BANQUETBUDDY\//\/github\/workspace\//g' coverage.xml
-        
-        
