@@ -18,9 +18,6 @@ from .signals import notify_employee_on_state_change
 from django.core.files import File
 
 # Create your tests here.
-
-
-
 class EmployeeTestCases(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -90,6 +87,22 @@ class EmployeeTestCases(TestCase):
         if os.path.exists(curriculum_path):
             with open(curriculum_path, 'rb') as f:
                 self.employee.curriculum.save('curriculum.pdf', File(f))
+                
+    def create_particular(self):
+        
+        self.user_particular1 = CustomUser.objects.create_user(
+            username='testuser_particular1',
+            email='particular1@example.com',
+            password='testpassword2'
+            )
+        
+        self.particular1 = Particular.objects.create(
+            user=self.user_particular1,
+            phone_number='123456789',
+            preferences='Test preferences',
+            address='Test address',
+            is_subscribed=False
+        )
         
     def create_specific_job_application(self):
         
@@ -98,30 +111,77 @@ class EmployeeTestCases(TestCase):
             offer=self.offer,
             state='PENDING'
             )
+        
+    def create_event(self):
+        
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
 
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        expiration_date = datetime.now().date() + timedelta(days=1)
+        self.task = Task.objects.create(
+            event=self.event,
+            cateringservice=self.catering_service,
+            cateringcompany=self.catering_company,
+            description='Test Task Description',
+            assignment_date=datetime.now().date(),
+            assignment_state='COMPLETED',
+            expiration_date=expiration_date,
+            priority='HIGH'
+        )
+        self.task.employees.add(self.employee)
+        
+        
+    def create_recommendation_letter(self):
+        self.recommendation = RecommendationLetter.objects.create(
+        employee = self.employee,
+        catering = self.catering_company,
+        description = 'Test Recommendation Letter Description',
+        date = datetime.now().date()
+    )
+        
     # Test para la vista de lista de ofertas de empleo
     def test_employee_offer_list_view(self):
         request = self.factory.get(reverse('employeeOfferList'))
         request.user = self.user_employee1
         response = employee_offer_list(request)
+        
         self.assertEqual(response.status_code, 200)
         
     def test_employee_offer_list_view_with_anonymous_user(self):
         request = self.factory.get(reverse('employeeOfferList'))
         request.user = AnonymousUser()
         response = employee_offer_list(request)
+        
         self.assertEqual(response.status_code, 302)  # Redirect to login page
 
     def test_employee_offer_list_view(self):
         request = self.factory.get(reverse('employeeOfferList'))
         request.user = self.user_employee1
         response = employee_offer_list(request)  # Cambio aquí
+        
         self.assertEqual(response.status_code, 200)
 
     def test_employee_offer_list_view_with_anonymous_user(self):
         request = self.factory.get(reverse('employeeOfferList'))
         request.user = AnonymousUser()
         response = employee_offer_list(request)  # Cambio aquí
+        
         self.assertEqual(response.status_code, 302)
 
     # Test para la vista de solicitud de empleo
@@ -129,11 +189,11 @@ class EmployeeTestCases(TestCase):
         request = self.factory.get(reverse('application_to_offer', args=[self.offer.id]))
         request.user = self.user_employee1
         response = application_to_offer(request, self.offer.id)
+        
         self.assertEqual(response.status_code, 200)
         self.assertTrue(JobApplication.objects.filter(employee=self.employee, offer=self.offer).exists())
         
     def test_application_to_offer_view_invalid_employee(self):
-        
         invalid_user = CustomUser.objects.create_user(
             username='invaliduser',
             password='12345',
@@ -143,6 +203,7 @@ class EmployeeTestCases(TestCase):
         request = self.factory.get(reverse('application_to_offer', args=[self.offer.id]))
         request.user = invalid_user
         response = application_to_offer(request, self.offer.id)
+        
         self.assertEqual(response.status_code, 200)  # Renders error template for invalid employee
         
     def test_application_to_offer_view_already_applied(self):
@@ -150,11 +211,11 @@ class EmployeeTestCases(TestCase):
         request = self.factory.get(reverse('application_to_offer', args=[self.offer.id]))
         request.user = self.user_employee1
         response = application_to_offer(request, self.offer.id)
+        
         self.assertEqual(response.status_code, 200)  # Renders error template for already applied
         
     def test_application_to_offer_view_no_curriculum(self):
         self.employee.curriculum.delete()
-
         request = self.factory.get(reverse('application_to_offer', args=[self.offer.id]))
         request.user = self.user_employee1
         response = application_to_offer(request, self.offer.id)
@@ -163,37 +224,25 @@ class EmployeeTestCases(TestCase):
 
     # Test para la vista de lista de aplicaciones de empleo
     def test_employee_applications_list_authenticated_employee(self):
-        
         self.client.force_login(self.user_employee1)
-        
         job_application = JobApplication.objects.create(employee=self.employee, offer=self.offer, date_application=date.today())
-        
-        # Hacemos una solicitud GET a la vista
         response = self.client.get(reverse('JobApplicationList'))
-        
         
         self.assertEqual(response.status_code, 200)
         self.assertIn(job_application, response.context['applications'])
 
     def test_employee_applications_list_authenticated_non_employee(self):
-
         non_employee_user = CustomUser.objects.create_user(username='nonemployee', email='nonemployee@example.com', password='password')
-        # Simulamos que el usuario está autenticado
         self.client.force_login(non_employee_user)
-        
-        # Hacemos una solicitud GET a la vista
         response = self.client.get(reverse('JobApplicationList'))
         
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'error_employee.html')
 
     def test_employee_applications_list_unauthenticated(self):
-        # Simulamos que el usuario no está autenticado
         self.client.logout()
-        
         response = self.client.get(reverse('JobApplicationList'))
         
-        # Verificamos que la respuesta sea 302 Redireccionamiento
         self.assertEqual(response.status_code, 302)
     
     # Test para la vista de notificación de aplicación de empleo
@@ -202,24 +251,33 @@ class EmployeeTestCases(TestCase):
         self.job_application.state = 'PENDING'
         self.job_application.save()
         notification = NotificationJobApplication.objects.filter(user=self.user_employee1, job_application=self.job_application).count()
+        
         assert notification != 0
     
     # Test para la vista de recommendation letters
     def test_my_recommendation_letters_view_authenticated(self):
+        self.create_recommendation_letter()
         self.client.force_login(self.user_employee1)
         response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        
         self.assertEqual(response.status_code, 200)
 
     def test_other_recommendation_letters_view(self):
+        self.create_recommendation_letter()
         self.client.force_login(self.user_employee2)
         response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        
         self.assertEqual(response.status_code, 403)
 
     def test_no_employee_recommendation_letters_view(self):
+        self.create_recommendation_letter()
         self.client.force_login(self.user_catering_company)
         response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        
         self.assertEqual(response.status_code, 403)
     
     def test_my_recommendation_letters_view_unauthenticated(self):
+        self.create_recommendation_letter()
         response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
+        
         self.assertEqual(response.status_code, 302)
