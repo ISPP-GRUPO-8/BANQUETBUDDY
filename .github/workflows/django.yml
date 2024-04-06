@@ -44,7 +44,7 @@ jobs:
         run: pip install tox
 
       - name: Run Tox
-        run: tox
+        run: tox -e py
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
