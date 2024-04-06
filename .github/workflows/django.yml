@@ -32,6 +32,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0  
+      
+      - name: Fetch main branch
+        run: git fetch origin main:main
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -52,14 +55,9 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd banquetBuddy
+          mkdir -p coverage-reports  # Crea el directorio si no existe
           coverage run --source='.' manage.py test
           coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: banquetBuddy/coverage-reports/coverage.xml
       
       - name: Fix Code Coverage Paths
         run: |
