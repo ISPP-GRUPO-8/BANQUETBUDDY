@@ -68,6 +68,11 @@ jobs:
           coverage xml -o ../coverage.xml
           ls -la ..
           echo "Archivo coverage.xml generado."
+      
+      - name: Fix Code Coverage Paths
+        run: |
+          sed -i 's/\/home\/runner\/work\/BANQUETBUDDY\/BANQUETBUDDY\//\/github\/workspace\//g' coverage.xml
+          echo "Fix Code Coverage Paths done."
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
