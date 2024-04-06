@@ -37,6 +37,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Create coverage reports directory
+        run: mkdir -p banquetBuddy/coverage-reports
+
       - name: Install Tox
         run: pip install tox
 
