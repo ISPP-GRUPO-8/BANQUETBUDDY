@@ -39,15 +39,29 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Dependencies
+      - name: Instalar dependencias
         run: |
           pip install -r requirements.txt
+          echo "Dependencias instaladas."
 
-      - name: Run Tests with Coverage
+      - name: Verificar el directorio actual y listar archivos
+        run: |
+          pwd
+          ls -la
+
+      - name: Cambiar al directorio del proyecto Django y listar archivos
+        run: |
+          cd banquetBuddy
+          pwd
+          ls -la
+
+      - name: Ejecutar pruebas con Coverage y generar reporte
         run: |
           cd banquetBuddy
           coverage run manage.py test
           coverage xml -o ../coverage.xml
+          ls -la ..
+          echo "Archivo coverage.xml generado."
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
