@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - develop
+      - fix/sonar_coverage#178
   pull_request:
     branches:
       - main
       - develop
+      - fix/sonar_coverage#178
 
 jobs:
   build:
@@ -37,14 +39,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Create coverage reports directory
-        run: mkdir -p coverage-reports
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
-      - name: Install Tox
-        run: pip install tox
-
-      - name: Run Tox
-        run: tox -e py310
+      - name: Run Tests with Coverage
+        run: |
+          cd banquetBuddy
+          coverage run manage.py test
+          coverage xml -o ../coverage.xml
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
