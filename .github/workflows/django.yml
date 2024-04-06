@@ -57,9 +57,10 @@ jobs:
       - name: Aplicar migraciones
         run: |
           cd banquetBuddy
+          python manage.py makemigrations
           python manage.py migrate
           echo "Migraciones aplicadas."
-          
+
       - name: Ejecutar pruebas con Coverage y generar reporte
         run: |
           cd banquetBuddy
