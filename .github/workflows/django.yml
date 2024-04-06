@@ -54,7 +54,12 @@ jobs:
           cd banquetBuddy
           pwd
           ls -la
-
+      - name: Aplicar migraciones
+        run: |
+          cd banquetBuddy
+          python manage.py migrate
+          echo "Migraciones aplicadas."
+          
       - name: Ejecutar pruebas con Coverage y generar reporte
         run: |
           cd banquetBuddy
