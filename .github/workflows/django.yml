@@ -35,6 +35,10 @@ jobs:
       
       - name: Fetch main branch
         run: git fetch origin main:main
+      
+      - name: List branches
+        run: git branch -a
+      
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -58,6 +62,11 @@ jobs:
           mkdir -p coverage-reports  # Crea el directorio si no existe
           coverage run --source='.' manage.py test
           coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
+
+      - name: List coverage report
+        run: |
+          ls -l banquetBuddy/coverage-reports/
+        
       
       - name: Fix Code Coverage Paths
         run: |
