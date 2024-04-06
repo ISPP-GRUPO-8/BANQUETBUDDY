@@ -28,46 +28,22 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  
-      
-      - name: Fetch main branch
-        run: git fetch origin main:main
-      
-      - name: List branches
-        run: git branch -a
-      
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install Tox
+        run: pip install tox
 
-      - name: Run migrations
-        run: |
-          cd banquetBuddy
-          python manage.py makemigrations
-          python manage.py migrate
+      - name: Run Tox
+        run: tox
 
-      - name: Run tests with coverage
-        run: |
-          cd banquetBuddy
-          mkdir -p coverage-reports  # Crea el directorio si no existe
-          coverage run --source='.' manage.py test
-          coverage xml -o coverage-reports/coverage.xml --omit '*/tests/*'
-
-      - name: List coverage report
-        run: |
-          ls -l banquetBuddy/coverage-reports/
-        
-      
-      - name: Fix Code Coverage Paths
-        run: |
-          sed -i 's/\/home\/runner\/work\/BANQUETBUDDY\/BANQUETBUDDY\//\/github\/workspace\//g' coverage.xml
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
