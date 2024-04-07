@@ -216,5 +216,5 @@ class FormForm(forms.ModelForm):
                 self.fields['catering'].queryset = CateringService.objects.filter(cateringcompany=catering_company)
 
         self.fields['questions'].widget.attrs['class'] = 'form-control'
-        self.fields['questions'].widget.attrs['multiple'] = 'multiple' 
-        self.fields['questions'].queryset = Question.objects.all()
+        self.fields['questions'].widget = forms.CheckboxSelectMultiple()
+        self.fields['questions'].queryset = Question.objects.filter(catering = CateringCompany.objects.get(name = user))

@@ -898,12 +898,11 @@ def create_form_form(request):
 
         if request.method == 'POST':
             # Validar formulario de preguntas
-            print(request.POST)
             if 'question_text' in request.POST:  # Si se está agregando una pregunta
                 question_form = QuestionForm(request.POST)
                 if question_form.is_valid():
                     question_text = question_form.cleaned_data['question_text']
-                    new_question = Question.objects.create(question_text=question_text)
+                    new_question = Question.objects.create(question_text=question_text, catering = owner)
             else:  # Si se está enviando el formulario principal
                 form_form = FormForm(request.POST, user=request.user)
                 if form_form.is_valid():
