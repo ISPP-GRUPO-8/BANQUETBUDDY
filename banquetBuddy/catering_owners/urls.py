@@ -84,6 +84,8 @@ urlpatterns = [
 
     path('canceled/', payment_canceled, name='canceled'),
 
+    path('form/create',create_form_form, name='form_form')
+
 
 ]
 

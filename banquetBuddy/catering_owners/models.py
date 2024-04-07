@@ -176,6 +176,8 @@ class RecommendationLetter(models.Model):
 class Question(models.Model):
     question_text = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.question_text
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='answers')

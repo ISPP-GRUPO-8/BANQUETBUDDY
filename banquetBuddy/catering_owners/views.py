@@ -2,8 +2,7 @@ from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect, get_object_or_404
 from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium, is_catering_company_premium_pro
-from .forms import OfferForm,CateringCompanyForm, MenuForm
-from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
+from .forms import *
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event
 from urllib.parse import urlencode
@@ -885,3 +884,34 @@ def create_recommendation_letter(request, employee_id, service_id):
         return HttpResponseForbidden("You don't have permission to do this.")
 
     return render(request, "recommendation_letter.html", context)
+
+
+@login_required
+def create_form_form(request):
+    user = request.user
+    try:
+        owner = CateringCompany.objects.get(user_id=user.id)
+        new_question = None
+        if request.method == 'POST':
+            form_form = FormForm(request.POST, user=request.user)
+            question_form = QuestionForm(request.POST)
+            if question_form.is_valid():
+                question_text = question_form.cleaned_data['question_text']
+                new_question = Question.objects.create(question_text=question_text)
+
+            if form_form.is_valid():
+                catering_service = form_form.cleaned_data['catering']
+                form = Form.objects.create (
+                    catering = CateringService.objects.get(name=catering_service), 
+                    name = form_form.cleaned_data['name'],
+                    questions = None
+                )
+                
+                return redirect('form_form') 
+        else:
+            form_form = FormForm()
+            question_form = QuestionForm()
+        return render(request, 'create_form.html', {'form_form': form_form, 'question_form': question_form})
+    except CateringCompany.DoesNotExist:
+        return HttpResponseForbidden("You don't have permission to do this.")
+

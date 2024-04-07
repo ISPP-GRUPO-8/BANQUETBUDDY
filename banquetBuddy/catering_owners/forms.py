@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
-from .models import CateringCompany, CateringService, Menu, Offer, Plate
+from .models import CateringCompany, CateringService, Menu, Offer, Plate, Question, Form
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -196,3 +196,27 @@ class PlateForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={"class": "form-control"}),
             "menu": forms.Select(attrs={"class": "form-control"}),
         }
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question_text']
+class FormForm(forms.ModelForm):
+    class Meta:
+        model = Form
+        fields = ['catering', 'name', 'questions']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None) 
+        super(FormForm, self).__init__(*args, **kwargs)
+
+        if user:
+            catering_company = CateringCompany.objects.filter(user=user).first()
+            if catering_company:
+                self.fields['catering'].queryset = CateringService.objects.filter(cateringcompany=catering_company)
+
+        self.fields['questions'].widget.attrs['class'] = 'form-control'
+        self.fields['questions'].widget.attrs['multiple'] = 'multiple' 
+        self.fields['questions'].queryset = Question.objects.all()
+
+
