@@ -218,5 +218,3 @@ class FormForm(forms.ModelForm):
         self.fields['questions'].widget.attrs['class'] = 'form-control'
         self.fields['questions'].widget.attrs['multiple'] = 'multiple' 
         self.fields['questions'].queryset = Question.objects.all()
-
-

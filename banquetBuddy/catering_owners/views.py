@@ -892,26 +892,31 @@ def create_form_form(request):
     try:
         owner = CateringCompany.objects.get(user_id=user.id)
         new_question = None
-        if request.method == 'POST':
-            form_form = FormForm(request.POST, user=request.user)
-            question_form = QuestionForm(request.POST)
-            if question_form.is_valid():
-                question_text = question_form.cleaned_data['question_text']
-                new_question = Question.objects.create(question_text=question_text)
 
-            if form_form.is_valid():
-                catering_service = form_form.cleaned_data['catering']
-                form = Form.objects.create (
-                    catering = CateringService.objects.get(name=catering_service), 
-                    name = form_form.cleaned_data['name'],
-                    questions = None
-                )
-                
-                return redirect('form_form') 
-        else:
-            form_form = FormForm()
-            question_form = QuestionForm()
+        form_form = FormForm(user=request.user)
+        question_form = QuestionForm()
+
+        if request.method == 'POST':
+            # Validar formulario de preguntas
+            print(request.POST)
+            if 'question_text' in request.POST:  # Si se está agregando una pregunta
+                question_form = QuestionForm(request.POST)
+                if question_form.is_valid():
+                    question_text = question_form.cleaned_data['question_text']
+                    new_question = Question.objects.create(question_text=question_text)
+            else:  # Si se está enviando el formulario principal
+                form_form = FormForm(request.POST, user=request.user)
+                if form_form.is_valid():
+                    catering_service = form_form.cleaned_data['catering']
+                    form = Form.objects.create (
+                        catering = CateringService.objects.get(name=catering_service), 
+                        name = form_form.cleaned_data['name'],
+                    )
+                    selected_questions = request.POST.getlist('questions')
+                    form.questions.set(selected_questions)
+                    form.save()
+                    return redirect('/') 
+
         return render(request, 'create_form.html', {'form_form': form_form, 'question_form': question_form})
     except CateringCompany.DoesNotExist:
         return HttpResponseForbidden("You don't have permission to do this.")
-
