@@ -11,6 +11,7 @@ from django.conf import settings
 from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
+from django.contrib.auth import get_user_model
 
 
 from faker import Faker
@@ -19,6 +20,7 @@ from random import randint, choice
 faker = Faker(['es_ES'])
 faker.add_provider(person)
 faker.add_provider(address)
+CustomUser = get_user_model()
 
 def create_cuisine_types():
     for cuisine in CuisineType.choices:
@@ -723,6 +725,19 @@ def create_task_employee():
             t.save()
             employees.remove(random_employee)
 
+
+def create_superusers():
+    superusers_data = [
+        {'username': 'admin1', 'email': 'admin1@example.com', 'password': 'admin1'},
+        {'username': 'admin2', 'email': 'admin2@example.com', 'password': 'admin2'},
+    ]
+    for data in superusers_data:
+        if not CustomUser.objects.filter(username=data['username']).exists():
+            user = CustomUser.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
+            user.is_superuser = True
+            user.is_staff = True
+            user.save()
+
 def populate_database():
     truncate_all_tables()
     create_cuisine_types()  # Crear los tipos de cocina antes de crear las compañías de catering
@@ -741,6 +756,7 @@ def populate_database():
     create_job_applications(10)
     create_recommendation_letters(10)
     create_task_employee()
+    create_superusers()
 
 if __name__ == "__main__":
     populate_database()
