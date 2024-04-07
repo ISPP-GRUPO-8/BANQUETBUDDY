@@ -172,3 +172,17 @@ class RecommendationLetter(models.Model):
     catering = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name = 'catering')
     description = models.CharField(max_length=255)
     date = models.DateField()
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=255)
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='answers')
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    date = models.DateField(auto_now_add=True)
+
+class Form(models.Model):
+    catering = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='forms')
+    name = models.CharField(max_length=255)
+    questions = models.ManyToManyField(Question, related_name='forms')
