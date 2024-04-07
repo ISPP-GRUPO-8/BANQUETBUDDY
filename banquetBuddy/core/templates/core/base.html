@@ -100,13 +100,13 @@
                     <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" id="search-input">
                 </form>
                 {% if request.user.is_authenticated %}
-                    {% comment %} {% if request.user.ParticularUsername %}
-                        <a class="nav-link" href="{% url 'my_books' %}">My Books</a>
+                    {% if request.user.ParticularUsername %}
+                        {% comment %} <a class="nav-link" href="{% url 'my_books' %}">My Books</a> {% endcomment %}
                         <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                         {{ user.username }}
                         </a>
-                    {% endif %} {% endcomment %}
+                    {% endif %}
                     {% if request.user.EmployeeUsername %}
                         <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fa-solid fa-user-tie"></i>
