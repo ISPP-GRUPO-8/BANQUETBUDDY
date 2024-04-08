@@ -69,6 +69,7 @@ urlpatterns = [
     path('plates/add/', views.add_plate, name='add_plate'),
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
+    path('chats/', listar_caterings_particular, name='listar_caterings_particular'),
 
     # CAMBIO DE PLAN
     path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),

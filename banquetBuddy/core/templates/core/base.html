@@ -72,6 +72,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
                     </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated and is_catering_company %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'listar_caterings_particular' %}">Chats</a>
+                    </li>
                 {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">

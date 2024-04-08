@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4 text-center">Chats</h1>
+  <hr />
+  {% if is_catering_company %}
+
+    <div class="row">
+      {% for message in messages %}
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ message.sender.username }}</h5>
+            <p><strong>Nombre:</strong> {{ message.sender.first_name }} {{ message.sender.last_name }}<p>
+            <p class="card-text"><strong>Phone number:</strong> {{ message.sender.email }}</p>
+            <a href="{% url 'chat' message.sender.id %}"><button class="btn btn-primary">Chat</button></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-danger" role="alert">You are not authorized to view this page.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

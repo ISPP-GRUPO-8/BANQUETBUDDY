@@ -918,3 +918,12 @@ def chat_view(request, id):
         messages = catering_company.get_messages(particular.user.id)
 
     return render(request, 'chat.html', {'messages': messages})
+
+@login_required
+def listar_caterings_particular(request):
+    context = {}
+    context['is_catering_company'] = is_catering_company(request)
+    catering_company = get_object_or_404(CateringCompany, user = request.user)
+    messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
+    context['messages'] = messages
+    return render(request, "contact_chat_owner.html", context)
