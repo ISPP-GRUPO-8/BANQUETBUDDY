@@ -21,7 +21,17 @@ urlpatterns = [
     path('profilex-edit', profile_edit_view, name='profile_edit'),
     path('error-report', error_report, name='error-report'),
     path('notifications', notification_view, name='notifications'), 
-    path('privacy-policy/', privacy_policy, name='privacy_policy'),
-    path('terms-and-conditions/', terms_and_conditions, name='terms_and_conditions'),
+    path('privacy-policy/', actual_privacy_policy, name='privacy_policy'),
+    path('terms-and-conditions/', actual_terms_and_conditions, name='terms_and_conditions'),
+    path('privacy-policy-archive/', previous_policies, name='previous_policies'),
+    path('terms-and-conditions-archive/', previous_terms, name='previous_terms'),
+    path('policy-archive/', policy_archive, name='policy_archive'),
+    path('terms-archive/', terms_archive, name='terms_archive'),
+    path('privacy-policy/v1.0/', policy_version1_0, name='policy_version1_0'),
+    path('terms-and-conditions/v1.0/', terms_version1_0, name='terms_version1_0'),
+
+
+
+
     
 ]
