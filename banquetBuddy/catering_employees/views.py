@@ -4,6 +4,7 @@ from django.contrib import messages
 from catering_owners.models import CateringCompany, Offer, JobApplication, RecommendationLetter
 from .models import Employee
 from .forms import EmployeeFilterForm, EmployeeForm
+from core.views import *
 
 from core.forms import CustomUserCreationForm
 from catering_owners.models import JobApplication, Employee
@@ -145,3 +146,15 @@ def my_recommendation_letters(request, employee_id):
     context = {'recommendation_dict': recommendation_dict}
 
     return render(request, "my_recommendation_letters.html", context)
+
+def listar_caterings_companies(request):
+    context = {}
+    context["is_particular"] = is_particular(request)
+    context["is_employee"] = is_employee(request)
+    context["is_catering_company"] = is_catering_company(request)
+    if not is_employee(request):
+        return HttpResponseForbidden("You are not an employee")
+    caterings = CateringCompany.objects.all()
+
+    context["caterings"] = caterings
+    return render(request, "contact_chat_employee.html", context)

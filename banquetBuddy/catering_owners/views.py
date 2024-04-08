@@ -904,7 +904,14 @@ def chat_view(request, id):
         messages = particular.get_messages(catering_company.user.id)
 
     elif is_catering_company(request):
-        particular = Particular.objects.get(user_id=id)
+        try:
+            particular = Particular.objects.get(user_id=id)
+        except:
+            pass
+        try:
+            particular = Employee.objects.get(user_id=id)
+        except:
+            pass
         catering_company = CateringCompany.objects.get(user=request.user)
         
         if request.method == 'POST':
@@ -916,7 +923,20 @@ def chat_view(request, id):
                 return render(request, 'chat.html', {'messages': messages})
         
         messages = catering_company.get_messages(particular.user.id)
-
+    
+    elif is_employee(request):
+        employee = Employee.objects.get(user=request.user)
+        catering_company = CateringCompany.objects.get(user_id=id)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                employee.send_message(catering_company.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = employee.get_messages(catering_company.user.id)
+                return render(request, 'chat.html', {'messages': messages})
+        
+        messages = employee.get_messages(catering_company.user.id)
     return render(request, 'chat.html', {'messages': messages})
 
 @login_required
