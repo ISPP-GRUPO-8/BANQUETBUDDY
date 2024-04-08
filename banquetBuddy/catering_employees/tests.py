@@ -9,7 +9,7 @@ from .models import Employee
 from catering_particular.models import Particular
 from core.models import CustomUser
 from catering_owners.models import *
-from .views import employee_offer_list, application_to_offer
+from .views import *
 from django.urls import reverse
 from datetime import datetime, timedelta, date
 from django.core.files.base import ContentFile
@@ -281,3 +281,35 @@ class EmployeeTestCases(TestCase):
         response = self.client.get(reverse('my_recommendation_letters', args=[self.employee.user.id]))
         
         self.assertEqual(response.status_code, 302)
+
+
+class ListarCateringsCompaniesTestCase(TestCase):
+    def setUp(self):
+        # Configuración inicial para crear un usuario de prueba
+        self.factory = RequestFactory()
+
+        # Creamos un usuario de prueba
+        self.employee_user = CustomUser.objects.create_user(username='employee_user', email='employee@example.com', password='password')
+
+        # Creamos un empleado asociado con el usuario
+        self.employee = Employee.objects.create(user=self.employee_user)
+
+    def test_listar_caterings_companies_employee_authenticated(self):
+        # Autenticamos al usuario como empleado
+        self.client.force_login(self.employee_user)
+
+        # Realizamos una solicitud GET a la vista
+        response = self.client.get(reverse('listar_caterings_companies_employee'))
+
+        # Verificamos que la vista responda correctamente
+        self.assertEqual(response.status_code, 200)
+
+        # Verificamos que la lista de empresas de catering esté presente en el contexto
+        self.assertIn('caterings', response.context)
+
+    def test_listar_caterings_companies_employee_unauthenticated(self):
+        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+        response = self.client.get(reverse('listar_caterings_companies_employee'))
+
+        # Verificamos que el usuario no autenticado reciba un código de estado 403
+        self.assertEqual(response.status_code, 403)

@@ -2,18 +2,26 @@
 {% load static %}
 
 {% block content %}
+
 <head>
-<style>
-    /* Custom styles can be added here */
-    #message-container {
-        margin-top: 20px;
-    }
-</style>
+    <style>
+        /* Custom styles can be added here */
+        #message-container {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h1 class="mt-5">Chat</h1>
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-5">Chat</h1>
+            </div>
+            <div class="col d-flex justify-content-end align-items-center">
+                <button class="btn btn-success" type="button" id="recargar" style="background-color: #02483e;">Actualizar Chat</button>
+            </div>
+        </div>
         <div id="message-container" class="mt-4">
             {% for message in messages %}
             <div class="border-bottom py-2">
@@ -22,16 +30,26 @@
             </div>
             {% endfor %}
         </div>
-        <form id="message-form" method="post" class="mt-4">
+        <form id="message-form" method="post" class="mt-4 mb-4">
             {% csrf_token %}
             <div class="input-group">
                 <input type="text" class="form-control" name="content" placeholder="Type your message..."
                     aria-label="Type your message..." aria-describedby="button-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit" id="button-addon2">Send</button>
+                    <button class="btn btn-primary" type="submit" id="button-addon2" style="background-color: #54c5cb;">Send</button>
                 </div>
             </div>
         </form>
     </div>
 </body>
+<script>
+    function recargarPagina() {
+        location.reload();
+    }
+
+    window.onload = function () {
+        var botonRecargar = document.getElementById("recargar");
+        botonRecargar.addEventListener("click", recargarPagina);
+    }
+</script>
 {% endblock %}

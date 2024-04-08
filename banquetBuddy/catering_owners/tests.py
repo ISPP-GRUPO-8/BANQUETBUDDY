@@ -1,6 +1,6 @@
 from decimal import Decimal
 import os
-from django.test import Client, TestCase
+from django.test import Client, TestCase, RequestFactory
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from catering_particular.models import Particular
@@ -534,6 +534,39 @@ class RecommendationLetterTest(TestCase):
         response = self.client.get(reverse('recommendation_letter', args=[self.catering_service.id, self.employee.user.id]))
         self.assertEqual(response.status_code, 200)  
 
+class ChatViewTestCase(TestCase):
+    def setUp(self):
+        # Crear usuarios personalizados
+        self.particular_user = CustomUser.objects.create_user(username='particular_user', email='particular@example.com', password='password')
+        self.employee_user = CustomUser.objects.create_user(username='employee_user', email='employee@example.com', password='password')
+        self.company_user = CustomUser.objects.create_user(username='company_user', email='company@example.com', password='password')
+
+        # Crear instancias de Particular, Employee y CateringCompany
+        self.particular = Particular.objects.create(user=self.particular_user)
+        self.employee = Employee.objects.create(user=self.employee_user)
+        self.company = CateringCompany.objects.create(user=self.company_user)
+
+        # Crear algunos mensajes
+        Message.objects.create(sender=self.particular_user, receiver=self.company_user, date=timezone.now(), content="Hola desde el particular")
+        Message.objects.create(sender=self.company_user, receiver=self.particular_user, date=timezone.now(), content="Hola desde la empresa")
+
+    def test_chat_view_particular(self):
+        # Prueba la vista de chat para un usuario particular
+        self.client.force_login(self.particular_user)
+        response = self.client.get('/chat/{}/'.format(self.company.user.id))
+        self.assertEqual(response.status_code, 200)
+
+    def test_chat_view_employee(self):
+        # Prueba la vista de chat para un empleado
+        self.client.force_login(self.employee_user)
+        response = self.client.get('/chat/{}/'.format(self.company.user.id))
+        self.assertEqual(response.status_code, 200)
+
+    def test_chat_view_catering_company(self):
+        # Prueba la vista de chat para una empresa de catering
+        self.client.force_login(self.company_user)
+        response = self.client.get('/chat/{}/'.format(self.particular.user.id))
+        self.assertEqual(response.status_code, 200)
 
 
 

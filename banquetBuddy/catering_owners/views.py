@@ -888,7 +888,7 @@ def create_recommendation_letter(request, employee_id, service_id):
 
 def chat_view(request, id):
     messages = None  # Inicializamos messages en caso de que no haya mensajes
-    
+
     if is_particular(request):
         particular = Particular.objects.get(user=request.user)
         catering_company = CateringCompany.objects.get(user_id=id)
