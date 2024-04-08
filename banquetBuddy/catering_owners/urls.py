@@ -83,6 +83,8 @@ urlpatterns = [
     path('completed_pro/', payment_completed_pro, name='completed_pro'),
 
     path('canceled/', payment_canceled, name='canceled'),
+    path('chat/<int:id>/', chat_view, name='chat'),
+
 
 
 ]

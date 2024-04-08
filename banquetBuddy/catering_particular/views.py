@@ -429,3 +429,15 @@ def payment_completed(request):
 
 def payment_canceled(request):
     return render(request, "payment/canceled.html")
+
+def listar_caterings_companies(request):
+    context = {}
+    context["is_particular"] = is_particular(request)
+    context["is_employee"] = is_employee(request)
+    context["is_catering_company"] = is_catering_company(request)
+    if not is_particular(request):
+        return HttpResponseForbidden("You are not a particular")
+    caterings = CateringCompany.objects.all()
+
+    context["caterings"] = caterings
+    return render(request, "contact_chat.html", context)

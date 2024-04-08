@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect, get_object_or_404
-from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium, is_catering_company_premium_pro
+from core.views import *
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
@@ -885,3 +885,36 @@ def create_recommendation_letter(request, employee_id, service_id):
         return HttpResponseForbidden("You don't have permission to do this.")
 
     return render(request, "recommendation_letter.html", context)
+
+def chat_view(request, id):
+    messages = None  # Inicializamos messages en caso de que no haya mensajes
+    
+    if is_particular(request):
+        particular = Particular.objects.get(user=request.user)
+        catering_company = CateringCompany.objects.get(user_id=id)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                particular.send_message(catering_company.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = particular.get_messages(catering_company.user.id)
+                return render(request, 'chat.html', {'messages': messages})
+        
+        messages = particular.get_messages(catering_company.user.id)
+
+    elif is_catering_company(request):
+        particular = Particular.objects.get(user_id=id)
+        catering_company = CateringCompany.objects.get(user=request.user)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                catering_company.send_message(particular.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = catering_company.get_messages(particular.user.id)
+                return render(request, 'chat.html', {'messages': messages})
+        
+        messages = catering_company.get_messages(particular.user.id)
+
+    return render(request, 'chat.html', {'messages': messages})

@@ -20,4 +20,5 @@ urlpatterns = [
     path('completed/', payment_completed, name='completed'),
     path('canceled/', payment_canceled, name='canceled'),
     path('<int:catering_id>/review', catering_review, name='add_review'),
+    path('chats/', listar_caterings_companies, name='listar_caterings_companies'),
 ]
