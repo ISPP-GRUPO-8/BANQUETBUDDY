@@ -5,7 +5,7 @@ from core.views import is_catering_company_basic, is_catering_company_not_subscr
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
-from .models import  Offer, CateringService,Event
+from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
 from urllib.parse import urlencode
 from django.core.paginator import Paginator
 from django.urls import reverse
@@ -885,3 +885,35 @@ def create_recommendation_letter(request, employee_id, service_id):
         return HttpResponseForbidden("You don't have permission to do this.")
 
     return render(request, "recommendation_letter.html", context)
+
+def employee_record_list(request, employee_id):
+    employee = get_object_or_404(Employee, user_id=employee_id)
+    services_worked = EmployeeWorkService.objects.filter(employee=employee)
+    return render(request, 'employee_record.html', {'employee': employee, 'services_worked': services_worked})
+
+def hire_employee(request, employee_id):
+    if request.method == "POST":
+        action = request.POST.get('action')
+        if action == "hire":
+            employee = get_object_or_404(Employee, user_id=employee_id)
+            offer_id = request.POST.get('offer_id')
+            offer = get_object_or_404(Offer, id=offer_id)
+            
+            # Crear instancia de EmployeeWorkService
+            EmployeeWorkService.objects.create(
+                employee=employee,
+                cateringservice=offer.cateringservice,
+                start_date=datetime.now()
+            )
+
+            # Eliminar la JobApplication asociada al empleado y oferta
+            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+
+        elif action == "reject":
+            # Eliminar la JobApplication asociada al empleado y oferta
+            employee = get_object_or_404(Employee, user_id=employee_id)
+            offer_id = request.POST.get('offer_id')
+            offer = get_object_or_404(Offer, id=offer_id)
+            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+
+    return redirect('offer_list')
