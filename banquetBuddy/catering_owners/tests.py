@@ -12,9 +12,11 @@ from catering_particular.models import Particular
 from core.forms import CustomUserCreationForm
 from .forms import CateringCompanyForm
 from core.models import CustomUser, BookingState
-from phonenumbers import PhoneNumber, parse, is_valid_number
+from phonenumbers import parse
 from datetime import datetime, timedelta
 from django.core.files import File
+from django.http import HttpRequest
+
 
 class CateringBookTestCase(TestCase):
     def setUp(self):
@@ -535,6 +537,49 @@ class RecommendationLetterTest(TestCase):
         self.assertEqual(response.status_code, 200)  
 
 
+class CateringViewTest(TestCase):
+    def setUp(self):
+        # Configurar el entorno de prueba con objetos necesarios
+        self.client = Client()
+
+        self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
+        self.user1 = CustomUser.objects.create_user(username='test_user1', password='test_password1',email='testuser1@gmail.com')
+
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company',price_plan = "PREMIUM_PRO")
+        
+        self.message = Message.objects.create(
+            sender=self.user,
+            receiver=self.user1,
+            date=datetime.now(),
+            content="Este es un mensaje de ejemplo."
+        )
+
+    def test_listar_caterings_particular(self):
+        # Simular una solicitud HTTP al punto final
+        self.client.force_login(self.user)
+
+
+        # Realizar la solicitud HTTP
+        response = self.client.get(reverse('listar_caterings_particular'))
+
+        # Verificar si la respuesta es exitosa
+        self.assertEqual(response.status_code, 200)
+
+        # Verificar si el template utilizado es el esperado
+        self.assertTemplateUsed(response, 'contact_chat_owner.html')
+        
+        # Verificar si el contexto se pasa correctamente al template
+        self.assertTrue(response.context['is_catering_company'])
+        
+        self.assertIn('messages', response.context)
+        
+        
+    def test_listar_caterings_particular_unauthenticated(self):
+        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+        response = self.client.get(reverse('listar_caterings_particular'))
+
+        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo 
+        self.assertEqual(response.status_code, 302)
 
 
 

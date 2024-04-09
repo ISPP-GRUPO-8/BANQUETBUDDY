@@ -18,7 +18,7 @@ class Employee(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='message_sender')
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='message_receiver')
-    date = models.DateField()
+    date = models.DateTimeField()
     content = models.TextField()
 
     class Meta:
