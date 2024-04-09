@@ -887,6 +887,8 @@ def create_recommendation_letter(request, employee_id, service_id):
     return render(request, "recommendation_letter.html", context)
 
 def chat_view(request, id):
+    context = {}
+    context['id'] = int(id)
     messages = None  # Inicializamos messages en caso de que no haya mensajes
 
     if is_particular(request):
@@ -899,7 +901,8 @@ def chat_view(request, id):
                 particular.send_message(catering_company.user, content)
                 # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
                 messages = particular.get_messages(catering_company.user.id)
-                return render(request, 'chat.html', {'messages': messages})
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
         
         messages = particular.get_messages(catering_company.user.id)
 
@@ -920,7 +923,8 @@ def chat_view(request, id):
                 catering_company.send_message(particular.user, content)
                 # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
                 messages = catering_company.get_messages(particular.user.id)
-                return render(request, 'chat.html', {'messages': messages})
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
         
         messages = catering_company.get_messages(particular.user.id)
     
@@ -934,10 +938,12 @@ def chat_view(request, id):
                 employee.send_message(catering_company.user, content)
                 # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
                 messages = employee.get_messages(catering_company.user.id)
-                return render(request, 'chat.html', {'messages': messages})
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
         
         messages = employee.get_messages(catering_company.user.id)
-    return render(request, 'chat.html', {'messages': messages})
+    context['messages'] = messages
+    return render(request, 'chat.html', context)
 
 @login_required
 def listar_caterings_particular(request):
