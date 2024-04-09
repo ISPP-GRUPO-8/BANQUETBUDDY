@@ -887,8 +887,10 @@ def create_recommendation_letter(request, employee_id, service_id):
     return render(request, "recommendation_letter.html", context)
 
 def chat_view(request, id):
+    context = {}
+    context['id'] = int(id)
     messages = None  # Inicializamos messages en caso de que no haya mensajes
-    
+
     if is_particular(request):
         particular = Particular.objects.get(user=request.user)
         catering_company = CateringCompany.objects.get(user_id=id)
@@ -899,12 +901,20 @@ def chat_view(request, id):
                 particular.send_message(catering_company.user, content)
                 # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
                 messages = particular.get_messages(catering_company.user.id)
-                return render(request, 'chat.html', {'messages': messages})
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
         
         messages = particular.get_messages(catering_company.user.id)
 
     elif is_catering_company(request):
-        particular = Particular.objects.get(user_id=id)
+        try:
+            particular = Particular.objects.get(user_id=id)
+        except:
+            pass
+        try:
+            particular = Employee.objects.get(user_id=id)
+        except:
+            pass
         catering_company = CateringCompany.objects.get(user=request.user)
         
         if request.method == 'POST':
@@ -913,11 +923,27 @@ def chat_view(request, id):
                 catering_company.send_message(particular.user, content)
                 # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
                 messages = catering_company.get_messages(particular.user.id)
-                return render(request, 'chat.html', {'messages': messages})
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
         
         messages = catering_company.get_messages(particular.user.id)
-
-    return render(request, 'chat.html', {'messages': messages})
+    
+    elif is_employee(request):
+        employee = Employee.objects.get(user=request.user)
+        catering_company = CateringCompany.objects.get(user_id=id)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                employee.send_message(catering_company.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = employee.get_messages(catering_company.user.id)
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
+        
+        messages = employee.get_messages(catering_company.user.id)
+    context['messages'] = messages
+    return render(request, 'chat.html', context)
 
 @login_required
 def listar_caterings_particular(request):
