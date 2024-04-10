@@ -361,7 +361,7 @@ class NotificationViewTest(TestCase):
             booking_state = BookingState.CONTRACT_PENDING,
             number_guests = 23
         )
-        self.notification1 = NotificationEvent.objects.create(user=self.user1, has_been_read=False, message='Test notification 1', event=self.event)
+        self.notification1 = NotificationEvent.objects.create(user=self.user1, message='Test notification 1', event=self.event)
     
     def test_notification_view(self):
         # Simula una solicitud GET al view
@@ -373,10 +373,6 @@ class NotificationViewTest(TestCase):
         
         # Verifica que se haya llamado a la plantilla correcta
         self.assertEqual(response.status_code, 200)
-        
-        # Verifica que las notificaciones no leídas se hayan marcado como leídas
-        self.notification1.refresh_from_db()
-        self.assertTrue(self.notification1.has_been_read)
 
 
     

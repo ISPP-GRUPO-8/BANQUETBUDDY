@@ -7,7 +7,6 @@ from catering_owners.models import JobApplication, NotificationJobApplication
 def notify_employee_on_state_change(sender, instance, **kwargs):
     
     employee = instance.employee.user
-    NotificationJobApplication.objects.filter(user=employee, has_been_read=True).delete()
     if instance.state == 'PENDING':
         message = f"Tu aplicación a la oferta {instance.offer.title}, se ha enviado correctamente."
     else:
