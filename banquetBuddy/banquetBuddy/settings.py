@@ -11,12 +11,16 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from selenium.webdriver import Chrome
 import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
+
+DRIVER_PATH = os.path.join(BASE_DIR, 'static', 'driver', 'chromedriver.exe')
 #Sustituimos la siguiente línea por la que sigue a continuación cpara probar en local
 #BASE_URL = 'http:localhost:8000' 
 
@@ -140,6 +144,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+WEBDRIVER_OPTIONS = {
+    'executable_path': DRIVER_PATH,  # Ruta al archivo del controlador WebDriver
+    'headless': True,  # Ejecución sin interfaz gráfica (opcional)
+    # Otras opciones de configuración según tus necesidades
+}
 
 
 # Internationalization
