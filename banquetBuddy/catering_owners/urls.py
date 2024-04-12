@@ -72,6 +72,7 @@ urlpatterns = [
     path('plates/add/', views.add_plate, name='add_plate'),
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
+    path('chats/', listar_caterings_particular, name='listar_caterings_particular'),
 
     # CAMBIO DE PLAN
     path("catering_unsuscribe/", catering_unsuscribe, name="catering_unsuscribe"),
@@ -86,6 +87,8 @@ urlpatterns = [
     path('completed_pro/', payment_completed_pro, name='completed_pro'),
 
     path('canceled/', payment_canceled, name='canceled'),
+    path('chat/<int:id>/', chat_view, name='chat'),
+
 
 
 ]

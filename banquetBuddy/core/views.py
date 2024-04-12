@@ -496,11 +496,29 @@ def send_notifications_next_events_catering_company(request):
             event.save()
 
 
-def privacy_policy(request):
-    return render(request, 'core/privacy_policy.html')
+def actual_privacy_policy(request):
+    return render(request, 'core/actual_privacy_policy.html')
 
-def terms_and_conditions(request):
-    return render(request, 'core/terms_and_conditions.html')
+def actual_terms_and_conditions(request):
+    return render(request, 'core/actual_terms_and_conditions.html')
+
+def previous_policies(request):
+    return render(request, 'core/previous_policies.html')
+
+def previous_terms(request):
+    return render(request, 'core/previous_terms.html')
+
+def policy_archive(request):
+    return render(request, 'core/previous_policies.html')
+
+def terms_archive(request):
+    return render(request, 'core/previous_terms.html')
+
+def policy_version1_0(request):
+    return render(request, 'core/politicas y terminos anteriores/policyv1_0.html') 
+
+def terms_version1_0(request):
+    return render(request, 'core/politicas y terminos anteriores/termsv1.0.html')
 
 
 

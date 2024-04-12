@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect, get_object_or_404
-from core.views import is_catering_company_basic, is_catering_company_not_subscribed, is_catering_company_premium, is_catering_company_premium_pro
+from core.views import *
 from .forms import OfferForm,CateringCompanyForm, MenuForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
@@ -790,13 +790,6 @@ def delete_plate(request, plate_id):
     else:
         return redirect("list_plates")
 
-
-
-
-
-
-
- 
     
 @login_required
 def add_plate(request):
@@ -886,6 +879,7 @@ def create_recommendation_letter(request, employee_id, service_id):
 
     return render(request, "recommendation_letter.html", context)
 
+
 def employee_record_list(request, employee_id):
     employee = get_object_or_404(Employee, user_id=employee_id)
     services_worked = EmployeeWorkService.objects.filter(employee=employee)
@@ -917,3 +911,72 @@ def hire_employee(request, employee_id):
             JobApplication.objects.filter(employee=employee, offer=offer).delete()
 
     return redirect('offer_list')
+
+def chat_view(request, id):
+    context = {}
+    context['id'] = int(id)
+    messages = None  # Inicializamos messages en caso de que no haya mensajes
+
+    if is_particular(request):
+        particular = Particular.objects.get(user=request.user)
+        catering_company = CateringCompany.objects.get(user_id=id)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                particular.send_message(catering_company.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = particular.get_messages(catering_company.user.id)
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
+        
+        messages = particular.get_messages(catering_company.user.id)
+
+    elif is_catering_company(request):
+        try:
+            particular = Particular.objects.get(user_id=id)
+        except:
+            pass
+        try:
+            particular = Employee.objects.get(user_id=id)
+        except:
+            pass
+        catering_company = CateringCompany.objects.get(user=request.user)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                catering_company.send_message(particular.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = catering_company.get_messages(particular.user.id)
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
+        
+        messages = catering_company.get_messages(particular.user.id)
+    
+    elif is_employee(request):
+        employee = Employee.objects.get(user=request.user)
+        catering_company = CateringCompany.objects.get(user_id=id)
+        
+        if request.method == 'POST':
+            content = request.POST.get('content')
+            if content:
+                employee.send_message(catering_company.user, content)
+                # Después de enviar el mensaje, volvemos a obtener los mensajes actualizados
+                messages = employee.get_messages(catering_company.user.id)
+                context['messages'] = messages
+                return render(request, 'chat.html', context)
+        
+        messages = employee.get_messages(catering_company.user.id)
+    context['messages'] = messages
+    return render(request, 'chat.html', context)
+
+@login_required
+def listar_caterings_particular(request):
+    context = {}
+    context['is_catering_company'] = is_catering_company(request)
+    catering_company = get_object_or_404(CateringCompany, user = request.user)
+    messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
+    context['messages'] = messages
+    return render(request, "contact_chat_owner.html", context)
+

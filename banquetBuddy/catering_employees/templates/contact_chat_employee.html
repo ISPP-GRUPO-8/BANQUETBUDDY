@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4 text-center">Chats</h1>
+  <hr />
+  {% if is_employee %}
+
+    <div class="row">
+      {% for catering in caterings %}
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ catering.name }}</h5>
+            <p class="card-text">Phone number: {{ catering.phone_number }}</p>
+            <a href="{% url 'chat' catering.user.id %}" class="btn btn-primary">Chat</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-danger" role="alert">You are not authorized to view this page.</div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const search = document.getElementById("search");
+
+    search.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.keyCode === 13) {
+        event.preventDefault(); // Evita la acción predeterminada para que no se envíe el formulario automáticamente
+
+        if (search.value.trim() !== "") {
+          document.getElementById("miFormulario").submit();
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
