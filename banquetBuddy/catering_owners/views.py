@@ -839,11 +839,11 @@ def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     user = request.user
     owner = CateringCompany.objects.get(user_id = user.id)
-    tasks = Task.objects.filter(cateringservice = catering_service)
+    employees_hired = EmployeeWorkService.objects.filter(cateringservice = catering_service)
 
     employees = []
-    for t in tasks:
-        employees.extend(t.employees.all())
+    for t in employees_hired:
+        employees.append(t.employee)
     
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
 
