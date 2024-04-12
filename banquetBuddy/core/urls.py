@@ -29,6 +29,7 @@ urlpatterns = [
     path('terms-archive/', terms_archive, name='terms_archive'),
     path('privacy-policy/v1.0/', policy_version1_0, name='policy_version1_0'),
     path('terms-and-conditions/v1.0/', terms_version1_0, name='terms_version1_0'),
+    path('mark-as-read/', mark_notifications_as_read, name='mark_as_read'),
 
 
 
