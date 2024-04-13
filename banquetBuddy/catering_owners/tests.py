@@ -622,17 +622,3 @@ class CateringViewTest(TestCase):
 ########################
 ###Tests de interfaz####
 ########################
-
-class ChromeDriverTest(TestCase):
-    #test para probar que el driver funciona
-    #se puede borrar posteriormente
-    def test_chromedriver(self):
-        chrome_driver_path = settings.DRIVER_PATH
-        chrome_options = Options()
-        chrome_options.add_argument('--headless') 
-        driver = webdriver.Chrome(executable_path=chrome_driver_path, options=chrome_options)
-        # Abrir una página web de prueba
-        driver.get('https://www.google.com')
-        # Verificar que el título de la página sea el esperado
-        self.assertEqual(driver.title, 'Google')
-        driver.quit()
