@@ -57,12 +57,13 @@ jobs:
 
       - name: Dar permisos al driver de Selenium
         run: |
-          chmod +x banquetBuddy/static/driver/chromedriver.exe
+          cd banquetBuddy/static/driver
+          chmod +x chromedriver.exe
 
       - name: Crear archivo .env y escribir DB_PASSWORD
         run: |
-          echo "DB_PASSWORD=ispp" > .env
-          echo ".env creado y contraseña de base de datos escrita."
+          echo "DB_PASSWORD=ispp" >  .env
+          echo ".env creado y contraseña de base de datos escrita"
 
       - name: Aplicar migraciones
         run: |
