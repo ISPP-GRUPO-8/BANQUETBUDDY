@@ -889,19 +889,9 @@ def hire_employee(request, employee_id):
     if request.method == "POST":
         action = request.POST.get('action')
         if action == "hire":
-            employee = get_object_or_404(Employee, user_id=employee_id)
-            offer_id = request.POST.get('offer_id')
-            offer = get_object_or_404(Offer, id=offer_id)
-            
-            # Crear instancia de EmployeeWorkService
-            EmployeeWorkService.objects.create(
-                employee=employee,
-                cateringservice=offer.cateringservice,
-                start_date=datetime.now()
-            )
-
-            # Eliminar la JobApplication asociada al empleado y oferta
-            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+            offer_id = request.POST.get('offer_id')  # Obtener offer_id de la solicitud POST
+            return redirect('hire_form', employee_id=employee_id, offer_id=offer_id)
+        
 
         elif action == "reject":
             # Eliminar la JobApplication asociada al empleado y oferta
@@ -911,6 +901,27 @@ def hire_employee(request, employee_id):
             JobApplication.objects.filter(employee=employee, offer=offer).delete()
 
     return redirect('offer_list')
+
+def hire_form(request, employee_id, offer_id):
+    employee = get_object_or_404(Employee, pk=employee_id)
+    offer = get_object_or_404(Offer, pk=offer_id)
+    catering_service = offer.cateringservice
+    
+    if request.method == "POST":
+        form = EmployeeWorkServiceForm(request.POST)
+        if form.is_valid():
+            employee_work_service = form.save(commit=False)
+            employee_work_service.employee = employee
+            employee_work_service.cateringservice_id = catering_service.id 
+            employee_work_service.save()
+            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+
+            return redirect('offer_list')  
+    else:
+        form = EmployeeWorkServiceForm()
+    
+    return render(request, 'hire_form.html', {'form': form, 'employee': employee, 'catering_service': catering_service})
+
 
 def chat_view(request, id):
     context = {}

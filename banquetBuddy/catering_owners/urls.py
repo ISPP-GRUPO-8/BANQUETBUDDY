@@ -89,6 +89,8 @@ urlpatterns = [
     path('canceled/', payment_canceled, name='canceled'),
     path('chat/<int:id>/', chat_view, name='chat'),
 
+    path('hire_form/<int:employee_id>/<int:offer_id>/', views.hire_form, name='hire_form'),
+
 
 
 ]

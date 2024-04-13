@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
-from .models import CateringCompany, CateringService, Menu, Offer, Plate
+from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -195,4 +195,13 @@ class PlateForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
             "price": forms.NumberInput(attrs={"class": "form-control"}),
             "menu": forms.Select(attrs={"class": "form-control"}),
+        }
+
+class EmployeeWorkServiceForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeWorkService
+        fields = ['start_date', 'end_date']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'class': 'datepicker'}),
+            'end_date': forms.DateInput(attrs={'class': 'datepicker'}),
         }

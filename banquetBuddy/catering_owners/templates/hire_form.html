@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hire Employee</title>
+    <style>
+        form {
+            margin: 0 auto;
+            width: 70%; 
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Complete the form to hire the employee  </h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="catering_service">Catering Service:</label>
+        <input type="text" id="catering_service" name="catering_service" value="{{ catering_service }}" readonly><br><br>
+        <label for="employee">Employee:</label>
+        <input type="text" id="employee" name="employee" value="{{ employee }}" readonly><br><br>
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date"><br><br>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date"><br><br>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
+{% endblock %}  
