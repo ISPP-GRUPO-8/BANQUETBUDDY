@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from selenium.webdriver import Chrome
 import os
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,6 +37,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'banquetbuddyoficial@gmail.com'
 EMAIL_HOST_PASSWORD = 'zsqt bsae cayb atuk'
 DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
 
 # Quick-start development settings - unsuitable for production
@@ -110,7 +114,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ispp",
         "USER": "ispp",
-        "PASSWORD": "ispp",
+        "PASSWORD": DB_PASSWORD,
         "HOST": "localhost",
         "PORT": "5432",
     },
