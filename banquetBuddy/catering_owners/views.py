@@ -898,7 +898,8 @@ def hire_employee(request, employee_id):
             employee = get_object_or_404(Employee, user_id=employee_id)
             offer_id = request.POST.get('offer_id')
             offer = get_object_or_404(Offer, id=offer_id)
-            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+            catering_service = offer.cateringservice
+            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
 
     return redirect('offer_list')
 
@@ -914,7 +915,7 @@ def hire_form(request, employee_id, offer_id):
             employee_work_service.employee = employee
             employee_work_service.cateringservice_id = catering_service.id 
             employee_work_service.save()
-            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
 
             return redirect('offer_list')  
     else:
