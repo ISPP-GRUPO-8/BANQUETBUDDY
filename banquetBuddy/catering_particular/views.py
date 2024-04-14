@@ -413,9 +413,14 @@ def payment_completed(request):
     menu = Menu.objects.get(id=request.session["selected_menu"])
     catering_service_id = request.session["catering_service_id"]
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
+    
+    # Asignar la empresa de catering vinculada al servicio de catering
+    catering_company = catering_service.cateringcompany
+
     # Crear el evento y hacer la reserva
     event = Event.objects.create(
         cateringservice=catering_service,
+        cateringcompany=catering_company,  # Asignar la empresa de catering
         particular=get_object_or_404(Particular, user=request.user),
         name=f"Reservation for {catering_service.cateringcompany.name} by {request.user.username}",
         date=request.session["event_date"],

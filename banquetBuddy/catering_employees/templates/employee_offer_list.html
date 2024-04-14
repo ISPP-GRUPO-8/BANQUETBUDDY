@@ -65,6 +65,7 @@
         {% for offer in offers %}
         <div class="offer">
             <h2 class="offerTitle">{{ offer.title }}</h2>
+            <h3>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h3>
             <h4>{{ offer.location }}</h4>
             <p>{{ offer.description }}</p>
             {% if applications|get_value:offer.id %}

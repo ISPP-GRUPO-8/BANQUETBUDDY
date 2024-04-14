@@ -421,16 +421,19 @@ def create_events(num_events):
     services = CateringService.objects.all()
     particulars = Particular.objects.all()
     menus = Menu.objects.all()
+    
     for i in range(num_events):
         menu = choice(menus) if menus else None
+        selected_service = choice(services)
         Event.objects.create(
-            cateringservice=choice(services),
+            cateringservice=selected_service,
+            cateringcompany=selected_service.cateringcompany,  # Asignar la compañía de catering del servicio seleccionado
             particular=choice(particulars),
             menu=menu,
             name=event_names[i % len(event_names)],  # Utiliza el nombre del evento correspondiente
             date=faker.date_between(start_date='today', end_date='+1y'),
             details=events_details[i % len(events_details)],
-            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED','FINALIZED']),
+            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED', 'FINALIZED']),
             number_guests=randint(20, 200)
         )
 

@@ -57,6 +57,7 @@ class CateringService(models.Model):
 
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='events')  # Nueva relación directa
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='particular')
     menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
@@ -66,6 +67,9 @@ class Event(models.Model):
     number_guests = models.IntegerField()
     notified_to_particular = models.BooleanField(default=False)
     notified_to_catering_company = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 class Task(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
