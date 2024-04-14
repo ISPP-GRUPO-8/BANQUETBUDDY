@@ -58,10 +58,6 @@ def home(request):
     caterings = CateringService.objects.all()  
     random_caterings = sample(list(caterings), 4)
     
-    if request.user.is_authenticated:
-        notifications = NotificationEvent.objects.filter(user=request.user).count() + NotificationJobApplication.objects.filter(user=request.user).count()
-        context['notification_number'] = notifications
-    
     context['offers'] = random_offers
     context['caterings'] = random_caterings
     context['is_particular'] = is_particular(request)
