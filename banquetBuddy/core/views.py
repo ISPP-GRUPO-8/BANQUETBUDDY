@@ -66,7 +66,7 @@ def home(request):
     random_caterings = sample(list(caterings), 4)
     
     if request.user.is_authenticated:
-        notifications = NotificationEvent.objects.filter(user=request.user, has_been_read=False).count() + NotificationJobApplication.objects.filter(user=request.user, has_been_read=False).count()
+        notifications = NotificationEvent.objects.filter(user=request.user).count() + NotificationJobApplication.objects.filter(user=request.user).count()
         context['notification_number'] = notifications
     
     context['offers'] = random_offers
@@ -451,15 +451,9 @@ def notification_view(request):
     current_user = request.user
     try:
         employee = Employee.objects.get(user=current_user)
-        notifications = NotificationJobApplication.objects.filter(user=current_user, has_been_read=False)
-        for notification in notifications:
-            notification.has_been_read = True
-            notification.save()
+        notifications = NotificationJobApplication.objects.filter(user=current_user)
     except Employee.DoesNotExist:
-        notifications = NotificationEvent.objects.filter(user=current_user, has_been_read=False)
-        for notification in notifications:
-            notification.has_been_read = True
-            notification.save()
+        notifications = NotificationEvent.objects.filter(user=current_user)
     context = {'notifications' : notifications}
         
     return render(request, 'core/notifications.html', context)
@@ -468,7 +462,6 @@ def notification_view(request):
 
 def send_notifications_next_events_particular(request):
     current_user = request.user
-    NotificationEvent.objects.filter(user=current_user, has_been_read=True).delete()
     week_after = timezone.now() + timedelta(days=7)
     next_events = Event.objects.filter(date__lte=week_after, particular__user=current_user)
     
@@ -482,7 +475,6 @@ def send_notifications_next_events_particular(request):
             
 def send_notifications_next_events_catering_company(request):
     current_user = request.user
-    NotificationEvent.objects.filter(user=current_user, has_been_read=True).delete()
     week_after = timezone.now() + timedelta(days=7)
     catering_company = get_object_or_404(CateringCompany, user=current_user)
     next_events = Event.objects.filter(date__lte=week_after, cateringservice__cateringcompany=catering_company)
@@ -519,6 +511,21 @@ def policy_version1_0(request):
 
 def terms_version1_0(request):
     return render(request, 'core/politicas y terminos anteriores/termsv1.0.html')
+
+#Borrado de notificaciones
+def mark_notifications_as_read(request):
+    current_user = request.user
+    try:
+        employee = Employee.objects.get(user=current_user)
+        notifications = NotificationJobApplication.objects.filter(user=current_user)
+    except Employee.DoesNotExist:
+        notifications = NotificationEvent.objects.filter(user=current_user)
+        
+    for notification in notifications:
+            notification.delete()
+            
+    return redirect('notifications')
+    
 
 
 
