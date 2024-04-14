@@ -171,8 +171,9 @@ class NotificationEvent(models.Model):
     
 class NotificationJobApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='employee_receiver')
-    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application')
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application', null=True, blank=True)
     message = models.TextField()
+    title = models.CharField(max_length=255, null=True, blank=True)
 
 class RecommendationLetter(models.Model): 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
