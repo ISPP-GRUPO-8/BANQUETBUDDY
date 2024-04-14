@@ -524,15 +524,6 @@ def generate_plate_description(plate_name):
     return descriptions.get(plate_name, 'Delicioso plato preparado con ingredientes frescos y de alta calidad.')
 
 
-
-
-
-
-
-
-
-
-
 reviews_data = [
     {"description": "¡Excelente servicio y comida deliciosa! Definitivamente recomendaré este catering a mis amigos y familiares.", "rating": 5},
     {"description": "La presentación de los platos fue impecable, pero algunos sabores podrían mejorar. En general, una experiencia satisfactoria.", "rating": 4},

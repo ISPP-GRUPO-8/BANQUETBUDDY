@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect, get_object_or_404
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm
+from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService

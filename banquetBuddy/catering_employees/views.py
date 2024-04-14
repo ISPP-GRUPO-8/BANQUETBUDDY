@@ -105,7 +105,7 @@ def application_to_offer(request, offer_id):
 
     offer = get_object_or_404(Offer, id=offer_id)
     
-    if JobApplication.objects.filter(employee=employee, offer=offer) or EmployeeWorkService.objects.filter(employee=employee, offer=offer):
+    if JobApplication.objects.filter(employee=employee, offer=offer) or EmployeeWorkService.objects.filter(employee=employee, cateringservice=offer.cateringservice):
         return render(request, 'error_employee_already_applied.html')
     elif not employee.curriculum:
         return render(request, 'error_employee_curriculum.html')
