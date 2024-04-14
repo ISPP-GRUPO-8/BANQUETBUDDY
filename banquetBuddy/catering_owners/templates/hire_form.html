@@ -29,14 +29,7 @@
     <h1>Complete the form to hire the employee  </h1>
     <form method="POST">
         {% csrf_token %}
-        <label for="catering_service">Catering Service:</label>
-        <input type="text" id="catering_service" name="catering_service" value="{{ catering_service }}" readonly><br><br>
-        <label for="employee">Employee:</label>
-        <input type="text" id="employee" name="employee" value="{{ employee.user }}" readonly><br><br>
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date"><br><br>
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date"><br><br>
+        {{ form.as_p }}
         <button type="submit">Save</button>
     </form>
 </body>

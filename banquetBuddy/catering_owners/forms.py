@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
 from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
+from datetime import datetime
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -202,6 +203,20 @@ class EmployeeWorkServiceForm(forms.ModelForm):
         model = EmployeeWorkService
         fields = ['start_date', 'end_date']
         widgets = {
-            'start_date': forms.DateInput(attrs={'class': 'datepicker'}),
-            'end_date': forms.DateInput(attrs={'class': 'datepicker'}),
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        # Comprobar que start_date es antes que end_date
+        if start_date and end_date and start_date > end_date:
+            self.add_error('end_date',"End date should be after start date.")
+
+        # Comprobar que start_date no es una fecha que ya ha pasado
+        if start_date and start_date < datetime.today().date():
+            self.add_error('start_date', "Start date should not be in the past.")
+
+        return cleaned_data

@@ -660,16 +660,16 @@ def create_offers(num_offers):
         )
 
 
-def create_job_applications(num_applications):
-    employees = Employee.objects.all()
-    offers = Offer.objects.all()
-    for _ in range(num_applications):
-        JobApplication.objects.create(
-            employee=choice(employees),
-            offer=choice(offers),
-            date_application=faker.date_between(start_date='-5d', end_date='today'),
-            state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
-        )
+# def create_job_applications(num_applications):
+#     employees = Employee.objects.all()
+#     offers = Offer.objects.all()
+#     for _ in range(num_applications):
+#         JobApplication.objects.create(
+#             employee=choice(employees),
+#             offer=choice(offers),
+#             date_application=faker.date_between(start_date='-5d', end_date='today'),
+#             state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
+#         )
 
 
 
@@ -744,7 +744,7 @@ def populate_database():
     create_reviews(10)
     create_employee_work_services(100)
     create_offers(10)
-    create_job_applications(10)
+    # create_job_applications(10)
     create_recommendation_letters(10)
     create_task_employee()
     create_superusers()
