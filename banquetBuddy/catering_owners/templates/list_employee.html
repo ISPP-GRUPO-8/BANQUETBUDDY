@@ -5,38 +5,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee List</title>
-    <!-- Agregar enlaces a Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>List of Employees</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .already-recommended {
-            color: orange;
-        }
+        .status-active { color: green; }
+        .status-terminated { color: red; }
+        .section-header { margin-top: 20px; font-size: 24px; }
+        .pagination { margin-top: 20px; }
+        .form-inline { margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>List Employee</h1>
-        <ul class="list-group">
-            {% for employee in employees %}
-                <li class="list-group-item">
-                    <h3>{{ employee.user }}</h3>
-                    <p>Email: {{ employee.user.email }}</p>
-                    <p>Name: {{ employee.user.first_name }} {{ employee.user.last_name }}</p>
-                    <p>Profession: {{ employee.profession }} </p>
-                    {% if employee.user.id not in recommendations_dict %}
-                        <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee.user.id %}">
-                            <button type="button" class="btn btn-primary btn-add-recommendation">Add Recommendation Letter</button>
-                        </a>
-                    {% else %}
-                        <p class="already-recommended">Already recommended for this employee</p>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
+        <h1>List of Employees</h1>
+        <form method="get" class="form-inline">
+            <label for="status" class="mr-sm-2">Filter by status:</label>
+            <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
+                <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
+                <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
+            </select>
+        </form>
+        {% for employee_service in page_obj %}
+        <div class="list-group-item">
+            <h3>{{ employee_service.employee.user.get_full_name }}</h3>
+            <p>Username: {{ employee_service.employee.user.username }}</p>
+            <p>Email: {{ employee_service.employee.user.email }}</p>
+            <p>Profession: {{ employee_service.employee.profession }}</p>
+            <p>Event: {{ employee_service.event.name }}</p>
+            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
+            <p class="status-{{ employee_service.current_status|lower }}">{{ employee_service.current_status }}</p>
+            {% if employee_service.employee.user.id not in recommendations_dict %}
+            <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee_service.employee.user.id %}" class="btn btn-primary">Add Recommendation Letter</a>
+            {% else %}
+            <p class="already-recommended">Already recommended for this employee</p>
+            {% endif %}
+            {% if employee_service.current_status == 'Activo' %}
+            <form action="{% url 'dismiss_employee' employee_service.id %}" method="post" onsubmit="return confirm('Are you sure you want to dismiss this employee?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Dismiss</button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <nav aria-label="Employee page navigation">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item disabled"><a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+          </ul>
+        </nav>
     </div>
-    <!-- Agregar enlaces a Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

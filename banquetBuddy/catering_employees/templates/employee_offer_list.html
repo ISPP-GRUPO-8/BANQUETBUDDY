@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 {% extends 'core/base.html' %}
-{% load custom_tags %}
 {% load static %}
+{% load custom_tags %}
 
 {% block content %}
 <style>
@@ -9,19 +8,16 @@
         text-align: center;
         color: #333;
     }
-
     label {
         display: block;
         margin-top: 3%;
     }
-
     input[type="text"], textarea {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;
         border-radius: 5px;
     }
-
     .list {
         margin-right: 8%;
         margin-left: 8%;
@@ -30,11 +26,6 @@
     .offer {
         margin-top: 3%;
     }
-
-    hr {
-        margin-top: 3%;
-    }
-
     .offerTitle {
         font-weight: bold;
     }
@@ -51,39 +42,35 @@
     .button-appearance:hover {
         background-color: #01352e;
     }
-
 </style>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offer List</title>
-</head>
-<body>
-    <h1 style="margin-top: 2%;">Offer List</h1>
-    <div class="list">
-        {% for offer in offers %}
-        <div class="offer">
-            <h2 class="offerTitle">{{ offer.title }}</h2>
-            <h3>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h3>
-            <h4>{{ offer.location }}</h4>
-            <p>{{ offer.description }}</p>
-            {% if applications|get_value:offer.id %}
-                <p style="color: red;">You've already applied for this offer</p>
-            {% elif hirings|get_value:offer.id %}
-                <p style="color: red;">You're already working on this service</p>
-            {% else %}
-                <button class="button-appearance" onclick="applyToOffer({{ offer.id }})">Apply</button>
-            {% endif %}
-        </div>
-        {% endfor %}
+
+<h1 style="margin-top: 2%;">Offer List</h1>
+<div class="list">
+    {% for offer in offers %}
+    <div class="offer">
+        <h2 class="offerTitle">{{ offer.title }}</h2>
+        <h3>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h3>
+        <h4>{{ offer.location }}</h4>
+        <p>{{ offer.description }}</p>
+        {% if applications|get_item:offer.id %}
+            <p style="color: red;">You've already applied for this offer</p>
+        {% elif hirings|get_item:offer.id %}
+            <p style="color: red;">You're already working on this service</p>
+        {% else %}
+            <form id="applyForm{{ offer.id }}" action="/employeeApplication/{{ offer.id }}/" method="post">
+                {% csrf_token %}
+                <button type="button" class="button-appearance" onclick="return confirmApply('{{ offer.id }}', '{{ offer.title }}', '{{ offer.start_date|date:'Y-m-d' }}', '{{ offer.end_date|date:'Y-m-d' }}', '{{ offer.location }}')">Apply</button>
+            </form>
+        {% endif %}
     </div>
-</body>
+    {% endfor %}
+</div>
 
 <script>
-function applyToOffer(offerId) {
-    window.location.href = "/employeeApplication/" + offerId;
+function confirmApply(offerId, offerTitle, startDate, endDate, location) {
+    if(confirm(`Are you sure you want to apply for the offer "${offerTitle}" at "${location}" from ${startDate} to ${endDate}?`)){
+        document.getElementById('applyForm' + offerId).submit();
+    }
 }
 </script>
-</html>
 {% endblock %}

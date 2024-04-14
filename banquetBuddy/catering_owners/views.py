@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
-
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Case, When, Value, CharField
 from core.views import *
 from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
@@ -839,21 +840,36 @@ def delete_plate(request, plate_id):
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
-    user = request.user
-    owner = CateringCompany.objects.get(user_id = user.id)
-    employees_hired = EmployeeWorkService.objects.filter(cateringservice = catering_service)
-
-    employees = []
-    for t in employees_hired:
-        employees.append(t.employee)
+    owner = CateringCompany.objects.get(user_id=request.user.id)
     
+    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
+
+    employees_hired = EmployeeWorkService.objects.filter(
+        cateringservice=catering_service
+    ).annotate(
+        current_status=Case(
+            When(end_date__isnull=True, then=Value('Activo')),
+            When(end_date__lte=timezone.now().date(), then=Value('Terminado')),
+            default=Value('Activo'),
+            output_field=CharField(),
+        )
+    ).filter(current_status=status_filter).order_by('-start_date')
+
+    paginator = Paginator(employees_hired, 10)  # Muestra 10 empleados por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
+    recommendations_dict = {recommendation.employee_id: recommendation for recommendation in recommendations}
 
-    recommendations_dict = {}
-    for recommendation in recommendations:
-        recommendations_dict[recommendation.employee_id] = recommendation
-    
-    return render(request, 'list_employee.html', {'employees': employees, 'service': catering_service, 'recommendations_dict': recommendations_dict})
+    return render(request, 'list_employee.html', {
+        'page_obj': page_obj,
+        'service': catering_service,
+        'recommendations_dict': recommendations_dict,
+        'current_status': status_filter
+    })
+
+
 
 @login_required
 def create_recommendation_letter(request, employee_id, service_id):
@@ -1043,3 +1059,14 @@ def listar_caterings_particular(request):
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
 
+@login_required
+def dismiss_employee(request, employee_work_service_id):
+    employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
+
+    # Asigna la fecha de finalización sin importar el método
+    employee_work_service.end_date = timezone.now().date()
+    employee_work_service.save()
+    messages.success(request, "Employee has been successfully dismissed.")
+
+    service_id = employee_work_service.cateringservice.id  # Obtener el ID del servicio para redirigir correctamente
+    return redirect('list_employee', service_id=service_id)
