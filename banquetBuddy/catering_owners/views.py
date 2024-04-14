@@ -899,6 +899,9 @@ def hire_employee(request, employee_id):
             offer_id = request.POST.get('offer_id')
             offer = get_object_or_404(Offer, id=offer_id)
             catering_service = offer.cateringservice
+            message = f"You've been rejected by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
+            title = f"Rejected by {catering_service.cateringcompany.user.username}"
+            NotificationJobApplication.objects.create(user=employee.user, message=message, title=title)
             JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
 
     return redirect('offer_list')
@@ -915,8 +918,10 @@ def hire_form(request, employee_id, offer_id):
             employee_work_service.employee = employee
             employee_work_service.cateringservice_id = catering_service.id 
             employee_work_service.save()
+            message = f"You've been hired by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
+            title = f"Hired by {catering_service.cateringcompany.user.username}"
+            NotificationJobApplication.objects.create(user=employee.user, message=message, title=title)
             JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
-
             return redirect('offer_list')  
     else:
         form = EmployeeWorkServiceForm()
