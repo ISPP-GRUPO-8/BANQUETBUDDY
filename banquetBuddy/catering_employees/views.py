@@ -7,7 +7,7 @@ from .forms import EmployeeFilterForm, EmployeeForm
 from core.views import *
 
 from core.forms import CustomUserCreationForm
-from catering_owners.models import JobApplication, Employee
+from catering_owners.models import JobApplication, Employee, EmployeeWorkService
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -89,7 +89,8 @@ def employee_offer_list(request):
             offers = Offer.objects.filter(Q(title__icontains=search))
         
     applications = {offer.id: offer.job_applications.filter(employee=employee).exists() for offer in offers}
-    context = {'offers': offers, 'applications': applications, 'search':search}
+    hirings = {offer.id: EmployeeWorkService.objects.filter(employee=employee, cateringservice=offer.cateringservice).exists() for offer in offers}
+    context = {'offers': offers, 'applications': applications, 'search':search, 'hirings': hirings}
     
     return render(request, "employee_offer_list.html", context)
 
@@ -104,7 +105,7 @@ def application_to_offer(request, offer_id):
 
     offer = get_object_or_404(Offer, id=offer_id)
     
-    if JobApplication.objects.filter(employee=employee, offer=offer):
+    if JobApplication.objects.filter(employee=employee, offer=offer) or EmployeeWorkService.objects.filter(employee=employee, cateringservice=offer.cateringservice):
         return render(request, 'error_employee_already_applied.html')
     elif not employee.curriculum:
         return render(request, 'error_employee_curriculum.html')

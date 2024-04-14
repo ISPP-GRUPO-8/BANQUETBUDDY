@@ -69,6 +69,8 @@
             <p>{{ offer.description }}</p>
             {% if applications|get_value:offer.id %}
                 <p style="color: red;">You've already applied for this offer</p>
+            {% elif hirings|get_value:offer.id %}
+                <p style="color: red;">You're already working on this service</p>
             {% else %}
                 <button class="button-appearance" onclick="applyToOffer({{ offer.id }})">Apply</button>
             {% endif %}

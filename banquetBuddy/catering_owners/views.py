@@ -2,10 +2,10 @@ from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect, get_object_or_404
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm
+from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
-from .models import  Offer, CateringService,Event
+from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
 from urllib.parse import urlencode
 from django.core.paginator import Paginator
 from django.urls import reverse
@@ -790,13 +790,6 @@ def delete_plate(request, plate_id):
     else:
         return redirect("list_plates")
 
-
-
-
-
-
-
- 
     
 @login_required
 def add_plate(request):
@@ -846,11 +839,11 @@ def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     user = request.user
     owner = CateringCompany.objects.get(user_id = user.id)
-    tasks = Task.objects.filter(cateringservice = catering_service)
+    employees_hired = EmployeeWorkService.objects.filter(cateringservice = catering_service)
 
     employees = []
-    for t in tasks:
-        employees.extend(t.employees.all())
+    for t in employees_hired:
+        employees.append(t.employee)
     
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
 
@@ -885,6 +878,51 @@ def create_recommendation_letter(request, employee_id, service_id):
         return HttpResponseForbidden("You don't have permission to do this.")
 
     return render(request, "recommendation_letter.html", context)
+
+
+def employee_record_list(request, employee_id):
+    employee = get_object_or_404(Employee, user_id=employee_id)
+    services_worked = EmployeeWorkService.objects.filter(employee=employee)
+    return render(request, 'employee_record.html', {'employee': employee, 'services_worked': services_worked})
+
+def hire_employee(request, employee_id):
+    if request.method == "POST":
+        action = request.POST.get('action')
+        if action == "hire":
+            offer_id = request.POST.get('offer_id')  # Obtener offer_id de la solicitud POST
+            return redirect('hire_form', employee_id=employee_id, offer_id=offer_id)
+        
+
+        elif action == "reject":
+            # Eliminar la JobApplication asociada al empleado y oferta
+            employee = get_object_or_404(Employee, user_id=employee_id)
+            offer_id = request.POST.get('offer_id')
+            offer = get_object_or_404(Offer, id=offer_id)
+            catering_service = offer.cateringservice
+            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
+
+    return redirect('offer_list')
+
+def hire_form(request, employee_id, offer_id):
+    employee = get_object_or_404(Employee, pk=employee_id)
+    offer = get_object_or_404(Offer, pk=offer_id)
+    catering_service = offer.cateringservice
+    
+    if request.method == "POST":
+        form = EmployeeWorkServiceForm(request.POST)
+        if form.is_valid():
+            employee_work_service = form.save(commit=False)
+            employee_work_service.employee = employee
+            employee_work_service.cateringservice_id = catering_service.id 
+            employee_work_service.save()
+            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
+
+            return redirect('offer_list')  
+    else:
+        form = EmployeeWorkServiceForm()
+    
+    return render(request, 'hire_form.html', {'form': form, 'employee': employee, 'catering_service': catering_service})
+
 
 def chat_view(request, id):
     context = {}
@@ -953,3 +991,4 @@ def listar_caterings_particular(request):
     messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
+

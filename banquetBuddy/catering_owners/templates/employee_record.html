@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catering Services for Employee</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .already-recommended {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Catering Services where {{ employee.user.username }} previously worked </h1>
+        <ul class="list-group">
+            {% for service in services_worked %}
+                <li class="list-group-item">
+                    <h3>{{ service.cateringservice.name }}</h3>
+                    <p>Description: {{ service.cateringservice.description }}</p>
+                    <p>Location: {{ service.cateringservice.location }}</p>
+                    <p>Start date: {{ service.start_date }} </p>
+                    <p>End date: {{ service.end_date }} </p>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No catering services found for this employee.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}
+
