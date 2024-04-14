@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from core.views import home
-from django.urls import path, include
+from django.urls import path
 from .views import *
 
 urlpatterns = [

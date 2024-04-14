@@ -2,7 +2,7 @@ from asyncio import Task
 import os
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.test import RequestFactory, TestCase, Client
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from .models import Employee
@@ -12,9 +12,6 @@ from catering_owners.models import *
 from .views import *
 from django.urls import reverse
 from datetime import datetime, timedelta, date
-from django.core.files.base import ContentFile
-from django.db.models.signals import post_save
-from .signals import notify_employee_on_state_change
 from django.core.files import File
 
 # Create your tests here.

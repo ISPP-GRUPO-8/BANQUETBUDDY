@@ -1,6 +1,6 @@
 from decimal import Decimal
 import os
-from django.test import Client, TestCase, RequestFactory
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from catering_particular.models import Particular
@@ -15,10 +15,7 @@ from core.models import CustomUser, BookingState
 from phonenumbers import parse
 from datetime import datetime, timedelta
 from django.core.files import File
-from django.http import HttpRequest
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 
 class CateringBookTestCase(TestCase):

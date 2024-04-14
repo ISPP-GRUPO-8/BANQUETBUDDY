@@ -9,7 +9,6 @@ from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
 from urllib.parse import urlencode
 from django.core.paginator import Paginator
 from django.urls import reverse
-from django.db.models import F
 import stripe
 from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY

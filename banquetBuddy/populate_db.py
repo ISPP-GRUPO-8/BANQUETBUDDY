@@ -8,7 +8,7 @@ from django.utils import timezone
 from faker.providers import person, address
 import random
 from django.conf import settings
-from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
+from catering_employees.models import CustomUser, Employee, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
 from django.contrib.auth import get_user_model
