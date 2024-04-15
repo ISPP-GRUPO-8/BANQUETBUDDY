@@ -353,6 +353,7 @@ class NotificationViewTest(TestCase):
         )
         self.event = Event.objects.create(
             cateringservice = self.catering_service,
+            cateringcompany = self.company,
             particular = self.particular,
             menu = self.menu,
             name = "Test Event",

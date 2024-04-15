@@ -421,16 +421,19 @@ def create_events(num_events):
     services = CateringService.objects.all()
     particulars = Particular.objects.all()
     menus = Menu.objects.all()
+    
     for i in range(num_events):
         menu = choice(menus) if menus else None
+        selected_service = choice(services)
         Event.objects.create(
-            cateringservice=choice(services),
+            cateringservice=selected_service,
+            cateringcompany=selected_service.cateringcompany,  # Asignar la compañía de catering del servicio seleccionado
             particular=choice(particulars),
             menu=menu,
             name=event_names[i % len(event_names)],  # Utiliza el nombre del evento correspondiente
             date=faker.date_between(start_date='today', end_date='+1y'),
             details=events_details[i % len(events_details)],
-            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED','FINALIZED']),
+            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED', 'FINALIZED']),
             number_guests=randint(20, 200)
         )
 
@@ -554,13 +557,15 @@ def create_reviews(num_reviews):
 def create_employee_work_services(num_relations):
     employees = Employee.objects.all()
     services = CateringService.objects.all()
+    events = Event.objects.all()
+
+    if not employees or not services or not events:
+        return
 
     for _ in range(num_relations):
-        if not employees or not services:
-            break
-
-        employee = random.choice(employees)
-        service = random.choice(services)
+        employee = choice(employees)
+        service = choice(services)
+        event = choice(events)  # Seleccionar un evento al azar
 
         # Generar fechas de inicio y fin de manera aleatoria
         start_date = timezone.now().date() - timedelta(days=random.randint(0, 30))
@@ -570,6 +575,7 @@ def create_employee_work_services(num_relations):
         overlapping_assignments = EmployeeWorkService.objects.filter(
             employee=employee,
             cateringservice=service,
+            event=event,  # Asegúrate de incluir el evento en la consulta
             end_date__gte=start_date,
             start_date__lte=end_date
         )
@@ -579,9 +585,11 @@ def create_employee_work_services(num_relations):
             EmployeeWorkService.objects.create(
                 employee=employee,
                 cateringservice=service,
+                event=event,  # Asignar el evento
                 start_date=start_date,
                 end_date=end_date
             )
+
 
 
 
@@ -650,13 +658,28 @@ offers = [
 
 def create_offers(num_offers):
     services = CateringService.objects.all()
-    for _ in range(num_offers):
+    events = Event.objects.filter(booking_state='CONFIRMED')  # Asegúrate de elegir solo eventos confirmados si es necesario
+
+    for i in range(num_offers):
+        if not services or not events:
+            break
+
+        service = choice(services)
+        event = choice(events)  # Elegir un evento al azar
+
+        # Generar fechas de inicio y fin de manera aleatoria
+        start_date = timezone.now().date() + timedelta(days=random.randint(1, 30))  # Fecha de inicio en el futuro
+        end_date = start_date + timedelta(days=random.randint(30, 180))  # Fecha de fin después de la fecha de inicio
+
         Offer.objects.create(
-            cateringservice=choice(services),
-            title=offers[_]['title'],
-            description=offers[_]['description'],
-            requirements=offers[_]['requirements'],
-            location=offers[_]['location']
+            cateringservice=service,
+            event=event,  # Asignar el evento seleccionado
+            title=offers[i]['title'],
+            description=offers[i]['description'],
+            requirements=offers[i]['requirements'],
+            location=offers[i]['location'],
+            start_date=start_date,
+            end_date=end_date
         )
 
 

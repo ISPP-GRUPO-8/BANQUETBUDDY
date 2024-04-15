@@ -57,6 +57,7 @@ class CateringService(models.Model):
 
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='events')  # Nueva relación directa
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='particular')
     menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
@@ -66,6 +67,9 @@ class Event(models.Model):
     number_guests = models.IntegerField()
     notified_to_particular = models.BooleanField(default=False)
     notified_to_catering_company = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 class Task(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
@@ -122,23 +126,20 @@ class Review(models.Model):
 class EmployeeWorkService(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_work_services')
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='employee_work_services')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='employee_work_services')  # Nueva relación con Event
 
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
 
     class Meta:
         constraints = [
-            # Restricción de comprobación para asegurarse de que start_date es siempre anterior a end_date
-            CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
-
-            # Restricción de unicidad para evitar que el mismo empleado sea asignado al mismo servicio en fechas superpuestas
+            models.CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
             models.UniqueConstraint(
-                fields=['employee', 'cateringservice'],
-                name='unique_employee_service',
+                fields=['employee', 'cateringservice', 'event'],  # Incluir 'event' en la restricción de unicidad
+                name='unique_employee_service_event',
                 condition=models.Q(end_date__isnull=True) | models.Q(end_date__gte=models.F('start_date'))
             )
         ]
-
 
     def current_status(self):
         today = timezone.now().date()
@@ -147,16 +148,21 @@ class EmployeeWorkService(models.Model):
         elif today >= self.start_date:
             return 'Activo'
 
-
     def __str__(self):
-        return f"{self.employee} en {self.cateringservice} ({self.current_status()})"
+        return f"{self.employee} en {self.cateringservice} para el evento {self.event.name}"
 
 class Offer(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='offers')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='offers')  # Nueva relación con Event
     title = models.CharField(max_length=255)
     description = models.TextField()
     requirements = models.TextField()
     location = models.CharField(max_length=255)
+    start_date = models.DateField()  # Fecha de inicio de la oferta
+    end_date = models.DateField(null=True, blank=True)  # Fecha de fin opcional
+
+    def __str__(self):
+        return f"Oferta para {self.title} en {self.cateringservice.name} para el evento {self.event.name}"
 
 class JobApplication(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='job_applications')
