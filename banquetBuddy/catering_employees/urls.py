@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from django.urls import path, include
+from django.urls import path
 from core.views import *
 from catering_employees import views
 

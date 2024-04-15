@@ -1,17 +1,12 @@
-from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect
 from banquetBuddy import settings
 from catering_employees.models import Employee
 from catering_particular.models import Particular
 
 from catering_owners.models import CateringCompany
-from .forms import EmailAuthenticationForm, CustomUserCreationForm
+from .forms import EmailAuthenticationForm
 
-from catering_particular.forms import ParticularForm
-from catering_employees.forms import EmployeeForm
-from catering_owners.forms import CateringCompanyForm
 
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
@@ -25,13 +20,11 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth import update_session_auth_hash
 
-from django.db.models import Q
 from random import sample
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import timedelta
 from catering_owners.models import NotificationEvent, NotificationJobApplication
 from catering_owners.models import Event
 
@@ -64,10 +57,6 @@ def home(request):
 
     caterings = CateringService.objects.all()  
     random_caterings = sample(list(caterings), 4)
-    
-    if request.user.is_authenticated:
-        notifications = NotificationEvent.objects.filter(user=request.user).count() + NotificationJobApplication.objects.filter(user=request.user).count()
-        context['notification_number'] = notifications
     
     context['offers'] = random_offers
     context['caterings'] = random_caterings

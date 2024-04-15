@@ -1,8 +1,6 @@
-from django.urls import path, include
-from . import views
+from django.urls import path
 from core.views import *
 from .views import *
-from . import views
 from catering_particular.views import *
 
 urlpatterns = [

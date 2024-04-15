@@ -1,6 +1,5 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
 from catering_owners.models import JobApplication, NotificationJobApplication
 
 @receiver(post_save, sender=JobApplication)

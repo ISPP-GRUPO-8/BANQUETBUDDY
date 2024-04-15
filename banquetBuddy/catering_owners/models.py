@@ -1,6 +1,5 @@
 from datetime import timezone
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from catering_particular.models import Particular
 from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType
 from catering_employees.models import Employee

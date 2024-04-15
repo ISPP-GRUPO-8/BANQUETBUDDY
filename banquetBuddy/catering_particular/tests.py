@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from core.models import CustomUser, BookingState
-from datetime import datetime, timedelta
+from core.models import CustomUser
+from datetime import datetime
 from core.models import CustomUser
 from catering_owners.models import *
 from .views import *

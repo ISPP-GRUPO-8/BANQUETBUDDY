@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from core.models import BookingState
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,7 +6,6 @@ from django.urls import reverse
 from core.forms import CustomUserCreationForm
 from catering_owners.models import *
 from .forms import ParticularForm
-import re
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.contrib.auth.decorators import login_required
