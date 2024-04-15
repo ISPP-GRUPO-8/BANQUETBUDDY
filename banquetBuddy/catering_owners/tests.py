@@ -72,6 +72,7 @@ class CateringBookTestCase(TestCase):
         self.event = Event.objects.create(
             cateringservice = self.catering_service,
             particular = self.particular,
+            cateringcompany = self.company,
             menu = self.menu,
             name = "Test Event",
             date = datetime.now().date(),
@@ -259,8 +260,10 @@ class ViewTests(TestCase):
     def setUp(self) -> None:
         
         self.user = CustomUser.objects.create_user(username='testuser', password='testpassword', email='testuser@gmail.com')
+        self.user_particular = CustomUser.objects.create_user(username='testuser2', password='testpassword', email='testuser2@gmail.com')
         phone_number = parse("+15551234567", "US")
         self.catering_company = CateringCompany.objects.create(user=self.user, name='Prueba', phone_number=str(phone_number), service_description='Prueba', price_plan='PREMIUM_PRO')
+        self.particular = Particular.objects.create(user=self.user_particular)
         self.catering_service = CateringService.objects.create(
             cateringcompany=self.catering_company,
             name="Brunch para la oficina",
@@ -269,7 +272,25 @@ class ViewTests(TestCase):
             capacity=50,
             price=Decimal("129.99"),
         )
-        self.offer = Offer.objects.create(title="Oferta de prueba", description="Descripción de prueba", requirements="Requisitos de prueba", location="Ubicación de prueba",cateringservice= self.catering_service)
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            cateringcompany = self.catering_company,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        self.offer = Offer.objects.create(title="Oferta de prueba", event=self.event, description="Descripción de prueba", requirements="Requisitos de prueba", location="Ubicación de prueba",cateringservice= self.catering_service, start_date = datetime.now().date(), end_date=datetime.now().date() + timedelta(days=1))
         self.employee = Employee.objects.create(user=CustomUser.objects.create(username="usuario_prueba", email= 'estoesunaprueba@gmail.com'), phone_number="1234567890", profession="Chef", experience="5 years", skills="Culinary skills", english_level="C2", location="Ubicación de prueba")
         
         curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
@@ -366,6 +387,7 @@ class CateringViewsTest(TestCase):
         self.event = Event.objects.create(
             cateringservice=self.catering_service,
             particular=self.particular,
+            cateringcompany = self.catering_company,
             menu=self.menu,
             name='Test Event',
             date=self.event_date,
@@ -487,6 +509,7 @@ class RecommendationLetterTest(TestCase):
         self.event = Event.objects.create(
             cateringservice = self.catering_service,
             particular = self.particular,
+            cateringcompany = self.company,
             menu = self.menu,
             name = "Test Event",
             date = datetime.now().date(),
