@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from core.models import EnglishLevel
 from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
 from datetime import datetime
+from django.utils import timezone
 
 
 class CateringCompanyForm(forms.ModelForm):
@@ -225,6 +226,7 @@ class EmployeeWorkServiceForm(forms.ModelForm):
         return cleaned_data
 
 class TerminationForm(forms.ModelForm):
+
     class Meta:
         model = EmployeeWorkService
         fields = ['end_date', 'termination_reason', 'termination_details']
@@ -233,3 +235,17 @@ class TerminationForm(forms.ModelForm):
             'termination_reason': forms.Select(),
             'termination_details': forms.Textarea(attrs={'rows': 3}),
         }
+        
+    def clean_end_date(self):
+        end_date = self.cleaned_data['end_date']
+        if end_date and end_date < timezone.localdate():
+            raise ValidationError("End date cannot be in the past.")
+        return end_date
+
+    def clean_termination_reason(self):
+        termination_reason = self.cleaned_data['termination_reason']
+        if not termination_reason:
+            raise ValidationError("This field is required.")
+        return termination_reason
+
+

@@ -878,9 +878,17 @@ def edit_employee_termination(request, employee_work_service_id):
 
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Employee termination details updated successfully.')
-            return redirect('list_employee', service_id=employee_service.cateringservice.id)
+            # Aquí podrías agregar una comprobación adicional, aunque no es necesaria
+            termination_reason = form.cleaned_data.get('termination_reason')
+            if not termination_reason:
+                form.add_error('termination_reason', 'This field is required.')
+            else:
+                form.save()
+                messages.success(request, 'Employee termination details updated successfully.')
+                return redirect('list_employee', service_id=employee_service.cateringservice.id)
+        else:
+            # Aquí se manejarán automáticamente los errores de formulario
+            messages.error(request, 'Please correct the errors below.')
 
     return render(request, 'edit_employee.html', {
         'employee_service': employee_service,
