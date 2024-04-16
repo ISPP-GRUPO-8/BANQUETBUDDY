@@ -34,7 +34,10 @@
             <p>Event: {{ employee_service.event.name }}</p>
             <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default_if_none:"Current" }}</p>
             <p class="status-{{ employee_service.current_status|lower }}">{{ employee_service.current_status }}</p>
-            {% if employee_service.current_status == 'Terminado' %}
+            {% if employee_service.current_status == 'Activo' %}
+            <a href="{% url 'edit_employee_termination' employee_service.id %}" class="btn btn-warning">Modify</a>
+            {% endif %}
+                    {% if employee_service.current_status == 'Terminado' %}
                 <p>Termination Reason: {{ employee_service.termination_reason }}</p>
                 {% if employee_service.termination_details %}
                     <p>Termination Details: {{ employee_service.termination_details }}</p>

@@ -843,7 +843,8 @@ def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     owner = CateringCompany.objects.get(user_id=request.user.id)
     
-    status_filter = request.GET.get('status', 'Activo')
+    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
+
     employees_hired = EmployeeWorkService.objects.filter(
         cateringservice=catering_service
     ).annotate(
@@ -855,18 +856,7 @@ def list_employee(request, service_id):
         )
     ).filter(current_status=status_filter).order_by('-start_date')
 
-    # Preparar formularios para empleados activos
-    termination_forms = {employee.id: TerminationForm(prefix=str(employee.id), instance=employee) for employee in employees_hired if employee.current_status == 'Activo'}
-
-    if request.method == 'POST':
-        employee_id = int(request.POST.get('form_id'))
-        form = TerminationForm(request.POST, prefix=str(employee_id), instance=EmployeeWorkService.objects.get(id=employee_id))
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Employee termination updated successfully.")
-            return redirect('list_employee', service_id=service_id)
-
-    paginator = Paginator(employees_hired, 10)
+    paginator = Paginator(employees_hired, 5)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -877,9 +867,26 @@ def list_employee(request, service_id):
         'page_obj': page_obj,
         'service': catering_service,
         'recommendations_dict': recommendations_dict,
-        'current_status': status_filter,
-        'termination_forms': termination_forms
+        'current_status': status_filter
     })
+
+
+@login_required
+def edit_employee_termination(request, employee_work_service_id):
+    employee_service = get_object_or_404(EmployeeWorkService, id=employee_work_service_id)
+    form = TerminationForm(request.POST or None, instance=employee_service)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Employee termination details updated successfully.')
+            return redirect('list_employee', service_id=employee_service.cateringservice.id)
+
+    return render(request, 'edit_employee.html', {
+        'employee_service': employee_service,
+        'form': form
+    })
+
 
 
 
@@ -1070,18 +1077,3 @@ def listar_caterings_particular(request):
     messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
-
-@login_required
-def update_termination_details(request, employee_work_service_id):
-    employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
-    
-    if request.method == 'POST':
-        form = TerminationForm(request.POST, instance=employee_work_service)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Termination details updated successfully.")
-            return redirect('list_employee', service_id=employee_work_service.cateringservice.id)
-    else:
-        form = TerminationForm(instance=employee_work_service)
-    
-    return render(request, 'update_termination.html', {'form': form, 'employee_work_service': employee_work_service})
