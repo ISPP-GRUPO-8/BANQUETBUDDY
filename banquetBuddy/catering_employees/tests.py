@@ -2,7 +2,7 @@ from asyncio import Task
 import os
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.test import RequestFactory, TestCase, Client
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from .models import Employee
@@ -12,13 +12,46 @@ from catering_owners.models import *
 from .views import *
 from django.urls import reverse
 from datetime import datetime, timedelta, date
-from django.core.files.base import ContentFile
-from django.db.models.signals import post_save
-from .signals import notify_employee_on_state_change
 from django.core.files import File
 
 # Create your tests here.
 class EmployeeTestCases(TestCase):
+    
+    def create_event(self):
+        
+        self.menu = Menu.objects.create(
+            id = 1,
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        self.catering_service.menus.add(self.menu)
+
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            cateringcompany = self.catering_company,
+            particular = self.particular1,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
+        expiration_date = datetime.now().date() + timedelta(days=1)
+        self.task = Task.objects.create(
+            event=self.event,
+            cateringservice=self.catering_service,
+            cateringcompany=self.catering_company,
+            description='Test Task Description',
+            assignment_date=datetime.now().date(),
+            assignment_state='COMPLETED',
+            expiration_date=expiration_date,
+            priority='HIGH'
+        )
+        self.task.employees.add(self.employee)
+        
     def setUp(self):
         self.factory = RequestFactory()
         self.user_employee1 = CustomUser.objects.create_user(
@@ -74,12 +107,18 @@ class EmployeeTestCases(TestCase):
             capacity=100, price=100.00
             )
         
+        self.create_particular()
+        self.create_event()
+        
         self.offer = Offer.objects.create(
             cateringservice=self.catering_service ,
+            event = self.event,
             title='Test Offer',
             description='Test Description',
             requirements='Test Requirements',
-            location='Test Location'
+            location='Test Location',
+            start_date = datetime.now().date(),
+            end_date=datetime.now().date() + timedelta(days=1),
             )
         
         curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
@@ -111,41 +150,6 @@ class EmployeeTestCases(TestCase):
             offer=self.offer,
             state='PENDING'
             )
-        
-    def create_event(self):
-        
-        self.menu = Menu.objects.create(
-            id = 1,
-            cateringservice=self.catering_service,
-            name='Test Menu',
-            description='Test menu description',
-            diet_restrictions='Test diet restrictions'
-        )
-        self.catering_service.menus.add(self.menu)
-
-        self.event = Event.objects.create(
-            cateringservice = self.catering_service,
-            particular = self.particular,
-            menu = self.menu,
-            name = "Test Event",
-            date = datetime.now().date(),
-            details = "Test details",
-            booking_state = BookingState.CONTRACT_PENDING,
-            number_guests = 23
-        )
-        expiration_date = datetime.now().date() + timedelta(days=1)
-        self.task = Task.objects.create(
-            event=self.event,
-            cateringservice=self.catering_service,
-            cateringcompany=self.catering_company,
-            description='Test Task Description',
-            assignment_date=datetime.now().date(),
-            assignment_state='COMPLETED',
-            expiration_date=expiration_date,
-            priority='HIGH'
-        )
-        self.task.employees.add(self.employee)
-        
         
     def create_recommendation_letter(self):
         self.recommendation = RecommendationLetter.objects.create(

@@ -2,7 +2,6 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .views import notification_view
-from catering_employees.models import Employee
 from .models import CustomUser, BookingState
 from catering_owners.models import CateringCompany, CateringService, NotificationEvent, Event, Menu
 from catering_particular.models import Particular
@@ -353,6 +352,7 @@ class NotificationViewTest(TestCase):
         )
         self.event = Event.objects.create(
             cateringservice = self.catering_service,
+            cateringcompany = self.company,
             particular = self.particular,
             menu = self.menu,
             name = "Test Event",

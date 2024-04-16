@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
-
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Case, When, Value, CharField
 from core.views import *
 from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
@@ -9,7 +10,6 @@ from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
 from urllib.parse import urlencode
 from django.core.paginator import Paginator
 from django.urls import reverse
-from django.db.models import F
 import stripe
 from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -618,22 +618,24 @@ def create_offer(request):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     
     catering_company = request.user.CateringCompanyusername
-    catering_services = CateringService.objects.filter(cateringcompany=catering_company)
-    if is_catering_company_premium_pro(request) is True:
-        if request.method == 'POST':
-            form = OfferForm(request.POST)
-            if form.is_valid():
-                offer = form.save(commit=False)
-                offer.cateringservice = CateringService.objects.get(pk=request.POST['catering_service'])  # Obtener el CateringService seleccionado en el formulario
-                offer.save()
-                return redirect('offer_list')
+    events = Event.objects.filter(cateringcompany=catering_company)
+
+    if request.method == 'POST':
+        form = OfferForm(request.POST)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            offer.cateringservice = offer.event.cateringservice  # Asigna el servicio de catering del evento
+            offer.save()
+            return redirect('offer_list')
         else:
-            messages.error(request, "Cant access this functionality with your current plan.Perhaps you want to check a better plan?")
             form = OfferForm()
     else:
-        return redirect('subscription_plans')
-    
-    return render(request, 'offers/create_offer.html', {'form': form, 'catering_services': catering_services})
+        form = OfferForm()
+
+    return render(request, 'offers/create_offer.html', {
+        'form': form,
+        'events': events
+    })
 
 @login_required
 def edit_offer(request, offer_id): 
@@ -653,6 +655,10 @@ def edit_offer(request, offer_id):
     else:
         return redirect("offer_list")
 
+    return render(request, 'offers/edit_offer.html', {
+        'form': form,
+        'offer': offer
+    })
     
 @login_required
 def delete_offer(request, offer_id):
@@ -916,12 +922,16 @@ def list_employee(request, service_id):
         employees.append(t.employee)
     
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
+    recommendations_dict = {recommendation.employee_id: recommendation for recommendation in recommendations}
 
-    recommendations_dict = {}
-    for recommendation in recommendations:
-        recommendations_dict[recommendation.employee_id] = recommendation
-    
-    return render(request, 'list_employee.html', {'employees': employees, 'service': catering_service, 'recommendations_dict': recommendations_dict})
+    return render(request, 'list_employee.html', {
+        'page_obj': page_obj,
+        'service': catering_service,
+        'recommendations_dict': recommendations_dict,
+        'current_status': status_filter
+    })
+
+
 
 @login_required
 def create_recommendation_letter(request, employee_id, service_id):
@@ -959,55 +969,95 @@ def employee_record_list(request, employee_id):
     services_worked = EmployeeWorkService.objects.filter(employee=employee)
     return render(request, 'employee_record.html', {'employee': employee, 'services_worked': services_worked})
 
+
+@login_required
 def hire_employee(request, employee_id):
     user = request.user
     if not is_user_catering_company(user):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     if request.method == "POST":
         action = request.POST.get('action')
-        if action == "hire":
-            offer_id = request.POST.get('offer_id')  # Obtener offer_id de la solicitud POST
-            offer = get_object_or_404(Offer, id=offer_id)
-            if offer.cateringservice.cateringcompany.user != user:
-                return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
-            return redirect('hire_form', employee_id=employee_id, offer_id=offer_id)
-        
-        elif action == "reject":
-            # Eliminar la JobApplication asociada al empleado y oferta
-            employee = get_object_or_404(Employee, user_id=employee_id)
-            offer_id = request.POST.get('offer_id')
-            offer = get_object_or_404(Offer, id=offer_id)
-            if offer.cateringservice.cateringcompany.user != user:
-                return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
-            catering_service = offer.cateringservice
-            message = f"You've been rejected by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
-            title = f"Rejected by {catering_service.cateringcompany.user.username}"
-            NotificationJobApplication.objects.create(user=employee.user, message=message, title=title)
-            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
+        offer_id = request.POST.get('offer_id')
+        offer = get_object_or_404(Offer, pk=offer_id)
+        employee = get_object_or_404(Employee, pk=employee_id)
 
+        if action == "hire":
+            # Crear EmployeeWorkService directamente
+            EmployeeWorkService.objects.create(
+                employee=employee,
+                cateringservice=offer.cateringservice,
+                event=offer.event,
+                start_date=offer.start_date,
+                end_date=offer.end_date
+            )
+            
+            # Crear notificación de contratación
+            message = f"You have been hired by {offer.cateringservice.cateringcompany.user.username} for the offer '{offer.title}', from {offer.start_date} to {offer.end_date}."
+            NotificationJobApplication.objects.create(
+                user=employee.user,
+                job_application=None,
+                message=message,
+                title=f"Hired for {offer.title}"
+            )
+            
+            # Eliminar la aplicación de trabajo si existe
+            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+
+            messages.success(request, f"{employee.user.username} was successfully hired.")
+            return redirect('applicants', offer_id=offer_id)  # Redirecciona a la lista de aplicantes de la oferta
+
+        elif action == "reject":
+            # Notificar rechazo
+            message = f"You have been rejected by {offer.cateringservice.cateringcompany.user.username} for the offer '{offer.title}'."
+            NotificationJobApplication.objects.create(
+                user=employee.user,
+                job_application=None,
+                message=message,
+                title=f"Rejected for {offer.title}"
+            )
+
+            # Eliminar la aplicación de trabajo si existe
+            JobApplication.objects.filter(employee=employee, offer=offer).delete()
+
+            messages.error(request, f"{employee.user.username} was rejected.")
+            return redirect('applicants', offer_id=offer_id)  # Redirecciona a la lista de aplicantes de la oferta
+
+    # Redirecciona a la lista general de ofertas si no hay acción POST
     return redirect('offer_list')
 
 def hire_form(request, employee_id, offer_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     offer = get_object_or_404(Offer, pk=offer_id)
     catering_service = offer.cateringservice
-    
+    event = offer.event
+
     if request.method == "POST":
         form = EmployeeWorkServiceForm(request.POST)
         if form.is_valid():
             employee_work_service = form.save(commit=False)
             employee_work_service.employee = employee
-            employee_work_service.cateringservice_id = catering_service.id 
+            employee_work_service.cateringservice = catering_service
+            employee_work_service.event = event  # Asignar el evento desde la oferta
+            employee_work_service.start_date = offer.start_date  # Usar fechas de la oferta
+            employee_work_service.end_date = offer.end_date
             employee_work_service.save()
+            # Notificación de contratación
             message = f"You've been hired by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
             title = f"Hired by {catering_service.cateringcompany.user.username}"
             NotificationJobApplication.objects.create(user=employee.user, message=message, title=title)
+            # Eliminar solicitudes de empleo pendientes
             JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
             return redirect('offer_list')  
     else:
         form = EmployeeWorkServiceForm()
-    
-    return render(request, 'hire_form.html', {'form': form, 'employee': employee, 'catering_service': catering_service})
+
+    return render(request, 'hire_form.html', {
+        'form': form,
+        'employee': employee,
+        'catering_service': catering_service,
+        'event': event,  # Pasar el evento para mostrar información relevante
+        'offer': offer  # Pasar la oferta para mostrar fechas
+    })
 
 
 def chat_view(request, id):
@@ -1078,3 +1128,14 @@ def listar_caterings_particular(request):
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
 
+@login_required
+def dismiss_employee(request, employee_work_service_id):
+    employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
+
+    # Asigna la fecha de finalización sin importar el método
+    employee_work_service.end_date = timezone.now().date()
+    employee_work_service.save()
+    messages.success(request, "Employee has been successfully dismissed.")
+
+    service_id = employee_work_service.cateringservice.id  # Obtener el ID del servicio para redirigir correctamente
+    return redirect('list_employee', service_id=service_id)

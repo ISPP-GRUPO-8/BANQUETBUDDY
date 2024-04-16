@@ -79,10 +79,13 @@ class MenuForm(forms.ModelForm):
         }
 
 
-class OfferForm(forms.ModelForm):
+from django.forms import ModelForm
+from .models import Offer
+
+class OfferForm(ModelForm):
     class Meta:
         model = Offer
-        fields = ["title", "description", "requirements", "location"]
+        fields = ['title', 'description', 'requirements', 'location', 'start_date', 'end_date', 'event']
 
 
 class EmployeeFilterForm(forms.Form):
