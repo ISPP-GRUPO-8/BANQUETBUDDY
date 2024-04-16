@@ -6,7 +6,7 @@ from core.models import EnglishLevel
 from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
 from datetime import datetime
 from django.utils import timezone
-
+from django.forms import ModelForm
 
 class CateringCompanyForm(forms.ModelForm):
 
@@ -80,8 +80,6 @@ class MenuForm(forms.ModelForm):
         }
 
 
-from django.forms import ModelForm
-from .models import Offer
 
 class OfferForm(ModelForm):
     class Meta:
@@ -240,6 +238,8 @@ class TerminationForm(forms.ModelForm):
         end_date = self.cleaned_data['end_date']
         if end_date and end_date < timezone.localdate():
             raise ValidationError("End date cannot be in the past.")
+        if not end_date:
+            raise ValidationError("This field is required.")
         return end_date
 
     def clean_termination_reason(self):
@@ -247,5 +247,6 @@ class TerminationForm(forms.ModelForm):
         if not termination_reason:
             raise ValidationError("This field is required.")
         return termination_reason
+        
 
 

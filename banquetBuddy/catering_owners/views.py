@@ -14,6 +14,7 @@ import stripe
 from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
+from django.core.exceptions import ValidationError
 
 from core.views import is_catering_company
 from .forms import (
@@ -576,16 +577,15 @@ def offer_list(request):
 def create_offer(request):
     catering_company = request.user.CateringCompanyusername
     events = Event.objects.filter(cateringcompany=catering_company)
-
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
             offer = form.save(commit=False)
-            offer.cateringservice = offer.event.cateringservice  # Asigna el servicio de catering del evento
+            offer.cateringservice = offer.event.cateringservice
             offer.save()
+            messages.success(request, "Offer created successfully!")
             return redirect('offer_list')
-        else:
-            form = OfferForm()
+        
     else:
         form = OfferForm()
 
@@ -594,24 +594,34 @@ def create_offer(request):
         'events': events
     })
 
+
 @login_required
 def edit_offer(request, offer_id):
     offer = get_object_or_404(Offer, pk=offer_id)
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == 'POST':
-            form = OfferForm(request.POST, instance=offer)
-            if form.is_valid():
-                offer.save()
-                return redirect('offer_list')
-        else:
-            form = OfferForm(instance=offer)
-    else:
+    if request.user != offer.cateringservice.cateringcompany.user:
         return redirect('offer_list')
+
+    if request.method == 'POST':
+        form = OfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            try:
+                form.save()  # Intenta guardar el formulario
+                return redirect('offer_list')
+            except ValidationError as e:
+                # Añade los errores de validación del modelo a los errores del formulario
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        form.add_error(field, error)
+        # Si la validación falla, pasa el formulario con errores al template
+    else:
+        messages.error(request, "Please correct the errors below.")
 
     return render(request, 'offers/edit_offer.html', {
         'form': form,
         'offer': offer
     })
+
+
     
 @login_required
 def delete_offer(request, offer_id):
@@ -886,9 +896,6 @@ def edit_employee_termination(request, employee_work_service_id):
                 form.save()
                 messages.success(request, 'Employee termination details updated successfully.')
                 return redirect('list_employee', service_id=employee_service.cateringservice.id)
-        else:
-            # Aquí se manejarán automáticamente los errores de formulario
-            messages.error(request, 'Please correct the errors below.')
 
     return render(request, 'edit_employee.html', {
         'employee_service': employee_service,

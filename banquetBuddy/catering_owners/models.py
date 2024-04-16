@@ -7,6 +7,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee,Message
 from django.db.models import CheckConstraint
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class CateringCompany(models.Model):
@@ -164,6 +166,21 @@ class Offer(models.Model):
     location = models.CharField(max_length=255)
     start_date = models.DateField()  # Fecha de inicio de la oferta
     end_date = models.DateField(null=True, blank=True)  # Fecha de fin opcional
+
+    def clean(self):
+        if self.start_date and self.start_date < timezone.localdate():
+            raise ValidationError("Start date cannot be in the past.")
+
+        if self.end_date:
+            if self.end_date < timezone.localdate():
+                raise ValidationError("End date cannot be in the past.")
+            if self.end_date < self.start_date:
+                raise ValidationError("End date cannot be earlier than start date.")
+                
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"Oferta para {self.title} en {self.cateringservice.name} para el evento {self.event.name}"
