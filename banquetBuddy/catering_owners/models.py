@@ -1,7 +1,7 @@
 from datetime import timezone
 from django.db import models
 from catering_particular.models import Particular
-from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType
+from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType, TerminationReason
 from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee,Message
@@ -122,19 +122,23 @@ class Review(models.Model):
             models.CheckConstraint(check=models.Q(rating__gte=1, rating__lte=5), name='rating_range')
         ]
 
+
+
 class EmployeeWorkService(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_work_services')
-    cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='employee_work_services')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='employee_work_services')  # Nueva relación con Event
+    cateringservice = models.ForeignKey('CateringService', on_delete=models.CASCADE, related_name='employee_work_services')
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='employee_work_services')
 
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
+    termination_reason = models.CharField(max_length=50, choices=TerminationReason.choices, null=True, blank=True)
+    termination_details = models.TextField(null=True, blank=True)
 
     class Meta:
         constraints = [
             models.CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
             models.UniqueConstraint(
-                fields=['employee', 'cateringservice', 'event'],  # Incluir 'event' en la restricción de unicidad
+                fields=['employee', 'cateringservice', 'event'], 
                 name='unique_employee_service_event',
                 condition=models.Q(end_date__isnull=True) | models.Q(end_date__gte=models.F('start_date'))
             )
@@ -144,8 +148,9 @@ class EmployeeWorkService(models.Model):
         today = timezone.now().date()
         if self.end_date and today > self.end_date:
             return 'Terminado'
-        elif today >= self.start_date:
+        elif today >= self.start_date and (self.end_date is None or today <= self.end_date):
             return 'Activo'
+        return 'Activo'
 
     def __str__(self):
         return f"{self.employee} en {self.cateringservice} para el evento {self.event.name}"

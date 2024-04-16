@@ -32,31 +32,31 @@
             <p>Email: {{ employee_service.employee.user.email }}</p>
             <p>Profession: {{ employee_service.employee.profession }}</p>
             <p>Event: {{ employee_service.event.name }}</p>
-            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
+            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default_if_none:"Current" }}</p>
             <p class="status-{{ employee_service.current_status|lower }}">{{ employee_service.current_status }}</p>
-            {% if employee_service.employee.user.id not in recommendations_dict %}
-            <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee_service.employee.user.id %}" class="btn btn-primary">Add Recommendation Letter</a>
-            {% else %}
-            <p class="already-recommended">Already recommended for this employee</p>
+            {% if employee_service.current_status == 'Terminado' %}
+                <p>Termination Reason: {{ employee_service.termination_reason }}</p>
+                {% if employee_service.termination_details %}
+                    <p>Termination Details: {{ employee_service.termination_details }}</p>
+                {% endif %}
             {% endif %}
-            {% if employee_service.current_status == 'Activo' %}
-            <form action="{% url 'dismiss_employee' employee_service.id %}" method="post" onsubmit="return confirm('Are you sure you want to dismiss this employee?');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Dismiss</button>
-            </form>
+            {% if employee_service.employee.user.id not in recommendations_dict %}
+                <a href="{% url 'recommendation_letter' service_id=service.id employee_id=employee_service.employee.user.id %}" class="btn btn-primary">Add Recommendation Letter</a>
+            {% else %}
+                <p class="already-recommended">Already recommended for this employee</p>
             {% endif %}
         </div>
         {% endfor %}
         <nav aria-label="Employee page navigation">
           <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
             {% endif %}
             <li class="page-item disabled"><a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
             {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a the "page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
             {% endif %}
           </ul>
         </nav>

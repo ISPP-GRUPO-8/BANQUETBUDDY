@@ -223,3 +223,13 @@ class EmployeeWorkServiceForm(forms.ModelForm):
             self.add_error('start_date', "Start date should not be in the past.")
 
         return cleaned_data
+
+class TerminationForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeWorkService
+        fields = ['end_date', 'termination_reason', 'termination_details']
+        widgets = {
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'termination_reason': forms.Select(),
+            'termination_details': forms.Textarea(attrs={'rows': 3}),
+        }

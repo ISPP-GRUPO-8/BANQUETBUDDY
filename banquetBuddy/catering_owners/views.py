@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Case, When, Value, CharField
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
+from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm, TerminationForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
@@ -836,13 +836,14 @@ def delete_plate(request, plate_id):
         return redirect("list_plates")
 
 
+from django.db.models import Case, When, Value, CharField
+
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     owner = CateringCompany.objects.get(user_id=request.user.id)
     
-    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
-
+    status_filter = request.GET.get('status', 'Activo')
     employees_hired = EmployeeWorkService.objects.filter(
         cateringservice=catering_service
     ).annotate(
@@ -854,7 +855,18 @@ def list_employee(request, service_id):
         )
     ).filter(current_status=status_filter).order_by('-start_date')
 
-    paginator = Paginator(employees_hired, 10)  # Muestra 10 empleados por página
+    # Preparar formularios para empleados activos
+    termination_forms = {employee.id: TerminationForm(prefix=str(employee.id), instance=employee) for employee in employees_hired if employee.current_status == 'Activo'}
+
+    if request.method == 'POST':
+        employee_id = int(request.POST.get('form_id'))
+        form = TerminationForm(request.POST, prefix=str(employee_id), instance=EmployeeWorkService.objects.get(id=employee_id))
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Employee termination updated successfully.")
+            return redirect('list_employee', service_id=service_id)
+
+    paginator = Paginator(employees_hired, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -865,7 +877,8 @@ def list_employee(request, service_id):
         'page_obj': page_obj,
         'service': catering_service,
         'recommendations_dict': recommendations_dict,
-        'current_status': status_filter
+        'current_status': status_filter,
+        'termination_forms': termination_forms
     })
 
 
@@ -1059,13 +1072,16 @@ def listar_caterings_particular(request):
     return render(request, "contact_chat_owner.html", context)
 
 @login_required
-def dismiss_employee(request, employee_work_service_id):
+def update_termination_details(request, employee_work_service_id):
     employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
-
-    # Asigna la fecha de finalización sin importar el método
-    employee_work_service.end_date = timezone.now().date()
-    employee_work_service.save()
-    messages.success(request, "Employee has been successfully dismissed.")
-
-    service_id = employee_work_service.cateringservice.id  # Obtener el ID del servicio para redirigir correctamente
-    return redirect('list_employee', service_id=service_id)
+    
+    if request.method == 'POST':
+        form = TerminationForm(request.POST, instance=employee_work_service)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Termination details updated successfully.")
+            return redirect('list_employee', service_id=employee_work_service.cateringservice.id)
+    else:
+        form = TerminationForm(instance=employee_work_service)
+    
+    return render(request, 'update_termination.html', {'form': form, 'employee_work_service': employee_work_service})
