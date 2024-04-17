@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container mt-4">
   {% for message in messages %}
-  <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  <div class="alert alert-{{ message.tags }}" style="text-align: center;">{{ message }}</div>
   {% endfor %}
   {% if request.user.is_authenticated and request.user.ParticularUsername %}
   <form method="post" action="{% url 'listar_caterings' %}" id="miFormulario" class="mb-4">
