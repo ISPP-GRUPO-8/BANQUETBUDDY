@@ -24,7 +24,16 @@
             <p>Profession: {{ employee_service.employee.profession }}</p>
             <p>Event: {{ employee_service.event.name }}</p>
             <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default_if_none:"Current" }}</p>
-            <p class="status-{{ employee_service.current_status|lower }}">{{ employee_service.current_status }}</p>
+            <p class="status-{{ employee_service.current_status|lower }}">
+                
+                {% if employee_service.current_status == 'Activo' %}
+                   State: Active
+                {% endif %}
+
+                {% if employee_service.current_status == 'Terminado' %}
+                    State: Terminated
+                {% endif %}
+            </p>
             
             <!-- Edit form for termination details -->
             <form method="post" class="edit-form">
