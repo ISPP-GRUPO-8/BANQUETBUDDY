@@ -15,6 +15,7 @@ from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from core.views import is_catering_company
 from .forms import (
@@ -852,26 +853,18 @@ from django.db.models import Case, When, Value, CharField
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     owner = CateringCompany.objects.get(user_id=request.user.id)
-    
-    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
 
-    employees_hired = EmployeeWorkService.objects.filter(
-        cateringservice=catering_service
-    ).annotate(
-        current_status=Case(
-            When(end_date__isnull=True, then=Value('Activo')),
-            When(end_date__lte=timezone.now().date(), then=Value('Terminado')),
-            default=Value('Activo'),
-            output_field=CharField(),
-        )
-    ).filter(current_status=status_filter).order_by('-start_date')
+    status_filter = request.GET.get('status', 'Activo')
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
+    filtered_employees = [emp for emp in all_employees if emp.current_status() == status_filter]
 
-    paginator = Paginator(employees_hired, 5)  
+    paginator = Paginator(filtered_employees, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
     recommendations_dict = {recommendation.employee_id: recommendation for recommendation in recommendations}
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
 
     return render(request, 'list_employee.html', {
         'page_obj': page_obj,
@@ -880,6 +873,7 @@ def list_employee(request, service_id):
         'current_status': status_filter
     })
 
+    
 
 @login_required
 def edit_employee_termination(request, employee_work_service_id):

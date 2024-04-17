@@ -147,12 +147,22 @@ class EmployeeWorkService(models.Model):
         ]
 
     def current_status(self):
-        today = timezone.now().date()
-        if self.end_date and today > self.end_date:
-            return 'Terminado'
-        elif today >= self.start_date and (self.end_date is None or today <= self.end_date):
-            return 'Activo'
+        today = timezone.localtime(timezone.now()).date()
+        if self.end_date:
+            if self.end_date < today:
+                return 'Terminado'
+            elif self.end_date == today:
+                if self.termination_reason is not None:
+                    return 'Terminado'
+                else:
+                    return 'Activo'
+            else:
+                return 'Activo'
         return 'Activo'
+
+
+
+
 
     def __str__(self):
         return f"{self.employee} en {self.cateringservice} para el evento {self.event.name}"
