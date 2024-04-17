@@ -909,18 +909,30 @@ def delete_plate(request, plate_id):
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
-    user = request.user
-    if not is_user_catering_company(user):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
-    if catering_service.cateringcompany.user != user:
+    if catering_service.cateringcompany.user != current_user:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
-    owner = CateringCompany.objects.get(user_id = user.id)
-    employees_hired = EmployeeWorkService.objects.filter(cateringservice = catering_service)
-
-    employees = []
-    for t in employees_hired:
-        employees.append(t.employee)
+    owner = CateringCompany.objects.get(user_id=request.user.id)
     
+    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
+
+    employees_hired = EmployeeWorkService.objects.filter(
+        cateringservice=catering_service
+    ).annotate(
+        current_status=Case(
+            When(end_date__isnull=True, then=Value('Activo')),
+            When(end_date__lte=timezone.now().date(), then=Value('Terminado')),
+            default=Value('Activo'),
+            output_field=CharField(),
+        )
+    ).filter(current_status=status_filter).order_by('-start_date')
+
+    paginator = Paginator(employees_hired, 10)  # Muestra 10 empleados por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
     recommendations_dict = {recommendation.employee_id: recommendation for recommendation in recommendations}
 
@@ -979,6 +991,8 @@ def hire_employee(request, employee_id):
         action = request.POST.get('action')
         offer_id = request.POST.get('offer_id')
         offer = get_object_or_404(Offer, pk=offer_id)
+        if offer.cateringservice.cateringcompany.user != user:
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
         employee = get_object_or_404(Employee, pk=employee_id)
 
         if action == "hire":
@@ -1024,41 +1038,6 @@ def hire_employee(request, employee_id):
 
     # Redirecciona a la lista general de ofertas si no hay acción POST
     return redirect('offer_list')
-
-def hire_form(request, employee_id, offer_id):
-    employee = get_object_or_404(Employee, pk=employee_id)
-    offer = get_object_or_404(Offer, pk=offer_id)
-    catering_service = offer.cateringservice
-    event = offer.event
-
-    if request.method == "POST":
-        form = EmployeeWorkServiceForm(request.POST)
-        if form.is_valid():
-            employee_work_service = form.save(commit=False)
-            employee_work_service.employee = employee
-            employee_work_service.cateringservice = catering_service
-            employee_work_service.event = event  # Asignar el evento desde la oferta
-            employee_work_service.start_date = offer.start_date  # Usar fechas de la oferta
-            employee_work_service.end_date = offer.end_date
-            employee_work_service.save()
-            # Notificación de contratación
-            message = f"You've been hired by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
-            title = f"Hired by {catering_service.cateringcompany.user.username}"
-            NotificationJobApplication.objects.create(user=employee.user, message=message, title=title)
-            # Eliminar solicitudes de empleo pendientes
-            JobApplication.objects.filter(employee=employee, offer__cateringservice=catering_service).delete()
-            return redirect('offer_list')  
-    else:
-        form = EmployeeWorkServiceForm()
-
-    return render(request, 'hire_form.html', {
-        'form': form,
-        'employee': employee,
-        'catering_service': catering_service,
-        'event': event,  # Pasar el evento para mostrar información relevante
-        'offer': offer  # Pasar la oferta para mostrar fechas
-    })
-
 
 def chat_view(request, id):
     context = {}
@@ -1131,6 +1110,8 @@ def listar_caterings_particular(request):
 @login_required
 def dismiss_employee(request, employee_work_service_id):
     employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
+    if employee_work_service.cateringservice.cateringcompany.user != request.user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     # Asigna la fecha de finalización sin importar el método
     employee_work_service.end_date = timezone.now().date()
