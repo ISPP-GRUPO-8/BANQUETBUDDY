@@ -243,6 +243,25 @@ class CateringReviewTestCase(TestCase):
             capacity=100,
             price=100.00,
         )
+        
+        self.menu = Menu.objects.create(
+            cateringservice=self.catering_service,
+            name='Test Menu',
+            description='Test menu description',
+            diet_restrictions='Test diet restrictions'
+        )
+        
+        self.event = Event.objects.create(
+            cateringservice = self.catering_service,
+            particular = self.particular,
+            cateringcompany = self.company,
+            menu = self.menu,
+            name = "Test Event",
+            date = datetime.now().date(),
+            details = "Test details",
+            booking_state = BookingState.CONTRACT_PENDING,
+            number_guests = 23
+        )
 
     def test_catering_review_view(self):
         self.client.login(username='testuser2', password='testpassword2')
