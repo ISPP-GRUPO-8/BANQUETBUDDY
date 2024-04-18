@@ -24,9 +24,23 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 @login_required
 def my_books(request):
     user = request.user
-    events = Event.objects.filter(particular_id=user.id)
-    context = {"events": events}
+    events_list = Event.objects.filter(particular_id=user.id).order_by('-date')
+
+    paginator = Paginator(events_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        events = paginator.page(1)
+    except EmptyPage:
+        events = paginator.page(paginator.num_pages)
+
+    context = {
+        "events": events,
+    }
     return render(request, "my_books.html", context)
+
 
 
 @login_required
@@ -38,7 +52,7 @@ def book_cancel(request, event_id):
     if user.id == event.particular_id:
         event.booking_state = BookingState.CANCELLED
         event.save()
-    return render(request, "my_books.html", context)
+    return redirect('my_books')
 
 
 @login_required
@@ -81,7 +95,7 @@ def book_edit(request, event_id):
         event.details = f"Reservation for {number_guests} guests"
         event.save()
 
-        return render(request, "my_books.html", context)
+        return redirect('my_books')
 
     return render(request, "book_edit.html", context)
 
