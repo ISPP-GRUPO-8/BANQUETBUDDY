@@ -55,8 +55,6 @@ urlpatterns = [
     path('offer_list', offer_list, name='offer_list'),
     path('employee_record/<int:employee_id>/', employee_record_list, name='employee_record'),
     path('hire_employee/<int:employee_id>/', hire_employee, name='hire_employee'),
-
-    path('apply_offer/<int:offer_id>/', apply_offer, name='apply_offer'),
     path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
@@ -73,8 +71,8 @@ urlpatterns = [
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
     path('chats/', listar_caterings_particular, name='listar_caterings_particular'),
-    path('dismiss-employee/<int:employee_work_service_id>/', dismiss_employee, name='dismiss_employee'),
     path('service/<int:service_id>/employees', list_employee, name='list_employee'),
+    path('employees/edit/<int:employee_work_service_id>/', edit_employee_termination, name='edit_employee_termination'),
 
 
     # CAMBIO DE PLAN
@@ -91,8 +89,6 @@ urlpatterns = [
 
     path('canceled/', payment_canceled, name='canceled'),
     path('chat/<int:id>/', chat_view, name='chat'),
-
-    path('hire_form/<int:employee_id>/<int:offer_id>/', views.hire_form, name='hire_form'),
 
 
 

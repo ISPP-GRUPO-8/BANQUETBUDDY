@@ -15,7 +15,7 @@ from core.forms import CustomUserCreationForm
 from catering_owners.models import JobApplication, Employee, EmployeeWorkService
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, CharField
 from django.http import HttpResponseForbidden
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
@@ -23,9 +23,15 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from core.permission_checks import is_user_employee
+from django.core.paginator import Paginator
 
 
 # Create your views here.
+
+
+NOT_EMPLOYEE_ERROR = "You are not registered as an employee"
+FORBIDDEN_ACCESS_ERROR = "You are not allowed to access to the following page"
 
 
 def register_employee(request):
@@ -103,11 +109,7 @@ def employee_applications(request, offer_id):
     offer = get_object_or_404(Offer, id=offer_id)
 
     if request.user != offer.cateringservice.cateringcompany.user:
-        return render(
-            request,
-            "error.html",
-            {"message": "No tienes permisos para acceder a esta oferta"},
-        )
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     applicants = offer.job_applications.select_related("employee").all()
 
@@ -126,11 +128,10 @@ def employee_offer_list(request):
     current_user = request.user
     offers = Offer.objects.all()
 
-    try:
-        employee = Employee.objects.get(user=current_user)
-    except Employee.DoesNotExist:
-        return render(request, "error_employee.html")
+    if not is_user_employee(current_user):
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
 
+    employee = Employee.objects.get(user=current_user)
     search = ""
     offers = Offer.objects.all()
     if request.method == "POST":
@@ -162,10 +163,9 @@ def employee_offer_list(request):
 def application_to_offer(request, offer_id):
 
     current_user = request.user
-    try:
-        employee = Employee.objects.get(user=current_user)
-    except Employee.DoesNotExist:
-        return render(request, "error_employee.html")
+    if not is_user_employee(current_user):
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
+    employee = Employee.objects.get(user=current_user)
 
     offer = get_object_or_404(Offer, id=offer_id)
 
@@ -186,11 +186,10 @@ def application_to_offer(request, offer_id):
 def employee_applications_list(request):
 
     current_user = request.user
-    try:
-        employee = Employee.objects.get(user=current_user)
-    except Employee.DoesNotExist:
-        return render(request, "error_employee.html")
+    if not is_user_employee(current_user):
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
 
+    employee = Employee.objects.get(user=current_user)
     applications = JobApplication.objects.filter(employee=employee)
     context = {"applications": applications}
 
@@ -199,13 +198,12 @@ def employee_applications_list(request):
 
 @login_required
 def my_recommendation_letters(request, employee_id):
-    user = request.user
-    try:
-        employee = Employee.objects.get(user=user)
-        if employee.user.id != employee_id:
-            return HttpResponseForbidden("You are not allowed to access this.")
-    except Employee.DoesNotExist:
-        return HttpResponseForbidden("You are not allowed to access this.")
+    current_user = request.user
+    if not is_user_employee(current_user):
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
+    employee = Employee.objects.get(user=current_user)
+    if employee.user.id != employee_id:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     recommendations = RecommendationLetter.objects.filter(employee_id=employee_id)
 
@@ -221,14 +219,49 @@ def my_recommendation_letters(request, employee_id):
     return render(request, "my_recommendation_letters.html", context)
 
 
+@login_required
 def listar_caterings_companies(request):
     context = {}
     context["is_particular"] = is_particular(request)
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
     if not is_employee(request):
-        return HttpResponseForbidden("You are not an employee")
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
     caterings = CateringCompany.objects.all()
 
     context["caterings"] = caterings
     return render(request, "contact_chat_employee.html", context)
+
+
+@login_required
+def list_work_services(request):
+    current_user = request.user
+    if not is_user_employee(current_user):
+        return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
+    employee = Employee.objects.get(user_id=current_user.id)
+    status_filter = request.GET.get(
+        "status", "Activo"
+    )  # 'Activo' es el valor predeterminado
+    employee_services = (
+        EmployeeWorkService.objects.filter(employee=employee)
+        .annotate(
+            current_status=Case(
+                When(end_date__isnull=True, then=Value("Activo")),
+                When(end_date__lte=timezone.now().date(), then=Value("Terminado")),
+                default=Value("Activo"),
+                output_field=CharField(),
+            )
+        )
+        .filter(current_status=status_filter)
+        .order_by("-start_date")
+    )
+
+    paginator = Paginator(employee_services, 10)  # Muestra 10 servicios por página
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "list_work_services.html",
+        {"page_obj": page_obj, "current_status": status_filter},
+    )

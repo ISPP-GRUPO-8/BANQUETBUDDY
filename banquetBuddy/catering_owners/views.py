@@ -1,67 +1,63 @@
+from datetime import datetime, date
+import calendar
 from urllib.parse import urlencode
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Case, When, Value, CharField
-from core.views import *
-from .forms import OfferForm, CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
-from .forms import (
-    CateringServiceFilterForm,
-    OfferForm,
-    CateringCompanyForm,
-    MenuForm,
-    EmployeeFilterForm,
-)
-from django.http import HttpResponseForbidden
-from .models import Offer, CateringService, Event, Employee, EmployeeWorkService
-from urllib.parse import urlencode
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.urls import reverse
+from django.db.models import Min
+from django.http import HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.dateformat import DateFormat
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 import stripe
-from django.conf import settings
+from .forms import (
+    CateringCompanyForm,
+    CateringServiceFilterForm,
+    CateringServiceForm,
+    EmployeeFilterForm,
+    MenuForm,
+    OfferForm,
+    PlateForm,
+)
+from .models import (
+    Offer,
+    CateringService,
+    Event,
+    Employee,
+    EmployeeWorkService,
+    CateringCompany,
+    Menu,
+    Plate,
+)
+from core.views import is_catering_company
+from core.permission_checks import is_user_catering_company
+from core.views import *
+
+from catering_owners.models import *
+from .forms import TerminationForm
+from core.forms import CustomUserCreationForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 
-from core.views import is_catering_company
-from .forms import (
-    CateringServiceFilterForm,
-    CateringServiceForm,
-    OfferForm,
-    CateringCompanyForm,
-    MenuForm,
-    EmployeeFilterForm,
-    PlateForm,
-)
-from django.http import HttpResponseForbidden
-from .models import Offer, CateringService, Event
-
-from django.contrib.auth.decorators import login_required
-from core.forms import CustomUserCreationForm
-from .models import CateringCompany, Menu, Plate
-from core.models import *
-from django.db.models import Min
-from django.contrib import messages
-from core.models import *
-from django.contrib.auth.decorators import login_required
-
-from datetime import datetime, date
-
-from catering_owners.models import *
-from django.utils.dateformat import DateFormat
-import calendar
-from .models import CateringCompany, Menu, Plate, Offer, CateringService, PricePlan
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
+NOT_CATERING_COMPANY_ERROR = "You are not registered as a catering company"
+FORBIDDEN_ACCESS_ERROR = "You are not allowed to access to the following page"
 
 
 @login_required
 def catering_books(request):
-    user = request.user
-    catering_company = get_object_or_404(CateringCompany, user=user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+    catering_company = get_object_or_404(CateringCompany, user=current_user)
     catering_services = CateringService.objects.filter(
         cateringcompany_id=catering_company.user_id
     )
@@ -76,6 +72,8 @@ def book_catering_cancel(request, event_id):
     catering_company = get_object_or_404(CateringCompany, user=user)
     catering_service = CateringService.objects.filter(cateringcompany=catering_company)
     event = get_object_or_404(Event, id=event_id)
+    if event.cateringservice.cateringcompany.user != user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     for service in catering_service:
         if user == service.cateringcompany.user:
@@ -87,7 +85,10 @@ def book_catering_cancel(request, event_id):
 
 @login_required
 def book_catering_edit(request, event_id):
+    current_user = request.user
     event = get_object_or_404(Event, id=event_id)
+    if event.cateringservice.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     catering_company = get_object_or_404(CateringCompany, user=request.user)
     menus = Menu.objects.filter(cateringcompany=catering_company)
     context = {"event": event, "menus": menus}
@@ -179,22 +180,25 @@ def register_company(request):
 
 @login_required
 def list_menus(request):
-    catering_company = CateringCompany.objects.get(user=request.user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
+    catering_company = CateringCompany.objects.get(user=current_user)
     menus = Menu.objects.filter(cateringcompany=catering_company)
     return render(request, "list_menus.html", {"menus": menus})
 
 
 @login_required
 def employee_applications(request, offer_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
 
     offer = get_object_or_404(Offer, id=offer_id)
 
     if request.user != offer.cateringservice.cateringcompany.user:
-        return render(
-            request,
-            "error.html",
-            {"message": "No tienes permisos para acceder a esta oferta"},
-        )
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     applicants = offer.job_applications.select_related("employee").all()
 
@@ -208,6 +212,9 @@ def employee_applications(request, offer_id):
 
 @login_required
 def view_reservations(request, catering_service_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
 
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
     if request.user == catering_service.cateringcompany.user:
@@ -219,25 +226,29 @@ def view_reservations(request, catering_service_id):
             {"reservations": reservations, "catering_service": catering_service},
         )
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to view this reservations."
-        )
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
 
 @login_required
 def view_reservation(request, event_id, catering_service_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_service = get_object_or_404(CateringService, pk=catering_service_id)
     if request.user == catering_service.cateringcompany.user:
         event = get_object_or_404(Event, pk=event_id)
         return render(request, "view_reservation.html", {"event": event})
     else:
-        return HttpResponseForbidden(
-            "You don't have permission to view this reservation."
-        )
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
 
 @login_required
 def catering_calendar_preview(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_company = CateringCompany.objects.get(user=request.user)
     if is_catering_company_premium(request) or is_catering_company_premium_pro(request):
         if request.method == "POST":
@@ -267,6 +278,10 @@ def catering_calendar_preview(request):
 
 @login_required
 def my_bookings_preview(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_company = CateringCompany.objects.get(user=request.user)
     if request.method == "POST":
         form = CateringServiceFilterForm(catering_company, request.POST)
@@ -331,9 +346,7 @@ def catering_calendar_view(request, catering_service_id, month, year):
                 },
             )
         else:
-            return HttpResponseForbidden(
-                "You don't have permission to view this calendar."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     else:
         messages.error(
             request,
@@ -361,9 +374,7 @@ def reservations_for_day(request, catering_service_id, year, month, day):
                 },
             )
         else:
-            return HttpResponseForbidden(
-                "You don't have permission to view this day reservations."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     else:
         messages.error(
             request,
@@ -382,9 +393,7 @@ def next_month_view(request, catering_service_id, year, month):
                 next_month = 1
                 next_year += 1
         else:
-            return HttpResponseForbidden(
-                "You don't have permission to manipulate this calendar."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     else:
         messages.error(
             request,
@@ -410,9 +419,7 @@ def prev_month_view(request, catering_service_id, year, month):
                 prev_month = 12
                 prev_year -= 1
         else:
-            return HttpResponseForbidden(
-                "You don't have permission to manipulate this calendar."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     else:
         messages.error(
             request,
@@ -430,6 +437,10 @@ def prev_month_view(request, catering_service_id, year, month):
 
 @login_required
 def add_menu(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_company = CateringCompany.objects.get(user=request.user)
     if request.method == "POST":
         form = MenuForm(request.user, request.POST)
@@ -447,7 +458,10 @@ def add_menu(request):
 
 @login_required
 def edit_menu(request, menu_id):
-    menu = get_object_or_404(Menu, id=menu_id, cateringcompany__user=request.user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+    menu = get_object_or_404(Menu, id=menu_id, cateringcompany__user=current_user)
     if request.method == "POST":
         form = MenuForm(request.user, request.POST, instance=menu)
         if form.is_valid():
@@ -461,7 +475,11 @@ def edit_menu(request, menu_id):
 
 @login_required
 def delete_menu(request, menu_id):
-    menu = get_object_or_404(Menu, id=menu_id, cateringcompany__user=request.user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
+    menu = get_object_or_404(Menu, id=menu_id, cateringcompany__user=current_user)
     if request.method == "POST":
         menu.delete()
         messages.success(request, "Menu removed successfully.")
@@ -474,6 +492,8 @@ def delete_menu(request, menu_id):
 def catering_profile_edit(request):
     context = {}
     user = request.user
+    if not is_user_catering_company(user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
 
     # Obtener el perfil de la empresa de catering del usuario actual
     catering_company = CateringCompany.objects.get_or_create(user=user)[0]
@@ -627,11 +647,10 @@ def payment_canceled(request):
 def offer_list(request):
 
     current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
 
-    try:
-        catering_company = CateringCompany.objects.get(user=current_user)
-    except CateringCompany.DoesNotExist:
-        return render(request, "error_catering.html")
+    catering_company = CateringCompany.objects.get(user=current_user)
     if is_catering_company_premium_pro(request) is True:
         offers = Offer.objects.filter(cateringservice__cateringcompany=catering_company)
         return render(request, "offers/offer_list.html", {"offers": offers})
@@ -645,20 +664,21 @@ def offer_list(request):
 
 @login_required
 def create_offer(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_company = request.user.CateringCompanyusername
     events = Event.objects.filter(cateringcompany=catering_company)
-
     if request.method == "POST":
         form = OfferForm(request.POST)
         if form.is_valid():
             offer = form.save(commit=False)
-            offer.cateringservice = (
-                offer.event.cateringservice
-            )  # Asigna el servicio de catering del evento
+            offer.cateringservice = offer.event.cateringservice
             offer.save()
+            messages.success(request, "Offer created successfully!")
             return redirect("offer_list")
-        else:
-            form = OfferForm()
+
     else:
         form = OfferForm()
 
@@ -667,17 +687,28 @@ def create_offer(request):
 
 @login_required
 def edit_offer(request, offer_id):
+    current_user = request.user
     offer = get_object_or_404(Offer, pk=offer_id)
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == "POST":
-            form = OfferForm(request.POST, instance=offer)
-            if form.is_valid():
-                offer.save()
+
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+    if current_user != offer.cateringservice.cateringcompany.user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
+
+    if request.method == "POST":
+        form = OfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            try:
+                form.save()  # Intenta guardar el formulario
                 return redirect("offer_list")
-        else:
-            form = OfferForm(instance=offer)
+            except ValidationError as e:
+                # Añade los errores de validación del modelo a los errores del formulario
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        form.add_error(field, error)
+        # Si la validación falla, pasa el formulario con errores al template
     else:
-        return redirect("offer_list")
+        messages.error(request, "Please correct the errors below.")
 
     return render(request, "offers/edit_offer.html", {"form": form, "offer": offer})
 
@@ -687,9 +718,7 @@ def delete_offer(request, offer_id):
     if is_catering_company_premium_pro(request) is True:
         offer = get_object_or_404(Offer, pk=offer_id)
         if request.user != offer.cateringservice.cateringcompany.user:
-            return HttpResponseForbidden(
-                "You don't have permission to delete this offer."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
         return render(request, "offers/delete_offer.html", {"offer": offer})
     else:
         messages.error(
@@ -704,9 +733,7 @@ def confirm_delete_offer(request, offer_id):
     if is_catering_company_premium_pro(request) is True:
         offer = get_object_or_404(Offer, pk=offer_id)
         if request.user != offer.cateringservice.cateringcompany.user:
-            return HttpResponseForbidden(
-                "You don't have permission to delete this offer."
-            )
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
         if request.method == "POST":
             offer = get_object_or_404(Offer, pk=offer_id)
             offer.delete()
@@ -721,25 +748,6 @@ def confirm_delete_offer(request, offer_id):
         return redirect("subscription_plans")
 
 
-def apply_offer(request, offer_id):
-    offer = get_object_or_404(Offer, pk=offer_id)
-
-    if request.method == "POST":
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            # Procesar la aplicación, por ejemplo, guardarla en la base de datos
-            application = form.save(commit=False)
-            application.offer = offer  # Asignar la oferta a la aplicación
-            application.save()
-            # Aquí podrías agregar cualquier lógica adicional, como enviar un correo electrónico de confirmación
-            return redirect(
-                "offer_list"
-            )  # Redirigir de vuelta a la lista de ofertas después de aplicar
-    else:
-        form = OfferForm()
-    return render(request, "offers/offer_list.html", {"form": form, "offer": offer})
-
-
 ###########################
 ######## Servicios ########
 ###########################
@@ -747,8 +755,11 @@ def apply_offer(request, offer_id):
 
 @login_required
 def get_catering_services(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     context = {}
-    catering_company = CateringCompany.objects.get(user=request.user)
+    catering_company = CateringCompany.objects.get(user=current_user)
     services = CateringService.objects.filter(cateringcompany=catering_company)
     context["services"] = services
     context["is_catering_company"] = is_catering_company(request)
@@ -757,6 +768,10 @@ def get_catering_services(request):
 
 @login_required
 def create_catering_service(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     context = {}
     context["is_catering_company"] = is_catering_company(request)
     if request.method == "POST":
@@ -776,14 +791,15 @@ def create_catering_service(request):
 
 @login_required
 def update_catering_service(request, service_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     context = {}
     context["is_catering_company"] = is_catering_company(request)
     catering_service = get_object_or_404(CateringService, id=service_id)
 
-    if catering_service.cateringcompany.user != request.user:
-        return HttpResponseForbidden(
-            "You must be logged in as catering company to update a service."
-        )
+    if catering_service.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     if request.method == "POST":
         form = CateringServiceForm(request.POST, instance=catering_service)
@@ -799,25 +815,27 @@ def update_catering_service(request, service_id):
 
 @login_required
 def delete_service(request, service_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     context = {}
-    if not is_catering_company(request):
-        return HttpResponseForbidden(
-            "You must be logged in as catering company to delete a service."
-        )
     context["is_catering_company"] = is_catering_company(request)
     service = get_object_or_404(CateringService, pk=service_id)
+    if service.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     context["service"] = service
     return render(request, "delete_service.html", context)
 
 
 @login_required
 def confirm_delete_service(request, service_id):
-    if not is_catering_company(request):
-        return HttpResponseForbidden(
-            "You must be logged in as catering company to delete a service."
-        )
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     if request.method == "POST":
         service = get_object_or_404(CateringService, pk=service_id)
+        if service.cateringcompany.user != current_user:
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
         service.delete()
         return redirect("services")
     else:
@@ -826,7 +844,11 @@ def confirm_delete_service(request, service_id):
 
 @login_required
 def list_plates(request):
-    catering_company = get_object_or_404(CateringCompany, user=request.user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
+    catering_company = get_object_or_404(CateringCompany, user=current_user)
     plates_query = Plate.objects.filter(cateringcompany=catering_company)
 
     # Filtrar los platos si se proporciona menu_id
@@ -875,7 +897,13 @@ def list_plates(request):
 
 @login_required
 def delete_plate(request, plate_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if plate.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     if request.method == "POST":
         plate.delete()
         messages.success(request, "Plate removed successfully.")
@@ -890,6 +918,10 @@ def delete_plate(request, plate_id):
 
 @login_required
 def add_plate(request):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     catering_company = CateringCompany.objects.get(user=request.user)
     if request.method == "POST":
         form = PlateForm(request.user, request.POST)
@@ -907,7 +939,13 @@ def add_plate(request):
 
 @login_required
 def edit_plate(request, plate_id):
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+
     plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    if plate.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     if request.method == "POST":
         form = PlateForm(request.user, request.POST, instance=plate)
         if form.is_valid():
@@ -921,7 +959,12 @@ def edit_plate(request, plate_id):
 
 @login_required
 def delete_plate(request, plate_id):
-    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=request.user)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+    plate = get_object_or_404(Plate, id=plate_id, cateringcompany__user=current_user)
+    if plate.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     if request.method == "POST":
         plate.delete()
         messages.success(request, "Plate removed successfully.")
@@ -935,27 +978,20 @@ def delete_plate(request, plate_id):
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
+    current_user = request.user
+    if not is_user_catering_company(current_user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
+    if catering_service.cateringcompany.user != current_user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     owner = CateringCompany.objects.get(user_id=request.user.id)
 
-    status_filter = request.GET.get(
-        "status", "Activo"
-    )  # 'Activo' es el valor predeterminado
+    status_filter = request.GET.get("status", "Activo")
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
+    filtered_employees = [
+        emp for emp in all_employees if emp.current_status() == status_filter
+    ]
 
-    employees_hired = (
-        EmployeeWorkService.objects.filter(cateringservice=catering_service)
-        .annotate(
-            current_status=Case(
-                When(end_date__isnull=True, then=Value("Activo")),
-                When(end_date__lte=timezone.now().date(), then=Value("Terminado")),
-                default=Value("Activo"),
-                output_field=CharField(),
-            )
-        )
-        .filter(current_status=status_filter)
-        .order_by("-start_date")
-    )
-
-    paginator = Paginator(employees_hired, 10)  # Muestra 10 empleados por página
+    paginator = Paginator(filtered_employees, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -963,6 +999,7 @@ def list_employee(request, service_id):
     recommendations_dict = {
         recommendation.employee_id: recommendation for recommendation in recommendations
     }
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
 
     return render(
         request,
@@ -977,11 +1014,44 @@ def list_employee(request, service_id):
 
 
 @login_required
+def edit_employee_termination(request, employee_work_service_id):
+    employee_service = get_object_or_404(
+        EmployeeWorkService, id=employee_work_service_id
+    )
+    form = TerminationForm(request.POST or None, instance=employee_service)
+
+    if request.method == "POST":
+        if form.is_valid():
+            # Aquí podrías agregar una comprobación adicional, aunque no es necesaria
+            termination_reason = form.cleaned_data.get("termination_reason")
+            if not termination_reason:
+                form.add_error("termination_reason", "This field is required.")
+            else:
+                form.save()
+                messages.success(
+                    request, "Employee termination details updated successfully."
+                )
+                return redirect(
+                    "list_employee", service_id=employee_service.cateringservice.id
+                )
+
+    return render(
+        request,
+        "edit_employee.html",
+        {"employee_service": employee_service, "form": form},
+    )
+
+
+@login_required
 def create_recommendation_letter(request, employee_id, service_id):
+    user = request.user
+    if not is_user_catering_company(user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     catering_service = get_object_or_404(CateringService, id=service_id)
+    if catering_service.cateringcompany.user != user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     employee = get_object_or_404(Employee, user_id=employee_id)
 
-    user = request.user
     try:
         owner = CateringCompany.objects.get(user_id=user.id)
         if owner:
@@ -1002,7 +1072,7 @@ def create_recommendation_letter(request, employee_id, service_id):
                 )
                 return redirect("list_employee", service_id=service_id)
     except:
-        return HttpResponseForbidden("You don't have permission to do this.")
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
 
     return render(request, "recommendation_letter.html", context)
 
@@ -1019,10 +1089,15 @@ def employee_record_list(request, employee_id):
 
 @login_required
 def hire_employee(request, employee_id):
+    user = request.user
+    if not is_user_catering_company(user):
+        return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     if request.method == "POST":
         action = request.POST.get("action")
         offer_id = request.POST.get("offer_id")
         offer = get_object_or_404(Offer, pk=offer_id)
+        if offer.cateringservice.cateringcompany.user != user:
+            return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
         employee = get_object_or_404(Employee, pk=employee_id)
 
         if action == "hire":
@@ -1074,51 +1149,6 @@ def hire_employee(request, employee_id):
 
     # Redirecciona a la lista general de ofertas si no hay acción POST
     return redirect("offer_list")
-
-
-def hire_form(request, employee_id, offer_id):
-    employee = get_object_or_404(Employee, pk=employee_id)
-    offer = get_object_or_404(Offer, pk=offer_id)
-    catering_service = offer.cateringservice
-    event = offer.event
-
-    if request.method == "POST":
-        form = EmployeeWorkServiceForm(request.POST)
-        if form.is_valid():
-            employee_work_service = form.save(commit=False)
-            employee_work_service.employee = employee
-            employee_work_service.cateringservice = catering_service
-            employee_work_service.event = event  # Asignar el evento desde la oferta
-            employee_work_service.start_date = (
-                offer.start_date
-            )  # Usar fechas de la oferta
-            employee_work_service.end_date = offer.end_date
-            employee_work_service.save()
-            # Notificación de contratación
-            message = f"You've been hired by {catering_service.cateringcompany.user.username} for the offer {offer.title}."
-            title = f"Hired by {catering_service.cateringcompany.user.username}"
-            NotificationJobApplication.objects.create(
-                user=employee.user, message=message, title=title
-            )
-            # Eliminar solicitudes de empleo pendientes
-            JobApplication.objects.filter(
-                employee=employee, offer__cateringservice=catering_service
-            ).delete()
-            return redirect("offer_list")
-    else:
-        form = EmployeeWorkServiceForm()
-
-    return render(
-        request,
-        "hire_form.html",
-        {
-            "form": form,
-            "employee": employee,
-            "catering_service": catering_service,
-            "event": event,  # Pasar el evento para mostrar información relevante
-            "offer": offer,  # Pasar la oferta para mostrar fechas
-        },
-    )
 
 
 def chat_view(request, id):
@@ -1189,20 +1219,3 @@ def listar_caterings_particular(request):
     messages = Message.objects.filter(receiver=catering_company.user).distinct("sender")
     context["messages"] = messages
     return render(request, "contact_chat_owner.html", context)
-
-
-@login_required
-def dismiss_employee(request, employee_work_service_id):
-    employee_work_service = get_object_or_404(
-        EmployeeWorkService, pk=employee_work_service_id
-    )
-
-    # Asigna la fecha de finalización sin importar el método
-    employee_work_service.end_date = timezone.now().date()
-    employee_work_service.save()
-    messages.success(request, "Employee has been successfully dismissed.")
-
-    service_id = (
-        employee_work_service.cateringservice.id
-    )  # Obtener el ID del servicio para redirigir correctamente
-    return redirect("list_employee", service_id=service_id)

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse
+from unittest.mock import patch
 
 from .models import Employee
 from catering_particular.models import Particular
@@ -218,9 +219,7 @@ class EmployeeTestCases(TestCase):
         request.user = invalid_user
         response = application_to_offer(request, self.offer.id)
 
-        self.assertEqual(
-            response.status_code, 200
-        )  # Renders error template for invalid employee
+        self.assertEqual(response.status_code, 403)
 
     def test_application_to_offer_view_already_applied(self):
         JobApplication.objects.create(
@@ -264,8 +263,7 @@ class EmployeeTestCases(TestCase):
         self.client.force_login(non_employee_user)
         response = self.client.get(reverse("JobApplicationList"))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "error_employee.html")
+        self.assertEqual(response.status_code, 403)
 
     def test_employee_applications_list_unauthenticated(self):
         self.client.logout()
@@ -325,6 +323,7 @@ class ListarCateringsCompaniesTestCase(TestCase):
     def setUp(self):
         # Configuración inicial para crear un usuario de prueba
         self.factory = RequestFactory()
+        self.user_anonymous = AnonymousUser()
 
         # Creamos un usuario de prueba
         self.employee_user = CustomUser.objects.create_user(
@@ -351,16 +350,45 @@ class ListarCateringsCompaniesTestCase(TestCase):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
         response = self.client.get(reverse("listar_caterings_companies_employee"))
 
-        # Verificamos que el usuario no autenticado reciba un código de estado 403
-        self.assertEqual(response.status_code, 403)
+        # Verificamos que el usuario no autenticado reciba un código de estado 302
+        self.assertEqual(response.status_code, 302)
+
+    @patch("catering_employees.models.Employee.objects.get")
+    @patch("catering_owners.models.EmployeeWorkService.objects.filter")
+    def test_list_work_services(self, mock_filter, mock_get):
+        mock_get.return_value = Employee(user_id=self.user_anonymous.id)
+        mock_filter.return_value = EmployeeWorkService.objects.none()
+
+        request = self.factory.get("/list_work_services")
+        request.user = self.employee_user
+        response = list_work_services(request)
+
+        self.assertEqual(response.status_code, 200)
+        mock_get.assert_called_once_with(user_id=self.employee_user.id)
+        mock_filter.assert_called_once()
+
+
+class ListWorkServicesIntegrationTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = CustomUser.objects.create_user(
+            username="testuser", password="12345"
+        )
+        self.employee = Employee.objects.create(user_id=self.user.id)
+
+    def test_list_work_services_integration(self):
+        self.client.login(username="testuser", password="12345")
+
+        response = self.client.get("/listWorkServices")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "list_work_services.html")
 
 
 class RegisterEmployeeTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.register_url = reverse(
-            "register_employee"
-        )  # Asegúrate de que 'register_particular' es el nombre correcto de la URL en tu archivo urls.py
+        self.register_url = reverse("register_employee")
 
     def test_register_particular_valid_data(self):
         User = get_user_model()

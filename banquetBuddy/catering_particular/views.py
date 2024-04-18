@@ -21,11 +21,15 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
+from core.permission_checks import is_user_particular
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+NOT_PARTICULAR_ERROR = "You are not registered as a particular"
+FORBIDDEN_ACCESS_ERROR = "You are not allowed to access to the following page"
 
 
 # @login_required
@@ -156,8 +160,11 @@ def register_particular(request):
 
 @login_required
 def catering_contratados(request):
+    current_user = request.user
     context = {}
-    particular = get_object_or_404(Particular, user=request.user)
+    if not is_user_particular(current_user):
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    particular = get_object_or_404(Particular, user=current_user)
     events = Event.objects.filter(particular=particular)
     context["events"] = events
     context["is_particular"] = is_particular(request)
@@ -229,7 +236,7 @@ def listar_caterings(request):
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     caterings = CateringService.objects.all()
 
     # Obtener tipos de cocina únicos
@@ -285,7 +292,7 @@ def catering_detail(request, catering_id):
 
     context["reviews"] = reviews
     if not is_particular(request):
-        return HttpResponseForbidden("No eres cliente")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     catering = get_object_or_404(CateringService, id=catering_id)
     context["catering"] = catering
     return render(request, "catering_detail.html", context)
@@ -293,9 +300,24 @@ def catering_detail(request, catering_id):
 
 @login_required
 def catering_review(request, catering_id):
-    catering = get_object_or_404(CateringService, id=catering_id)
     user = request.user
+    catering = get_object_or_404(CateringService, id=catering_id)
+    if not is_user_particular(user):
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    has_been_booked = False
     particular = Particular.objects.filter(user_id=user.id)
+    particular_events = Event.objects.filter(particular=particular[0])
+    for event in particular_events:
+        if event.cateringservice == catering:
+            has_been_booked = True
+            break
+
+    if not has_been_booked:
+        messages.error(
+            request,
+            "You must have a booking with this catering service before reviewing it",
+        )
+        return redirect("listar_caterings")
 
     if particular:
         context = {"catering": catering, "particular": particular}
@@ -329,7 +351,7 @@ def booking_process(request, catering_id):
     )
     user = request.user
     if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
 
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
@@ -483,7 +505,7 @@ def listar_caterings_companies(request):
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     caterings = CateringCompany.objects.all()
 
     context["caterings"] = caterings
