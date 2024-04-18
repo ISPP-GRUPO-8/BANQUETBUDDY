@@ -300,7 +300,7 @@ def booking_process(request, catering_id):
     # Obtener el menú para el catering actual
     highlighted_dates_str = [date.strftime("%Y-%m-%d") for date in highlighted_dates]
 
-    menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
+    menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
     # Coloca el menú dentro del contexto correctamente
     context = {
