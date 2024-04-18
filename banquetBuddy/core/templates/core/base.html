@@ -65,7 +65,7 @@
 
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
+                            <a class="nav-link" href="{% url 'my_books' %}">My bookings</a>
                         </li>
                     {% endif %}
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
