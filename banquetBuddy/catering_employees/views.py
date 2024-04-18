@@ -10,9 +10,10 @@ from core.forms import CustomUserCreationForm
 from catering_owners.models import JobApplication, Employee, EmployeeWorkService
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, CharField
 from django.http import HttpResponseForbidden
 from core.permission_checks import is_user_employee
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -167,10 +168,19 @@ def list_work_services(request):
     if not is_user_employee(current_user):
         return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
     employee = Employee.objects.get(user_id = current_user.id)
-    employee_services = EmployeeWorkService.objects.filter(employee = employee)
-
-    work_list = []
-    for t in employee_services:
-        work_list.append(t.employee)
+    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
+    employee_services = EmployeeWorkService.objects.filter(employee = employee).annotate(
+        current_status=Case(
+            When(end_date__isnull=True, then=Value('Activo')),
+            When(end_date__lte=timezone.now().date(), then=Value('Terminado')),
+            default=Value('Activo'),
+            output_field=CharField(),
+        )
+    ).filter(current_status=status_filter).order_by('-start_date')
     
-    return render(request, 'list_work_services.html', {'work_list': work_list})
+    paginator = Paginator(employee_services, 10)  # Muestra 10 servicios por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    
+    return render(request, 'list_work_services.html', {'page_obj': page_obj, 'current_status': status_filter})

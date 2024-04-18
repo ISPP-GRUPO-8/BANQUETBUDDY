@@ -13,4 +13,5 @@ urlpatterns = [
     path('employeeApplication/<int:offer_id>/', views.application_to_offer, name='application_to_offer'),
     path('<int:employee_id>/recommendation_letters', views.my_recommendation_letters, name='my_recommendation_letters'),
     path('chats/employees', views.listar_caterings_companies, name='listar_caterings_companies_employee'),
+    path('listWorkServices', views.list_work_services, name='list_catering_services_employee'),
 ]

@@ -67,11 +67,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
                         </li>
-                    {% endif %}
-                    {% if request.user.is_authenticated and request.user.ParticularUsername %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
+                        </li>
                     {% endif %}
                     {% if request.user.is_authenticated and is_catering_company %}
                     <li class="nav-item">
@@ -92,6 +90,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_companies_employee' %}">Chats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'list_catering_services_employee' %}">Job history</a>
                     </li>
                     {% endif %}
                 </ul>
