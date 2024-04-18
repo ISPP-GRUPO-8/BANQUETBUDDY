@@ -17,8 +17,8 @@ class CustomUser(AbstractUser):
         self.save()
 
 class TerminationReason(models.TextChoices):
-    RENUNCIA_VOLUNTARIA = "Renuncia voluntaria", "Renuncia voluntaria"
-    RENUNCIA_FORZADA = "Renuncia forzada", "Renuncia forzada"
+    RENUNCIA_VOLUNTARIA = "Voluntary resignation", "Voluntary resignation"
+    RENUNCIA_FORZADA = "Forced resignation", "Forced resignation"
 
 
 class AssignmentState(models.TextChoices):
