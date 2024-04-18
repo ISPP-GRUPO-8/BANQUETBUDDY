@@ -311,7 +311,7 @@ def profile_edit_view(request):
 
         # Validaciones
         if not (email and username and first_name and last_name):
-            messages.error(request, "Completa todos los campos")
+            messages.error(request, "Complete all fields")
             return render(request, "core/profile_edit.html", context)
 
         if (
@@ -319,7 +319,7 @@ def profile_edit_view(request):
             .exclude(username=request.user.username)
             .exists()
         ):
-            messages.error(request, "El correo electrónico ya está en uso")
+            messages.error(request, "Email is already in use")
             return render(request, "core/profile_edit.html", context)
 
         if (
@@ -327,14 +327,14 @@ def profile_edit_view(request):
             .exclude(username=request.user.username)
             .exists()
         ):
-            messages.error(request, "El nombre de usuario ya está en uso")
+            messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
         if is_employee:
             curriculum_file = request.FILES.get("curriculum")
             if curriculum_file:
                 if not curriculum_file.name.endswith(".pdf"):
-                    messages.error(request, "Por favor, carga solo archivos PDF")
+                    messages.error(request, "Please upload only PDF files")
                     return render(request, "core/profile_edit.html", context)
                 if employee_instance.curriculum:
                     employee_instance.curriculum.delete()
@@ -348,7 +348,7 @@ def profile_edit_view(request):
         user.last_name = last_name
         user.save()
 
-        messages.success(request, "Perfil actualizado correctamente")
+        messages.success(request, "Profile updated successfully")
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)

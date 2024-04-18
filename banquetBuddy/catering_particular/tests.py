@@ -2,15 +2,11 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from core.models import CustomUser
 from datetime import datetime
-from core.models import CustomUser
 from catering_owners.models import *
 from .views import *
 from catering_particular.models import *
-from django.test import TestCase, Client
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-from core.forms import CustomUserCreationForm
-from .forms import ParticularForm
+
 
 # class BookTestCase(TestCase):
 #     def setUp(self):

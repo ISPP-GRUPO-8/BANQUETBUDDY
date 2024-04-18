@@ -8,6 +8,8 @@
         <div class="card-header text-white" style="background-color: #02483e;">
             {% for event in events %}
                 {{ event.name }} - {{ event.cateringservice.name }} - {{ event.cateringservice.cateringcompany.name }}
+            {% empty %}
+                You don't have reservations yet.
             {% endfor %}
         </div>
         <div class="card-body">
@@ -20,6 +22,8 @@
                     <strong>Date:</strong> {{ event.date }}<br>
                     <strong>Number of Guests:</strong> {{ event.number_guests }}<br>
                 </p>
+            {% empty %}    
+                <a href="{% url 'listar_caterings' %}">Click here</a> to see the available caterings.
             {% endfor %}
         </div>
     </div>
