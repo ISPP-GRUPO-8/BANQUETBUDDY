@@ -73,8 +73,8 @@ urlpatterns = [
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
     path('chats/', listar_caterings_particular, name='listar_caterings_particular'),
-    path('dismiss-employee/<int:employee_work_service_id>/', dismiss_employee, name='dismiss_employee'),
     path('service/<int:service_id>/employees', list_employee, name='list_employee'),
+    path('employees/edit/<int:employee_work_service_id>/', edit_employee_termination, name='edit_employee_termination'),
 
 
     # CAMBIO DE PLAN

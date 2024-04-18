@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Case, When, Value, CharField
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm
+from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm, TerminationForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
@@ -14,6 +14,8 @@ import stripe
 from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from core.views import is_catering_company
 from .forms import (
@@ -576,16 +578,15 @@ def offer_list(request):
 def create_offer(request):
     catering_company = request.user.CateringCompanyusername
     events = Event.objects.filter(cateringcompany=catering_company)
-
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
             offer = form.save(commit=False)
-            offer.cateringservice = offer.event.cateringservice  # Asigna el servicio de catering del evento
+            offer.cateringservice = offer.event.cateringservice
             offer.save()
+            messages.success(request, "Offer created successfully!")
             return redirect('offer_list')
-        else:
-            form = OfferForm()
+        
     else:
         form = OfferForm()
 
@@ -594,24 +595,34 @@ def create_offer(request):
         'events': events
     })
 
+
 @login_required
 def edit_offer(request, offer_id):
     offer = get_object_or_404(Offer, pk=offer_id)
-    if request.user == offer.cateringservice.cateringcompany.user:
-        if request.method == 'POST':
-            form = OfferForm(request.POST, instance=offer)
-            if form.is_valid():
-                offer.save()
-                return redirect('offer_list')
-        else:
-            form = OfferForm(instance=offer)
-    else:
+    if request.user != offer.cateringservice.cateringcompany.user:
         return redirect('offer_list')
+
+    if request.method == 'POST':
+        form = OfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            try:
+                form.save()  # Intenta guardar el formulario
+                return redirect('offer_list')
+            except ValidationError as e:
+                # Añade los errores de validación del modelo a los errores del formulario
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        form.add_error(field, error)
+        # Si la validación falla, pasa el formulario con errores al template
+    else:
+        messages.error(request, "Please correct the errors below.")
 
     return render(request, 'offers/edit_offer.html', {
         'form': form,
         'offer': offer
     })
+
+
     
 @login_required
 def delete_offer(request, offer_id):
@@ -836,30 +847,24 @@ def delete_plate(request, plate_id):
         return redirect("list_plates")
 
 
+from django.db.models import Case, When, Value, CharField
+
 @login_required
 def list_employee(request, service_id):
     catering_service = get_object_or_404(CateringService, id=service_id)
     owner = CateringCompany.objects.get(user_id=request.user.id)
-    
-    status_filter = request.GET.get('status', 'Activo')  # 'Activo' es el valor predeterminado
 
-    employees_hired = EmployeeWorkService.objects.filter(
-        cateringservice=catering_service
-    ).annotate(
-        current_status=Case(
-            When(end_date__isnull=True, then=Value('Activo')),
-            When(end_date__lte=timezone.now().date(), then=Value('Terminado')),
-            default=Value('Activo'),
-            output_field=CharField(),
-        )
-    ).filter(current_status=status_filter).order_by('-start_date')
+    status_filter = request.GET.get('status', 'Activo')
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
+    filtered_employees = [emp for emp in all_employees if emp.current_status() == status_filter]
 
-    paginator = Paginator(employees_hired, 10)  # Muestra 10 empleados por página
+    paginator = Paginator(filtered_employees, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     recommendations = RecommendationLetter.objects.filter(catering_id=owner.user.id)
     recommendations_dict = {recommendation.employee_id: recommendation for recommendation in recommendations}
+    all_employees = EmployeeWorkService.objects.filter(cateringservice=catering_service)
 
     return render(request, 'list_employee.html', {
         'page_obj': page_obj,
@@ -867,6 +872,30 @@ def list_employee(request, service_id):
         'recommendations_dict': recommendations_dict,
         'current_status': status_filter
     })
+
+    
+
+@login_required
+def edit_employee_termination(request, employee_work_service_id):
+    employee_service = get_object_or_404(EmployeeWorkService, id=employee_work_service_id)
+    form = TerminationForm(request.POST or None, instance=employee_service)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            # Aquí podrías agregar una comprobación adicional, aunque no es necesaria
+            termination_reason = form.cleaned_data.get('termination_reason')
+            if not termination_reason:
+                form.add_error('termination_reason', 'This field is required.')
+            else:
+                form.save()
+                messages.success(request, 'Employee termination details updated successfully.')
+                return redirect('list_employee', service_id=employee_service.cateringservice.id)
+
+    return render(request, 'edit_employee.html', {
+        'employee_service': employee_service,
+        'form': form
+    })
+
 
 
 
@@ -1057,15 +1086,3 @@ def listar_caterings_particular(request):
     messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
-
-@login_required
-def dismiss_employee(request, employee_work_service_id):
-    employee_work_service = get_object_or_404(EmployeeWorkService, pk=employee_work_service_id)
-
-    # Asigna la fecha de finalización sin importar el método
-    employee_work_service.end_date = timezone.now().date()
-    employee_work_service.save()
-    messages.success(request, "Employee has been successfully dismissed.")
-
-    service_id = employee_work_service.cateringservice.id  # Obtener el ID del servicio para redirigir correctamente
-    return redirect('list_employee', service_id=service_id)

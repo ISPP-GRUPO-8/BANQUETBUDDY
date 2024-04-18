@@ -35,7 +35,20 @@
         margin-left: 10%;
         margin-right: 10%;
     }
+    .alert {
+        color: red;
+        margin-top: 5px;
+    }
 </style>
+
+{% if form.non_field_errors %}
+    <div class="errors">
+        {% for error in form.non_field_errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <h1>Create new job offer</h1>
 <div class="form">
     <form action="{% url 'create_offer' %}" method="post">
@@ -47,17 +60,18 @@
             {% endfor %}
         </select><br>
         <label for="id_title">Title:</label>
-        <input type="text" id="id_title" name="title" required><br>
+        <input type="text" id="id_title" name="title" value="{{ form.title.value|default_if_none:'' }}" required><br>
         <label for="id_description">Description:</label>
-        <textarea id="id_description" name="description" required></textarea><br>
+        <textarea id="id_description" name="description" required>{{ form.description.value|default_if_none:'' }}</textarea><br>
         <label for="id_requirements">Requirements:</label>
-        <textarea id="id_requirements" name="requirements" required></textarea><br>
+        <textarea id="id_requirements" name="requirements" required>{{ form.requirements.value|default_if_none:'' }}</textarea><br>
         <label for="id_location">Location:</label>
-        <input type="text" id="id_location" name="location" required><br>
+        <input type="text" id="id_location" name="location" value="{{ form.location.value|default_if_none:'' }}" required><br>
         <label for="id_start_date">Start Date:</label>
-        <input type="date" id="id_start_date" name="start_date" required><br>
-        <label for="id_end_date">End Date (Optional):</label>
-        <input type="date" id="id_end_date" name="end_date"><br>
+        <input type="date" id="id_start_date" name="start_date" value="{{ form.start_date.value|default_if_none:'' }}" required><br>
+        <label for="id_end_date">End Date:</label>
+        
+        <input type="date" id="id_end_date" name="end_date" value="{{ form.end_date.value|default_if_none:'' }}"><br>
         <input type="submit" value="Create offer">
     </form>
 </div>

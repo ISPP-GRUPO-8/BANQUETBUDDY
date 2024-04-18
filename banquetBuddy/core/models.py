@@ -16,6 +16,10 @@ class CustomUser(AbstractUser):
         self.reset_password_token = token
         self.save()
 
+class TerminationReason(models.TextChoices):
+    RENUNCIA_VOLUNTARIA = "Voluntary resignation", "Voluntary resignation"
+    RENUNCIA_FORZADA = "Forced resignation", "Forced resignation"
+
 
 class AssignmentState(models.TextChoices):
     PENDING = 'PENDING', 'Pending'
