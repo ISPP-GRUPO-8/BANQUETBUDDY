@@ -20,6 +20,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import traceback
+import logging
+logger = logging.getLogger(__name__)
+from django.db import transaction
 
 from core.views import is_catering_company
 from .forms import (
@@ -1157,24 +1160,23 @@ def manage_tasks(request, event_id):
             task.event = event
             task.cateringservice = event.cateringservice
             task.cateringcompany = event.cateringcompany
-            task.assignment_state = 'PENDING'  # Establece el estado inicial a 'PENDING'
+            task.assignment_state = 'PENDING'
             task.save()
             form.save_m2m()
             return redirect('manage_tasks', event_id=event_id)
         else:
-            # Si el formulario no es válido, log los errores para depuración
             logger.error("Form errors: %s", form.errors)
     else:
         form = TaskForm()
 
-    tasks = Task.objects.filter(event=event)
+
+    tasks = Task.objects.filter(event=event).prefetch_related('employees')
     
     all_employee_work_services = EmployeeWorkService.objects.filter(
         event=event,
         cateringservice=event.cateringservice
     ).select_related('employee')
 
-    # Filtrar solo empleados activos
     active_employees = [ews.employee for ews in all_employee_work_services if ews.current_status() == 'Activo']
 
     context = {
@@ -1187,8 +1189,6 @@ def manage_tasks(request, event_id):
     return render(request, "manage_tasks.html", context)
 
 
-import logging
-logger = logging.getLogger(__name__)
 
 @require_POST
 @login_required
@@ -1225,24 +1225,28 @@ def update_task_state(request, task_id):
 @csrf_exempt
 def add_task(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    form = TaskForm(request.POST, event_id=event_id)  # Pasa event_id al form
+    form = TaskForm(request.POST, event_id=event_id)
 
     if form.is_valid():
-        task = form.save(commit=False)
-        task.assignment_state = 'PENDING'  # Asegúrate de que la tarea se añade con estado 'PENDING'
-        task.event = event
-        task.cateringservice = event.cateringservice
-        task.cateringcompany = event.cateringcompany
-        task.save()
-        form.save_m2m()  # Guarda relaciones ManyToMany, incluyendo employees
+        with transaction.atomic():
+            task = form.save(commit=False)
+            task.assignment_state = 'PENDING'
+            task.event = event
+            task.cateringservice = event.cateringservice
+            task.cateringcompany = event.cateringcompany
+            task.save()
+            form.save_m2m()  # Guarda relaciones ManyToMany, incluyendo employees
 
-        messages.success(request, 'Task added successfully.')  # Envía un mensaje de éxito
-        return redirect('manage_tasks', event_id=event_id)  # Redirecciona a la vista de manejo de tareas
+            # Guardar empleados seleccionados en la tarea
+            employees = form.cleaned_data.get('employees', [])
+            task.employees.add(*employees)
+
+        messages.success(request, 'Task added successfully.')
+        return redirect('manage_tasks', event_id=event_id)
 
     else:
-        # Si el formulario no es válido, agrega los errores al sistema de mensajes de Django
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(request, f"{field}: {error}")
 
-        return redirect('manage_tasks', event_id=event_id)  # Redirecciona de vuelta al formulario con errores
+        return redirect('manage_tasks', event_id=event_id)
