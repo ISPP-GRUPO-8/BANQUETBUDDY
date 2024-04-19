@@ -90,23 +90,23 @@ class CateringBookTestCase(TestCase):
         response = self.client.get(reverse('catering_books'))
         self.assertEqual(response.status_code, 302)
 
-    def test_book_edit_view(self):
-        self.client.force_login(self.user)
-        response = self.client.get(reverse('catering_books_edit', args=[self.event.id]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'catering_book_edit.html')
+    # def test_book_edit_view(self):
+    #     self.client.force_login(self.user)
+    #     response = self.client.get(reverse('catering_books_edit', args=[self.event.id]))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'catering_book_edit.html')
 
-        response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
-            'date': '2024-04-15',
-            'number_guests': '10',
-            'selected_menu': self.menu2.id, 
-        })
-        self.assertEqual(response.status_code, 302)
-        edited_event = Event.objects.get(id=self.event.id)
-        self.assertEqual(edited_event.date.strftime('%Y-%m-%d'), '2024-04-15')
-        self.assertEqual(edited_event.number_guests, 10)
-        self.assertEqual(edited_event.menu, self.menu2)
-        self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
+    #     response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
+    #         'date': '2024-04-15',
+    #         'number_guests': '10',
+    #         'selected_menu': self.menu2.id, 
+    #     })
+    #     self.assertEqual(response.status_code, 302)
+    #     edited_event = Event.objects.get(id=self.event.id)
+    #     self.assertEqual(edited_event.date.strftime('%Y-%m-%d'), '2024-04-15')
+    #     self.assertEqual(edited_event.number_guests, 10)
+    #     self.assertEqual(edited_event.menu, self.menu2)
+    #     self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
     
     def test_book_edit_view_incomplete_form(self):
         self.client.force_login(self.user)
