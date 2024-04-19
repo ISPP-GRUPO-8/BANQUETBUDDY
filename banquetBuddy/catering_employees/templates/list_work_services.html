@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Employees</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .status-active { color: green; }
+        .status-terminated { color: red; }
+        .section-header { margin-top: 20px; font-size: 24px; }
+        .pagination { margin-top: 20px; }
+        .form-inline { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-2 mb-4">Jobs carried out</h1>
+        <hr/>
+        <div class="d-flex justify-content-center">
+            <form method="get" class="form-inline">
+                <label for="status" class="mr-sm-2">Filter by status:</label>
+                <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
+                    <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
+                    <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
+                </select>
+            </form>
+        </div>
+        {% for employee_service in page_obj %}
+        <div class="list-group-item">
+            <h3>{{ employee_service.cateringservice.name }}</h3>
+            <p>Catering company: {{ employee_service.cateringservice.cateringcompany.name }}</p>
+            <p>Email: {{ employee_service.cateringservice.cateringcompany.user.email }}</p>
+            <p>Phone number: {{ employee_service.cateringservice.cateringcompany.phone_number }}</p>
+            <p>Event: {{ employee_service.event.name }}</p>
+            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
+            <p class="status-{{ employee_service.current_status|lower }}">
+                
+                {% if employee_service.current_status == 'Activo' %}
+                   State: Active
+                {% endif %}
+
+                {% if employee_service.current_status == 'Terminado' %}
+                    State: Terminated
+                {% endif %}
+            </p>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center">
+            <p>No jobs found</p>
+        </div>
+        {% endfor %}
+        <nav aria-label="Employee page navigation">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item disabled"><a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

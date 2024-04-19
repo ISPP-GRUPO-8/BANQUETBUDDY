@@ -55,8 +55,6 @@ urlpatterns = [
     path('offer_list', offer_list, name='offer_list'),
     path('employee_record/<int:employee_id>/', employee_record_list, name='employee_record'),
     path('hire_employee/<int:employee_id>/', hire_employee, name='hire_employee'),
-
-    path('apply_offer/<int:offer_id>/', apply_offer, name='apply_offer'),
     path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
@@ -91,8 +89,6 @@ urlpatterns = [
 
     path('canceled/', payment_canceled, name='canceled'),
     path('chat/<int:id>/', chat_view, name='chat'),
-
-    path('hire_form/<int:employee_id>/<int:offer_id>/', views.hire_form, name='hire_form'),
 
 
 
