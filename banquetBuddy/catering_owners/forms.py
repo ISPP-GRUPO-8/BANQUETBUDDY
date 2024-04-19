@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
-from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
+from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService, Task, Employee
 from datetime import datetime
 from django.utils import timezone
 from django.forms import ModelForm
@@ -250,3 +250,28 @@ class TerminationForm(forms.ModelForm):
         
 
 
+class TaskForm(forms.ModelForm):
+    employees = forms.ModelMultipleChoiceField(
+        queryset=Employee.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    class Meta:
+        model = Task
+        fields = ['description', 'assignment_date', 'expiration_date', 'priority', 'employees']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+            'assignment_date': forms.DateInput(attrs={'type': 'date'}),
+            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
+            'priority': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        event_id = kwargs.pop('event_id', None)
+        super(TaskForm, self).__init__(*args, **kwargs)
+        if event_id:
+            self.fields['employees'].queryset = Employee.objects.filter(
+                employeeworkservices__event__id=event_id,
+                employeeworkservices__end_date__isnull=True
+            )

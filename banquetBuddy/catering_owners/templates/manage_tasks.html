@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Estilos generales para el tablero Kanban */
+.kanban-board {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+/* Estilos para cada columna del Kanban */
+.kanban-column {
+    width: 30%;
+    min-height: 300px;
+    background-color: #f4f4f4;
+    margin: 0 10px;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.kanban-column h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Estilos para las tareas dentro de las columnas */
+.task {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    cursor: pointer; /* Indica que la tarea es arrastrable */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.task:hover {
+    border-color: #aaa;
+}
+
+/* Estilo para la tarea mientras se arrastra */
+.task[draggable="true"]:active {
+    opacity: 0.5;
+}
+
+</style>
+
+<h1>Manage Tasks for {{ event.name }}</h1>
+
+    <div class="kanban-board">
+        <div class="kanban-column pending" data-state="PENDING">
+            <h2>Pending</h2>
+            <div class="tasks">
+                {% for task in tasks %}
+                    {% if task.assignment_state == 'PENDING' %}
+                        <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="kanban-column in_progress" data-state="IN_PROGRESS">
+            <h2>In Progress</h2>
+            <div class="tasks">
+                {% for task in tasks %}
+                    {% if task.assignment_state == 'IN_PROGRESS' %}
+                        <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="kanban-column completed" data-state="COMPLETED">
+            <h2>Completed</h2>
+            <div class="tasks">
+                {% for task in tasks %}
+                    {% if task.assignment_state == 'COMPLETED' %}
+                        <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                            <p>{{ task.description }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario para añadir nuevas tareas -->
+    <div class="add-task-form">
+        <h3>Add New Task</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="description" placeholder="Task Description" required>
+            <input type="date" name="assignment_date" required>
+            <input type="date" name="expiration_date" required>
+            <select name="employee" required>
+                {% for employee in active_employees %}
+                    <option value="{{ employee.employee.user.id }}">{{ employee.employee.profession }} - {{ employee.employee.user.username }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+
+    <script src="{% static 'core/kanban.js' %}"></script>
+{% endblock %}

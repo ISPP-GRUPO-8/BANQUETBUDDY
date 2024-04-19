@@ -150,6 +150,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
 WEBDRIVER_OPTIONS = {
     'executable_path': DRIVER_PATH,  # Ruta al archivo del controlador WebDriver
     'headless': True,  # Ejecución sin interfaz gráfica (opcional)

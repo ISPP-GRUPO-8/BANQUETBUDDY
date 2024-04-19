@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Case, When, Value, CharField
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm, TerminationForm
+from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm, TaskForm, TerminationForm
 from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
 from django.http import HttpResponseForbidden;
 from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
@@ -16,6 +16,10 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import traceback
 
 from core.views import is_catering_company
 from .forms import (
@@ -918,6 +922,7 @@ def delete_plate(request, plate_id):
 
 
 from django.db.models import Case, When, Value, CharField
+import json
 
 @login_required
 def list_employee(request, service_id):
@@ -1135,3 +1140,108 @@ def listar_caterings_particular(request):
     messages = Message.objects.filter(receiver = catering_company.user).distinct('sender')
     context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
+
+
+@login_required
+@csrf_exempt
+def manage_tasks(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    
+    # Verificar que el evento está confirmado y que el usuario tiene permisos
+    if event.booking_state != 'CONFIRMED' or request.user != event.cateringcompany.user:
+        return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
+    
+    # Preparar formulario para nueva tarea
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.event = event
+            task.cateringservice = event.cateringservice
+            task.cateringcompany = event.cateringcompany
+            task.save()
+            form.save_m2m()  # Para guardar relaciones ManyToMany como los empleados
+            return redirect('manage_tasks', event_id=event_id)  # Redireccionar para evitar doble posteo
+    else:
+        form = TaskForm()
+
+    # Recuperar tareas asociadas al evento
+    tasks = Task.objects.filter(event=event)
+    
+    # Filtrar empleados activos para el evento
+    active_employees = EmployeeWorkService.objects.filter(
+        event=event,
+        cateringservice=event.cateringservice,
+        end_date__isnull=True
+    ).select_related('employee')
+
+    context = {
+        'event': event,
+        'tasks': tasks,
+        'form': form,  # Incluir el formulario en el contexto
+        'active_employees': [ews.employee for ews in active_employees]
+    }
+
+    return render(request, "manage_tasks.html", context)
+
+import logging
+logger = logging.getLogger(__name__)
+
+@require_POST
+@login_required
+@csrf_exempt
+def update_task_state(request, task_id):
+    try:
+        if hasattr(request.user, 'CateringCompanyusername'):
+            catering_company = request.user.CateringCompanyusername
+        else:
+            return JsonResponse({'status': 'error', 'message': 'User does not have a catering company.'}, status=403)
+
+        task = Task.objects.get(id=task_id, cateringcompany=catering_company)
+        data = json.loads(request.body)
+        new_state = data.get('newState')
+
+        if new_state in [choice[0] for choice in AssignmentState.choices]:  # Ajustado para usar AssignmentState directamente
+            task.assignment_state = new_state
+            task.save()
+            return JsonResponse({'status': 'success', 'message': 'Task state updated.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Invalid state provided.'}, status=400)
+
+    except Task.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Task not found.'}, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'}, status=400)
+    except Exception as e:
+        logger.error('Error updating task state: %s', str(e), exc_info=True)
+        return JsonResponse({'status': 'error', 'message': 'Internal server error: {}'.format(str(e))}, status=500)
+
+
+@require_POST
+@login_required
+@csrf_exempt
+def add_task(request):
+    description = request.POST.get('description')
+    assignment_date = request.POST.get('assignment_date')
+    expiration_date = request.POST.get('expiration_date')
+    employee_id = request.POST.get('employee')
+    event_id = request.POST.get('event_id')  # Debería ser parte del formulario o determinado de otra manera.
+
+    employee = Employee.objects.get(id=employee_id)
+    event = Event.objects.get(id=event_id)
+
+    if event.booking_state == 'CONFIRMED':
+        task = Task.objects.create(
+            description=description,
+            assignment_date=assignment_date,
+            expiration_date=expiration_date,
+            event=event,
+            cateringservice=event.cateringservice,
+            cateringcompany=request.user.cateringcompany
+        )
+        task.employees.add(employee)
+        task.save()
+        return JsonResponse({'status': 'success', 'message': 'Task added successfully.'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Event is not confirmed or invalid data.'}, status=400)
+
