@@ -1,6 +1,6 @@
 from decimal import Decimal
 import os
-from django.test import Client, TestCase
+from django.test import Client, LiveServerTestCase, TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from catering_particular.models import Particular
@@ -15,6 +15,11 @@ from core.models import CustomUser, BookingState
 from phonenumbers import parse
 from datetime import datetime, timedelta
 from django.core.files import File
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
 
 
 
@@ -642,3 +647,75 @@ class CateringViewTest(TestCase):
 ########################
 ###Tests de interfaz####
 ########################
+
+class RegisterFormTestCase(LiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        cls.selenium.implicitly_wait(10)  # Espera implícita de hasta 10 segundos
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_register_form(self):
+        ruta_archivo = os.path.join(os.path.dirname(__file__), 'test_files', 'test_pdf.pdf')
+        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
+
+        # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
+        # Por ejemplo:
+        register_particular_button = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, 'register_company_button'))
+        )
+        register_particular_button.click()
+
+        # Verifica que se haya redirigido correctamente a la vista de registro de empleado
+        self.assertIn('/register_company', self.selenium.current_url)
+
+        # Completa el formulario de usuario
+        username_input = self.selenium.find_element_by_name('username')
+        username_input.send_keys('testuser')
+
+        first_name_input = self.selenium.find_element_by_name('first_name')
+        first_name_input.send_keys('John')
+
+        last_name_input = self.selenium.find_element_by_name('last_name')
+        last_name_input.send_keys('Doe')
+
+        email_input = self.selenium.find_element_by_name('email')
+        email_input.send_keys('test@example.com')
+
+        password1_input = self.selenium.find_element_by_name('password1')
+        password1_input.send_keys('parkour%123')
+
+        password2_input = self.selenium.find_element_by_name('password2')
+        password2_input.send_keys('parkour%123')
+
+        # Completa el formulario de compañía
+        name_input = self.selenium.find_element_by_name('name')
+        name_input.send_keys('Test Catering Company')
+
+        address_input = self.selenium.find_element_by_name('address')
+        address_input.send_keys('123 Test St.')
+
+        phone_number_input = self.selenium.find_element_by_name('phone_number')
+        phone_number_input.send_keys('+12125552368')
+
+        cif_input = self.selenium.find_element_by_name('cif')
+        cif_input.send_keys('A1234567J')
+
+        verification_document_input = self.selenium.find_element_by_name('verification_document')
+        verification_document_input.send_keys(ruta_archivo)
+
+        # Completa la casilla de Política de Privacidad
+        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
+        privacy_policy_checkbox.click()
+
+        # Envía el formulario
+        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
+
+        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
+        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
