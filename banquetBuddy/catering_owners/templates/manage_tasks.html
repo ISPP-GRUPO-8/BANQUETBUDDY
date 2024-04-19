@@ -100,10 +100,10 @@
             <input type="date" name="expiration_date" required>
             <select name="employee" required>
                 {% for employee in active_employees %}
-                    <option value="{{ employee.employee.user.id }}">{{ employee.employee.profession }} - {{ employee.employee.user.username }}</option>
+                    <option value="{{ employee.user.id }}">{{ employee.profession }} - {{ employee.user.username }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Add Task</button>
+                        <button type="submit">Add Task</button>
         </form>
     </div>
 

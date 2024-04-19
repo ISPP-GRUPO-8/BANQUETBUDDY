@@ -1147,11 +1147,9 @@ def listar_caterings_particular(request):
 def manage_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     
-    # Verificar que el evento está confirmado y que el usuario tiene permisos
     if event.booking_state != 'CONFIRMED' or request.user != event.cateringcompany.user:
         return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
     
-    # Preparar formulario para nueva tarea
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -1160,26 +1158,27 @@ def manage_tasks(request, event_id):
             task.cateringservice = event.cateringservice
             task.cateringcompany = event.cateringcompany
             task.save()
-            form.save_m2m()  # Para guardar relaciones ManyToMany como los empleados
-            return redirect('manage_tasks', event_id=event_id)  # Redireccionar para evitar doble posteo
+            form.save_m2m()
+            return redirect('manage_tasks', event_id=event_id)
     else:
         form = TaskForm()
 
-    # Recuperar tareas asociadas al evento
     tasks = Task.objects.filter(event=event)
     
-    # Filtrar empleados activos para el evento
-    active_employees = EmployeeWorkService.objects.filter(
+    # Obtener todos los EmployeeWorkService relacionados
+    all_employee_work_services = EmployeeWorkService.objects.filter(
         event=event,
-        cateringservice=event.cateringservice,
-        end_date__isnull=True
+        cateringservice=event.cateringservice
     ).select_related('employee')
+
+    # Filtrar por estado activo usando el método current_status
+    active_employees = [ews.employee for ews in all_employee_work_services if ews.current_status() == 'Activo']
 
     context = {
         'event': event,
         'tasks': tasks,
-        'form': form,  # Incluir el formulario en el contexto
-        'active_employees': [ews.employee for ews in active_employees]
+        'form': form,
+        'active_employees': active_employees
     }
 
     return render(request, "manage_tasks.html", context)
