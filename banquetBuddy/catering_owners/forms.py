@@ -252,7 +252,7 @@ class TerminationForm(forms.ModelForm):
 
 class TaskForm(forms.ModelForm):
     employees = forms.ModelMultipleChoiceField(
-        queryset=Employee.objects.all(),
+        queryset=Employee.objects.none(),  # Inicializa vacío; se llenará según el evento
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
@@ -271,7 +271,14 @@ class TaskForm(forms.ModelForm):
         event_id = kwargs.pop('event_id', None)
         super(TaskForm, self).__init__(*args, **kwargs)
         if event_id:
+            employee_services = EmployeeWorkService.objects.filter(
+                event__id=event_id
+            ).select_related('employee')
+
+            # Filtrar empleados activos en Python
+            active_employees = [ews.employee for ews in employee_services if ews.current_status() == 'Activo']
+
+            # Actualizar queryset de empleados en el formulario
             self.fields['employees'].queryset = Employee.objects.filter(
-                employeeworkservices__event__id=event_id,
-                employeeworkservices__end_date__isnull=True
+                user__id__in=[emp.user.id for emp in active_employees]  # Usa user.id aquí
             )

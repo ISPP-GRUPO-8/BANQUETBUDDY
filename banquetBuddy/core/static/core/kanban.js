@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({ newState: newState })
         }).then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+                throw new Error('Network response was not ok: ' + response.statusText);
             }
             return response.json();
         })
@@ -58,30 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function moveTask(taskId, newState) {
-        const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-        console.log("Task element found:", taskElement);  // Verificar que el elemento de la tarea se encuentra
-    
-        if (taskElement) {
-            const oldParent = taskElement.parentNode;
-            console.log("Old parent:", oldParent);  // Mostrar el contenedor padre anterior
-            const targetColumn = document.querySelector(`.kanban-column.${newState.toLowerCase()} .tasks`);
-            console.log("Looking for target column with class:", `.kanban-column.${newState.toLowerCase()} .tasks`);
-            console.log("Target column found:", targetColumn);  // Asegurarse de que se encuentra la columna destino
-    
-            if (targetColumn) {
-                oldParent.removeChild(taskElement);  // Asegurarse de que la tarea se elimina de la columna actual
-                targetColumn.appendChild(taskElement);  // Añadir la tarea a la nueva columna
-                console.log(`Task ${taskId} moved to ${newState}`);
-            } else {
-                console.log("Failed to find the target column for state:", newState);
-            }
-        } else {
-            console.log("Failed to find the task element for:", taskId);
-        }
-    }
-    
-
     function refreshTaskInDOM(taskId, newState) {
         const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
         if (taskElement) {
@@ -99,23 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Failed to find the task element for:", taskId);
         }
     }
-            
+
     function getCSRFToken() {
         return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     }
 
-    document.querySelector('.add-task-form form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        fetch('/add_task/', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-        .then(data => {
-            console.log('Task added successfully:', data);
-            window.location.reload();
-        }).catch(error => {
-            console.log('Error adding task:', error);
-        });
-    });
+    
 });

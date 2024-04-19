@@ -90,22 +90,31 @@
         </div>
     </div>
 
-    <!-- Formulario para añadir nuevas tareas -->
-    <div class="add-task-form">
-        <h3>Add New Task</h3>
-        <form method="post">
-            {% csrf_token %}
-            <input type="text" name="description" placeholder="Task Description" required>
-            <input type="date" name="assignment_date" required>
-            <input type="date" name="expiration_date" required>
-            <select name="employee" required>
-                {% for employee in active_employees %}
-                    <option value="{{ employee.user.id }}">{{ employee.profession }} - {{ employee.user.username }}</option>
-                {% endfor %}
+<!-- Formulario para añadir nuevas tareas -->
+<div class="add-task-form">
+    <h3>Add New Task</h3>
+    <form method="post" action="{% url 'add_task' event_id=event.id %}">
+        {% csrf_token %}
+        <input type="text" name="description" placeholder="Task Description" required>
+        <input type="date" name="assignment_date" required>
+        <input type="date" name="expiration_date" required>
+        <select name="employee" required>
+            {% for employee in active_employees %}
+                <option value="{{ employee.user.id }}">{{ employee.profession }} - {{ employee.user.username }}</option>
+            {% endfor %}
+        </select>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select name="priority" id="priority" required>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
             </select>
+        </div>
+        
                         <button type="submit">Add Task</button>
-        </form>
+    </form>
     </div>
-
+    
     <script src="{% static 'core/kanban.js' %}"></script>
 {% endblock %}
