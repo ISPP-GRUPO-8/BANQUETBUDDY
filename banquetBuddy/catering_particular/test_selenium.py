@@ -27,6 +27,24 @@ class TestLogin():
     self.driver.find_element(By.CSS_SELECTOR, ".form-group:nth-child(2)").click()
     self.driver.find_element(By.CSS_SELECTOR, ".form-group:nth-child(3)").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+
+class TestLogout():
+  def setup_method(self, method):
+    self.driver = webdriver.Chrome()
+    self.vars = {}
+  
+  def teardown_method(self, method):
+    self.driver.quit()
+  
+  def test_logout(self):
+    self.driver.get("http://127.0.0.1:8000/")
+    self.driver.set_window_size(1294, 1392)
+    self.driver.find_element(By.LINK_TEXT, "Log in").click()
+    self.driver.find_element(By.ID, "id_username").send_keys("Pablo@gmail.com")
+    self.driver.find_element(By.ID, "id_password").send_keys("Pablo")
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+    self.driver.find_element(By.LINK_TEXT, "Log out").click()
+  
   
 class TestBooking():
   def setup_method(self, method):
