@@ -15,7 +15,14 @@ from datetime import datetime
 import stripe
 from django.conf import settings
 from decimal import Decimal
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
 from core.permission_checks import is_user_particular
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
@@ -100,12 +107,43 @@ def register_particular(request):
 
         if user_form.is_valid() and particular_form.is_valid():
 
-            user = user_form.save()
+            user = user_form.save(commit=False)
+            user.is_active = (
+                False  # Desactiva la cuenta hasta que se confirme el correo electrónico
+            )
+            user.save()
 
             particular_profile = particular_form.save(commit=False)
             particular_profile.user = user
             particular_profile.save()
-            messages.success(request, "Registration successful!")
+
+            # Genera un token único para el usuario
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            # Obtiene el dominio actual
+            domain = get_current_site(request).domain
+            # Crea el enlace de confirmación
+            link = f"http://{domain}/activate/{uid}/{token}/particular"
+            # Renderiza el correo electrónico
+            mail_subject = "Activate your account"
+            message = render_to_string(
+                "core/activation_email.html",
+                {
+                    "user": user,
+                    "domain": domain,
+                    "uid": uid,
+                    "token": token,
+                },
+            )
+            # Envia el correo electrónico
+            send_mail(
+                mail_subject, message, "banquetbuddyoficial@gmail.com", [user.email]
+            )
+
+            messages.success(
+                request,
+                "Registration successful! Please confirm your email address to complete the registration",
+            )
 
             return redirect("home")
 
@@ -259,6 +297,7 @@ def catering_detail(request, catering_id):
     context["catering"] = catering
     return render(request, "catering_detail.html", context)
 
+
 @login_required
 def catering_review(request, catering_id):
     user = request.user
@@ -272,11 +311,14 @@ def catering_review(request, catering_id):
         if event.cateringservice == catering:
             has_been_booked = True
             break
-    
+
     if not has_been_booked:
-        messages.error(request, "You must have a booking with this catering service before reviewing it")
+        messages.error(
+            request,
+            "You must have a booking with this catering service before reviewing it",
+        )
         return redirect("listar_caterings")
-    
+
     if particular:
         context = {"catering": catering, "particular": particular}
 
@@ -310,7 +352,7 @@ def booking_process(request, catering_id):
     user = request.user
     if not is_particular(request):
         return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
-    
+
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
 
@@ -390,8 +432,11 @@ def booking_process(request, catering_id):
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, "booking_process.html", context)
 
+
 @login_required
-def payment_process(request, catering_service_id, selected_menu, number_guests, event_date):
+def payment_process(
+    request, catering_service_id, selected_menu, number_guests, event_date
+):
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
     request.session["selected_menu"] = selected_menu
     if request.method == "POST":
@@ -431,7 +476,7 @@ def payment_completed(request):
     menu = Menu.objects.get(id=request.session["selected_menu"])
     catering_service_id = request.session["catering_service_id"]
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
-    
+
     # Asignar la empresa de catering vinculada al servicio de catering
     catering_company = catering_service.cateringcompany
 
@@ -452,6 +497,7 @@ def payment_completed(request):
 
 def payment_canceled(request):
     return render(request, "payment/canceled.html")
+
 
 def listar_caterings_companies(request):
     context = {}

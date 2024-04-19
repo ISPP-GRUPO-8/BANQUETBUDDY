@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .invalid-link-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .invalid-link-container h1 {
+        font-size: 2em;
+        color: #333;
+    }
+
+    .invalid-link-container p {
+        font-size: 1.2em;
+        color: #666;
+    }
+
+    @media (max-width: 600px) {
+        .invalid-link-container h1 {
+            font-size: 1.5em;
+        }
+
+        .invalid-link-container p {
+            font-size: 1em;
+        }
+    }
+</style>
+
+<div class="invalid-link-container">
+    <h1>Invalid Activation Link</h1>
+    <p>We're sorry, but the activation link you have used is invalid or has expired.</p>
+    <p>Please try registering again or contact support if you need help.</p>
+</div>
+
+{% endblock %}

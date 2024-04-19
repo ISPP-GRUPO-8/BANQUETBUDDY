@@ -17,14 +17,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>List of Employees</h1>
-        <form method="get" class="form-inline">
-            <label for="status" class="mr-sm-2">Filter by status:</label>
-            <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
-                <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
-                <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
-            </select>
-        </form>
+        <h1 class="text-center mt-2 mb-4">Jobs carried out</h1>
+        <hr/>
+        <div class="d-flex justify-content-center">
+            <form method="get" class="form-inline">
+                <label for="status" class="mr-sm-2">Filter by status:</label>
+                <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
+                    <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
+                    <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
+                </select>
+            </form>
+        </div>
         {% for employee_service in page_obj %}
         <div class="list-group-item">
             <h3>{{ employee_service.cateringservice.name }}</h3>
@@ -43,6 +46,10 @@
                     State: Terminated
                 {% endif %}
             </p>
+        </div>
+        {% empty %}
+        <div class="list-group-item text-center">
+            <p>No jobs found</p>
         </div>
         {% endfor %}
         <nav aria-label="Employee page navigation">
