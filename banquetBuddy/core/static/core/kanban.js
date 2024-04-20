@@ -1,6 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Kanban JS is loaded and running");
+    console.log("Kanban JS loaded and running");
 
+    const board = document.querySelector('.kanban-board');
+    board.addEventListener('click', function(event) {
+        if (event.target.classList.contains('btn-edit')) {
+            event.preventDefault();
+            const taskId = event.target.closest('.task').dataset.taskId;
+            loadTaskData(taskId);
+        }
+    });
+    
     const tasks = document.querySelectorAll('.task');
     tasks.forEach(task => {
         task.addEventListener('dragstart', handleDragStart);
@@ -12,6 +21,55 @@ document.addEventListener('DOMContentLoaded', function() {
         column.addEventListener('dragover', handleDragOver);
         column.addEventListener('drop', handleDrop);
     });
+
+    document.querySelectorAll('.btn-edit').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const taskId = this.closest('.task').dataset.taskId;
+            loadTaskData(taskId);
+        });
+    });
+
+    function loadTaskData(taskId) {
+        fetch(`/get_task_data/?task_id=${taskId}`)
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('#editTaskModal .modal-body').innerHTML = html;
+            $('#editTaskModal').modal('show');
+        })
+        .catch(error => {
+            console.error('Error loading task data:', error);
+        });
+    }
+
+    // Función para enviar el formulario modificado
+    document.querySelector('#editTaskModal .btn-primary').addEventListener('click', function() {
+        document.querySelector('#editTaskModal form').submit();
+    });
+    
+
+    function submitEditForm() {
+        const form = document.querySelector('#editTaskModal form');
+        const formData = new FormData(form);
+        const taskId = form.querySelector('[name="task_id"]').value;
+        fetch(`/update_task/${taskId}/`, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Task updated successfully:', data);
+            $('#editTaskModal').modal('hide');
+            // Actualizar la información de la tarea en la interfaz de usuario aquí, si es necesario
+        }).catch(error => {
+            console.error('Error updating task:', error);
+        });
+    }
+
 
     function handleDragStart(e) {
         e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
@@ -75,6 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Failed to find the task element for:", taskId);
         }
     }
+
+    
 
     function getCSRFToken() {
         return document.querySelector('input[name="csrfmiddlewaretoken"]').value;

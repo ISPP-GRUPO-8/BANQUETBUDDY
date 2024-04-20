@@ -1149,34 +1149,39 @@ def listar_caterings_particular(request):
 @csrf_exempt
 def manage_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    
+    task_id = request.POST.get('task_id', None)
+
     if event.booking_state != 'CONFIRMED' or request.user != event.cateringcompany.user:
         return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
-    
+
+    if task_id:
+        task = get_object_or_404(Task, pk=task_id)
+        form = TaskForm(request.POST or None, instance=task, event_id=event_id)
+    else:
+        form = TaskForm(request.POST or None, event_id=event_id)
+
     if request.method == 'POST':
-        form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.event = event
             task.cateringservice = event.cateringservice
             task.cateringcompany = event.cateringcompany
-            task.assignment_state = 'PENDING'
+            if not task_id:
+                task.assignment_state = 'PENDING'
             task.save()
             form.save_m2m()
+            messages.success(request, 'Task updated successfully.' if task_id else 'Task added successfully.')
             return redirect('manage_tasks', event_id=event_id)
         else:
-            logger.error("Form errors: %s", form.errors)
-    else:
-        form = TaskForm()
-
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
 
     tasks = Task.objects.filter(event=event).prefetch_related('employees')
-    
     all_employee_work_services = EmployeeWorkService.objects.filter(
         event=event,
         cateringservice=event.cateringservice
     ).select_related('employee')
-
     active_employees = [ews.employee for ews in all_employee_work_services if ews.current_status() == 'Activo']
 
     context = {
@@ -1250,3 +1255,36 @@ def add_task(request, event_id):
                 messages.error(request, f"{field}: {error}")
 
         return redirect('manage_tasks', event_id=event_id)
+
+@require_POST
+@login_required
+@csrf_exempt
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id, cateringcompany=request.user.CateringCompanyusername)
+
+    if task:
+        task.delete()
+        messages.success(request, 'Task deleted successfully.')
+    else:
+        messages.error(request, 'Task not found.')
+
+    return redirect('manage_tasks', event_id=task.event.id)
+
+def update_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task, event_id=task.event.id)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_tasks', event_id=task.event.id)
+    else:
+        form = TaskForm(instance=task, event_id=task.event.id)  # Pase correcto de event_id
+
+    return render(request, 'edit_task.html', {'form': form, 'task': task})
+
+
+def get_task_data(request):
+    task_id = request.GET.get('task_id')
+    task = get_object_or_404(Task, pk=task_id)
+    form = TaskForm(instance=task)  # Inicializa el formulario con la instancia de la tarea
+    return render(request, 'task_edit_form.html', {'form': form, 'task': task})  # Asegúrate de pasar 'task' al contexto

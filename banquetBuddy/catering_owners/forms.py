@@ -253,32 +253,34 @@ class TerminationForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     employees = forms.ModelMultipleChoiceField(
         queryset=Employee.objects.none(),  # Inicializa vacío; se llenará según el evento
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(),
         required=False
     )
 
     class Meta:
         model = Task
         fields = ['description', 'assignment_date', 'expiration_date', 'priority', 'employees']
-        widgets = {
-            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
-            'assignment_date': forms.DateInput(attrs={'type': 'date'}),
-            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
-            'priority': forms.Select(attrs={'class': 'form-control'}),
-        }
 
     def __init__(self, *args, **kwargs):
         event_id = kwargs.pop('event_id', None)
+        instance = kwargs.get('instance', None)
         super(TaskForm, self).__init__(*args, **kwargs)
+
         if event_id:
+            # Obtener todos los servicios de trabajo de los empleados para este evento específico
             employee_services = EmployeeWorkService.objects.filter(
                 event__id=event_id
             ).select_related('employee')
 
-            # Filtrar empleados activos en Python
+            # Filtrar solo los empleados que están activos
             active_employees = [ews.employee for ews in employee_services if ews.current_status() == 'Activo']
 
-            # Actualizar queryset de empleados en el formulario
+            # Actualizar el queryset para el campo de empleados
             self.fields['employees'].queryset = Employee.objects.filter(
-                user__id__in=[emp.user.id for emp in active_employees]  # Usa user.id aquí
+                user_id__in=[emp.user_id for emp in active_employees]  # Usa user_id para filtrar
             )
+
+        # Prellenar el campo con los empleados actualmente asignados si se está editando una instancia existente
+        if instance:
+            self.fields['employees'].initial = instance.employees.all()
+
