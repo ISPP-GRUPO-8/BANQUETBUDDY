@@ -352,6 +352,9 @@ class ListWorkServicesIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'list_work_services.html')
 
+########################
+###Tests de interfaz####
+########################
 
 
 class RegisterFormTestCase(LiveServerTestCase):

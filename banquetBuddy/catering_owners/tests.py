@@ -15,11 +15,13 @@ from core.models import CustomUser, BookingState
 from phonenumbers import parse
 from datetime import datetime, timedelta
 from django.core.files import File
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
+from django.urls import reverse
 
 
 
@@ -719,3 +721,110 @@ class RegisterFormTestCase(LiveServerTestCase):
 
         # Verifica que se haya redirigido a la página de inicio después del registro exitoso
         self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
+
+
+class VisualAddMenuTest(LiveServerTestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        self.driver.implicitly_wait(10)
+
+        # Crear usuario y empresa de catering
+        self.user = CustomUser.objects.create_user(username='testuser', password='password',email='testuser@gmail.com')
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_add_menu_authenticated_user(self):
+        # Iniciar sesión con Selenium
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys('testuser@gmail.com')
+        self.driver.find_element_by_name('password').send_keys('password')
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Navegar a la página para agregar un plato
+        self.driver.get(self.live_server_url + '/add_menu/')
+        # Rellenar el formulario
+
+        name_input = self.driver.find_element_by_name('name')
+        name_input.send_keys('Test Menu')
+        description_input = self.driver.find_element_by_name('description')
+        description_input.send_keys('This is a test menu')
+        diet_restrictions_input = self.driver.find_element_by_name('diet_restrictions')
+        diet_restrictions_input.send_keys('No restrictions')
+
+        # Enviar el formulario
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Verificar si el plato se creó correctamente
+        self.assertEqual(self.driver.current_url, self.live_server_url + '/list_menus/')
+        success_message = self.driver.find_element_by_css_selector('.alert-success').text
+        self.assertIn('Menu created successfully', success_message)
+
+
+class VisualEditMenuTest(StaticLiveServerTestCase):
+    def setUp(self):
+        self.username = 'testuser@gmail.com'
+        self.password = 'password'
+        self.user = CustomUser.objects.create_user(username=self.username, password=self.password)
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+        self.menu = Menu.objects.create(cateringcompany=self.catering_company, name='Test Menu', description='Test Description', diet_restrictions='No restrictions')
+        self.url = self.live_server_url + reverse('edit_menu', kwargs={'menu_id': self.menu.id})
+        self.delete_url = self.live_server_url + reverse('delete_menu', kwargs={'menu_id': self.menu.id})
+
+        self.driver = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        self.driver.implicitly_wait(10)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_edit_menu_authenticated_user(self):
+        # Iniciar sesión
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys(self.username)
+        self.driver.find_element_by_name('password').send_keys(self.password)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Acceder a la página de edición del menú
+        self.driver.get(self.url)
+
+        # Simular la edición del menú
+        name_input = self.driver.find_element_by_css_selector('input[name="name"]')
+        name_input.clear()  # Limpiar el campo de nombre
+        name_input.send_keys('Updated Menu')  # Introducir un nombre actualizado
+        description_input = self.driver.find_element_by_css_selector('textarea[name="description"]')
+        description_input.clear()
+        description_input.send_keys('Updated Description')
+        diet_restrictions_input = self.driver.find_element_by_css_selector('input[name="diet_restrictions"]')
+        diet_restrictions_input.clear()
+        diet_restrictions_input.send_keys('Updated Restrictions')
+
+        # Enviar el formulario (método PUT simulado)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Verificar si el menú se actualizó correctamente
+        updated_menu = Menu.objects.get(id=self.menu.id)
+        self.assertEqual(updated_menu.name, 'Updated Menu')
+        self.assertEqual(updated_menu.description, 'Updated Description')
+        self.assertEqual(updated_menu.diet_restrictions, 'Updated Restrictions')
+    
+    def test_delete_menu(self):
+        # Ir a la página de lista de menús
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys(self.username)
+        self.driver.find_element_by_name('password').send_keys(self.password)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        self.driver.get(f'{self.live_server_url}/list_menus/')
+        
+        # Encontrar el botón de eliminar y hacer clic en él
+        delete_button = self.driver.find_element_by_name('delete_menu_button')
+        if delete_button.is_displayed():
+            delete_button.click()
+
+        # Verificar si el menú fue eliminado correctamente
+        self.assertNotIn(self.menu.name, self.driver.page_source)
+
+    
+
+

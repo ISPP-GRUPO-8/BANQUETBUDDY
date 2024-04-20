@@ -130,7 +130,7 @@
                     </form>
                     <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                        <button type="submit" class="btn btn-danger small-font" name="delete_menu_button"><i class="bi bi-trash3"></i></button>
                     </form>
                 </div>
             </div>
