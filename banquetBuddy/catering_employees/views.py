@@ -195,7 +195,7 @@ def list_work_services(request):
 
 def employee_kanban(request, event_id):
     current_user = request.user
-
+    event = get_object_or_404(Event, pk=event_id)
     try:
         employee = Employee.objects.get(user=current_user)
         employee_service = EmployeeWorkService.objects.get(
@@ -214,6 +214,7 @@ def employee_kanban(request, event_id):
         task_list.append(task)
 
     return render(request, 'employee_kanban.html', {
+        'event': event,
         'tasks': task_list,
         'event_id': event_id,
         'employee_service': employee_service

@@ -37,7 +37,7 @@
                 State: {{ employee_service.current_status }}
             </p>
             {% if employee_service.current_status == 'Activo' %}
-            <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-primary">View Kanban</a>
+            <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-primary">View Tasks</a>
             {% endif %}
         </div>
         {% endfor %}
