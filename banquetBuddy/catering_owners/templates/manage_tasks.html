@@ -68,6 +68,9 @@
     .priority-medium { background-color: #ffff99; } /* Amarillo para media prioridad */
     .priority-high { background-color: #ffcccc; } /* Rojo claro para alta prioridad */
 </style>
+
+
+
 {% if messages %}
 {% for message in messages %}
 <div class="alert alert-danger" role="alert">{{ message }}</div>
@@ -191,34 +194,76 @@
     </div>
 </div>
 
-<!-- Formulario para añadir nuevas tareas -->
-<div class="add-task-form">
-    <h3>Add New Task</h3>
-    <form method="post" action="{% url 'add_task' event_id=event.id %}">
-        {% csrf_token %}
-        <input type="text" name="description" placeholder="Task Description" required>
-        <input type="date" name="assignment_date" required>
-        <input type="date" name="expiration_date" required>
-        <div class="form-group">
-            <label for="employees">Assign Employees:</label>
-            <br>
-            {% for employee in active_employees %}
-                <input type="checkbox" name="employees" id="employee{{ employee.user.id }}" value="{{ employee.user.id }}">
-                <label for="employee{{ employee.user.id }}">{{ employee.profession }} - {{ employee.user.username }}</label><br>
-            {% endfor %}
-        </div>
+    <!-- formulario de añadir tarea -->
 
-        <div class="form-group">
-            <label for="priority">Priority:</label>
-            <select name="priority" id="priority" required>
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-            </select>
+
+
+    <div class="container mt-4">
+        <!-- Botón para desplegar el formulario de añadir tarea -->
+        <button id="toggleAddTaskBtn" class="btn btn-primary">
+            Add Task +
+        </button>
+    
+        <!-- Formulario desplegable, inicialmente oculto -->
+        <div id="addTaskForm" style="display: none;" class="card card-body mt-4">
+            <form method="post" action="{% url 'add_task' event_id=event.id %}" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="description" class="form-label">Task Description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter task description" required>
+                    <div class="invalid-feedback">
+                        Please provide a task description.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="assignment_date" class="form-label">Assignment Date</label>
+                    <input type="date" class="form-control" id="assignment_date" name="assignment_date" required>
+                    <div class="invalid-feedback">
+                        Please choose an assignment date.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="expiration_date" class="form-label">Expiration Date</label>
+                    <input type="date" class="form-control" id="expiration_date" name="expiration_date" required>
+                    <div class="invalid-feedback">
+                        Please choose an expiration date.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="employees" class="form-label">Assign Employees</label>
+                    {% for employee in active_employees %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="employee{{ employee.user.id }}" name="employees" value="{{ employee.user.id }}">
+                        <label class="form-check-label" for="employee{{ employee.user.id }}">
+                            {{ employee.profession }} - {{ employee.user.username }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label for="priority" class="form-label">Priority</label>
+                    <select class="form-select" id="priority" name="priority" required>
+                        <option value="">Select Priority</option>
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a priority level.
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Task</button>
+            </form>
         </div>
-        <button type="submit">Add Task</button>
-    </form>
-</div>
+    </div>
+    
+    <script>
+        document.getElementById('toggleAddTaskBtn').addEventListener('click', function() {
+            var form = document.getElementById('addTaskForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        });
+    </script>
+    
 
 <script src="{% static 'core/kanban.js' %}"></script>
 <!-- Modal para editar tarea -->
