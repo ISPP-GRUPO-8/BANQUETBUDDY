@@ -543,7 +543,7 @@ class CateringViewTest(TestCase):
         self.client.force_login(self.user)
 
         # Realizar la solicitud HTTP
-        response = self.client.get(reverse("listar_caterings_particular"))
+        response = self.client.get(reverse("listar_caterings"))
 
         # Verificar si la respuesta es exitosa
         self.assertEqual(response.status_code, 200)
@@ -557,7 +557,7 @@ class CateringViewTest(TestCase):
 
     def test_listar_caterings_particular_unauthenticated(self):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings_particular"))
+        response = self.client.get(reverse("listar_caterings"))
 
         # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
         self.assertEqual(response.status_code, 302)
