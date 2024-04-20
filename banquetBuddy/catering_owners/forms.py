@@ -250,9 +250,18 @@ class TerminationForm(forms.ModelForm):
         
 
 
+
+from django import forms
+from .models import Task, Employee, EmployeeWorkService
+
+class CustomEmployeeChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        # Personaliza la representación de la etiqueta de cada objeto
+        return f"{obj.profession} - {obj.user.username}"
+
 class TaskForm(forms.ModelForm):
-    employees = forms.ModelMultipleChoiceField(
-        queryset=Employee.objects.none(),  # Inicializa vacío; se llenará según el evento
+    employees = CustomEmployeeChoiceField(
+        queryset=Employee.objects.none(),  # Se inicializa vacío, se llenará según el evento
         widget=forms.CheckboxSelectMultiple(),
         required=False
     )
@@ -260,27 +269,26 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['description', 'assignment_date', 'expiration_date', 'priority', 'employees']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+            'assignment_date': forms.DateInput(attrs={'type': 'date'}),
+            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
+            'priority': forms.Select(attrs={'class': 'form-control'}),
+        }
 
     def __init__(self, *args, **kwargs):
         event_id = kwargs.pop('event_id', None)
-        instance = kwargs.get('instance', None)
         super(TaskForm, self).__init__(*args, **kwargs)
 
         if event_id:
-            # Obtener todos los servicios de trabajo de los empleados para este evento específico
             employee_services = EmployeeWorkService.objects.filter(
                 event__id=event_id
             ).select_related('employee')
 
-            # Filtrar solo los empleados que están activos
             active_employees = [ews.employee for ews in employee_services if ews.current_status() == 'Activo']
-
-            # Actualizar el queryset para el campo de empleados
             self.fields['employees'].queryset = Employee.objects.filter(
-                user_id__in=[emp.user_id for emp in active_employees]  # Usa user_id para filtrar
+                user__id__in=[emp.user.id for emp in active_employees]
             )
 
-        # Prellenar el campo con los empleados actualmente asignados si se está editando una instancia existente
-        if instance:
-            self.fields['employees'].initial = instance.employees.all()
-
+        if 'instance' in kwargs and kwargs['instance']:
+            self.fields['employees'].initial = kwargs['instance'].employees.all()

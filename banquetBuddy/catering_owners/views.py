@@ -1278,13 +1278,12 @@ def update_task(request, task_id):
             form.save()
             return redirect('manage_tasks', event_id=task.event.id)
     else:
-        form = TaskForm(instance=task, event_id=task.event.id)  # Pase correcto de event_id
+        form = TaskForm(instance=task, event_id=task.event.id)  # Asegura pasar event_id y instance
 
     return render(request, 'edit_task.html', {'form': form, 'task': task})
-
 
 def get_task_data(request):
     task_id = request.GET.get('task_id')
     task = get_object_or_404(Task, pk=task_id)
-    form = TaskForm(instance=task)  # Inicializa el formulario con la instancia de la tarea
-    return render(request, 'task_edit_form.html', {'form': form, 'task': task})  # Asegúrate de pasar 'task' al contexto
+    form = TaskForm(instance=task, event_id=task.event.id)  # Asegúrate de pasar event_id y la instancia
+    return render(request, 'task_edit_form.html', {'form': form, 'task': task})
