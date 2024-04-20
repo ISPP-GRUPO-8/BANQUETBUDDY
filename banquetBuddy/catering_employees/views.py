@@ -1,7 +1,8 @@
+import json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from catering_owners.models import CateringCompany, Offer, JobApplication, RecommendationLetter
+from catering_owners.models import CateringCompany, Offer, JobApplication, RecommendationLetter, Task
 from .models import Employee
 from .forms import EmployeeFilterForm, EmployeeForm
 from core.views import *
@@ -11,9 +12,15 @@ from catering_owners.models import JobApplication, Employee, EmployeeWorkService
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Case, When, Value, CharField
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from core.permission_checks import is_user_employee
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
+import logging
+from core.models import AssignmentState
 
 
 # Create your views here.
@@ -184,3 +191,67 @@ def list_work_services(request):
 
     
     return render(request, 'list_work_services.html', {'page_obj': page_obj, 'current_status': status_filter})
+
+
+def employee_kanban(request, event_id):
+    current_user = request.user
+
+    try:
+        employee = Employee.objects.get(user=current_user)
+        employee_service = EmployeeWorkService.objects.get(
+            employee=employee, 
+            event_id=event_id, 
+        )
+    except Employee.DoesNotExist:
+        return HttpResponseForbidden("No employee record found.")
+    except EmployeeWorkService.DoesNotExist:
+        return HttpResponseForbidden("No active work service found for this event.")
+    
+    tasks = Task.objects.filter(event_id=event_id).select_related('event')
+    task_list = []
+    for task in tasks:
+        task.is_draggable = task.employees.filter(user=current_user).exists()
+        task_list.append(task)
+
+    return render(request, 'employee_kanban.html', {
+        'tasks': task_list,
+        'event_id': event_id,
+        'employee_service': employee_service
+    })
+
+
+logger = logging.getLogger(__name__)
+def update_task_state(request, task_id):
+    try:
+        logger.debug("Attempting to update task state for task_id: %s by user: %s", task_id, request.user.username)
+        employee = Employee.objects.get(user=request.user)
+        task = Task.objects.get(pk=task_id)
+
+        if not task.employees.filter(user=employee.user).exists():
+            logger.warning("User %s does not have permission to modify task_id: %s", request.user.username, task_id)
+            return JsonResponse({'status': 'error', 'message': 'You do not have permission to modify this task.'}, status=403)
+
+        data = json.loads(request.body)
+        new_state = data.get('newState', '')
+
+        if new_state in [choice[0] for choice in AssignmentState.choices]:
+            task.assignment_state = new_state
+            task.save()
+            logger.info("Task state updated successfully for task_id: %s to state: %s", task_id, new_state)
+            return JsonResponse({'status': 'success', 'message': 'Task state updated.'})
+        else:
+            logger.error("Invalid state provided for task_id: %s", task_id)
+            return JsonResponse({'status': 'error', 'message': 'Invalid state provided.'}, status=400)
+    
+    except json.JSONDecodeError as e:
+        logger.error("Invalid JSON from user: %s, error: %s", request.user.username, str(e))
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+    except Employee.DoesNotExist:
+        logger.error("Employee not found for user: %s", request.user.username)
+        return JsonResponse({'status': 'error', 'message': 'Employee not found.'}, status=404)
+    except Task.DoesNotExist:
+        logger.error("Task not found with task_id: %s", task_id)
+        return JsonResponse({'status': 'error', 'message': 'Task not found.'}, status=404)
+    except Exception as e:
+        logger.error("Unexpected error for user: %s, error: %s", request.user.username, str(e))
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)

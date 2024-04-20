@@ -250,10 +250,6 @@ class TerminationForm(forms.ModelForm):
         
 
 
-
-from django import forms
-from .models import Task, Employee, EmployeeWorkService
-
 class CustomEmployeeChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         # Personaliza la representación de la etiqueta de cada objeto

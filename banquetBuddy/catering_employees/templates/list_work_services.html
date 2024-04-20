@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>List of Employees</title>
+    <title>List of Jobs</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .status-active { color: green; }
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>List of Employees</h1>
+        <h1>List of your jobs</h1>
         <form method="get" class="form-inline">
             <label for="status" class="mr-sm-2">Filter by status:</label>
             <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
@@ -34,18 +34,14 @@
             <p>Event: {{ employee_service.event.name }}</p>
             <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
             <p class="status-{{ employee_service.current_status|lower }}">
-                
-                {% if employee_service.current_status == 'Activo' %}
-                   State: Active
-                {% endif %}
-
-                {% if employee_service.current_status == 'Terminado' %}
-                    State: Terminated
-                {% endif %}
+                State: {{ employee_service.current_status }}
             </p>
+            {% if employee_service.current_status == 'Activo' %}
+            <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-primary">View Kanban</a>
+            {% endif %}
         </div>
         {% endfor %}
-        <nav aria-label="Employee page navigation">
+                <nav aria-label="Employee page navigation">
           <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item"><a class="page-link" href="?page=1">First</a></li>

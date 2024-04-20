@@ -1209,7 +1209,7 @@ def update_task_state(request, task_id):
         data = json.loads(request.body)
         new_state = data.get('newState')
 
-        if new_state in [choice[0] for choice in AssignmentState.choices]:  # Ajustado para usar AssignmentState directamente
+        if new_state in [choice[0] for choice in AssignmentState.choices]:  
             task.assignment_state = new_state
             task.save()
             return JsonResponse({'status': 'success', 'message': 'Task state updated.'})
@@ -1278,12 +1278,12 @@ def update_task(request, task_id):
             form.save()
             return redirect('manage_tasks', event_id=task.event.id)
     else:
-        form = TaskForm(instance=task, event_id=task.event.id)  # Asegura pasar event_id y instance
+        form = TaskForm(instance=task, event_id=task.event.id)  
 
     return render(request, 'edit_task.html', {'form': form, 'task': task})
 
 def get_task_data(request):
     task_id = request.GET.get('task_id')
     task = get_object_or_404(Task, pk=task_id)
-    form = TaskForm(instance=task, event_id=task.event.id)  # Asegúrate de pasar event_id y la instancia
+    form = TaskForm(instance=task, event_id=task.event.id)
     return render(request, 'task_edit_form.html', {'form': form, 'task': task})
