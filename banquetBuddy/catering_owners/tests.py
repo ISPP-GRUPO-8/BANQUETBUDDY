@@ -234,7 +234,6 @@ class RegisterCompanyTestCase(TestCase):
         }
 
         user_form = CustomUserCreationForm(data=user_data)
-        print(user_form.errors)
         self.assertTrue(user_form.is_valid())
         user = user_form.save()
 
@@ -255,8 +254,6 @@ class RegisterCompanyTestCase(TestCase):
 
         form = CateringCompanyForm(data=form_data, files=files)
 
-        if not form.is_valid():
-            print(form.errors)
         self.assertTrue(form.is_valid())
 
 
@@ -818,13 +815,14 @@ class CateringViewTest(TestCase):
             date=datetime.now(),
             content="Este es un mensaje de ejemplo.",
         )
+        self.particular = Particular.objects.create(user=self.user)
 
     def test_listar_caterings_particular(self):
         # Simular una solicitud HTTP al punto final
-        self.client.force_login(self.user)
+        self.client.force_login(self.particular)
 
         # Realizar la solicitud HTTP
-        response = self.client.get(reverse("listar_caterings_particular"))
+        response = self.client.get(reverse("listar_caterings"))
 
         # Verificar si la respuesta es exitosa
         self.assertEqual(response.status_code, 200)
@@ -839,10 +837,10 @@ class CateringViewTest(TestCase):
 
     def test_listar_caterings_particular_unauthenticated(self):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings_particular"))
+        response = self.client.get(reverse("listar_caterings"))
 
-        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
-        self.assertEqual(response.status_code, 302)
+        # Verificamos que el usuario no autenticado reciba un código de estado 403
+        self.assertEqual(response.status_code, 403)
 
 
 class RegisterCompanyTest(TestCase):
@@ -909,6 +907,3 @@ class RegisterCompanyTest(TestCase):
         )  # El usuario debería estar activo después de la activación
 
 
-########################
-###Tests de interfaz####
-########################
