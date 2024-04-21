@@ -489,7 +489,7 @@ def payment_completed(request):
         date=request.session["event_date"],
         details=f'Reservation for {request.session["number_guests"]} guests',
         menu=menu,
-        booking_state=BookingState.CONTRACT_PENDING,
+        booking_state=BookingState.CONFIRMED,
         number_guests=request.session["number_guests"],
     )
     return render(request, "payment/completed.html")
