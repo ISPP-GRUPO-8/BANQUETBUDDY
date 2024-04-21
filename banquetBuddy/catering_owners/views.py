@@ -130,7 +130,13 @@ def register_company(request):
 @login_required
 def list_menus(request):
     catering_company = CateringCompany.objects.get(user=request.user)
-    menus = Menu.objects.filter(cateringcompany=catering_company)
+    menus_query = Menu.objects.filter(cateringcompany=catering_company)
+    
+    # Paginación
+    paginator = Paginator(menus_query, 9)
+    page_number = request.GET.get('page')
+    menus = paginator.get_page(page_number)
+    
     return render(request, "list_menus.html", {"menus": menus})
 
 
@@ -369,7 +375,7 @@ def add_menu(request):
             menu = form.save(commit=False)
             menu.cateringcompany = catering_company
             menu.save()
-            messages.success(request, "Menu created successfully..")
+            messages.success(request, "Menu created successfully.")
             return redirect("list_menus")
     else:
         form = MenuForm(request.user)

@@ -1,11 +1,6 @@
 {% extends 'core/base.html' %}
-
-{% block extra_css %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
     .custom-border {
@@ -19,6 +14,15 @@
         right: 12%;
         z-index: 1000;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Agrega sombra al botón */
+    }
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
     }
 
     @media screen and (max-width: 768px) {
@@ -103,7 +107,7 @@
 
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
+    <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
     
     <div class="row justify-content-end mb-4">
         <div class="col-md-2">
@@ -137,7 +141,7 @@
         </div>
         {% empty %}
         <div class="col">
-            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available.</p>
+            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available</p>
         </div>
         {% endfor %}
     </div>
@@ -148,5 +152,28 @@
             </button>
         </a>
     </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Menu pagination">
+        <ul class="pagination justify-content-center">
+            {% if menus.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.previous_page_number }}"><</a></li>
+            {% endif %}
+
+            {% for num in menus.paginator.page_range %}
+            {% if menus.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if menus.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ menus.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.paginator.num_pages }}">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 {% endblock %}

@@ -19,7 +19,7 @@ from decimal import Decimal
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 
 
 # @login_required
@@ -235,17 +235,12 @@ def catering_detail(request, catering_id):
     reviews_list = Review.objects.filter(cateringservice_id=catering_id).order_by(
         "-date"
     )
-
-    paginator = Paginator(reviews_list, 3)  # Muestra 3 reviews por página
-    page = request.GET.get("page")
-
-    try:
-        reviews = paginator.page(page)
-    except PageNotAnInteger:
-        reviews = paginator.page(1)
-    except EmptyPage:
-        reviews = paginator.page(paginator.num_pages)
-
+    
+    # Paginación
+    paginator = Paginator(reviews_list, 3)
+    page_number = request.GET.get('page')
+    reviews = paginator.get_page(page_number)
+    
     context["reviews"] = reviews
     if not is_particular(request):
         return HttpResponseForbidden("No eres cliente")

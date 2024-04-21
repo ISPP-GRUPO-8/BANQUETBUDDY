@@ -96,10 +96,10 @@ catering_names = [
 logos_catering = [
     "lamediterranea.jpg",
     "sabororiental.jpg",
-    "rinconmexicano.jpg",
+    "rinconmexicano.png",
     "fusiongourmet.png",
-    "cocinaantonio.jpg",
-    "mediterranea,jpg",
+    "cocinaantonio.png",
+    "mediterranea.png",
     "cateringbenito.png"
 ]
 

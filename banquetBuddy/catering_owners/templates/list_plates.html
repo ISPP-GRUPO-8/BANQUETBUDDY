@@ -1,13 +1,17 @@
 {% extends 'core/base.html' %}
-
-{% block extra_css %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
     
     @media screen and (max-width: 600px) and (min-width: 451px) {
         .card-text {

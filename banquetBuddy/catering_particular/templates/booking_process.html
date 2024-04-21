@@ -5,109 +5,124 @@
 
 <div class="container-border">
   <div class="container mt-4">
-      <h1>{{ cateringservice.name }}</h1>
-      <h4>{{ catering.name }}</h4>
-      <p>{{ cateringservice.description }}</p>
-      <i class="bi bi-geo-alt-fill"></i> {{ cateringservice.location }}<br>
-      <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
-      <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€
+    <h1 class="card-title">{{ cateringservice.name }}</h1>
+    <p class="card-title">Catering company: {{ catering.name }}</p>
+    <p>{{ cateringservice.description }}</p>
+    <i class="bi bi-geo-alt-fill"></i> {{ cateringservice.location }}<br>
+    <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
+    <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€
 
-      <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
-          {% csrf_token %}
+    <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
+      {% csrf_token %}
 
-          {% if form_error %}
-              <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
-          {% endif %}
+      {% if form_error %}
+      <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
+      {% endif %}
 
-          {% if form_error_menu %}
-              <div class="alert alert-danger">You have to select a menu</div>
-          {% endif %}
+      {% if form_error_menu %}
+      <div class="alert alert-danger">You have to select a menu.</div>
+      {% endif %}
 
-          {% if form_error_capacity %}
-              <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{ catering.capacity }}. Please choose a lower number of guests.</div>
-          {% endif %}
+      {% if form_error_capacity %}
+      <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{
+        catering.capacity }}. Please choose a lower number of guests.</div>
+      {% endif %}
 
-          {% if form_error_date %}
-              <div class="alert alert-danger">The event date cannot be in the past.</div>
-          {% endif %}
+      {% if form_error_date %}
+      <div class="alert alert-danger">The event date cannot be in the past.</div>
+      {% endif %}
 
-          {% if form_error_date_selected %}
-              <div class="alert alert-danger">The selected date is already booked.</div>
-          {% endif %}
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                  <label for="event_date">Event Date:</label>
-                  <input type="date" name="event_date" class="form-control {% if form_error %}is-invalid{% endif %}" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                  <label for="number_guests">Number of Guests:</label>
-                  <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}" required>
+      {% if form_error_date_selected %}
+      <div class="alert alert-danger">The selected date is already booked.</div>
+      {% endif %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="event_date">Event Date:</label>
+            <input type="date" name="event_date" class="form-control {% if form_error %}is-invalid{% endif %}" required>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="number_guests">Number of Guests:</label>
+            <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}"
+              required>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        {% for menu in menus %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
+            <div class="card-body flex-fill d-flex flex-column">
+              <h4 class="card-title">{{ menu.name }}</h4>
+              <p class="card-text">{{ menu.description }}</p>
+              <div class="mt-auto">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-add select-menu"
+                    data-menu-id="{{ menu.id }}">Select</button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="row">
-            {% for menu in menus %}
-              <div class="col-md-4 mb-4">
-                  <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
-                      <div class="card-body flex-fill d-flex flex-column">
-                          <h5 class="card-title">{{ menu.name }}</h5>
-                          <p class="card-text">{{ menu.description }}</p>
-                          <div class="mt-auto">
-                              <div class="btn-group">
-                                  <button type="button" class="btn btn-sm btn-outline-success select-menu" data-menu-id="{{ menu.id }}">Select</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              {% endfor %}
-              <input type="hidden" name="selected_menu" id="selected_menu">
-            </div>
-          </br>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary" form="bookingForm">Confirmar</button>
-          </div>
-          <p></p>
-      </form>
-    </div>
+        </div>
+        {% endfor %}
+        <input type="hidden" name="selected_menu" id="selected_menu">
+      </div>
+      </br>
+      <div class="text-center">
+        <button type="submit" class="btn btn-custom" form="bookingForm">Confirmar</button>
+      </div>
+      <p></p>
+    </form>
   </div>
+</div>
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      const selectButtons = document.querySelectorAll('.select-menu');
+    const selectButtons = document.querySelectorAll('.select-menu');
 
-      selectButtons.forEach(button => {
-          button.addEventListener('click', function () {
-              const menuId = this.getAttribute('data-menu-id');
-              document.getElementById('selected_menu').value = menuId;
-          });
+    selectButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const menuId = this.getAttribute('data-menu-id');
+        document.getElementById('selected_menu').value = menuId;
       });
+    });
   });
   document.addEventListener('DOMContentLoaded', function () {
     const selectButtons = document.querySelectorAll('.select-menu');
 
     selectButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Remover la clase 'selected' de todos los botones
-            selectButtons.forEach(btn => btn.classList.remove('selected'));
+      button.addEventListener('click', function () {
+        // Remover la clase 'selected' de todos los botones
+        selectButtons.forEach(btn => btn.classList.remove('btn-select'));
 
-            // Agregar la clase 'selected' al botón seleccionado
-            this.classList.add('selected');
+        // Agregar la clase 'selected' al botón seleccionado
+        this.classList.add('btn-select');
 
-            const menuId = this.getAttribute('data-menu-id');
-            document.getElementById('selected_menu').value = menuId;
-        });
+        const menuId = this.getAttribute('data-menu-id');
+        document.getElementById('selected_menu').value = menuId;
+      });
     });
-});
+  });
 </script>
 <style>
-  .selected {
-    background-color: #28a745; /* Cambia el color de fondo cuando el botón está seleccionado */
-    color: #fff; /* Cambia el color del texto cuando el botón está seleccionado */
-}
+  .btn-select {
+    background-color: #02483E;
+    border-color: #02483E;
+    color: #ffffff;
+  }
 
+  .bi-geo-alt-fill {
+    color: #02483E;
+  }
+
+  .bi-person-circle {
+    color: #02483E;
+  }
+
+  .bi-tag-fill {
+    color: #02483E;
+  }
 </style>
 {% endblock %}

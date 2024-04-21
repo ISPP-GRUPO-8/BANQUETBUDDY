@@ -10,10 +10,10 @@
   <form method="post" action="{% url 'listar_caterings' %}" id="miFormulario" class="mb-4">
     {% csrf_token %}
     <div class="input-group">
-      <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." id="search" name="search"
+      <input type="text" class="form-control bg-light border-0 small" placeholder="Search catering by name..." id="search" name="search"
         value="{{ search }}" />
       <div class="input-group-append">
-        <button class="btn btn-primary  mb-3" type="submit">
+        <button class="btn btn-custom mb-3" type="submit">
           <i class="fa fa-search" aria-hidden="true"></i>
         </button>
       </div>
@@ -78,9 +78,28 @@
 
 
 {% if not request.user.is_authenticated %}
+<div class="col-12 text-center mt-4">
+  <p style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Welcome to BanquetBuddy the definitive catering management app that connects people interested in hiring a catering service, people seeking <br>
+    employment in the sector and the caterings themselves that are offered</p>
+</div>
 <div class="col-12 text-center mt-4 btn-container">
   <a href="/login" class="btn btn-login mr-3">Log in</a>
   <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+</div>
+<div class="col-12 text-center mt-4">
+  <h3 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Discover Us</h3>
+</div>
+<div class="col-12 mt-4 d-flex justify-content-center">
+  <div class="video-container">
+    <div class="video-frame">
+      <video controls autoplay muted loop>
+        <source src="{% static 'core/ad.mp4' %}" type="video/mp4">
+        Your browser does not permit the video element
+      </video>
+    </div>
+  </div>
 </div>
 {% endif %}
 
@@ -135,6 +154,24 @@
   
   #logo {
     transition: transform 0.8s ease-in-out;
+  }
+  
+  .video-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 900px;
+    width: 100%;
+  }
+  
+  .video-frame {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+  
+  .video-frame video {
+    width: 100%;
+    height: auto;
   }
 </style>
 
