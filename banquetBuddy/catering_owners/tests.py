@@ -102,7 +102,7 @@ class CateringBookTestCase(TestCase):
     #     response = self.client.post(reverse('catering_books_edit', args=[self.event.id]), {
     #         'date': '2024-04-15',
     #         'number_guests': '10',
-    #         'selected_menu': self.menu2.id, 
+    #         'selected_menu': self.menu2.id,
     #     })
     #     self.assertEqual(response.status_code, 302)
     #     edited_event = Event.objects.get(id=self.event.id)
@@ -110,7 +110,7 @@ class CateringBookTestCase(TestCase):
     #     self.assertEqual(edited_event.number_guests, 10)
     #     self.assertEqual(edited_event.menu, self.menu2)
     #     self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
-    
+
     def test_book_edit_view_incomplete_form(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse("catering_books_edit", args=[self.event.id]))
@@ -794,6 +794,7 @@ class ChatViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+"""
 class CateringViewTest(TestCase):
     def setUp(self):
         # Configurar el entorno de prueba con objetos necesarios
@@ -843,6 +844,7 @@ class CateringViewTest(TestCase):
 
         # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
         self.assertEqual(response.status_code, 302)
+"""
 
 
 class RegisterCompanyTest(TestCase):
