@@ -22,6 +22,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from core.permission_checks import is_user_particular
+import random
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -479,17 +480,17 @@ def payment_completed(request):
 
     # Asignar la empresa de catering vinculada al servicio de catering
     catering_company = catering_service.cateringcompany
-
+    random_number = random.randint(1, 999)
     # Crear el evento y hacer la reserva
     event = Event.objects.create(
         cateringservice=catering_service,
         cateringcompany=catering_company,  # Asignar la empresa de catering
         particular=get_object_or_404(Particular, user=request.user),
-        name=f"Reservation for {catering_service.cateringcompany.name} by {request.user.username}",
+        name=f"Reservation for {catering_service.cateringcompany.name} by {request.user.username} #{random_number}",
         date=request.session["event_date"],
         details=f'Reservation for {request.session["number_guests"]} guests',
         menu=menu,
-        booking_state=BookingState.CONTRACT_PENDING,
+        booking_state=BookingState.CONFIRMED,
         number_guests=request.session["number_guests"],
     )
     return render(request, "payment/completed.html")
@@ -504,8 +505,6 @@ def listar_caterings_companies(request):
     context["is_particular"] = is_particular(request)
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
-    if not is_particular(request):
-        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     caterings = CateringCompany.objects.all()
 
     context["caterings"] = caterings
