@@ -504,8 +504,6 @@ def listar_caterings_companies(request):
     context["is_particular"] = is_particular(request)
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
-    if not is_particular(request):
-        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     caterings = CateringCompany.objects.all()
 
     context["caterings"] = caterings
