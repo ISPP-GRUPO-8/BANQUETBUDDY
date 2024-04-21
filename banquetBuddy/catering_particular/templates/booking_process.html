@@ -10,7 +10,7 @@
       <p>{{ cateringservice.description }}</p>
       <i class="bi bi-geo-alt-fill"></i> {{ cateringservice.location }}<br>
       <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
-      <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€
+      <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€/guest
 
       <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
           {% csrf_token %}

@@ -1,18 +1,21 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="mb-4">My books</h1>
-    <div class="row">
+    <header class="text-center mb-4">
+        <h1>My books</h1>
+        <p>Find and manage your events</p>
+    </header>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for event in events %}
-        <div class="col-md-6">
-            <div class="card mb-4">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
                 <div class="card-body">
-                    <h5 class="card-title">{{ event.name }}</h5>
-                    <p class="card-text">{{ event.date }}</p>
+                    <h3 class="card-title">{{ event.name }}</h3>
+                    <h6 class="card-text">{{ event.date }}</h6>
                     <p class="card-text">{{ event.details }}</p>
+                    <img src="{% static 'core/images/rinconmexicano_ooPTU83.jpg' %}" width="70" height="auto" alt="Logo" loading="lazy">
                     <div class="row">
                         <div class="col-md-8">
                             <p class="{% if event.booking_state == 'CONTRACT_PENDING' %}text-warning{% elif event.booking_state == 'CANCELLED' %}text-danger{% elif event.booking_state == 'CONFIRMED' %}text-success{% endif %}">
@@ -27,8 +30,8 @@
                         </div>
                         <div class="col-md-4 text-right">
                             {% if event.booking_state == 'CONTRACT_PENDING' or event.booking_state == 'CONFIRMED' %}
-                                <a href="{% url 'book_edit' event.id %}" class="btn btn-primary">Edit</a>
-                                <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}">Cancel</button>
+                                <a href="{% url 'book_edit' event.id %}" class="btn btn-primary" style="background-color: #54BFAF;">Edit</a>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}" style="background-color: #BF5454;">Cancel</button>
                             {% endif %}
                         </div>
                     </div>
@@ -36,6 +39,24 @@
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <div class="pagination mt-4">
+        <span class="step-links">
+            {% if events.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ events.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ events.number }} de {{ events.paginator.num_pages }}.
+            </span>
+
+            {% if events.has_next %}
+                <a href="?page={{ events.next_page_number }}">Next</a>
+                <a href="?page={{ events.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 </div>
 
@@ -61,5 +82,47 @@
         </div>
     </div>
 {% endfor %}
+
+<style>
+    .custom-card {
+        background-color: #ffffff;
+        border-radius: 20px;
+        padding: 20px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .rating {
+        unicode-bidi: bidi-override;
+        direction: ltr;
+    }
+
+    .rating > span {
+        display: inline-block;
+        font-size: 1.5em; /* Tamaño de las estrellas */
+        margin-right: 5px; /* Espacio entre las estrellas */
+        color: gray; /* Color de las estrellas vacías */
+        pointer-events: none; /* Evitar eventos de ratón sobre las estrellas */
+    }
+
+    .rating > span.empty {
+        color: transparent; /* Las estrellas vacías son transparentes */
+    }
+
+    .rating > span:hover:before,
+    .rating > span:hover ~ span:before {
+        content: "\2605";
+        color: gold;
+    }
+
+    .pagination {
+        margin-top: 20px; /* Agrega margen superior para espacio entre la paginación y las tarjetas */
+    }
+
+    .card-text strong {
+        font-family: Arial, sans-serif; /* Cambia la fuente */
+        font-size: 20px; /* Tamaño de la fuente */
+    }
+</style>
 
 {% endblock %}

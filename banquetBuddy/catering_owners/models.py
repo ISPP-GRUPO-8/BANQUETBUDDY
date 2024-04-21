@@ -1,12 +1,13 @@
 from datetime import timezone
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from catering_particular.models import Particular
-from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType
+from core.models import ApplicationState, AssignmentState, BookingState, CustomUser, PricePlan, Priority, CuisineType, TerminationReason
 from catering_employees.models import Employee
 from phonenumber_field.modelfields import PhoneNumberField
 from catering_employees.models import Employee,Message
 from django.db.models import CheckConstraint
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
@@ -57,6 +58,7 @@ class CateringService(models.Model):
 
 class Event(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
+    cateringcompany = models.ForeignKey(CateringCompany, on_delete=models.CASCADE, related_name='events')  # Nueva relación directa
     particular = models.ForeignKey(Particular, on_delete=models.CASCADE, related_name='particular')
     menu = models.ForeignKey('Menu', on_delete=models.SET_NULL, null=True, blank=True, related_name='events')
     name = models.CharField(max_length=255)
@@ -66,6 +68,9 @@ class Event(models.Model):
     number_guests = models.IntegerField()
     notified_to_particular = models.BooleanField(default=False)
     notified_to_catering_company = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
 
 class Task(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='tasks')
@@ -80,7 +85,10 @@ class Task(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(assignment_date__lt=models.F('expiration_date')), name='assignment_before_expiration')
+            models.CheckConstraint(
+                check=models.Q(assignment_date__lte=models.F('expiration_date')), 
+                name='assignment_on_or_before_expiration'
+            )
         ]
 
 class Menu(models.Model):
@@ -119,44 +127,76 @@ class Review(models.Model):
             models.CheckConstraint(check=models.Q(rating__gte=1, rating__lte=5), name='rating_range')
         ]
 
+
+
 class EmployeeWorkService(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_work_services')
-    cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='employee_work_services')
+    cateringservice = models.ForeignKey('CateringService', on_delete=models.CASCADE, related_name='employee_work_services')
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='employee_work_services')
 
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
+    termination_reason = models.CharField(max_length=50, choices=TerminationReason.choices, null=True, blank=True)
+    termination_details = models.TextField(null=True, blank=True)
 
     class Meta:
         constraints = [
-            # Restricción de comprobación para asegurarse de que start_date es siempre anterior a end_date
-            CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
-
-            # Restricción de unicidad para evitar que el mismo empleado sea asignado al mismo servicio en fechas superpuestas
+            models.CheckConstraint(check=models.Q(end_date__gte=models.F('start_date')), name='end_date_after_start_date'),
             models.UniqueConstraint(
-                fields=['employee', 'cateringservice'],
-                name='unique_employee_service',
+                fields=['employee', 'cateringservice', 'event'], 
+                name='unique_employee_service_event',
                 condition=models.Q(end_date__isnull=True) | models.Q(end_date__gte=models.F('start_date'))
             )
         ]
 
-
     def current_status(self):
-        today = timezone.now().date()
-        if self.end_date and today > self.end_date:
-            return 'Terminado'
-        elif today >= self.start_date:
-            return 'Activo'
+        today = timezone.localtime(timezone.now()).date()
+        if self.end_date:
+            if self.end_date < today:
+                return 'Terminado'
+            elif self.end_date == today:
+                if self.termination_reason is not None:
+                    return 'Terminado'
+                else:
+                    return 'Activo'
+            else:
+                return 'Activo'
+        return 'Activo'
+
+
+
 
 
     def __str__(self):
-        return f"{self.employee} en {self.cateringservice} ({self.current_status()})"
+        return f"{self.employee} en {self.cateringservice} para el evento {self.event.name}"
 
 class Offer(models.Model):
     cateringservice = models.ForeignKey(CateringService, on_delete=models.CASCADE, related_name='offers')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='offers')  # Nueva relación con Event
     title = models.CharField(max_length=255)
     description = models.TextField()
     requirements = models.TextField()
     location = models.CharField(max_length=255)
+    start_date = models.DateField()  # Fecha de inicio de la oferta
+    end_date = models.DateField(null=True, blank=True)  # Fecha de fin opcional
+
+    def clean(self):
+        if self.start_date and self.start_date < timezone.localdate():
+            raise ValidationError("Start date cannot be in the past.")
+
+        if self.end_date:
+            if self.end_date < timezone.localdate():
+                raise ValidationError("End date cannot be in the past.")
+            if self.end_date < self.start_date:
+                raise ValidationError("End date cannot be earlier than start date.")
+                
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
+
+    def __str__(self):
+        return f"Oferta para {self.title} en {self.cateringservice.name} para el evento {self.event.name}"
 
 class JobApplication(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='job_applications')
@@ -168,13 +208,12 @@ class NotificationEvent(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
     message = models.TextField()
-    has_been_read = models.BooleanField(default=False)
     
 class NotificationJobApplication(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='employee_receiver')
-    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application')
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='job_application', null=True, blank=True)
     message = models.TextField()
-    has_been_read = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, null=True, blank=True)
 
 class RecommendationLetter(models.Model): 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')

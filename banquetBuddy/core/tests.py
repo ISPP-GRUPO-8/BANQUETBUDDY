@@ -2,7 +2,6 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .views import notification_view
-from catering_employees.models import Employee
 from .models import CustomUser, BookingState
 from catering_owners.models import CateringCompany, CateringService, NotificationEvent, Event, Menu
 from catering_particular.models import Particular
@@ -353,6 +352,7 @@ class NotificationViewTest(TestCase):
         )
         self.event = Event.objects.create(
             cateringservice = self.catering_service,
+            cateringcompany = self.company,
             particular = self.particular,
             menu = self.menu,
             name = "Test Event",
@@ -361,7 +361,7 @@ class NotificationViewTest(TestCase):
             booking_state = BookingState.CONTRACT_PENDING,
             number_guests = 23
         )
-        self.notification1 = NotificationEvent.objects.create(user=self.user1, has_been_read=False, message='Test notification 1', event=self.event)
+        self.notification1 = NotificationEvent.objects.create(user=self.user1, message='Test notification 1', event=self.event)
     
     def test_notification_view(self):
         # Simula una solicitud GET al view
@@ -373,10 +373,6 @@ class NotificationViewTest(TestCase):
         
         # Verifica que se haya llamado a la plantilla correcta
         self.assertEqual(response.status_code, 200)
-        
-        # Verifica que las notificaciones no leídas se hayan marcado como leídas
-        self.notification1.refresh_from_db()
-        self.assertTrue(self.notification1.has_been_read)
 
 
     

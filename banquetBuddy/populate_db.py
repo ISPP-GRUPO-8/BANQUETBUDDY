@@ -8,7 +8,7 @@ from django.utils import timezone
 from faker.providers import person, address
 import random
 from django.conf import settings
-from catering_employees.models import CustomUser, Employee, EnglishLevel, Message
+from catering_employees.models import CustomUser, Employee, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
 from django.contrib.auth import get_user_model
@@ -421,16 +421,19 @@ def create_events(num_events):
     services = CateringService.objects.all()
     particulars = Particular.objects.all()
     menus = Menu.objects.all()
+    
     for i in range(num_events):
         menu = choice(menus) if menus else None
+        selected_service = choice(services)
         Event.objects.create(
-            cateringservice=choice(services),
+            cateringservice=selected_service,
+            cateringcompany=selected_service.cateringcompany,  # Asignar la compañía de catering del servicio seleccionado
             particular=choice(particulars),
             menu=menu,
             name=event_names[i % len(event_names)],  # Utiliza el nombre del evento correspondiente
             date=faker.date_between(start_date='today', end_date='+1y'),
             details=events_details[i % len(events_details)],
-            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED','FINALIZED']),
+            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED', 'FINALIZED']),
             number_guests=randint(20, 200)
         )
 
@@ -524,15 +527,6 @@ def generate_plate_description(plate_name):
     return descriptions.get(plate_name, 'Delicioso plato preparado con ingredientes frescos y de alta calidad.')
 
 
-
-
-
-
-
-
-
-
-
 reviews_data = [
     {"description": "¡Excelente servicio y comida deliciosa! Definitivamente recomendaré este catering a mis amigos y familiares.", "rating": 5},
     {"description": "La presentación de los platos fue impecable, pero algunos sabores podrían mejorar. En general, una experiencia satisfactoria.", "rating": 4},
@@ -563,34 +557,58 @@ def create_reviews(num_reviews):
 def create_employee_work_services(num_relations):
     employees = Employee.objects.all()
     services = CateringService.objects.all()
+    events = Event.objects.all()
+    reasons = [reason.value for reason in TerminationReason]
 
-    for _ in range(num_relations):
-        if not employees or not services:
-            break
+    if not employees or not services or not events:
+        return
 
-        employee = random.choice(employees)
-        service = random.choice(services)
+    created_relations = set()  # Mantener un registro de las combinaciones creadas
 
-        # Generar fechas de inicio y fin de manera aleatoria
+    while len(created_relations) < num_relations:
+        employee = choice(employees)
+        service = choice(services)
+        event = choice(events)
+
+        # Generar fechas de inicio y fin aleatoriamente
         start_date = timezone.now().date() - timedelta(days=random.randint(0, 30))
         end_date = start_date + timedelta(days=random.randint(30, 180))
 
-        # Verificar si existe una superposición de fechas
-        overlapping_assignments = EmployeeWorkService.objects.filter(
+        # Combinación única
+        unique_combination = (employee.user_id if hasattr(employee, 'user_id') else employee.id, service.id, event.id)
+
+        if unique_combination in created_relations:
+            continue  # Si la combinación ya existe, intenta de nuevo
+
+        # Verificar superposiciones de fechas para el mismo empleado y servicio
+        overlapping = EmployeeWorkService.objects.filter(
             employee=employee,
             cateringservice=service,
             end_date__gte=start_date,
             start_date__lte=end_date
+        ).exists()
+
+        if overlapping:
+            continue  # Si hay superposición, intenta otra combinación
+
+        # Añadir la combinación a nuestro registro
+        created_relations.add(unique_combination)
+
+        # Decidir aleatoriamente si la relación terminará
+        terminated = random.choice([True, False])
+        termination_reason = random.choice(reasons) if terminated else None
+
+        # Crear la relación EmployeeWorkService
+        EmployeeWorkService.objects.create(
+            employee=employee,
+            cateringservice=service,
+            event=event,
+            start_date=start_date,
+            end_date=end_date if terminated else None,
+            termination_reason=termination_reason
         )
 
-        # Si no hay superposición, crear la asignación
-        if not overlapping_assignments.exists():
-            EmployeeWorkService.objects.create(
-                employee=employee,
-                cateringservice=service,
-                start_date=start_date,
-                end_date=end_date
-            )
+
 
 
 
@@ -659,26 +677,41 @@ offers = [
 
 def create_offers(num_offers):
     services = CateringService.objects.all()
-    for _ in range(num_offers):
+    events = Event.objects.filter(booking_state='CONFIRMED')  # Asegúrate de elegir solo eventos confirmados si es necesario
+
+    for i in range(num_offers):
+        if not services or not events:
+            break
+
+        service = choice(services)
+        event = choice(events)  # Elegir un evento al azar
+
+        # Generar fechas de inicio y fin de manera aleatoria
+        start_date = timezone.now().date() + timedelta(days=random.randint(1, 30))  # Fecha de inicio en el futuro
+        end_date = start_date + timedelta(days=random.randint(30, 180))  # Fecha de fin después de la fecha de inicio
+
         Offer.objects.create(
-            cateringservice=choice(services),
-            title=offers[_]['title'],
-            description=offers[_]['description'],
-            requirements=offers[_]['requirements'],
-            location=offers[_]['location']
+            cateringservice=service,
+            event=event,  # Asignar el evento seleccionado
+            title=offers[i]['title'],
+            description=offers[i]['description'],
+            requirements=offers[i]['requirements'],
+            location=offers[i]['location'],
+            start_date=start_date,
+            end_date=end_date
         )
 
 
-def create_job_applications(num_applications):
-    employees = Employee.objects.all()
-    offers = Offer.objects.all()
-    for _ in range(num_applications):
-        JobApplication.objects.create(
-            employee=choice(employees),
-            offer=choice(offers),
-            date_application=faker.date_between(start_date='-5d', end_date='today'),
-            state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
-        )
+# def create_job_applications(num_applications):
+#     employees = Employee.objects.all()
+#     offers = Offer.objects.all()
+#     for _ in range(num_applications):
+#         JobApplication.objects.create(
+#             employee=choice(employees),
+#             offer=choice(offers),
+#             date_application=faker.date_between(start_date='-5d', end_date='today'),
+#             state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
+#         )
 
 
 
@@ -753,7 +786,7 @@ def populate_database():
     create_reviews(10)
     create_employee_work_services(100)
     create_offers(10)
-    create_job_applications(10)
+    # create_job_applications(10)
     create_recommendation_letters(10)
     create_task_employee()
     create_superusers()
