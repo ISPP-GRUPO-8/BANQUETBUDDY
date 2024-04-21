@@ -22,6 +22,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from django.urls import reverse
+from selenium.webdriver.common.keys import Keys
+import time
 
 
 
@@ -824,6 +826,135 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
 
         # Verificar si el menú fue eliminado correctamente
         self.assertNotIn(self.menu.name, self.driver.page_source)
+
+
+
+class CateringCalendarViewTest(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        cls.email = 'testuser@gmail.com'
+        cls.password = 'password'
+        cls.user = CustomUser.objects.create_user(username=cls.email, password=cls.password)
+        cls.catering_company = CateringCompany.objects.create(user=cls.user, name='Test Catering Company',price_plan="PREMIUM_PRO")
+
+        cls.catering_service = CateringService.objects.create(
+            cateringcompany=cls.catering_company,
+            name="Mi servicio de catering",
+            description="Descripción de mi servicio de catering",
+            location="Ubicación de mi servicio de catering",
+            capacity=100,
+            price=500.00,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+
+    def test_catering_calendar_view(self):
+        # Iniciar sesión
+        self.selenium.get(self.live_server_url + reverse('login'))
+        self.selenium.find_element_by_name('username').send_keys(self.email)
+        self.selenium.find_element_by_name('password').send_keys(self.password)
+        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Abre la página del calendario de catering
+        catering_calendar_url = reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.id, 'year': 2024, 'month': 4})
+        self.selenium.get(self.live_server_url + catering_calendar_url)
+
+        # Verifica que se muestre el nombre del catering y el año/mes actual
+        h1_element = WebDriverWait(self.selenium, 10).until(
+            EC.visibility_of_element_located((By.TAG_NAME, "h1"))
+        )
+
+        # Verifica si el texto esperado está presente en el elemento h1
+        self.assertIn('Events on', h1_element.text)
+
+        # Verificar la presencia del enlace "Previous Month"
+        prev_month_link = self.selenium.find_element_by_link_text('Previous Month')
+        self.assertIsNotNone(prev_month_link)
+
+        # Verificar la presencia del enlace "Next Month"
+        next_month_link = self.selenium.find_element_by_link_text('Next Month')
+        self.assertIsNotNone(next_month_link)
+
+        # Verifica que se muestre la tabla del calendario
+        calendar_table = self.selenium.find_element_by_class_name("calendar-table")
+        self.assertIsNotNone(calendar_table)
+
+        # Verifica que se muestren los días del mes actual
+        days_in_month = calendar_table.find_elements_by_xpath("//td")
+        self.assertTrue(len(days_in_month) > 0)
+
+        # Verifica que se muestre la información adicional
+        info_section = self.selenium.find_element_by_class_name("info")
+        next_event_info = info_section.find_element_by_xpath("//p[contains(text(), 'Next Event:')]")
+        num_events_info = info_section.find_element_by_xpath("//p[contains(text(), 'Number of events this month:')]")
+
+        self.assertIsNotNone(next_event_info)
+        self.assertIsNotNone(num_events_info)
+
+    def test_next_month_view(self):
+        # Iniciar sesión
+        self.selenium.get(self.live_server_url + reverse('login'))
+        self.selenium.find_element_by_name('username').send_keys(self.email)
+        self.selenium.find_element_by_name('password').send_keys(self.password)
+        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Obtener la fecha actual
+        current_date = datetime.now()
+
+        # Calcular el mes siguiente
+        next_date = current_date + timedelta(days=30)
+
+
+
+        # Abre la página del calendario de catering
+        next_month_url = reverse('next_month', kwargs={'catering_service_id': self.catering_service.id, 'year': next_date.year, 'month': next_date.month})
+        self.selenium.get(self.live_server_url + next_month_url)
+
+        # Verificar si la redirección a la página del próximo mes es exitosa
+        self.assertIn('catering-calendar', self.selenium.current_url)
+
+        # Obtener los parámetros de la URL
+        url_params = next_month_url.split('/')
+        year_param = int(url_params[-4])
+        month_param = int(url_params[-3])
+
+        # Verificar si la fecha en la URL corresponde al mes siguiente
+        self.assertEqual(year_param, next_date.year)
+        self.assertEqual(month_param, next_date.month)
+
+    def test_prev_month_view(self):
+        # Iniciar sesión
+        self.selenium.get(self.live_server_url + reverse('login'))
+        self.selenium.find_element_by_name('username').send_keys(self.email)
+        self.selenium.find_element_by_name('password').send_keys(self.password)
+        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Obtener la fecha actual
+        current_date = datetime.now()
+
+        # Calcular el mes anterior
+        prev_date = current_date - timedelta(days=30)
+
+        # Abre la página del calendario de catering
+        prev_month_url = reverse('prev_month', kwargs={'catering_service_id': self.catering_service.id, 'year': prev_date.year, 'month': prev_date.month})
+        self.selenium.get(self.live_server_url + prev_month_url)
+
+        # Verificar si la redirección a la página del mes anterior es exitosa
+        self.assertIn('catering-calendar', self.selenium.current_url)
+
+        # Obtener los parámetros de la URL
+        url_params = prev_month_url.split('/')
+        year_param = int(url_params[-4])
+        month_param = int(url_params[-3])
+
+        # Verificar si la fecha en la URL corresponde al mes anterior
+        self.assertEqual(year_param, prev_date.year)
+        self.assertEqual(month_param, prev_date.month)  
+
 
     
 
