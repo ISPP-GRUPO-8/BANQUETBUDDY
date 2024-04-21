@@ -85,7 +85,10 @@ class Task(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(assignment_date__lt=models.F('expiration_date')), name='assignment_before_expiration')
+            models.CheckConstraint(
+                check=models.Q(assignment_date__lte=models.F('expiration_date')), 
+                name='assignment_on_or_before_expiration'
+            )
         ]
 
 class Menu(models.Model):

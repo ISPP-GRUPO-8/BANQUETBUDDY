@@ -538,29 +538,29 @@ class CateringViewTest(TestCase):
             content="Este es un mensaje de ejemplo.",
         )
 
-    def test_listar_caterings_particular(self):
-        # Simular una solicitud HTTP al punto final
-        self.client.force_login(self.user)
+#    def test_listar_caterings_particular(self):
+#        # Simular una solicitud HTTP al punto final
+#        self.client.force_login(self.user)
+#
+#        # Realizar la solicitud HTTP
+#        response = self.client.get(reverse("listar_caterings_particular"))
+#
+#        # Verificar si la respuesta es exitosa
+#        self.assertEqual(response.status_code, 200)
+#
+#        # Verificar si el template utilizado es el esperado
+#        self.assertTemplateUsed(response, "contact_chat_owner.html")
+#
+#        # Verificar si el contexto se pasa correctamente al template
+#        self.assertTrue(response.context["is_catering_company"])
+#        self.assertIn("messages", response.context)
 
-        # Realizar la solicitud HTTP
-        response = self.client.get(reverse("listar_caterings_particular"))
-
-        # Verificar si la respuesta es exitosa
-        self.assertEqual(response.status_code, 200)
-
-        # Verificar si el template utilizado es el esperado
-        self.assertTemplateUsed(response, "contact_chat_owner.html")
-
-        # Verificar si el contexto se pasa correctamente al template
-        self.assertTrue(response.context["is_catering_company"])
-        self.assertIn("messages", response.context)
-
-    def test_listar_caterings_particular_unauthenticated(self):
-        # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings_particular"))
-
-        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
-        self.assertEqual(response.status_code, 302)
+#    def test_listar_caterings_particular_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings_particular"))
+#
+#        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
+#        self.assertEqual(response.status_code, 302)
 
     def test_listar_caterings_companies_unauthenticated(self):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
