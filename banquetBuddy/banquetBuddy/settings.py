@@ -11,13 +11,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from selenium.webdriver import Chrome
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_URL = 'https://banquetbuddys3.pythonanywhere.com'
+BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
 
+DRIVER_PATH = os.path.join(BASE_DIR, 'static', 'driver', 'chromedriver.exe')
 #Sustituimos la siguiente línea por la que sigue a continuación cpara probar en local
 #BASE_URL = 'http:localhost:8000' 
 
@@ -41,9 +47,9 @@ DB_PASSWORD = os.environ.get('DB_PASSWORD')
 SECRET_KEY = "django-insecure-oe0$c66l3=!r-4uq*c45axvjq90v!-n5e!dtq)+b)*bpil@nf$"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['banquetbuddys3.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -105,13 +111,13 @@ WSGI_APPLICATION = "banquetBuddy.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'banquetbuddys3$default',
-        'USER': 'banquetbuddys3',
-        'PASSWORD': 'ISPP_grupo8',
-        'HOST': 'banquetbuddys3.mysql.pythonanywhere-services.com',
-        'CHARSET': 'utf8',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ispp",
+        "USER": "ispp",
+        "PASSWORD": DB_PASSWORD,
+        "HOST": "localhost",
+        "PORT": "5432",
     },
 }
 
@@ -144,6 +150,29 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
+WEBDRIVER_OPTIONS = {
+    'executable_path': DRIVER_PATH,  # Ruta al archivo del controlador WebDriver
+    'headless': True,  # Ejecución sin interfaz gráfica (opcional)
+    # Otras opciones de configuración según tus necesidades
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -162,12 +191,12 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_URL = 'login'
 
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "static/images/logos"),
 ]
 
