@@ -12,6 +12,7 @@ from catering_employees.models import CustomUser, Employee, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
 from catering_particular.models import Particular
 from django.contrib.auth import get_user_model
+import datetime
 
 
 from faker import Faker
@@ -558,97 +559,6 @@ def create_menus():
                 )
 
 
-def create_plates():
-    for menu in Menu.objects.all():
-        # Inicializa un conjunto para llevar un registro de los platos ya agregados a este menú
-        existing_plate_names = set()
-
-        num_plates = randint(2, 5)
-        for _ in range(num_plates):
-            plate_name = generate_plate_name()
-
-            # Verifica si el plato ya existe en este menú y, de ser así, continúa con el siguiente
-            if plate_name in existing_plate_names:
-                continue
-
-            existing_plate_names.add(plate_name)
-            plate_description = generate_plate_description(plate_name)
-
-            Plate.objects.create(
-                menu=menu,
-                cateringcompany=menu.cateringcompany,  # Asigna la compañía de catering propietaria del menú
-                name=plate_name,
-                description=plate_description,
-                price=faker.random_number(digits=2)
-            )
-
-           
-
-
-
-event_names = [
-    "Recepción Jardín Botánico",
-    "Cena Panorámica Urbana",
-    "Fiesta Temática Musical",
-    "Buffet Dulces Sueños",
-    "Degustación Vinos y Quesos",
-    "Celebración Familiar Divertida",
-    "Boda Playa Paradisíaca",
-    "Cena de Gala Elegante",
-    "Inauguración Empresarial Internacional",
-    "Fiesta Sorpresa Nocturna"
-]
-
-def create_events(num_events):
-    services = CateringService.objects.all()
-    particulars = Particular.objects.all()
-    menus = Menu.objects.all()
-    
-    for i in range(num_events):
-        menu = choice(menus) if menus else None
-        selected_service = choice(services)
-        Event.objects.create(
-            cateringservice=selected_service,
-            cateringcompany=selected_service.cateringcompany,  # Asignar la compañía de catering del servicio seleccionado
-            particular=choice(particulars),
-            menu=menu,
-            name=event_names[i % len(event_names)],  # Utiliza el nombre del evento correspondiente
-            date=faker.date_between(start_date='today', end_date='+1y'),
-            details=events_details[i % len(events_details)],
-            booking_state=choice(['CONFIRMED', 'CONTRACT_PENDING', 'CANCELLED', 'FINALIZED']),
-            number_guests=randint(20, 200)
-        )
-
-tasks_descriptions = [
-    "Preparación de menú para evento corporativo.",
-    "Coordinación de servicio de catering para boda.",
-    "Organización de degustación de platos para evento promocional.",
-    "Diseño de menú especializado para cena de gala.",
-    "Supervisión de cocina en evento benéfico.",
-    "Planificación de servicio de banquetes para conferencia.",
-    "Preparación y presentación de platos para sesión de fotos gastronómica.",
-    "Gestión de catering para inauguración de local.",
-    "Creación de menú temático para fiesta privada.",
-    "Coordinación logística para servicio de catering en festival gastronómico."
-]
-
-def create_tasks(num_tasks):
-    events = Event.objects.all()
-    services = CateringService.objects.all()
-    for _ in range(num_tasks):
-        service = choice(services)
-        Task.objects.create(
-            event=choice(events),
-            cateringservice=service,
-            cateringcompany=service.cateringcompany,  # Asegúrate de que cada tarea tenga una compañía de catering
-            description=tasks_descriptions[_],
-            assignment_date=faker.date_between(start_date='-1y', end_date='today'),
-            assignment_state=choice(['PENDING', 'IN_PROGRESS', 'COMPLETED']),
-            expiration_date=faker.date_between(start_date='today', end_date='+1y'),
-            priority=choice(['LOW', 'MEDIUM', 'HIGH'])
-        )
-
-
 menus_name = [
     "Menú Degustación Mediterráneo",
     "Menú Vegetariano Gourmet",
@@ -688,7 +598,78 @@ menus_plates = [
     ["Lentejas estofadas", "Estofado de ternera con patatas", "Arroz con leche", "Pastel de manzana", "Galletas de chocolate caseras"]
 ]
 
-
+menu_plates_data = {
+    "Menú Degustación Mediterráneo": [
+        {"name": "Paella de mariscos", "description": "Deliciosa paella con mariscos frescos y arroz aromático."},
+        {"name": "Ensalada griega", "description": "Ensalada refrescante con tomate, pepino, aceitunas y queso feta."},
+        {"name": "Pulpo a la gallega", "description": "Pulpo tierno cocido a la perfección y sazonado con aceite de oliva y pimentón."},
+        {"name": "Pasta al pesto", "description": "Pasta cocida al dente con salsa pesto casera y queso parmesano."},
+        {"name": "Tiramisú", "description": "Postre italiano clásico con capas de bizcocho, café y mascarpone."},
+    ],
+    "Menú Vegetariano Gourmet": [
+        {"name": "Risotto de champiñones", "description": "Risotto cremoso con champiñones frescos y queso parmesano."},
+        {"name": "Tartaleta de espinacas y queso de cabra", "description": "Tartaleta crujiente rellena de espinacas y queso de cabra."},
+        {"name": "Curry de verduras", "description": "Curry aromático con una variedad de verduras frescas y leche de coco."},
+        {"name": "Sushi vegetariano", "description": "Variedad de sushi roll con vegetales frescos y arroz sazonado."},
+        {"name": "Helado de frutas frescas", "description": "Helado casero con una mezcla de frutas frescas y cremosas."},
+    ],
+    "Menú BBQ Americana": [
+        {"name": "Hamburguesa clásica con papas fritas", "description": "Hamburguesa jugosa con papas fritas crujientes."},
+        {"name": "Costillas de cerdo BBQ", "description": "Costillas de cerdo ahumadas y glaseadas con salsa barbacoa."},
+        {"name": "Pollo a la parrilla con salsa barbacoa", "description": "Pollo marinado a la parrilla con salsa barbacoa."},
+        {"name": "Ensalada de col", "description": "Ensalada fresca de col con aderezo de mayonesa y vinagre."},
+        {"name": "Pie de manzana", "description": "Pastel de manzana con una capa crujiente de masa y relleno de manzanas dulces."},
+    ],
+    "Menú Asiático Fusion": [
+        {"name": "Sushi variado", "description": "Variedad de sushi roll con pescado fresco y arroz sazonado."},
+        {"name": "Pad thai de camarones", "description": "Plato tailandés de fideos de arroz salteados con camarones y vegetales."},
+        {"name": "Rollitos de primavera con salsa agridulce", "description": "Rollitos crujientes rellenos de carne y vegetales, servidos con salsa agridulce."},
+        {"name": "Curry rojo tailandés", "description": "Curry picante tailandés con carne o mariscos, leche de coco y especias."},
+        {"name": "Helado de té verde", "description": "Helado cremoso con sabor a té verde, un postre refrescante y delicioso."},
+    ],
+    "Menú Clásico Italiano": [
+        {"name": "Spaghetti carbonara", "description": "Spaghetti con salsa carbonara cremosa, panceta y queso parmesano."},
+        {"name": "Pizza margarita", "description": "Pizza clásica con salsa de tomate, mozzarella y albahaca fresca."},
+        {"name": "Lasagna boloñesa", "description": "Lasagna con capas de pasta, salsa boloñesa y queso derretido."},
+        {"name": "Ensalada caprese", "description": "Ensalada italiana con tomate, mozzarella fresca y albahaca."},
+        {"name": "Tiramisú", "description": "Postre italiano clásico con capas de bizcocho, café y mascarpone."},
+    ],
+    "Menú Tapas Españolas": [
+        {"name": "Patatas bravas", "description": "Patatas fritas con salsa brava y alioli, un clásico español."},
+        {"name": "Croquetas de jamón", "description": "Croquetas cremosas rellenas de jamón y bechamel."},
+        {"name": "Gambas al ajillo", "description": "Gambas salteadas en aceite de oliva con ajo y guindilla."},
+        {"name": "Tortilla española", "description": "Tortilla de patatas con huevos, patatas y cebolla."},
+        {"name": "Churros con chocolate", "description": "Churros crujientes servidos con chocolate caliente para mojar."},
+    ],
+    "Menú Saludable y Equilibrado": [
+        {"name": "Ensalada César con pollo a la parrilla", "description": "Ensalada fresca con pollo a la parrilla, crutones y aderezo César."},
+        {"name": "Salmón al horno con espárragos", "description": "Salmón fresco al horno con espárragos y limón."},
+        {"name": "Quinoa con verduras asadas", "description": "Quinoa cocida con una variedad de verduras asadas y hierbas."},
+        {"name": "Batido de frutas frescas", "description": "Batido cremoso con una mezcla de frutas frescas y yogur."},
+        {"name": "Yogur con granola y frutos rojos", "description": "Yogur natural con granola crujiente y frutos rojos."},
+    ],
+    "Menú Internacional Variado": [
+        {"name": "Sushi nigiri variado", "description": "Variedad de nigiri sushi con pescado fresco y arroz sazonado."},
+        {"name": "Curry de pollo indio", "description": "Curry picante de pollo con especias indias y arroz basmati."},
+        {"name": "Tacos mexicanos con guacamole", "description": "Tacos rellenos de carne, lechuga, tomate, queso y guacamole."},
+        {"name": "Pasta carbonara italiana", "description": "Pasta cremosa con salsa de huevo, panceta y queso parmesano."},
+        {"name": "Helado de mochi japonés", "description": "Helado japonés envuelto en masa de arroz glutinoso, un postre único y delicioso."},
+    ],
+    "Menú de Lujo Gourmet": [
+        {"name": "Foie gras con confitura de higos", "description": "Foie gras cocido a la perfección con confitura de higos y pan tostado."},
+        {"name": "Filete de ternera Wagyu", "description": "Filete de ternera Wagyu asado a la parrilla con una capa dorada y jugosa."},
+        {"name": "Langosta a la parrilla con mantequilla de trufa", "description": "Langosta fresca a la parrilla con mantequilla de trufa y limón."},
+        {"name": "Carpaccio de vieiras", "description": "Vieiras frescas en láminas finas con aceite de oliva, limón y sal."},
+        {"name": "Tarta de chocolate negro con oro comestible", "description": "Tarta de chocolate negro con hojas de oro comestible, un postre lujoso y decadente."},
+    ],
+    "Menú Tradicional de la Abuela": [
+        {"name": "Lentejas estofadas", "description": "Lentejas cocidas a fuego lento con verduras y chorizo, un plato reconfortante."},
+        {"name": "Estofado de ternera con patatas", "description": "Ternera estofada con patatas, zanahorias y guisantes, una comida casera clásica."},
+        {"name": "Arroz con leche", "description": "Arroz cocido con leche y azúcar, aromatizado con canela y ralladura de limón."},
+        {"name": "Pastel de manzana", "description": "Pastel casero con una base de masa crujiente y relleno de manzanas dulces y canela."},
+        {"name": "Galletas de chocolate caseras", "description": "Galletas de chocolate crujientes y llenas de sabor, perfectas para un postre o tentempié."},
+    ],
+}
 
 
 def generate_plate_name():
@@ -707,6 +688,186 @@ def generate_plate_description(plate_name):
 
     # Devuelve la descripción si el nombre del plato se encuentra en el diccionario, de lo contrario, devuelve una descripción genérica
     return descriptions.get(plate_name, 'Delicioso plato preparado con ingredientes frescos y de alta calidad.')
+
+
+def create_plates():
+    for menu_name, plates_data in menu_plates_data.items():
+        menus = Menu.objects.filter(name=menu_name)
+        for menu in menus:
+            cateringcompany = menu.cateringcompany
+            for plate_data in plates_data:
+                Plate.objects.create(
+                    menu=menu,
+                    cateringcompany=cateringcompany,
+                    name=plate_data["name"],
+                    description=plate_data["description"],
+                    price=faker.random_number(digits=2)
+                )
+
+           
+
+
+
+event_names = [
+    "Recepción Jardín Botánico",
+    "Cena Panorámica Urbana",
+    "Fiesta Temática Musical",
+    "Buffet Dulces Sueños",
+    "Degustación Vinos y Quesos",
+    "Celebración Familiar Divertida",
+    "Boda Playa Paradisíaca",
+    "Cena de Gala Elegante",
+    "Inauguración Empresarial Internacional",
+    "Fiesta Sorpresa Nocturna"
+]
+
+event_data_list = [
+    {
+        'name': 'Recepción Jardín Botánico',
+        'date': datetime.date(2024, 4, 28),
+        'details': "Celebre su evento en un entorno natural único. Nuestra recepción en el Jardín Botánico ofrece un ambiente sereno y elegante, perfecto para cualquier ocasión especial.",
+        'booking_state': 'CONFIRMED',
+        'number_guests': 120,
+        'particular_username': 'Pablo',  # Nombre de usuario del particular asociado
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Cena Panorámica Urbana',
+        'date': datetime.date(2024, 5, 20),
+        'details': "Disfrute de una vista impresionante de la ciudad mientras saborea una deliciosa cena con nuestros platos exclusivos. Una experiencia gastronómica inolvidable en lo alto de la urbe.",
+        'booking_state': 'CONFIRMED',
+        'number_guests': 80,
+        'particular_username': 'Jaime',  # Nombre de usuario del particular asociado
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Fiesta Temática Musical',
+        'date': datetime.date(2024, 6, 10),
+        'details': "¡Que suene la música! Organice una fiesta temática musical con nosotros y déjese llevar por los ritmos más pegajosos. Nuestro equipo se encargará de crear una atmósfera vibrante y llena de energía.",
+        'booking_state': 'CONFIRMED',
+        'number_guests': 150,
+        'particular_username': 'Pablo',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Buffet Dulces Sueños',
+        'date': datetime.date(2024, 7, 5),
+        'details': "Deléitese con una variedad de postres exquisitos en nuestro buffet de dulces sueños. Desde tartas caseras hasta macarons gourmet, tenemos algo para satisfacer todos los antojos.",
+        'booking_state': 'CONTRACT_PENDING',
+        'number_guests': 100,
+        'particular_username': 'David',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Degustación Vinos y Quesos',
+        'date': datetime.date(2024, 5, 15),
+        'details': "Descubre los mejores maridajes de vinos y quesos en nuestra degustación especial. Únete a nosotros para una experiencia sensorial única llena de sabores y aromas.",
+        'booking_state': 'CONTRACT_PENDING',
+        'number_guests': 50,
+        'particular_username': 'Manuel',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Celebración Familiar Divertida',
+        'date': datetime.date(2024, 5, 20),
+        'details': "Celebre momentos especiales en familia con nuestra celebración familiar divertida. Ofrecemos entretenimiento para todas las edades y una variedad de platos deliciosos para disfrutar juntos.",
+        'booking_state': 'CANCELLED',
+        'number_guests': 80,
+        'particular_username': 'Juan',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Boda Playa Paradisíaca',
+        'date': datetime.date(2024, 4, 8),
+        'details': "Haga realidad su sueño de una boda en la playa con nosotros. Con nuestras impresionantes vistas y servicios de catering excepcionales, su día especial será inolvidable.",
+        'booking_state': 'FINALIZED',
+        'number_guests': 200,
+        'particular_username': 'Pablo',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Cena de Gala Elegante',
+        'date': datetime.date(2024, 5, 12),
+        'details': "Disfrute de una noche de elegancia y sofisticación en nuestra cena de gala. Con un menú exquisito y un ambiente refinado, le garantizamos una experiencia inolvidable.",
+        'booking_state': 'CONFIRMED',
+        'number_guests': 150,
+        'particular_username': 'Manuel',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Inauguración Empresarial Internacional',
+        'date': datetime.date(2024, 5, 25),
+        'details': "Celebre la apertura de su empresa con un evento inolvidable. Nuestro servicio de catering internacional hará que su inauguración sea un éxito en todo el mundo.",
+        'booking_state': 'CONTRACT_PENDING',
+        'number_guests': 300,
+        'particular_username': 'David',
+        # Otros campos según sea necesario
+    },
+    {
+        'name': 'Fiesta Sorpresa Nocturna',
+        'date': datetime.date(2024, 5, 10),
+        'details': "Sorprende a tus seres queridos con una fiesta sorpresa nocturna. Nuestro equipo se encargará de todos los detalles para que puedas disfrutar de una velada llena de diversión y emoción.",
+        'booking_state': 'CONFIRMED',
+        'number_guests': 50,
+        'particular_username': 'Juan',
+        # Otros campos según sea necesario
+    },
+    # Agrega el resto de eventos con sus respectivos datos
+]
+
+def create_events():
+    for event_data in event_data_list:
+        catering_services = CateringService.objects.all()
+        particulars = Particular.objects.all()
+        menus = Menu.objects.all()
+
+        menu = choice(menus) if menus else None
+        selected_service = choice(catering_services)
+
+        particular = particulars.get(user__username=event_data['particular_username'])
+
+        Event.objects.create(
+            cateringservice=selected_service,
+            cateringcompany=selected_service.cateringcompany,
+            particular=particular,
+            menu=menu,
+            name=event_data['name'],
+            date=event_data['date'],
+            details=event_data['details'],
+            booking_state=event_data['booking_state'],
+            number_guests=event_data['number_guests']
+        )
+
+tasks_descriptions = [
+    "Preparación de menú para evento corporativo.",
+    "Coordinación de servicio de catering para boda.",
+    "Organización de degustación de platos para evento promocional.",
+    "Diseño de menú especializado para cena de gala.",
+    "Supervisión de cocina en evento benéfico.",
+    "Planificación de servicio de banquetes para conferencia.",
+    "Preparación y presentación de platos para sesión de fotos gastronómica.",
+    "Gestión de catering para inauguración de local.",
+    "Creación de menú temático para fiesta privada.",
+    "Coordinación logística para servicio de catering en festival gastronómico."
+]
+
+def create_tasks(num_tasks):
+    events = Event.objects.all()
+    services = CateringService.objects.all()
+    for _ in range(num_tasks):
+        service = choice(services)
+        Task.objects.create(
+            event=choice(events),
+            cateringservice=service,
+            cateringcompany=service.cateringcompany,  # Asegúrate de que cada tarea tenga una compañía de catering
+            description=tasks_descriptions[_],
+            assignment_date=faker.date_between(start_date='-1y', end_date='today'),
+            assignment_state=choice(['PENDING', 'IN_PROGRESS', 'COMPLETED']),
+            expiration_date=faker.date_between(start_date='today', end_date='+1y'),
+            priority=choice(['LOW', 'MEDIUM', 'HIGH'])
+        )
+
+
 
 
 reviews_data = [
@@ -943,7 +1104,7 @@ def populate_database():
     create_messages(5)
     create_catering_services(10)
     create_menus()
-    create_events(10)
+    create_events()
     create_tasks(10)
     create_plates()
     create_reviews(10)
