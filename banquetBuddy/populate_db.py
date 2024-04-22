@@ -148,7 +148,7 @@ catering_data = [
         'logo': 'cocinaantonio.jpg',
         'phone_number': faker.phone_number(),
         'is_verified': 'True',
-        'price_plan': 'PREMIUM'
+        'price_plan': 'PREMIUM_PRO'
     },
     {
         'username': 'ExquisitezGastronomica',
@@ -799,7 +799,7 @@ event_data_list = [
         'booking_state': 'CONFIRMED',
         'number_guests': 150,
         'particular_username': 'Manuel',
-        'service': 'Eventos Elegantes',
+        'service': 'Banquete Estelar',
         # Otros campos según sea necesario
     },
     {
@@ -871,11 +871,20 @@ tasks_data = [
         'priority': 'LOW'
     },
     {
-        'event_name': 'Degustación Vinos y Quesos',
+        'event_name': 'Fiesta Sorpresa Nocturna',
         'catering_service_name': 'Buffet Real',
         'description': 'Coordinación de servicio de catering para boda.',
         'assignment_date': datetime.date(2024, 4, 10),
-        'assignment_state': 'IN_PROGRESS',
+        'assignment_state': 'PENDING',
+        'expiration_date': datetime.date(2024, 5, 15),
+        'priority': 'MEDIUM'
+    },
+    {
+        'event_name': 'Degustación Vinos y Quesos',
+        'catering_service_name': 'Buffet Real',
+        'description': 'Supervisión de cocina.',
+        'assignment_date': datetime.date(2024, 4, 10),
+        'assignment_state': 'PENDING',
         'expiration_date': datetime.date(2024, 5, 15),
         'priority': 'MEDIUM'
     },
@@ -988,79 +997,56 @@ def create_employee_work_services(num_relations):
 
 
 
-offers = [
+offers_data = [
     {
-        "title": "Oferta especial de primavera",
-        "description": "¡Celebre la llegada de la primavera con nuestros deliciosos menús de temporada! Desde platos frescos y ligeros hasta opciones más sustanciales, tenemos todo lo que necesita para hacer de su evento un éxito.",
+        "title": "Cocinero/a de Temporada Primavera",
+        "description": "¡Únete a nuestro equipo para celebrar la llegada de la primavera! Buscamos cocineros/as con experiencia previa en catering y disponibilidad para eventos durante el día.",
         "requirements": "Experiencia previa en catering y disponibilidad para eventos durante el día.",
-        "location": "Ciudad Jardín, Calle Flores 123"
+        "location": "Ciudad Jardín, Calle Flores 123",
+        "service": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna"
     },
     {
-        "title": "Promoción de verano: BBQ Party",
-        "description": "¡Disfrute del sol y del aire libre con nuestra promoción especial de verano! Organice una barbacoa en su jardín o terraza y déjese llevar por nuestros deliciosos platos a la parrilla.",
+        "title": "Asistente de Cocina al Aire Libre",
+        "description": "¡Únete a nuestra promoción de verano y sé parte de nuestro equipo de cocina al aire libre! Estamos buscando personas con habilidades culinarias en cocina al aire libre y disponibilidad para fines de semana y días festivos.",
         "requirements": "Habilidades culinarias en cocina al aire libre y disponibilidad para fines de semana y días festivos.",
-        "location": "Playa del Sol, Avenida Marítima 456"
+        "location": "Playa del Sol, Avenida Marítima 456",
+        "service": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna"
     },
     {
-        "title": "Oferta de otoño: Menú de cosecha",
-        "description": "¡Celebre la temporada de cosecha con nuestro menú especial de otoño! Ingredientes frescos y de temporada se combinan para ofrecer una experiencia culinaria única que deleitará a sus invitados.",
+        "title": "Cocinero/a de Temporada de Cosecha",
+        "description": "¡Celebra la temporada de cosecha con nosotros! Estamos en busca de cocineros/as con conocimientos en cocina de temporada y disponibilidad para eventos de noche.",
         "requirements": "Conocimientos en cocina de temporada y disponibilidad para eventos de noche.",
-        "location": "Pueblo Viejo, Plaza Principal 789"
+        "location": "Pueblo Viejo, Plaza Principal 789",
+        "service": "Delicias del Chef",
+        "event": "Fiesta Temática Musical"
     },
     {
-        "title": "Promoción de invierno: Cena de Navidad",
-        "description": "¡Deleite a sus seres queridos con una deliciosa cena de Navidad preparada por nuestros talentosos chefs! Desde platos tradicionales hasta opciones modernas, tenemos todo lo necesario para hacer de su celebración una experiencia inolvidable.",
-        "requirements": "Experiencia previa en eventos festivos y disponibilidad para fines de semana y días festivos.",
-        "location": "Villa Invierno, Calle Nieve 101"
-    },
-    {
-        "title": "Oferta corporativa: Almuerzos de negocios",
-        "description": "¡Impresione a sus clientes y empleados con nuestros exquisitos almuerzos de negocios! Menús personalizados y servicio profesional garantizan el éxito de sus reuniones y eventos corporativos.",
-        "requirements": "Habilidades de presentación de alimentos y disponibilidad para eventos durante la semana.",
-        "location": "Centro Empresarial, Calle Negocios 222"
-    },
-    {
-        "title": "Promoción de cumpleaños: Fiesta temática",
-        "description": "¡Celebre su cumpleaños de una manera única con nuestra fiesta temática personalizada! Desde la decoración hasta el menú, nos encargamos de todos los detalles para que pueda disfrutar de su día especial sin preocupaciones.",
+        "title": "Diseñador/a de Eventos Temáticos",
+        "description": "¿Tienes una mente creativa? Únete a nuestro equipo y ayuda a diseñar fiestas temáticas personalizadas para cumpleaños. Se requiere creatividad en diseño de eventos y disponibilidad para fines de semana.",
         "requirements": "Creatividad en diseño de eventos y disponibilidad para fines de semana.",
-        "location": "Barrio Feliz, Calle Fiesta 333"
+        "location": "Barrio Feliz, Calle Fiesta 333",
+        "service": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna"
     },
     {
-        "title": "Oferta familiar: Cena de domingo",
-        "description": "¡Reúna a su familia para una deliciosa cena de domingo sin tener que preocuparse por cocinar! Nuestros menús familiares ofrecen una variedad de platos para satisfacer los gustos de todos.",
+        "title": "Chef de Cocina Familiar para Eventos de Domingo",
+        "description": "Únete a nosotros para hacer de los domingos días especiales para las familias. Buscamos chefs con experiencia en cocina familiar y disponibilidad para eventos de tarde.",
         "requirements": "Experiencia en cocina familiar y disponibilidad para eventos de tarde.",
-        "location": "Colina Verde, Calle Familia 444"
+        "location": "Colina Verde, Calle Familia 444",
+        "service": "Banquete Estelar",
+        "event": "Cena de Gala Elegante"
     },
-    {
-        "title": "Promoción de aniversario: Banquete elegante",
-        "description": "¡Celebre su aniversario con un banquete elegante diseñado para impresionar! Desde la recepción hasta el postre, nos aseguramos de que cada detalle sea perfecto para su ocasión especial.",
-        "requirements": "Experiencia en eventos formales y disponibilidad para fines de semana y eventos nocturnos.",
-        "location": "Avenida Elegancia, Salón Magnífico 555"
-    },
-    {
-        "title": "Oferta de inauguración: Brunch de bienvenida",
-        "description": "¡Dale la bienvenida a tus invitados con un brunch de inauguración inolvidable! Desde platos salados hasta opciones dulces, nuestro brunch ofrece algo para todos los gustos.",
-        "requirements": "Conocimientos en cocina para eventos de inauguración y disponibilidad para eventos durante el día.",
-        "location": "Barrio Nuevo, Calle Bienvenida 666"
-    },
-    {
-        "title": "Promoción de fiesta de fin de año",
-        "description": "¡Celebra el fin de año con una fiesta espectacular y un menú especial para despedir el año viejo y dar la bienvenida al nuevo! Música, comida y diversión aseguradas para una noche inolvidable.",
-        "requirements": "Experiencia en eventos festivos y disponibilidad para eventos nocturnos.",
-        "location": "Plaza Fiesta, Calle Año Nuevo 777"
-    }
 ]
 
-def create_offers(num_offers):
+def create_offers():
     services = CateringService.objects.all()
     events = Event.objects.filter(booking_state='CONFIRMED')  # Asegúrate de elegir solo eventos confirmados si es necesario
 
-    for i in range(num_offers):
-        if not services or not events:
-            break
-
-        service = choice(services)
-        event = choice(events)  # Elegir un evento al azar
+    for offers in offers_data:
+        service = CateringService.objects.get(name = offers['service'])
+        event = Event.objects.get(name = offers['event'])  # Elegir un evento al azar
 
         # Generar fechas de inicio y fin de manera aleatoria
         start_date = timezone.now().date() + timedelta(days=random.randint(1, 30))  # Fecha de inicio en el futuro
@@ -1069,10 +1055,10 @@ def create_offers(num_offers):
         Offer.objects.create(
             cateringservice=service,
             event=event,  # Asignar el evento seleccionado
-            title=offers[i]['title'],
-            description=offers[i]['description'],
-            requirements=offers[i]['requirements'],
-            location=offers[i]['location'],
+            title=offers['title'],
+            description=offers['description'],
+            requirements=offers['requirements'],
+            location=offers['location'],
             start_date=start_date,
             end_date=end_date
         )
@@ -1161,7 +1147,7 @@ def populate_database():
     create_plates()
     create_reviews(10)
     create_employee_work_services(100)
-    create_offers(10)
+    create_offers()
     # create_job_applications(10)
     create_recommendation_letters(10)
     create_task_employee()
