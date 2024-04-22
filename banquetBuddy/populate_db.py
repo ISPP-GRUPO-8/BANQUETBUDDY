@@ -859,21 +859,46 @@ tasks_descriptions = [
     "Coordinación logística para servicio de catering en festival gastronómico."
 ]
 
-def create_tasks(num_tasks):
-    events = Event.objects.all()
-    services = CateringService.objects.all()
-    for _ in range(num_tasks):
-        service = choice(services)
-        Task.objects.create(
-            event=choice(events),
-            cateringservice=service,
-            cateringcompany=service.cateringcompany,  # Asegúrate de que cada tarea tenga una compañía de catering
-            description=tasks_descriptions[_],
-            assignment_date=faker.date_between(start_date='-1y', end_date='today'),
-            assignment_state=choice(['PENDING', 'IN_PROGRESS', 'COMPLETED']),
-            expiration_date=faker.date_between(start_date='today', end_date='+1y'),
-            priority=choice(['LOW', 'MEDIUM', 'HIGH'])
-        )
+
+tasks_data = [
+    {
+        'event_name': 'Fiesta Sorpresa Nocturna',
+        'catering_service_name': 'Buffet Real',
+        'description': 'Preparación de menú para evento corporativo.',
+        'assignment_date': datetime.date(2024, 4, 10),
+        'assignment_state': 'PENDING',
+        'expiration_date': datetime.date(2024, 5, 10),
+        'priority': 'LOW'
+    },
+    {
+        'event_name': 'Degustación Vinos y Quesos',
+        'catering_service_name': 'Buffet Real',
+        'description': 'Coordinación de servicio de catering para boda.',
+        'assignment_date': datetime.date(2024, 4, 10),
+        'assignment_state': 'IN_PROGRESS',
+        'expiration_date': datetime.date(2024, 5, 15),
+        'priority': 'MEDIUM'
+    },
+    # Agrega los otros campos según sea necesario para cada tarea
+]
+
+def create_tasks_from_data(tasks_data):
+    for task_data in tasks_data:
+        try:
+            event = Event.objects.get(name=task_data['event_name'])
+            catering_service = CateringService.objects.get(name=task_data['catering_service_name'])
+            Task.objects.create(
+                event=event,
+                cateringservice=catering_service,
+                cateringcompany=catering_service.cateringcompany,
+                description=task_data['description'],
+                assignment_date=task_data['assignment_date'],
+                assignment_state=task_data['assignment_state'],
+                expiration_date=task_data['expiration_date'],
+                priority=task_data['priority']
+            )
+        except (Event.DoesNotExist, CateringService.DoesNotExist) as e:
+            print(f"Error: {e}")
 
 
 
@@ -1113,7 +1138,7 @@ def populate_database():
     create_catering_services(10)
     create_menus()
     create_events()
-    create_tasks(10)
+    create_tasks_from_data(tasks_data)
     create_plates()
     create_reviews(10)
     create_employee_work_services(100)
