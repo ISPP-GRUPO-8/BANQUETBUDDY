@@ -728,7 +728,8 @@ event_data_list = [
         'details': "Celebre su evento en un entorno natural único. Nuestra recepción en el Jardín Botánico ofrece un ambiente sereno y elegante, perfecto para cualquier ocasión especial.",
         'booking_state': 'CONFIRMED',
         'number_guests': 120,
-        'particular_username': 'Pablo',  # Nombre de usuario del particular asociado
+        'particular_username': 'Pablo',
+        'service': 'Banquete Estelar',   # Nombre de usuario del particular asociado
         # Otros campos según sea necesario
     },
     {
@@ -737,7 +738,8 @@ event_data_list = [
         'details': "Disfrute de una vista impresionante de la ciudad mientras saborea una deliciosa cena con nuestros platos exclusivos. Una experiencia gastronómica inolvidable en lo alto de la urbe.",
         'booking_state': 'CONFIRMED',
         'number_guests': 80,
-        'particular_username': 'Jaime',  # Nombre de usuario del particular asociado
+        'particular_username': 'Jaime', 
+        'service': 'Banquete Estelar', # Nombre de usuario del particular asociado
         # Otros campos según sea necesario
     },
     {
@@ -747,6 +749,7 @@ event_data_list = [
         'booking_state': 'CONFIRMED',
         'number_guests': 150,
         'particular_username': 'Pablo',
+        'service': 'Delicias del Chef',
         # Otros campos según sea necesario
     },
     {
@@ -756,6 +759,7 @@ event_data_list = [
         'booking_state': 'CONTRACT_PENDING',
         'number_guests': 100,
         'particular_username': 'David',
+        'service': 'Buffet Real',
         # Otros campos según sea necesario
     },
     {
@@ -765,6 +769,7 @@ event_data_list = [
         'booking_state': 'CONTRACT_PENDING',
         'number_guests': 50,
         'particular_username': 'Manuel',
+        'service': 'Buffet Real',
         # Otros campos según sea necesario
     },
     {
@@ -774,6 +779,7 @@ event_data_list = [
         'booking_state': 'CANCELLED',
         'number_guests': 80,
         'particular_username': 'Juan',
+        'service': 'Catering Premium',
         # Otros campos según sea necesario
     },
     {
@@ -783,6 +789,7 @@ event_data_list = [
         'booking_state': 'FINALIZED',
         'number_guests': 200,
         'particular_username': 'Pablo',
+        'service': 'Cocina de Autor',
         # Otros campos según sea necesario
     },
     {
@@ -792,6 +799,7 @@ event_data_list = [
         'booking_state': 'CONFIRMED',
         'number_guests': 150,
         'particular_username': 'Manuel',
+        'service': 'Eventos Elegantes',
         # Otros campos según sea necesario
     },
     {
@@ -801,6 +809,7 @@ event_data_list = [
         'booking_state': 'CONTRACT_PENDING',
         'number_guests': 300,
         'particular_username': 'David',
+        'service': 'Fiesta Gourmet',
         # Otros campos según sea necesario
     },
     {
@@ -810,6 +819,7 @@ event_data_list = [
         'booking_state': 'CONFIRMED',
         'number_guests': 50,
         'particular_username': 'Juan',
+        'service': 'Buffet Real',
         # Otros campos según sea necesario
     },
     # Agrega el resto de eventos con sus respectivos datos
@@ -817,13 +827,11 @@ event_data_list = [
 
 def create_events():
     for event_data in event_data_list:
-        catering_services = CateringService.objects.all()
         particulars = Particular.objects.all()
         menus = Menu.objects.all()
 
         menu = choice(menus) if menus else None
-        selected_service = choice(catering_services)
-
+        selected_service = CateringService.objects.get(name=event_data['service'])
         particular = particulars.get(user__username=event_data['particular_username'])
 
         Event.objects.create(
