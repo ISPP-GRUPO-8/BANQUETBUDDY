@@ -14,7 +14,9 @@ Con BanquetBuddy, transformamos la planificación de eventos, mejorando la exper
 
 [¡Dame tu opinión!](https://docs.google.com/forms/d/e/1FAIpQLSfMTBCnbfQ6rzbyg9BjClGEgxGa4RmDEFyk_vA2AcKwnMnp0w/viewform)
 
-[Docusaurus](https://github.com/marrocrod/DocusaurusBanquetBuddy)
+[Docusaurus](https://docusaurus-banquet-buddy.vercel.app/)
+
+[Despliegue](https://banquetbuddys3.pythonanywhere.com/)
 
 
 ## Pre-requisitos 📋
