@@ -4,10 +4,6 @@
 {% block content %}
 
     <style>
-        h1{
-        text-align: center;
-        font-size: 35px;
-        } 
         .form-container {
             max-width: 400px;
             margin: 0 auto;
@@ -15,7 +11,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            margin-top: 30px;
         }
         .form-container select {
             width: 100%;
@@ -39,12 +35,12 @@
             background-color: #01352e;
         }
         @media screen and (max-width: 450px) {
-            h1 {
+            h2 {
                 font-size: 25px; /* Cambio de tamaño de fuente en dispositivos pequeños */
             }
         }
         @media screen and (max-width: 600px) and (min-width: 451px) {
-            h1 {
+            h2 {
                 font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
             }
         }
@@ -52,7 +48,8 @@
 
 <body>
     <div class="form-container">
-        <h1>Select a Catering Service</h1>
+        <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Select a Catering Service</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}

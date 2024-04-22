@@ -28,6 +28,17 @@
     .name a:hover {
         color: #3f8c7f;
     }
+
+    .navbar .dropdown-menu .dropdown-item-custom {
+        color: #54BFAF;
+    }
+
+    .navbar .dropdown-menu .dropdown-item-custom.active,
+    .navbar .dropdown-menu .dropdown-item-custom:focus,
+    .navbar .dropdown-menu .dropdown-item-custom:hover {
+        color: #3f8c7f;
+        background-color: #ffffff;
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -60,6 +71,11 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
+                    {% if request.user.CateringCompanyusername or not user.is_authenticated%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subscription-plans">Plan</a>
+                    </li>
+                    {% endif %}
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
                     <li class="nav-item">
                         <a class="nav-link" href="/caterings">Caterings</a>
@@ -67,13 +83,25 @@
                     {% endif %}
 
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Management
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item dropdown-item-custom" href="{% url 'list_menus' %}">My Menus</a>
+                            <a class="dropdown-item dropdown-item-custom" href="{% url 'list_plates' %}">My Plates</a>
+                            <a class="dropdown-item dropdown-item-custom" href="{% url 'my_bookings' %}">My Bookings</a>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href="/services">Services</a>
                     </li>
                     {% endif %}
-                    {% if request.user.CateringCompanyusername or not user.is_authenticated%}
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/subscription-plans">Plan</a>
+                        <a class="nav-link" href="{% url 'offer_list' %}">Offers</a>
                     </li>
                     {% endif %}
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
@@ -95,11 +123,6 @@
                     {% if request.user.is_authenticated and is_catering_company %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_particular' %}">Chats</a>
-                    </li>
-                    {% endif %}
-                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
-                    <li class="nav-item">
-                        <a class="nav-link" href={% url 'offer_list' %}>Offers</a>
                     </li>
                     {% endif %}
                     {% if request.user.is_authenticated and request.user.EmployeeUsername %}

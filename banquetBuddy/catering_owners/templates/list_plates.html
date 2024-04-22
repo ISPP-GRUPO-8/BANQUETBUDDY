@@ -3,6 +3,9 @@
 {% block content %}
 
 <style>
+    .custom-border {
+        border-color: #02483E !important; /* Cambia el color verde aquí */
+    }
 
     .pagination .page-link {
         color: #02483E;
@@ -71,12 +74,18 @@
     <div class="container mt-4 mb-4">
         <div class="row justify-content-center align-items-center mb-4">
             <div class="col-md-6 text-center">
-                <h2 class="mb-0" style="color: #02483E;">My Plates</h2>
+                <h2 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Plates</h2>
             </div>
         </div>
 
-        <div class="mt-2 right justify-content-center" style="text-align: center;">
-            <a href="{% url 'add_plate' %}" class="btn btn-primary btn-add">Add New Plate</a>
+        <div class="row justify-content-end mb-4">
+            <div class="col-md-2">
+                <a href="{% url 'add_plate' %}" class="text-decoration-none">
+                    <button class="btn btn-add btn-block small-font">
+                        <i class="bi bi-plus-circle"></i> Add New Plate
+                    </button>
+                </a>
+            </div>
         </div>
         <!-- Filtro de menús -->
         <form method="get" class="form-inline my-2 my-lg-0">
@@ -90,31 +99,32 @@
             <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit">Filter</button>
         </form>
 
-        <div class="row mt-4">
+        <br>
+        <div class="row">
             {% for plate in plates %}
-            <div class="col-md-4">
-                <div class="card">
+            <div class="col-md-4 mb-4">
+                <div class="card rounded-3 border custom-border">
                     <div class="card-body">
                         <h5 class="card-title">{{ plate.name }}</h5>
                         <p class="card-text">Menu: {% if plate.menu %}{{ plate.menu.name }}{% else %}Not associated{% endif %}</p>
                         <p class="card-text">{{ plate.description }}</p>
                         <p class="card-text">Price: {{ plate.price }}</p>
-                        <div class="btn-group" role="group" aria-label="Actions">
-                            <form action="{% url 'edit_plate' plate.id %}" method="get">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-edit mr-2"><i class="bi bi-pencil"></i> Edit</button>
-                            </form>
-                            <form method="post" action="{% url 'delete_plate' plate.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i> Delete</button>
-                            </form>
-                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form action="{% url 'edit_plate' plate.id %}" method="get" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                        </form>
+                        <form action="{% url 'delete_plate' plate.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                        </form>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-md-12">
-                <p>No plates found.</p>
+            <div class="col">
+                <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No plates found</p>
             </div>
             {% endfor %}
         </div>
