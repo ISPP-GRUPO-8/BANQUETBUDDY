@@ -53,7 +53,6 @@ class EmployeeFilterForm(forms.Form):
 
         if english_level:
             hierarchy_value = self.ENGLISH_LEVEL_HIERARCHY.get(english_level, 0)
-            print(hierarchy_value)
             queryset = queryset.filter(employee__english_level__in=[clave for clave, valor in self.ENGLISH_LEVEL_HIERARCHY.items() if valor >= hierarchy_value])
 
         if profession:
