@@ -934,37 +934,56 @@ def create_employee_work_services(num_relations):
     employees = Employee.objects.all()
     services = CateringService.objects.all()
     events = Event.objects.all()
+    reasons = [reason.value for reason in TerminationReason]
 
     if not employees or not services or not events:
         return
 
-    for _ in range(num_relations):
+    created_relations = set()  # Mantener un registro de las combinaciones creadas
+
+    while len(created_relations) < num_relations:
         employee = choice(employees)
         service = choice(services)
-        event = choice(events)  # Seleccionar un evento al azar
+        event = choice(events)
 
-        # Generar fechas de inicio y fin de manera aleatoria
+        # Generar fechas de inicio y fin aleatoriamente
         start_date = timezone.now().date() - timedelta(days=random.randint(0, 30))
         end_date = start_date + timedelta(days=random.randint(30, 180))
 
-        # Verificar si existe una superposición de fechas
-        overlapping_assignments = EmployeeWorkService.objects.filter(
+        # Combinación única
+        unique_combination = (employee.user_id if hasattr(employee, 'user_id') else employee.id, service.id, event.id)
+
+        if unique_combination in created_relations:
+            continue  # Si la combinación ya existe, intenta de nuevo
+
+        # Verificar superposiciones de fechas para el mismo empleado y servicio
+        overlapping = EmployeeWorkService.objects.filter(
             employee=employee,
             cateringservice=service,
-            event=event,  # Asegúrate de incluir el evento en la consulta
             end_date__gte=start_date,
             start_date__lte=end_date
+        ).exists()
+
+        if overlapping:
+            continue  # Si hay superposición, intenta otra combinación
+
+        # Añadir la combinación a nuestro registro
+        created_relations.add(unique_combination)
+
+        # Decidir aleatoriamente si la relación terminará
+        terminated = random.choice([True, False])
+        termination_reason = random.choice(reasons) if terminated else None
+
+        # Crear la relación EmployeeWorkService
+        EmployeeWorkService.objects.create(
+            employee=employee,
+            cateringservice=service,
+            event=event,
+            start_date=start_date,
+            end_date=end_date if terminated else None,
+            termination_reason=termination_reason
         )
 
-        # Si no hay superposición, crear la asignación
-        if not overlapping_assignments.exists():
-            EmployeeWorkService.objects.create(
-                employee=employee,
-                cateringservice=service,
-                event=event,  # Asignar el evento
-                start_date=start_date,
-                end_date=end_date
-            )
 
 
 

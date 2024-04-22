@@ -55,8 +55,6 @@ urlpatterns = [
     path('offer_list', offer_list, name='offer_list'),
     path('employee_record/<int:employee_id>/', employee_record_list, name='employee_record'),
     path('hire_employee/<int:employee_id>/', hire_employee, name='hire_employee'),
-
-    path('apply_offer/<int:offer_id>/', apply_offer, name='apply_offer'),
     path('delete_offer/<int:offer_id>/', delete_offer, name='delete_offer'),
     path('edit_offer/<int:offer_id>/', edit_offer, name='edit_offer'),
     path('confirm_delete_offer/<int:offer_id>/', confirm_delete_offer, name='confirm_delete_offer'),
@@ -72,9 +70,18 @@ urlpatterns = [
     path('plates/add/', views.add_plate, name='add_plate'),
     path('plates/<int:plate_id>/edit/', views.edit_plate, name='edit_plate'),
     path('plates/<int:plate_id>/delete/', views.delete_plate, name='delete_plate'),
-    path('chats/', listar_caterings_particular, name='listar_caterings_particular'),
-    path('dismiss-employee/<int:employee_work_service_id>/', dismiss_employee, name='dismiss_employee'),
+    path('chats_companies/', listar_caterings_particular, name='listar_caterings_particular'),
     path('service/<int:service_id>/employees', list_employee, name='list_employee'),
+    path('employees/edit/<int:employee_work_service_id>/', edit_employee_termination, name='edit_employee_termination'),
+    path('event/<int:event_id>/tasks/', manage_tasks, name='manage_tasks'),
+    path('update_task_state/<int:task_id>/', update_task_state, name='update_task_state'),
+    path('add_task/', add_task, name='add_task'),
+    path('event/<int:event_id>/tasks/', views.manage_tasks, name='manage_tasks'),
+    path('event/<int:event_id>/add_task/', views.add_task, name='add_task'),
+    path('task/delete/<int:task_id>/', delete_task, name='delete_task'),
+    path('task/update/<int:task_id>/', update_task, name='update_task'),
+    path('get_task_data/', get_task_data, name='get_task_data'),
+
 
 
     # CAMBIO DE PLAN
@@ -91,8 +98,6 @@ urlpatterns = [
 
     path('canceled/', payment_canceled, name='canceled'),
     path('chat/<int:id>/', chat_view, name='chat'),
-
-    path('hire_form/<int:employee_id>/<int:offer_id>/', views.hire_form, name='hire_form'),
 
 
 
