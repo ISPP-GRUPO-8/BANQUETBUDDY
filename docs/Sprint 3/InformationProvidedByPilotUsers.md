@@ -1,0 +1,59 @@
+---
+sidebar_label: 'Feedback de los usuarios piloto (InformationProvidedByPilotUsers.md)'
+sidebar_position: 3
+---
+
+FeedBack de los usuarios Sprint 3
+
+Hicimos 2 despliegues: el día 20/04 y otro el 22/03 por la mañana.
+
+## Particulares
+
+| Fecha que se recepciona el acceso al sistema | Fecha de envío del feedback al grupo | Miembro del equipo que actúa como UP | Fallos encontrados | Recomendaciones de mejora |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Iñigo Ruiz Marchueta | El mismo error que la ultima vez que lo probe, he hecho un fallo forzoso de indicar mas capacidad de la posible y el mensaje de error sale cuando vuelvo al inicio | indicar que es necesario iniciar sesion con el correo cuando no se pone un correo |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Paula Peña Fernández | indicar que es necesario iniciar sesion con el correo cuando no se pone un correo | Mejorando un poco la interfaz |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Ramón José Guerrero Romero |     | En el sing in, que indiquen a que se refieren con preferencias<br></br>Decir que te tienes que activar la cuenta con un correo que te haya llegado.<br></br>Poder cancelar o modificar tu reserva<br></br>Intento reservar para hoy y no deja debido a que es en el "pasado"<br></br>He probado el chat con otro particular y gerente y no puedo hablar con ellos mediante el chatmás |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Francisco Manuel Villalobos Páez - fravilpae | La reserva en el presente no se puede, solo se puede a futuro. Si seleccionas la fecha de hoy, al reservar te dice que no puedes reservar en el pasado. Si la aplicación debe funcionar así, que en el error ponga que solo se pueda reservar en fechas futuras.<br></br>No he podido comprobar del todo el chat porque a un gerente no le funcionaba. | No sé a qué se refieren con referencias al registrarme.<br></br>Creo que en el Sprint 2 podía modificar o cancelar la reserva, y en este ya no puedo. Estaría bien poder hacerlo. |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Jesús Zambrana Guerra | Al realizar una reserva de booking si hay errores en el proceso, estos se muestran en la pantalla de inicio al terminar la reserva | \-En notificaciones, si no hay notificaciones sin leer no mostrar el botón de marcar como leídas.<br></br>\-No poder hacer más de una review por catering<br></br>\- Las imagenes si son del mismo tamaño al mostrarlas mejor, por ejemplo la de fiesta gourmet ocupa bastante y desplaza muchos los botones en comparación a las otras. |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 22/04/2024 1:45:54 | Jose Carlos Ortiz Gutierrez | Al abrir la app desde el movil no se puede completar el registro porque todos los componentes se solapan entre si.<br></br>Cuando vas a reservar un catering y le das a "atras" en la pasarela de pago, te devuelve un mensaje de: 'Ha habido un fallo en la compra'. Cuando en realidad es el usuario el que lo ha cancelado.<br></br>Te deja valorar un catering antes de haber "asistido" a el. Quizas con añadir un comparador de fecha y que la actual este siempre igual o posterior al dia de la reserva listo. | Quizas veo demasiado fondo blanco en la pantalla inicial de caterings, es cierto que no sabria decir que mejora hacer pero quizas rellenar con algunas fotos o algo. Por comentar algo. |
+| --- | --- | --- | --- | --- |
+
+## Búsqueda de empleo
+
+| Fecha que se recepciona el acceso al sistema | Fecha de envío del feedback al grupo | Miembro del equipo que actúa como UP | Fallos encontrados | Recomendaciones de mejora |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Carlos Varela Soult | COMO EMPLEADO:<br></br>Lo primero que he hecho ha sido irme a planes como usuario anónimo. He seleccionado el plan básico y me ha redirigido a la vista de login. Estaría bien que en el formulario de login haya un enlace al formulario de register por si aún no tienes cuenta.<br></br>1\. Registro de Empleado:<br></br>\- Al acceder al registro, veo que el formulario se come parte del footer \[register.png\].<br></br>\- He puesto datos erroneos para que salgan errores \[register_errores.png\] y veo que el<br></br>formulario se mete de lleno en el footer y ya no deja clicar la casilla de la<br></br>política de privacidad, así que hay que recargar la página. Además, como se ve hay<br></br>un error en español y otros dos en inglés.<br></br>\- Las casilla de Profession te deja escribir cualquier cosa, yo he puesto Cabra mismo \[register_final.png\].<br></br>\- Las casillas de Experience y Skills podrían estar en edición del perfil del usuario,<br></br>ya que deberían ser campos de texto más grandes para escribir párrafos.<br></br>2\. Buscador:<br></br>\- Una vez hecho login (el link de activación al correo me funcionó perfectamente),<br></br>busco algo en el buscador. Debería de haber un label arriba del buscador que diga qué<br></br>es lo que se supone que estoy buscando antes de buscarlo.<br></br>\- Obviamente ahora no tengo ningún Offer, así que cuando no devuelve nada debería salir no<br></br>existen offers para la búsqueda, en lugar de una página en blanco \[buscador.png\].<br></br>3\. Edición de perfil:<br></br>\- Las casillas de Profession, Experience y Skills no salen para editarlas. Seguiré siendo Cabra xd.<br></br>\- En el perfil si puedes editar el correo, debería mandarse un nuevo link de confirmación de correo.<br></br>Hice logout para probar el restablecimiento de contraseña y funciona perfectamente.<br></br>4\. EmployeeOfferList:<br></br>\- De nuevo haciendo login, al aplicar a un trabajo, se queda una pestaña con un link a Back to Home. Estaría mejor si se autoreenvía solo después de 4-5 segundos, para que el usuario lea el mensaje y siga navegando. Aunque funcione como está, lo digo más por el UX que otra cosa.<br></br>5\. Chat de empleados:<br></br>\- No entiendo exactamente para qué se va a usar esto pero en cuanto al UI/UX, aparecen muchos chats de golpe y esta página se puede hacer extremadamente larga si no hay un filtro o un buscador en lugar de tantos chats a la vez. \[chats.png\]<br></br>6\. Report Error:<br></br>\- En principio al darle a Submit no me da feedback de que he mandado el report.<br></br>\- Tampoco hace ningún criterio para que no introduzcas name o surname falsos.<br></br>\- Veo el riesgo de ataque DDoS en este formulario. |     |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | RAÚL MONTALBÁN MARTÍN | No me ha dejado logearme en ninguno de los perfiles. |     |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | AITOR RODRÍGUEZ DUEÑAS | En el formulario de registro cuando aparecen varios errores de validación no deja pulsar el botón para aceptar las políticas.<br></br>También si editas el correo luego no me ha dejado volver a loguearme. He solicitado un cambio de contraseña y me aparece que ni el email antiguo ni el nuevo tras editarlo existen. | Confirmar el email me parece una medida muy segura pero creo que pierde algo de valor cuando desde el perfil de usuario se puede editar con un solo click. Creo que sería mejor confirmar ese cambio de alguna forma o directamente no permitirlo. La aplicación desde la parte empleado es correcta pero con el login encontré ciertos problemas. |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Raúl Montalbán Martín |     | Lo único en el register choice se ve un poco raro el hecho de q los roles estén subrayados parecen enlaces cuando no lo son. |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 22/04/2024 0:18:38 | Juan José Gómez Borrallo | Pongo un 2 en manejo de la app porque es móvil es prácticamente imposible usar la app. A veces se queda pillado y va muy lenta la aplicación. También se superponen los tectos y los botones, lo que hace muy dificil pulsar el botón que quieres: [link][link](https://cdn.discordapp.com/attachments/777990254241644584/1231730230037708890/IMG_6231.png?ex=6626e1ab&is=6625902b&hm=1e31572d5dc97a5ae6ad09835922bd590201121347d26c52136d1d5779b0ab9f&)<br></br>Eso sí, en ordenador no he tenido problemas de carga.<br></br>La pestaña de registro está muy vacía. Se puede poner el logo de la app en algún lado o rellenar con algo más.<br></br>La pestaña de perfil de usuarioestá muy vacía. Se puede poner el logo de la app en algún lado o rellenar con algo más.<br></br>En la pestaña "notifications" el botón de "MarkAsRead" Podría verse más grande y estar colocado en otro lado.<br></br>En la pestaña de "recommendation_letters" poner algun mensaje/alerta si no tienes carta de recomendación<br></br>En la pestaña inicial estando logueado [link](https://banquetbuddys3.pythonanywhere.com/) El logo de la aplicación cuando pasas el cursor a veces hace que se gire la imagen, la mayoria de veces se queda congelada la imagen al hacer el giro, a veces ni se mueve. Recomendaría dejarla estática para evitar problemas.<br></br>Añadir la posibilidad de eliminar solicitudes de trabajo por si te arrepientes.<br></br>En el NavBar se pueden poner las letras un poco más oscuras para que se vean mejor (ponerle el bold si no lo tiene)<br></br>La pestaña "/privacy-policy-archive/ " queda muy vacía, poner directamente la política de privacidad. Además ya que toda la web está en inglés, diría que traducido quedaría mejor.<br></br>Poner validaciones en el nombre/apellido de las personas, editando el perfil puedo ponerme un caracter: [link](https://i.gyazo.com/e73cd3eaaf660344d7dea8bde54ce8b5.png)<br></br>Si pongo un solo espacio en mi nombre o apellidos, se rellena sin problemas: [link](https://i.gyazo.com/8241e2d4cd69057f175a2882ad5c3e61.png) |     |
+| --- | --- | --- | --- | --- |
+
+##
+
+##
+
+##
+
+## Gerente de Catering
+
+| Fecha que se recepciona el acceso al sistema | Fecha de envío del feedback al grupo | Miembro del equipo que actúa como UP | Fallos encontrados | Recomendaciones de mejora |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Eduardo Pizarro López | Registro: El nombre y dirección del registro te permite poner cosas con un caracter o algo que no es una dirección, pondria que te obligase poner un numero y mas de 8 caracteres.<br></br>Menu de inicio: En el menu de inicio el boton plan tiene diferentes tamaños si te logeas, o si estas en la pagina principal.<br></br>Servicio: te permite crear servicios con solo un caracter en los campos de String, y ademas puedes crear otro exactamente igual y que no salte error, puedes crear un servicio que todos sus campos sean "8". Como consejo haria que los titulos deban de ser diferentes para asi, en el layaout solo se vean el titulo, el enorme tamaño de cada servicio hace que poder visualizar todos los que tienes en caso de tener muchos sea complicado.<br></br>A la hora de desloguearse, recomendaria algun mensaje de que te has deslogueado correctamente. Las funcionalidades de calendario y offers no las he podido probar por que necesito pagar para la funcionalidad. |     |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Adrián Romero Flores | no he podido hacer login, he aceptado el correo de confirmación y nada |     |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Adrián Romero Flores | Error 500 al entar en [link](https://banquetbuddys3.pythonanywhere.com/chats_companies/>, puedes create una cuenta con el mismo numero y dni, | El management esta muy oculto, deberia estar en la barra, el pago técnicamente le llega a la app pero al gerente no, no puedo cancelar una reserva directamente esta |
+| --- | --- | --- | --- | --- |
+| 20/04/2024 | 21/04/2024 | Raúl Montalbán Martín | No me ha dejado logearme en ninguno de los 3 perfiles desconozco el problema. |     |
+| --- | --- | --- | --- | --- |
