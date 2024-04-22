@@ -11,12 +11,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from selenium.webdriver import Chrome
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_URL = 'https://banquetbuddy.pythonanywhere.com'
+
+DRIVER_PATH = os.path.join(BASE_DIR, 'static', 'driver', 'chromedriver.exe')
 #Sustituimos la siguiente línea por la que sigue a continuación cpara probar en local
 #BASE_URL = 'http:localhost:8000' 
 
@@ -30,6 +37,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'banquetbuddyoficial@gmail.com'
 EMAIL_HOST_PASSWORD = 'zsqt bsae cayb atuk'
 DEFAULT_FROM_EMAIL = 'banquetbuddyoficial@gmail.com'
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
 
 # Quick-start development settings - unsuitable for production
@@ -90,6 +98,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.global_variable',
             ],
         },
     },
@@ -106,7 +115,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ispp",
         "USER": "ispp",
-        "PASSWORD": "ispp",
+        "PASSWORD": DB_PASSWORD,
         "HOST": "localhost",
         "PORT": "5432",
     },
@@ -141,13 +150,36 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
+WEBDRIVER_OPTIONS = {
+    'executable_path': DRIVER_PATH,  # Ruta al archivo del controlador WebDriver
+    'headless': True,  # Ejecución sin interfaz gráfica (opcional)
+    # Otras opciones de configuración según tus necesidades
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 

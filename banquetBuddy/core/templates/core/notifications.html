@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 {% extends 'core/base.html' %}
+{% block extra_css %}
 {% load static %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
 {% block content %}
 <style>
     h1 {
@@ -41,11 +43,14 @@
 </style>
     <h1 style="margin-top: 2%;">Notifications</h1>
     <div class="list">
-            
+        <form method="post" action="{% url 'mark_as_read' %}">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit">Mark as read</button>
+        </form>
         {% for notification in notifications %}
         <div class="notification">
         {% if request.user.is_authenticated and request.user.EmployeeUsername %}
-            <h2 class="notificationTitle">{{ notification.job_application.offer.title }}</h2>
+            <h2 class="notificationTitle">{{ notification.title }}</h2>
         {% else %}
             <h2 class="notificationTitle">{{ notification.event.name }}</h2>
         {% endif %}

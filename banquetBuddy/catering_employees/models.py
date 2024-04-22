@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import CustomUser, EnglishLevel
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils import timezone
 
 # Create your models here.
 
@@ -15,10 +16,16 @@ class Employee(models.Model):
     location = models.CharField(max_length=255)
     curriculum = models.FileField(upload_to='curriculums/', blank=True, null=True)
 
+    def send_message(self, receiver, content):
+        Message.objects.create(sender=self.user,date=timezone.now(), receiver=receiver, content=content)
+
+    def get_messages(self, other_user):
+        return Message.objects.filter(sender=self.user, receiver=other_user) | Message.objects.filter(sender=other_user, receiver=self.user)
+
 class Message(models.Model):
     sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='message_sender')
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='message_receiver')
-    date = models.DateField()
+    date = models.DateTimeField()
     content = models.TextField()
 
     class Meta:

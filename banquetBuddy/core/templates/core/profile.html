@@ -86,8 +86,8 @@
                 <li class="list-group-item">
                   <strong>Verification Document:</strong>
                   {% if catering_company.verification_document %}
-                  <a href="{{ catering_company.verification_document.url }}" target="_blank">{{
-                    catering_company.verification_document.name }}</a>
+                  <a href="{{ catering_company.verification_document.url }}" target="_blank">
+                  {{ catering_company.verification_document.name }}</a>
                   {% else %}
                   There is no associated verification document.
                   {% endif %}

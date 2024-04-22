@@ -24,7 +24,7 @@
         }
         .table-container {
             overflow-x: auto;
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
         }
         table {
@@ -83,29 +83,34 @@
 
   <div class="table-container">
     <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Booking State</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for reservation in reservations %}
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Booking State</th>
+            <th>Action</th>
+            <th>Manage Tasks</th> <!-- Nueva columna para gestionar tareas -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
           <tr>
             <td>{{ reservation.name }}</td>
             <td>{{ reservation.date }}</td>
-            {% if reservation.booking_state == "CONTRACT_PENDING" %}
-            <td>CONTRACT PENDING</td>
-            {% else %}
-            <td>{{ reservation.booking_state}}</td>
-            {% endif %}
+            <td>{{ reservation.booking_state }}</td>
             <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
+            <td>
+              {% if reservation.booking_state == "CONFIRMED" %}
+              <a href="{% url 'manage_tasks' event_id=reservation.id %}">Manage Tasks</a>
+              {% else %}
+              N/A
+              {% endif %}
+            </td>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% endfor %}
+        </tbody>
+      </table>
+      
   </div>
 
 </body>

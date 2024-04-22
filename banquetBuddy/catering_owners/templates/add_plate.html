@@ -1,13 +1,19 @@
 {% extends 'core/base.html' %}
 
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+{% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
+
 <div class="container mt-4 mb-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card" style="background-color: #02483e">
-                <div class="container">
-                    <h2 class="mt-4 mb-3 text-white text-center">Add Plate</h2>
-                    <form method="post">
+            <form method="post">
+                <div class="card" style="background-color: #02483e">
+                    <div class="container">
+                        <h2 class="mt-4 mb-3 text-white text-center">Add Plate</h2>
                         {% csrf_token %}
                         <div class="form-group text-white">
                             <label for="id_name">Name:</label>
@@ -25,12 +31,12 @@
                             <label for="id_menu">Menu:</label>
                             {{ form.menu }}
                         </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary" style="background-color: #54bfaf">Save Plate</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+                <div class="text-center mt-2">
+                    <button type="submit" class="btn btn-primary-custom">Add Plate</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
