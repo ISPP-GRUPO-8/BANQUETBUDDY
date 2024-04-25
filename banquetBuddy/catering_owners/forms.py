@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import EnglishLevel
-from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService
+from .models import CateringCompany, CateringService, Menu, Offer, Plate, EmployeeWorkService, Task, Employee
 from datetime import datetime
 from django.utils import timezone
 from django.forms import ModelForm
@@ -138,7 +138,6 @@ class EmployeeFilterForm(forms.Form):
 
         if english_level:
             hierarchy_value = self.ENGLISH_LEVEL_HIERARCHY.get(english_level, 0)
-            print(hierarchy_value)
             queryset = queryset.filter(
                 employee__english_level__in=[
                     clave
@@ -250,3 +249,41 @@ class TerminationForm(forms.ModelForm):
         
 
 
+class CustomEmployeeChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        # Personaliza la representación de la etiqueta de cada objeto
+        return f"{obj.profession} - {obj.user.username}"
+
+class TaskForm(forms.ModelForm):
+    employees = CustomEmployeeChoiceField(
+        queryset=Employee.objects.none(),  # Se inicializa vacío, se llenará según el evento
+        widget=forms.CheckboxSelectMultiple(),
+        required=False
+    )
+
+    class Meta:
+        model = Task
+        fields = ['description', 'assignment_date', 'expiration_date', 'priority', 'employees']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 3}),
+            'assignment_date': forms.DateInput(attrs={'type': 'date'}),
+            'expiration_date': forms.DateInput(attrs={'type': 'date'}),
+            'priority': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        event_id = kwargs.pop('event_id', None)
+        super(TaskForm, self).__init__(*args, **kwargs)
+
+        if event_id:
+            employee_services = EmployeeWorkService.objects.filter(
+                event__id=event_id
+            ).select_related('employee')
+
+            active_employees = [ews.employee for ews in employee_services if ews.current_status() == 'Activo']
+            self.fields['employees'].queryset = Employee.objects.filter(
+                user__id__in=[emp.user.id for emp in active_employees]
+            )
+
+        if 'instance' in kwargs and kwargs['instance']:
+            self.fields['employees'].initial = kwargs['instance'].employees.all()

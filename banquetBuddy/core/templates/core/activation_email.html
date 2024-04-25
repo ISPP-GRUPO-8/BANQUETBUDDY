@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hello {{ user.username|safe }},
+
+Thank you for registering on our website. Please click the following link to activate your account and log in:
+
+http://{{ domain|safe }}{% url 'activate' uidb64=uid token=token %}
+
+If you did not request this email, please ignore it.
+
+Best regards,
+BanquetBuddy team
+{% endautoescape %}
