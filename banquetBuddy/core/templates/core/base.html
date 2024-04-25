@@ -41,9 +41,6 @@
     }
 </style>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    integrity="sha512-vyQ7N3S2F+Dd2jhN07XSyZ6R1ZSeznM57XjLSeV/DtBrJrE8c3H0RFuytWI3jGX5UJi+g8PXTPX/gqThXx1PEw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
 <html lang="en">
 
 <head>
@@ -111,14 +108,12 @@
                     {% endif %}
 
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'catering_contratados' %}">My bookings</a>
-                    </li>
-                    {% endif %}
-                    {% if request.user.is_authenticated and request.user.ParticularUsername %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_books' %}">My bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
+                        </li>
                     {% endif %}
                     {% if request.user.is_authenticated and is_catering_company %}
                     <li class="nav-item">
@@ -135,6 +130,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_companies_employee' %}">Chats</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'list_catering_services_employee' %}">My Jobs</a>
+                    </li>
                     {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
@@ -143,23 +141,10 @@
                         <i class="fas fa-bell"></i>
                         <span class="notifications_not_read">{{ notification_number }}</span>
                     </a>
-                </div>
-                <form class="form-inline my-2 my-lg-0">
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
-                </form>
-                {% endif %}
-                <form class="form-inline my-2 my-lg-0" style="position: relative;">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-icon">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search"
-                        aria-label="Search" id="search-input">
-                </form>
-                {% if request.user.is_authenticated %}
-                {% if request.user.ParticularUsername %}
-                {% comment %} <a class="nav-link" href="{% url 'my_books' %}">My Books</a> {% endcomment %}
-                <div class="name">
-                    <a href="{% url 'profile' %}" class="text-decoration-none">
+                    </div>
+                    {% if request.user.ParticularUsername %}
+                        {% comment %} <a class="nav-link" href="{% url 'my_books' %}">My Books</a> {% endcomment %}
+                        <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                         {{ user.username }}
                     </a>
@@ -179,8 +164,10 @@
                         <i class="fa-solid fa-utensils"></i>
                         {{ user.username }}
                     </a>
-                </div>
                 {% endif %}
+                <form class="form-inline my-2 my-lg-0 ml-4">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
+                </form>
                 {% endif %}
             </div>
 

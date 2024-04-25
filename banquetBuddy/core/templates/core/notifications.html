@@ -44,7 +44,7 @@
         {% for notification in notifications %}
         <div class="notification">
         {% if request.user.is_authenticated and request.user.EmployeeUsername %}
-            <h4 class="notificationTitle">{{ notification.job_application.offer.title }}</h4>
+            <h4 class="notificationTitle">{{ notification.title }}</h4>
         {% else %}
             <h4 class="notificationTitle">{{ notification.event.name }}</h4>
         {% endif %}

@@ -1,10 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
-from banquetBuddy import settings
 from django.contrib.auth.models import AbstractUser
-from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth.models import AbstractUser
 from django.utils.crypto import get_random_string
-from django.core.mail import send_mail
 
 # Create your models here.
 
@@ -18,6 +15,10 @@ class CustomUser(AbstractUser):
         # Asignar el token al usuario
         self.reset_password_token = token
         self.save()
+
+class TerminationReason(models.TextChoices):
+    RENUNCIA_VOLUNTARIA = "Voluntary resignation", "Voluntary resignation"
+    RENUNCIA_FORZADA = "Forced resignation", "Forced resignation"
 
 
 class AssignmentState(models.TextChoices):
