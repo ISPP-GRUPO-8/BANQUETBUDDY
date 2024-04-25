@@ -1040,7 +1040,7 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
     def setUp(self):
         self.username = 'testuser@gmail.com'
         self.password = 'password'
-        self.user = CustomUser.objects.create_user(username=self.username, password=self.password)
+        self.user = CustomUser.objects.create_user(username=self.username, password=self.password,email = self.username)
         self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
         self.menu = Menu.objects.create(cateringcompany=self.catering_company, name='Test Menu', description='Test Description', diet_restrictions='No restrictions')
         self.url = self.live_server_url + reverse('edit_menu', kwargs={'menu_id': self.menu.id})
@@ -1092,7 +1092,9 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
         self.driver.get(f'{self.live_server_url}/list_menus/')
         
         # Encontrar el botón de eliminar y hacer clic en él
-        delete_button = self.driver.find_element_by_name('delete_menu_button')
+        delete_button = WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((By.NAME, 'delete_menu_button'))
+    )
         if delete_button.is_displayed():
             delete_button.click()
 
@@ -1108,7 +1110,7 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
         cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
         cls.email = 'testuser@gmail.com'
         cls.password = 'password'
-        cls.user = CustomUser.objects.create_user(username=cls.email, password=cls.password)
+        cls.user = CustomUser.objects.create_user(username=cls.email, password=cls.password,email = cls.email)
         cls.catering_company = CateringCompany.objects.create(user=cls.user, name='Test Catering Company',price_plan="PREMIUM_PRO")
 
         cls.catering_service = CateringService.objects.create(
@@ -1227,6 +1229,50 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
         self.assertEqual(year_param, prev_date.year)
         self.assertEqual(month_param, prev_date.month)  
 
+
+
+class CateringUnsubscribeTest(StaticLiveServerTestCase):
+    def setUp(self):
+        super().setUpClass()
+        self.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        # Crear un usuario premium
+        self.email = 'testuser@gmail.com'
+        self.password = 'password'
+        self.user = CustomUser.objects.create_user(username=self.email, password=self.password,email = self.email)
+        self.catering_company = CateringCompany.objects.create(user=self.user,price_plan = "PREMIUM")
+        self.catering_company.save()
+        # Otros pasos de configuración si es necesario
+
+    def tearDown(self):
+        # Limpiar los datos creados durante la prueba si es necesario
+        self.user.delete()
+        self.catering_company.delete()
+
+    def test_catering_unsubscribe_view(self):
+        # Iniciar sesión
+        self.selenium.get(self.live_server_url + reverse('login'))
+        self.selenium.find_element_by_name('username').send_keys(self.email)
+        self.selenium.find_element_by_name('password').send_keys(self.password)
+        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Hacer clic en el enlace del header para ir a la página de suscripciones
+        self.selenium.find_element_by_link_text('Plan').click()
+
+        # Verificar que estamos en la página de suscripciones
+        self.assertIn('subscription-plans', self.selenium.current_url)
+
+        # Encontrar el botón de cancelar suscripción y hacer clic en él
+        
+        unsubscribe_button = self.selenium.find_element_by_name("cancel_subscription_premium")
+        unsubscribe_button.click()
+
+            # Esperar a que se realice la redirección a la página de perfil
+        profile_url = self.live_server_url + reverse('profile')
+        WebDriverWait(self.selenium, 10).until(EC.url_to_be(profile_url))
+
+            # Verificar que se haya actualizado la suscripción
+        updated_subscription = CateringCompany.objects.get(user=self.user).price_plan
+        self.assertEqual(updated_subscription, "NO_SUBSCRIBED")
 
     
 
