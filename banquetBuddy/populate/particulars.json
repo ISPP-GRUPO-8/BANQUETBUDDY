@@ -1,0 +1,74 @@
+[
+    {
+        "username": "Pablo",
+        "password": "pablo",
+        "email": "pablo@gmail.com",
+        "phone_number": "555-1234",
+        "preferences": ["Comida italiana", "Comida vegetariana", "Postres"],
+        "address": "123 Calle Principal",
+        "is_subscribed": true
+    },
+    {
+        "username": "Juan",
+        "password": "juan",
+        "email": "juan@gmail.com",
+        "phone_number": "555-5678",
+        "preferences": ["Comida mexicana", "Comida rápida"],
+        "address": "456 Avenida Central",
+        "is_subscribed": true
+    },
+    {
+        "username": "Antonio",
+        "password": "antonio",
+        "email": "antonio@gmail.com",
+        "phone_number": "555-9012",
+        "preferences": ["Comida asiática", "Comida vegana", "Bebidas"],
+        "address": "789 Paseo de la Montaña",
+        "is_subscribed": true
+    },
+    {
+        "username": "David",
+        "password": "david",
+        "email": "david@gmail.com",
+        "phone_number": "555-3456",
+        "preferences": ["Comida italiana", "Comida casera"],
+        "address": "101 Ruta del Sol",
+        "is_subscribed": true
+    },
+    {
+        "username": "Manuel",
+        "password": "manuel",
+        "email": "manuel@gmail.com",
+        "phone_number": "555-7890",
+        "preferences": ["Comida rápida", "Postres"],
+        "address": "202 Camino Real",
+        "is_subscribed": true
+    },
+    {
+        "username": "Jaime",
+        "password": "jaime",
+        "email": "jaime@gmail.com",
+        "phone_number": "555-2345",
+        "preferences": ["Comida vegetariana", "Bebidas"],
+        "address": "303 Boulevard Norte",
+        "is_subscribed": true
+    },
+    {
+        "username": "Luis",
+        "password": "luis",
+        "email": "luis@gmail.com",
+        "phone_number": "555-6789",
+        "preferences": ["Comida gourmet", "Comida casera"],
+        "address": "404 Carrera Sur",
+        "is_subscribed": true
+    },
+    {
+        "username": "Mateo",
+        "password": "mateo",
+        "email": "mateo@gmail.com",
+        "phone_number": "555-0123",
+        "preferences": ["Comida mexicana", "Comida vegana", "Comida rápida"],
+        "address": "505 Callejón Este",
+        "is_subscribed": true
+    }
+]
