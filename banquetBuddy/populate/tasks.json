@@ -1,0 +1,411 @@
+[
+    {
+        "event": "Cena de Gala Elegante",
+        "description": "Coordinación y supervisión de la Cena de Gala Elegante, asegurando que todos los preparativos estén en su lugar antes de la llegada de los invitados.",
+        "assignment_date": "2024-07-11",
+        "expiration_date": "2024-07-13",
+        "assignment_state": "PENDING",
+        "priority": "HIGH",
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "employees": ["AmeliaP", "LucasR", "EthanD"]
+    },
+    {
+        "event": "Cena de Gala Elegante",
+        "description": "Preparación de aperitivos y bebidas para los invitados, incluyendo la coordinación con proveedores externos para la entrega de ingredientes.",
+        "assignment_date": "2024-07-11",
+        "expiration_date": "2024-07-12",
+        "assignment_state": "IN_PROGRESS",
+        "priority": "MEDIUM",
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "employees": ["AmeliaP"]
+    },
+    {
+        "event": "Cena de Gala Elegante",
+        "description": "Gestión de logística y disposición de la sala, incluyendo la configuración de mesas y la decoración acorde al tema del evento.",
+        "assignment_date": "2024-07-11",
+        "expiration_date": "2024-07-13",
+        "assignment_state": "COMPLETED",
+        "priority": "LOW",
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "employees": ["LucasR", "EthanD"]
+    },
+
+    {
+        "event": "Cena de lujo en la playa",
+        "employees": ["LoganC"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Preparación y presentación del banquete en la cena de lujo en la playa.",
+        "assignment_date": "2024-07-14",
+        "expiration_date": "2024-07-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Cena de lujo en la playa",
+        "employees": ["MiaB"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Coordinación del servicio de mesa y atención a los invitados durante la cena.",
+        "assignment_date": "2024-07-14",
+        "expiration_date": "2024-07-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Cena de lujo en la playa",
+        "employees": ["JacksonV"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Supervisión general del evento y manejo de imprevistos en la logística.",
+        "assignment_date": "2024-07-14",
+        "expiration_date": "2024-07-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+
+    {
+        "event": "Gala de Primavera",
+        "employees": ["SophiaL"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Diseño y decoración del ambiente del evento para la Gala de Primavera.",
+        "assignment_date": "2024-09-14",
+        "expiration_date": "2024-09-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Gala de Primavera",
+        "employees": ["ScarlettZ"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Organización del equipo de servicio para garantizar una atención fluida durante la gala.",
+        "assignment_date": "2024-09-14",
+        "expiration_date": "2024-09-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Gala de Primavera",
+        "employees": ["JulianF"],
+        "cateringservice": "Banquete Estelar",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Gestión de proveedores y logística de alimentos y bebidas para el evento.",
+        "assignment_date": "2024-09-14",
+        "expiration_date": "2024-09-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+
+    {
+        "event": "Fiesta Sorpresa Nocturna",
+        "employees": ["ElijahM"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Preparación y presentación del buffet principal, asegurando la calidad y frescura de los alimentos.",
+        "assignment_date": "2024-07-09",
+        "expiration_date": "2024-07-11",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta Sorpresa Nocturna",
+        "employees": ["GraceH"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Coordinación de la logística del evento para garantizar que todos los aspectos sorpresa estén perfectamente sincronizados.",
+        "assignment_date": "2024-07-09",
+        "expiration_date": "2024-07-11",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta Sorpresa Nocturna",
+        "employees": ["OwenK"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Supervisión de la configuración del espacio del evento, incluyendo la decoración y el ambiente musical.",
+        "assignment_date": "2024-07-09",
+        "expiration_date": "2024-07-11",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Fiesta Increíble en la Noche",
+        "employees": ["IsabellaC"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Organización del servicio de buffet, asegurando que todas las estaciones estén completamente equipadas y funcionales.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta Increíble en la Noche",
+        "employees": ["HannahL"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Coordinación de actividades de entretenimiento nocturno, incluyendo la configuración técnica y la logística de los artistas.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta Increíble en la Noche",
+        "employees": ["GabrielM"],
+        "cateringservice": "Buffet Real",
+        "cateringcompany": "CocinaAntonio",
+        "description": "Supervisión general del evento, incluyendo la seguridad, la limpieza y el flujo de invitados.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Recepción Jardín Botánico",
+        "employees": ["ZoeS"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Coordinar la disposición floral y la decoración temática del evento, asegurando que todos los detalles visuales estén en armonía con el entorno del jardín.",
+        "assignment_date": "2024-07-27",
+        "expiration_date": "2024-07-29",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Recepción Jardín Botánico",
+        "employees": ["HenryT"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Supervisar la logística de la instalación de iluminación y sonido, trabajando en estrecha colaboración con los proveedores para garantizar una ejecución sin problemas.",
+        "assignment_date": "2024-07-27",
+        "expiration_date": "2024-07-29",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Recepción Jardín Botánico",
+        "employees": ["EvelynR"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Gestionar el equipo de atención al cliente y asegurarse de que todas las necesidades de los invitados se atiendan de manera eficiente y cortés.",
+        "assignment_date": "2024-07-27",
+        "expiration_date": "2024-07-29",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Recepción especial en el palacio de cristal",
+        "employees": ["AvaM"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Organizar y supervisar la configuración del mobiliario, asegurando que cada pieza esté perfectamente alineada con el diseño y estética del evento.",
+        "assignment_date": "2024-06-28",
+        "expiration_date": "2024-06-30",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Recepción especial en el palacio de cristal",
+        "employees": ["TheoW"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Coordinar con el equipo técnico para la instalación de equipos audiovisuales, asegurándose de que todo funcione correctamente antes del comienzo del evento.",
+        "assignment_date": "2024-06-28",
+        "expiration_date": "2024-06-30",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Recepción especial en el palacio de cristal",
+        "employees": ["ClaireD"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Encargada de la coordinación general del evento, supervisando la llegada de los invitados y la ejecución de la agenda programada.",
+        "assignment_date": "2024-06-28",
+        "expiration_date": "2024-06-30",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Tarde de Cata de Tés",
+        "employees": ["NoahH"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Preparar y organizar la selección de tés para la cata, asegurando la calidad y variedad adecuada para sorprender a los asistentes.",
+        "assignment_date": "2024-10-21",
+        "expiration_date": "2024-10-23",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Tarde de Cata de Tés",
+        "employees": ["EmmaW"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Diseñar y supervisar la disposición de los espacios donde se realizarán las catas, garantizando un ambiente relajado y agradable.",
+        "assignment_date": "2024-10-21",
+        "expiration_date": "2024-10-23",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Tarde de Cata de Tés",
+        "employees": ["LiamG"],
+        "cateringservice": "Eventos Elegantes",
+        "cateringcompany": "DeliciasMediterraneas",
+        "description": "Coordinar con el personal de servicio para asegurar una atención esmerada y profesional durante el evento, instruyéndolos sobre los diferentes tés y su correcta presentación.",
+        "assignment_date": "2024-10-21",
+        "expiration_date": "2024-10-23",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Boda Playa Paradisíaca",
+        "employees": ["CharlotteN"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Supervisar la configuración del espacio de la ceremonia en la playa, asegurando que la decoración y el arreglo floral estén perfectamente alineados con los deseos de la pareja.",
+        "assignment_date": "2024-06-14",
+        "expiration_date": "2024-06-16",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Boda Playa Paradisíaca",
+        "employees": ["LucasR"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Coordinar con el equipo de música y entretenimiento para garantizar una integración fluida con el programa del evento, asegurando ensayos y ajustes técnicos previos.",
+        "assignment_date": "2024-06-14",
+        "expiration_date": "2024-06-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Boda Playa Paradisíaca",
+        "employees": ["MiaB"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Organizar el servicio de catering, desde la selección del menú hasta la disposición de los bufetes, asegurando que todas las consideraciones dietéticas estén atendidas y que la presentación sea impecable.",
+        "assignment_date": "2024-06-14",
+        "expiration_date": "2024-06-16",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Boda espectacular en la playa",
+        "employees": ["JacksonV"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Coordinar con el fotógrafo y el equipo de video para asegurar una cobertura completa del evento, enfocándose en los momentos clave y las peticiones especiales de los novios.",
+        "assignment_date": "2024-06-16",
+        "expiration_date": "2024-06-18",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Boda espectacular en la playa",
+        "employees": ["ScarlettZ"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Supervisar el montaje de las áreas de recepción y ceremonia, asegurando que cada detalle, desde los asientos hasta la iluminación, esté perfectamente configurado según el plan.",
+        "assignment_date": "2024-06-16",
+        "expiration_date": "2024-06-18",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Boda espectacular en la playa",
+        "employees": ["JulianF"],
+        "cateringservice": "Celebración Soñada",
+        "cateringcompany": "Dulces Caprichos",
+        "description": "Administrar la logística del catering, incluyendo la coordinación de tiempos, la distribución de alimentos y bebidas y la atención a requerimientos dietéticos especiales de los invitados.",
+        "assignment_date": "2024-06-16",
+        "expiration_date": "2024-06-18",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Conferencia de Negocios Internacional",
+        "employees": ["GraceH"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Preparar y supervisar el buffet de desayuno para los asistentes, asegurando una variedad de opciones saludables y energizantes para comenzar el día.",
+        "assignment_date": "2024-07-19",
+        "expiration_date": "2024-07-21",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Conferencia de Negocios Internacional",
+        "employees": ["OwenK"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Coordinar la logística de los coffee breaks entre sesiones, incluyendo la reposición constante y la calidad del servicio.",
+        "assignment_date": "2024-07-19",
+        "expiration_date": "2024-07-21",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Conferencia de Negocios Internacional",
+        "employees": ["HannahL"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Organizar la cena de clausura, coordinando la presentación de platos especiales, la selección de vinos y el servicio impecable para cerrar el evento.",
+        "assignment_date": "2024-07-19",
+        "expiration_date": "2024-07-21",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Conferencia de Negocios Global",
+        "employees": ["GabrielM"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Supervisar la preparación y presentación de la estación de bebidas durante el evento, asegurando opciones variadas y de calidad para todos los gustos.",
+        "assignment_date": "2024-07-21",
+        "expiration_date": "2024-07-23",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Conferencia de Negocios Global",
+        "employees": ["ZoeS"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Gestionar la logística y coordinación del almuerzo, incluyendo la sincronización con las sesiones de la conferencia para evitar interrupciones.",
+        "assignment_date": "2024-07-21",
+        "expiration_date": "2024-07-23",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Conferencia de Negocios Global",
+        "employees": ["HenryT"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Preparar los arreglos finales y el servicio de cierre, centrando esfuerzos en la calidad del servicio y la satisfacción del cliente durante el último día.",
+        "assignment_date": "2024-07-21",
+        "expiration_date": "2024-07-23",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    }
+
+
+]

@@ -7,7 +7,6 @@ django.setup()
 from django.core.files import File
 from django.utils import timezone
 from faker.providers import person, address
-import random
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
@@ -23,6 +22,7 @@ from faker import Faker
 from core.models import *
 from random import randint, choice
 from django.utils.timezone import make_aware
+from django.db import transaction
 faker = Faker(['es_ES'])
 faker.add_provider(person)
 faker.add_provider(address)
@@ -427,16 +427,43 @@ def create_recommendation_letters(num_recommendations):
             description=description,
             date=date
     )
-def create_task_employee():
-    employees = list(Employee.objects.all())
-    tasks = list(Task.objects.all())
 
-    if employees and tasks:
-        for t in tasks:
-            random_employee = random.choice(employees)
-            t.employees.add(random_employee)
-            t.save()
-            employees.remove(random_employee)
+
+def create_task_employee():
+    with open('populate/tasks.json', 'r', encoding='utf-8') as file:
+        tasks_data = json.load(file)
+
+    for item in tasks_data:
+        try:
+            with transaction.atomic():
+                print(f"Looking for company: {item['cateringcompany']}")
+                cateringcompany = CateringCompany.objects.get(user__username=item['cateringcompany'])
+                event = Event.objects.get(name=item['event'])
+                cateringservice = CateringService.objects.get(name=item['cateringservice'])
+                
+                task = Task(
+                    event=event,
+                    cateringservice=cateringservice,
+                    cateringcompany=cateringcompany,
+                    description=item['description'],
+                    assignment_date=timezone.datetime.strptime(item['assignment_date'], '%Y-%m-%d').date(),
+                    expiration_date=timezone.datetime.strptime(item['expiration_date'], '%Y-%m-%d').date(),
+                    assignment_state=item['assignment_state'],
+                    priority=item['priority']
+                )
+                task.save()
+
+                for username in item['employees']:
+                    employee = Employee.objects.get(user__username=username)
+                    task.employees.add(employee)
+
+                print(f"Task for {event.name} created and employees assigned successfully.")
+        except CateringCompany.DoesNotExist:
+            print(f"CateringCompany '{item['cateringcompany']}' does not exist.")
+        except Exception as e:
+            print(f"Error processing task data: {str(e)}")
+
+
 
 
 def create_superusers():
