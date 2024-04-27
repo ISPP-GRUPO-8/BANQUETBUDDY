@@ -264,6 +264,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    messages.add_message(request, messages.SUCCESS, 'Succesfully logout.')
     return redirect("/")
 
 
