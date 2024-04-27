@@ -1,4 +1,5 @@
 from datetime import timedelta
+import json
 import os
 import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
@@ -18,6 +19,7 @@ import datetime
 from faker import Faker
 from core.models import *
 from random import randint, choice
+from django.utils.timezone import make_aware
 faker = Faker(['es_ES'])
 faker.add_provider(person)
 faker.add_provider(address)
@@ -42,458 +44,106 @@ def truncate_all_tables():
     print("All data has been deleted from the database.")
 
 
-
-user_list =[
-    'Pablo',
-    'Juan',
-    'Antonio',
-    'David',
-    'Manuel',
-    'Jaime',
-    'Luis',
-    'Mateo',
-]
-
-phone_numbers = [
-    '555-1234',
-    '555-5678',
-    '555-9012',
-    '555-3456',
-    '555-7890',
-    '555-2345',
-    '555-6789',
-    '555-0123',
-]
-
-addresses = [
-    '123 Calle Principal',
-    '456 Avenida Central',
-    '789 Paseo de la Montaña',
-    '101 Ruta del Sol',
-    '202 Camino Real',
-    '303 Boulevard Norte',
-    '404 Carrera Sur',
-    '505 Callejón Este',
-]
-
-preferences_per_user = [
-    ["Comida italiana", "Comida vegetariana", "Postres"],
-    ["Comida mexicana", "Comida rápida"],
-    ["Comida asiática", "Comida vegana", "Bebidas"],
-    ["Comida italiana", "Comida casera"],
-    ["Comida rápida", "Postres"],
-    ["Comida vegetariana", "Bebidas"],
-    ["Comida gourmet", "Comida casera"],
-    ["Comida mexicana", "Comida vegana", "Comida rápida"],
-]
-
-def create_particulars(num_particulars):
-    for i in range(num_particulars):
-        user = CustomUser.objects.create_user(username=user_list[i], password=user_list[i], email=user_list[i]+"@gmail.com")
-        Particular.objects.create(
-            user=user,
-            phone_number=phone_numbers[i],
-            preferences=preferences_per_user[i],
-            address=addresses[i],
-            is_subscribed=True  # Cambié esto a True, ya que parece que quieres que todos estén suscritos
-        )
+def create_particulars():
+    with open('populate/particulars.json', 'r', encoding='utf-8') as file:
+        particulars = json.load(file)
+        for p in particulars:
+            user = CustomUser.objects.create_user(
+                username=p['username'], 
+                password=p['password'], 
+                email=p['email']
+            )
+            Particular.objects.create(
+                user=user,
+                phone_number=p['phone_number'],
+                preferences=", ".join(p['preferences']),
+                address=p['address'],
+                is_subscribed=p['is_subscribed']
+            )
 
 
-catering_data = [
-    {
-        'username': 'DeliciasMediterraneas',
-        'password': 'DeliciasMediterraneas',
-        'name': 'Delicias Mediterráneas',
-        'service_description':         "Sumérgete en un festín de sabores inspirados en los países bañados por el mar Mediterráneo...",
-        'logo':'lamediterranea.jpg',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM_PRO'
-    },
-    {
-        'username': 'SaborOriental',
-        'password': 'SaborOriental',
-        'name': 'Sabor Oriental',
-        'service_description': "Embárcate en un viaje culinario a través de Asia con nuestra exquisita selección de platos orientales...",
-        'logo': 'sabororiental.jpg',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'RinconMexicano',
-        'password': 'RinconMexicano',
-        'name': 'Rincón Mexicano',
-        'service_description': "Vive la vibrante cultura y los intensos sabores de México con nuestro auténtico menú mexicano...",
-        'logo': 'rinconmexicano.jpg',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'False',
-        'price_plan': 'NO_SUSCRIBED'
-    },
-    {
-        'username': 'GourmetFusion',
-        'password': 'GourmetFusion',
-        'name': 'Gourmet Fusion',
-        'service_description': "Explora la innovadora fusión de sabores de nuestra cocina gourmet...",
-        'logo': 'fusiongourmet.png',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'CocinaAntonio',
-        'password': 'CocinaAntonio',
-        'name': 'Cocina Antonio',
-        'service_description': "Redescubre los sabores reconfortantes de la cocina tradicional con nuestro menú clásico...",
-        'logo': 'cocinaantonio.jpg',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM_PRO'
-    },
-    {
-        'username': 'ExquisitezGastronomica',
-        'password': 'ExquisitezGastronomica',
-        'name': 'Exquisitez Gastronómica',
-        'service_description': "Déjate seducir por la sofisticación y la elegancia de nuestra exquisitez gastronómica...",
-        'logo': 'mediterranea.jpg',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'CateringBenito',
-        'password': 'CateringBenito',
-        'name': 'Catering Benito',
-        'service_description': "Embriágate con los aromas y sabores exóticos de Oriente con nuestra deliciosa cocina asiática...",
-        'logo': 'cateringbenito.png',
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'SaboresdelMar',
-        'password': 'SaboresdelMar',
-        'name': 'Sabores del Mar',
-        'service_description': "Sumérgete en una experiencia culinaria costera con nuestros deliciosos sabores del mar...",
-        'logo': '',  # Aquí puedes proporcionar el nombre del archivo de logo si lo tienes
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'SazonCasera',
-        'password': 'SazonCasera',
-        'name': 'Sazón Casera',
-        'service_description': "Disfruta del auténtico sabor de la comida casera con nuestro menú reconfortante y familiar...",
-        'logo': '',  # Aquí puedes proporcionar el nombre del archivo de logo si lo tienes
-        'phone_number': faker.phone_number(),
-        'is_verified': 'True',
-        'price_plan': 'PREMIUM'
-    },
-    {
-        'username': 'DulcesCaprichos',
-        'password': 'DulcesCaprichos',
-        'name': 'Dulces Caprichos',
-        'service_description': "Déjate seducir por la tentación de nuestros dulces caprichos...",
-        'logo': '',  # Aquí puedes proporcionar el nombre del archivo de logo si lo tienes
-        'phone_number': faker.phone_number(),
-        'is_verified': 'False',
-        'price_plan': 'PREMIUM'
-    }
-]
-
-cuisine_types = [
-   ["MEDITERRANEAN"],  
-    ["ORIENTAL"],       
-    ["MEXICAN"]        
-]
 
 
 def create_catering_companies():
-    for i, catering_info in enumerate(catering_data):
-        user = CustomUser.objects.create_user(username=catering_info['username'], password=catering_info['password'], email=catering_info['username'] + "@gmail.com")
-        catering_company = CateringCompany.objects.create(
-            user=user,
-            name=catering_info['name'],
-            phone_number=catering_info['phone_number'],
-            service_description=catering_info['service_description'],
-            is_verified=catering_info['is_verified'],
-            price_plan=catering_info['price_plan']
-        )
-
-        # Añadir los tipos de cocina
-        for cuisine_type in cuisine_types[i % len(cuisine_types)]:  
-            cuisine_instance = CuisineTypeModel.objects.get_or_create(type=cuisine_type)[0]
-            catering_company.cuisine_types.add(cuisine_instance)
-
-        # Añadir el logo si está disponible
-        logo_filename = catering_info.get('logo', None)
-        if logo_filename:
-            logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logos', logo_filename)
-            if os.path.exists(logo_path):
-                with open(logo_path, 'rb') as f:
-                    catering_company.logo = File(f, name=logo_filename)
-                    catering_company.save()
-
-employee_data = [
-    {
-        'username': 'OliverS',
-        'password': 'employee1',
-        'experience': 'Experiencia en la preparación de banquetes para grandes eventos',
-        'skill': 'Creatividad para desarrollar platos innovadores',
-        'english_level': 'C1'
-    },
-    {
-        'username': 'WillJ98',
-        'password': 'employee2',
-        'experience': 'Trabajo en restaurantes de cocina internacional',
-        'skill': 'Trabajo en equipo en entornos de alta presión',
-        'english_level': 'B2'
-    },
-    {
-        'username': 'HarryB_22',
-        'password': 'employee3',
-        'experience': 'Gestión de la logística de eventos gastronómicos',
-        'skill': 'Destreza en la decoración y presentación de platos',
-        'english_level': 'A2'
-    },
-    {
-        'username': 'GeorgeM_10',
-        'password': 'employee4',
-        'experience': 'Supervisión de personal en servicios de catering',
-        'skill': 'Habilidad para adaptarse a las preferencias y restricciones dietéticas de los clientes',
-        'english_level': 'NONE'
-    },
-    {
-        'username': 'JackW',
-        'password': 'employee5',
-        'experience': 'Planificación y ejecución de menús para eventos especiales',
-        'skill': 'Comunicación efectiva con clientes y proveedores',
-        'english_level': 'C2'
-    },
-    {
-        'username': 'AmeliaW',
-        'password': 'employee6',
-        'experience': 'Experiencia en la gestión de cocinas industriales',
-        'skill': 'Gestión del tiempo para coordinar la preparación de múltiples platos',
-        'english_level': 'C1'
-    },
-    {
-        'username': 'OliviaT',
-        'password': 'employee7',
-        'experience': 'Conocimiento de normativas de higiene y seguridad alimentaria',
-        'skill': 'Capacidad para resolver problemas rápidamente durante eventos en vivo',
-        'english_level': 'B1'
-    },
-    {
-        'username': 'IsabellaG',
-        'password': 'employee8',
-        'experience': 'Trabajo en servicios de catering para bodas y eventos sociales',
-        'skill': 'Conocimiento de técnicas de servicio y atención al cliente',
-        'english_level': 'A1'
-    },
-    {
-        'username': 'AvaJ',
-        'password': 'employee9',
-        'experience': 'Participación en catas y maridajes de vinos y alimentos',
-        'skill': 'Flexibilidad para ajustarse a cambios de último minuto en los pedidos',
-        'english_level': 'C1'
-    },
-    {
-        'username': 'SophiaM99',
-        'password': 'employee10',
-        'experience': 'Manejo de equipos y utensilios especializados en cocina',
-        'skill': 'Compromiso con la calidad y la excelencia en la cocina',
-        'english_level': 'C1'
-    }
-]
-
-
-def create_employees(num_employees):
-    for i in range(num_employees):
-        user = CustomUser.objects.create_user(username=employee_data[i]['username'], password= employee_data[i]['password'],email=employee_data[i]['username'] + "@gmail.com")
-        employee = Employee.objects.create(
-            user=user,
-            phone_number=faker.phone_number(),
-            profession=choice(['Chef', 'Camarero', 'Pastelero']),
-            experience=employee_data[i]['experience'],
-            skills=employee_data[i]['skill'],
-            english_level=employee_data[i]['english_level'],
-            location=faker.address(),
-            curriculum=None
-        )
-        
-        curriculum_filename = 'curriculum.pdf'
-        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', curriculum_filename)
-        
-        if os.path.exists(curriculum_path):
-            with open(curriculum_path, 'rb') as f:
-                employee.curriculum = File(f, name=curriculum_filename)
-                employee.save()
-
-
-messages_content = [
-    {
-        'content': "Hola, estamos organizando un evento para celebrar nuestro aniversario de bodas y nos gustaría contratar vuestro servicio de catering. ¿Podrían proporcionarnos más información sobre vuestros menús y precios?",
-        'sender': 'Pablo',
-        'receiver': 'DeliciasMediterraneas'
-    },
-    {
-        'content': "Buenos días, estamos planeando una fiesta de cumpleaños para nuestro hijo y nos gustaría saber si ofrecen opciones de catering para niños. ¿Podrían ayudarnos con esto?",
-        'sender': 'Juan',
-        'receiver': 'SaborOriental'
-    },
-    {
-        'content': "¡Hola! Estamos organizando una conferencia de negocios y necesitamos un servicio de catering para el almuerzo. ¿Podrían proporcionarnos un presupuesto para esto?",
-        'sender': 'Antonio',
-        'receiver': 'GourmetFusion'
-    },
-    {
-        'content': "Hola, estamos interesados en contratar vuestro servicio de catering para nuestra boda el próximo mes. ¿Podrían decirnos si tienen disponibilidad y cuáles son sus opciones de menú?",
-        'sender': 'David',
-        'receiver': 'CocinaAntonio'
-    },
-    {
-        'content': "Hola, estamos planeando una cena especial para nuestro aniversario y nos gustaría contratar vuestro servicio de catering para la ocasión. ¿Podrían decirnos qué opciones de menú tienen disponibles?",
-        'sender': 'Manuel',
-        'receiver': 'ExquisitezGastronomica'
-    },
-    {
-        'content': "¡Hola! Nos gustaría organizar una fiesta sorpresa para nuestro amigo y nos preguntábamos si podrían ayudarnos con el catering. ¿Podrían proporcionarnos información sobre vuestros servicios y precios?",
-        'sender': 'Jaime',
-        'receiver': 'CateringBenito'
-    },
-    {
-        'content': "Hola, estamos organizando un evento benéfico para recaudar fondos y nos gustaría contratar vuestro servicio de catering para la cena. ¿Podrían decirnos si tienen experiencia en eventos de este tipo?",
-        'sender': 'Luis',
-        'receiver': 'SaboresdelMar'
-    },
-    {
-        'content': "Buenos días, estamos planeando una reunión familiar y nos gustaría contratar vuestro servicio de catering para la comida. ¿Podrían proporcionarnos información sobre vuestras opciones de menú y precios?",
-        'sender': 'Mateo',
-        'receiver': 'SazonCasera'
-    },
-    {
-        'content': "Hola, nos gustaría organizar una degustación de vinos en nuestra bodega y estamos buscando un servicio de catering para complementar la experiencia. ¿Podrían ayudarnos con esto?",
-        'sender': 'Pablo',
-        'receiver': 'DulcesCaprichos'
-    }
-]
-
-
-def create_messages(num_messages):
-    users = Particular.objects.all()
-    for _ in range(num_messages):
-        message_data = messages_content[_]
-        sender_username = message_data['sender']
-        receiver_username = message_data['receiver']
-        sender_particular = Particular.objects.get(user__username=sender_username)
-        receiver_catering = CateringCompany.objects.get(user__username=receiver_username)
-        Message.objects.create(
-            sender=sender_particular.user,  
-            receiver=receiver_catering.user,  
-            date=timezone.now(),
-            content=message_data['content']
-        )
+    with open('populate/catering_companies.json', 'r', encoding='utf-8') as file:
+        companies = json.load(file)
+        for company in companies:
+            user = CustomUser.objects.create_user(
+                username=company['username'], 
+                password=company['password'], 
+                email=company['email']
+            )
+            catering_company = CateringCompany.objects.create(
+                user=user,
+                name=company['name'],
+                phone_number=company['phone_number'],
+                service_description=company['service_description'],
+                is_verified=company['is_verified'],
+                price_plan=company['price_plan'],
+                address=company['address']
+            )
+            for cuisine_type in company['cuisine_types']:
+                cuisine, _ = CuisineTypeModel.objects.get_or_create(type=cuisine_type)
+                catering_company.cuisine_types.add(cuisine)
+            if company['logo']:
+                logo_path = os.path.join(settings.MEDIA_ROOT, 'logos', company['logo'])
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        catering_company.logo.save(company['logo'], File(f), save=True)
 
 
 
+def create_employees():
+    with open('populate/employees.json', 'r', encoding='utf-8') as file:
+        employees = json.load(file)
+        for emp in employees:
+            # Crear usuario asociado
+            user = CustomUser.objects.create_user(
+                username=emp['username'], 
+                password=emp['password'], 
+                email=emp['email']
+            )
+            # Crear instancia de empleado
+            Employee.objects.create(
+                user=user,
+                profession=emp['profession'],
+                experience=emp['experience'],
+                skills=emp['skills'],
+                english_level=emp['english_level'],
+                location=emp['location'],
+                curriculum=emp['curriculum']
+            )
 
-catering_services_data = [
-    {
-        'username': 'DeliciasMediterraneas',
-        'name': "Banquete Estelar",
-        'description': "Experimenta una explosión de sabores con nuestro banquete estelar. Ofrecemos una amplia variedad de platos exquisitos y servicios personalizados para satisfacer tus necesidades.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'SaborOriental',
-        'name': "Delicias del Chef",
-        'description': "Las delicias del chef te esperan en cada plato. Nuestro equipo de expertos culinarios se encargará de crear una experiencia gastronómica inolvidable para tu evento.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'GourmetFusion',
-        'name': "Fiesta Gourmet",
-        'description': "Haz que tu fiesta sea memorable con nuestro servicio de catering. Desde aperitivos elegantes hasta postres indulgentes, tenemos todo lo que necesitas para impresionar a tus invitados.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'DeliciasMediterraneas',
-        'name': "Cocina de Autor",
-        'description': "Déjanos sorprenderte con nuestra cocina de autor. Cada plato está cuidadosamente diseñado para deleitar tus sentidos y dejar una impresión duradera en tus invitados.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'CocinaAntonio',
-        'name': "Buffet Real",
-        'description': "Disfruta de un buffet real con una selección de platos exquisitos de todo el mundo. Nuestro equipo se encargará de cada detalle para que puedas disfrutar de tu evento sin preocupaciones.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'ExquisitezGastronomica',
-        'name': "Sabor Exclusivo",
-        'description': "Sabor exclusivo es lo que ofrecemos en cada evento. Nuestra pasión por la buena comida se refleja en cada plato que servimos, garantizando una experiencia culinaria excepcional.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'DeliciasMediterraneas',
-        'name': "Eventos Elegantes",
-        'description': "Organiza eventos elegantes con nuestro servicio de catering. Desde bodas hasta cenas de gala, nuestro equipo está preparado para hacer realidad tus sueños gastronómicos.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'SaboresdelMar',
-        'name': "Catering Premium",
-        'description': "Dale un toque de lujo a tu evento con nuestro catering premium. Desde ingredientes de primera calidad hasta presentaciones elegantes, estamos comprometidos a superar tus expectativas.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'SazonCasera',
-        'name': "Menús Especiales",
-        'description': "Descubre menús especiales diseñados para satisfacer tus gustos más exigentes. Nuestro equipo trabajará contigo para crear una experiencia gastronómica única para tu evento.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    },
-    {
-        'username': 'DulcesCaprichos',
-        'name': "Celebración Soñada",
-        'description': "Haz realidad la celebración de tus sueños con nuestro servicio de catering. Nos encargaremos de cada detalle para que puedas relajarte y disfrutar junto a tus seres queridos.",
-        'location': faker.address(),
-        'capacity': randint(50, 200),
-        'price': randint(500, 5000) / 100
-    }
-]
 
-def create_catering_services(num_services):
-    for i in range(num_services):
-        service_data = catering_services_data[i]
-        catering_company = CateringCompany.objects.get(user__username=service_data['username'])
-        CateringService.objects.create(
-            cateringcompany=catering_company,
-            name=service_data['name'],
-            description=service_data['description'],
-            location=service_data['location'],
-            capacity=service_data['capacity'],
-            price=service_data['price']
-        )
+def create_messages():
+    with open('populate/messages.json', 'r', encoding='utf-8') as file:
+        messages_content = json.load(file)
+        for message_data in messages_content:
+            sender_username = message_data['sender']
+            receiver_username = message_data['receiver']
+            sender_particular = Particular.objects.get(user__username=sender_username)
+            receiver_catering = CateringCompany.objects.get(user__username=receiver_username)
+            Message.objects.create(
+                sender=sender_particular.user,  
+                receiver=receiver_catering.user,  
+                date=timezone.now(),
+                content=message_data['content']
+            )
+
+def create_catering_services():
+    with open('populate/catering_services.json', 'r', encoding='utf-8') as file:
+        catering_services_data = json.load(file)
+        for service_data in catering_services_data:
+            catering_company = CateringCompany.objects.get(user__username=service_data['username'])
+            CateringService.objects.create(
+                cateringcompany=catering_company,
+                name=service_data['name'],
+                description=service_data['description'],
+                location=service_data['location'],
+                capacity=service_data['capacity'],
+                price=service_data['price']
+            )
+
 
 events_details = [
     "Una elegante recepción al aire libre en un jardín botánico.",
@@ -705,146 +355,27 @@ def create_plates():
                 )
 
            
-
-
-
-event_names = [
-    "Recepción Jardín Botánico",
-    "Cena Panorámica Urbana",
-    "Fiesta Temática Musical",
-    "Buffet Dulces Sueños",
-    "Degustación Vinos y Quesos",
-    "Celebración Familiar Divertida",
-    "Boda Playa Paradisíaca",
-    "Cena de Gala Elegante",
-    "Inauguración Empresarial Internacional",
-    "Fiesta Sorpresa Nocturna"
-]
-
-event_data_list = [
-    {
-        'name': 'Recepción Jardín Botánico',
-        'date': datetime.date(2024, 4, 28),
-        'details': "Celebre su evento en un entorno natural único. Nuestra recepción en el Jardín Botánico ofrece un ambiente sereno y elegante, perfecto para cualquier ocasión especial.",
-        'booking_state': 'CONFIRMED',
-        'number_guests': 120,
-        'particular_username': 'Pablo',
-        'service': 'Banquete Estelar',   # Nombre de usuario del particular asociado
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Cena Panorámica Urbana',
-        'date': datetime.date(2024, 5, 20),
-        'details': "Disfrute de una vista impresionante de la ciudad mientras saborea una deliciosa cena con nuestros platos exclusivos. Una experiencia gastronómica inolvidable en lo alto de la urbe.",
-        'booking_state': 'CONFIRMED',
-        'number_guests': 80,
-        'particular_username': 'Jaime', 
-        'service': 'Banquete Estelar', # Nombre de usuario del particular asociado
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Fiesta Temática Musical',
-        'date': datetime.date(2024, 6, 10),
-        'details': "¡Que suene la música! Organice una fiesta temática musical con nosotros y déjese llevar por los ritmos más pegajosos. Nuestro equipo se encargará de crear una atmósfera vibrante y llena de energía.",
-        'booking_state': 'CONFIRMED',
-        'number_guests': 150,
-        'particular_username': 'Pablo',
-        'service': 'Delicias del Chef',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Buffet Dulces Sueños',
-        'date': datetime.date(2024, 7, 5),
-        'details': "Deléitese con una variedad de postres exquisitos en nuestro buffet de dulces sueños. Desde tartas caseras hasta macarons gourmet, tenemos algo para satisfacer todos los antojos.",
-        'booking_state': 'CONTRACT_PENDING',
-        'number_guests': 100,
-        'particular_username': 'David',
-        'service': 'Buffet Real',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Degustación Vinos y Quesos',
-        'date': datetime.date(2024, 5, 15),
-        'details': "Descubre los mejores maridajes de vinos y quesos en nuestra degustación especial. Únete a nosotros para una experiencia sensorial única llena de sabores y aromas.",
-        'booking_state': 'CONTRACT_PENDING',
-        'number_guests': 50,
-        'particular_username': 'Manuel',
-        'service': 'Buffet Real',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Celebración Familiar Divertida',
-        'date': datetime.date(2024, 5, 20),
-        'details': "Celebre momentos especiales en familia con nuestra celebración familiar divertida. Ofrecemos entretenimiento para todas las edades y una variedad de platos deliciosos para disfrutar juntos.",
-        'booking_state': 'CANCELLED',
-        'number_guests': 80,
-        'particular_username': 'Juan',
-        'service': 'Catering Premium',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Boda Playa Paradisíaca',
-        'date': datetime.date(2024, 4, 8),
-        'details': "Haga realidad su sueño de una boda en la playa con nosotros. Con nuestras impresionantes vistas y servicios de catering excepcionales, su día especial será inolvidable.",
-        'booking_state': 'FINALIZED',
-        'number_guests': 200,
-        'particular_username': 'Pablo',
-        'service': 'Cocina de Autor',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Cena de Gala Elegante',
-        'date': datetime.date(2024, 5, 12),
-        'details': "Disfrute de una noche de elegancia y sofisticación en nuestra cena de gala. Con un menú exquisito y un ambiente refinado, le garantizamos una experiencia inolvidable.",
-        'booking_state': 'CONFIRMED',
-        'number_guests': 150,
-        'particular_username': 'Manuel',
-        'service': 'Banquete Estelar',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Inauguración Empresarial Internacional',
-        'date': datetime.date(2024, 5, 25),
-        'details': "Celebre la apertura de su empresa con un evento inolvidable. Nuestro servicio de catering internacional hará que su inauguración sea un éxito en todo el mundo.",
-        'booking_state': 'CONTRACT_PENDING',
-        'number_guests': 300,
-        'particular_username': 'David',
-        'service': 'Fiesta Gourmet',
-        # Otros campos según sea necesario
-    },
-    {
-        'name': 'Fiesta Sorpresa Nocturna',
-        'date': datetime.date(2024, 5, 10),
-        'details': "Sorprende a tus seres queridos con una fiesta sorpresa nocturna. Nuestro equipo se encargará de todos los detalles para que puedas disfrutar de una velada llena de diversión y emoción.",
-        'booking_state': 'CONFIRMED',
-        'number_guests': 50,
-        'particular_username': 'Juan',
-        'service': 'Buffet Real',
-        # Otros campos según sea necesario
-    },
-    # Agrega el resto de eventos con sus respectivos datos
-]
-
 def create_events():
-    for event_data in event_data_list:
-        particulars = Particular.objects.all()
-        menus = Menu.objects.all()
+    with open('populate/events.json', 'r', encoding='utf-8') as file:
+        events_data = json.load(file)
+        for event_data in events_data:
+            catering_company = CateringCompany.objects.get(user__username=event_data['catering_company_username'])
+            selected_service = CateringService.objects.get(name=event_data['service_name'], cateringcompany=catering_company)
+            particular = Particular.objects.get(user__username=event_data['particular_username'])
+            menu = Menu.objects.filter(cateringservice=selected_service).first()  # Omitir si no necesitas asociar menús específicos
+            
+            Event.objects.create(
+                cateringservice=selected_service,
+                cateringcompany=catering_company,
+                particular=particular,
+                menu=menu,
+                name=event_data['name'],
+                date=datetime.datetime.strptime(event_data['date'], '%Y-%m-%d').date(),
+                details=event_data['details'],
+                booking_state=event_data['booking_state'],
+                number_guests=event_data['number_guests']
+            )
 
-        menu = choice(menus) if menus else None
-        selected_service = CateringService.objects.get(name=event_data['service'])
-        particular = particulars.get(user__username=event_data['particular_username'])
-
-        Event.objects.create(
-            cateringservice=selected_service,
-            cateringcompany=selected_service.cateringcompany,
-            particular=particular,
-            menu=menu,
-            name=event_data['name'],
-            date=event_data['date'],
-            details=event_data['details'],
-            booking_state=event_data['booking_state'],
-            number_guests=event_data['number_guests']
-        )
 
 tasks_descriptions = [
     "Preparación de menú para evento corporativo.",
@@ -994,86 +525,43 @@ def create_employee_work_services(num_relations):
         )
 
 
-
-
-
-offers_data = [
-    {
-        "title": "Cocinero/a de Temporada Primavera",
-        "description": "¡Únete a nuestro equipo para celebrar la llegada de la primavera! Buscamos cocineros/as con experiencia previa en catering y disponibilidad para eventos durante el día.",
-        "requirements": "Experiencia previa en catering y disponibilidad para eventos durante el día.",
-        "location": "Ciudad Jardín, Calle Flores 123",
-        "service": "Buffet Real",
-        "event": "Fiesta Sorpresa Nocturna"
-    },
-    {
-        "title": "Asistente de Cocina al Aire Libre",
-        "description": "¡Únete a nuestra promoción de verano y sé parte de nuestro equipo de cocina al aire libre! Estamos buscando personas con habilidades culinarias en cocina al aire libre y disponibilidad para fines de semana y días festivos.",
-        "requirements": "Habilidades culinarias en cocina al aire libre y disponibilidad para fines de semana y días festivos.",
-        "location": "Playa del Sol, Avenida Marítima 456",
-        "service": "Buffet Real",
-        "event": "Fiesta Sorpresa Nocturna"
-    },
-    {
-        "title": "Cocinero/a de Temporada de Cosecha",
-        "description": "¡Celebra la temporada de cosecha con nosotros! Estamos en busca de cocineros/as con conocimientos en cocina de temporada y disponibilidad para eventos de noche.",
-        "requirements": "Conocimientos en cocina de temporada y disponibilidad para eventos de noche.",
-        "location": "Pueblo Viejo, Plaza Principal 789",
-        "service": "Delicias del Chef",
-        "event": "Fiesta Temática Musical"
-    },
-    {
-        "title": "Diseñador/a de Eventos Temáticos",
-        "description": "¿Tienes una mente creativa? Únete a nuestro equipo y ayuda a diseñar fiestas temáticas personalizadas para cumpleaños. Se requiere creatividad en diseño de eventos y disponibilidad para fines de semana.",
-        "requirements": "Creatividad en diseño de eventos y disponibilidad para fines de semana.",
-        "location": "Barrio Feliz, Calle Fiesta 333",
-        "service": "Buffet Real",
-        "event": "Fiesta Sorpresa Nocturna"
-    },
-    {
-        "title": "Chef de Cocina Familiar para Eventos de Domingo",
-        "description": "Únete a nosotros para hacer de los domingos días especiales para las familias. Buscamos chefs con experiencia en cocina familiar y disponibilidad para eventos de tarde.",
-        "requirements": "Experiencia en cocina familiar y disponibilidad para eventos de tarde.",
-        "location": "Colina Verde, Calle Familia 444",
-        "service": "Banquete Estelar",
-        "event": "Cena de Gala Elegante"
-    },
-]
-
 def create_offers():
-    services = CateringService.objects.all()
-    events = Event.objects.filter(booking_state='CONFIRMED')  # Asegúrate de elegir solo eventos confirmados si es necesario
+    with open('populate/offers.json', 'r', encoding='utf-8') as file:
+        offers_data = json.load(file)
+        for offer_data in offers_data:
+            service = CateringService.objects.get(name=offer_data['service_name'])
+            event = Event.objects.get(name=offer_data['event_name'], cateringservice=service)
+            
+            Offer.objects.create(
+                cateringservice=service,
+                event=event,
+                title=offer_data['title'],
+                description=offer_data['description'],
+                requirements=offer_data['requirements'],
+                location=offer_data['location'],
+                start_date=datetime.datetime.strptime(offer_data['start_date'], '%Y-%m-%d').date(),
+                end_date=datetime.datetime.strptime(offer_data['end_date'], '%Y-%m-%d').date()
+            )
 
-    for offers in offers_data:
-        service = CateringService.objects.get(name = offers['service'])
-        event = Event.objects.get(name = offers['event'])  # Elegir un evento al azar
+def create_job_applications():
+    # Cargar datos desde un archivo JSON
+    with open('populate/job_applications.json', 'r', encoding='utf-8') as file:
+        job_applications_data = json.load(file)
 
-        # Generar fechas de inicio y fin de manera aleatoria
-        start_date = timezone.now().date() + timedelta(days=random.randint(1, 30))  # Fecha de inicio en el futuro
-        end_date = start_date + timedelta(days=random.randint(30, 180))  # Fecha de fin después de la fecha de inicio
+    for application_data in job_applications_data:
+        employee = Employee.objects.get(user__username=application_data['employee_username'])
+        offer = Offer.objects.get(title=application_data['offer_title'])
 
-        Offer.objects.create(
-            cateringservice=service,
-            event=event,  # Asignar el evento seleccionado
-            title=offers['title'],
-            description=offers['description'],
-            requirements=offers['requirements'],
-            location=offers['location'],
-            start_date=start_date,
-            end_date=end_date
+        # Parsear las fechas y hacerlas timezone-aware
+        date_application = make_aware(datetime.datetime.strptime(application_data['date_application'], '%Y-%m-%d'))
+
+        # Crear la aplicación de trabajo
+        JobApplication.objects.create(
+            employee=employee,
+            offer=offer,
+            date_application=date_application,
+            state=application_data['state']
         )
-
-
-# def create_job_applications(num_applications):
-#     employees = Employee.objects.all()
-#     offers = Offer.objects.all()
-#     for _ in range(num_applications):
-#         JobApplication.objects.create(
-#             employee=choice(employees),
-#             offer=choice(offers),
-#             date_application=faker.date_between(start_date='-5d', end_date='today'),
-#             state=choice(['PENDING', 'REJECTED', 'ACCEPTED'])
-#         )
 
 
 
@@ -1136,11 +624,11 @@ def create_superusers():
 def populate_database():
     truncate_all_tables()
     create_cuisine_types()  # Crear los tipos de cocina antes de crear las compañías de catering
-    create_particulars(8)
+    create_particulars()
     create_catering_companies()
-    create_employees(10)
-    create_messages(5)
-    create_catering_services(10)
+    create_employees()
+    create_messages()
+    create_catering_services()
     create_menus()
     create_events()
     create_tasks_from_data(tasks_data)
@@ -1148,7 +636,7 @@ def populate_database():
     create_reviews(10)
     create_employee_work_services(100)
     create_offers()
-    # create_job_applications(10)
+    create_job_applications()
     create_recommendation_letters(10)
     create_task_employee()
     create_superusers()
