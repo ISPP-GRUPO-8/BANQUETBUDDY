@@ -1,0 +1,382 @@
+[
+    {
+        "name": "Cena de Gala Elegante",
+        "date": "2024-07-12",
+        "details": "Disfrute de una noche de elegancia y sofisticación en nuestra cena de gala.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 15,
+        "particular_username": "Manuel",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Fiesta Sorpresa Nocturna",
+        "date": "2024-07-10",
+        "details": "Sorprende a tus seres queridos con una fiesta sorpresa nocturna. Nuestro equipo se encargará de todos los detalles para que puedas disfrutar de una velada llena de diversión y emoción.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 5,
+        "particular_username": "Juan",
+        "service_name": "Buffet Real",
+        "catering_company_username": "CocinaAntonio"
+    },
+    {
+        "name": "Recepción Jardín Botánico",
+        "date": "2024-07-28",
+        "details": "Celebre su evento en un entorno natural único. Nuestra recepción en el Jardín Botánico ofrece un ambiente sereno y elegante, perfecto para cualquier ocasión especial.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 3,
+        "particular_username": "Pablo",
+        "service_name": "Eventos Elegantes",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+
+
+    {
+        "name": "Boda Playa Paradisíaca",
+        "date": "2024-06-15",
+        "details": "Haga realidad su sueño de una boda en la playa con nosotros. Con nuestras impresionantes vistas y servicios de catering excepcionales, su día especial será inolvidable.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 20,
+        "particular_username": "David",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Conferencia de Negocios Internacional",
+        "date": "2024-07-20",
+        "details": "Organizamos su conferencia de negocios con un servicio de catering de primera clase que impresionará a todos sus asistentes. Ofrecemos una variedad de opciones culinarias para adaptarnos a todas las dietas.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 12,
+        "particular_username": "Antonio",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Cata de Vinos y Quesos",
+        "date": "2024-08-11",
+        "details": "Descubra los mejores maridajes de vinos y quesos en nuestra degustación especial. Únete a nosotros para una experiencia sensorial única llena de sabores y aromas.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 40,
+        "particular_username": "Luis",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+    {
+        "name": "Cumpleaños Temático para Niños",
+        "date": "2024-09-05",
+        "details": "Celebra el cumpleaños de tu hijo con un tema especial y un catering que encantará tanto a niños como a adultos. Desde juegos hasta menús divertidos, todo está organizado para tu comodidad.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 19,
+        "particular_username": "Jaime",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Fiesta de Inauguración Corporativa",
+        "date": "2024-07-01",
+        "details": "Marca la inauguración de tu empresa con un evento espectacular. Ofrecemos una amplia gama de servicios de catering para garantizar que su evento sea un éxito rotundo.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 11,
+        "particular_username": "Manuel",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
+    },
+    {
+        "name": "Degustación Gastronómica Exclusiva",
+        "date": "2024-10-10",
+        "details": "Únete a nosotros para una exclusiva noche de degustación gastronómica. Explora sabores únicos y platos innovadores creados por nuestros chefs de primera línea.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 20,
+        "particular_username": "David",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+
+    {
+        "name": "Cena de lujo en la playa",
+        "date": "2024-07-15",
+        "details": "Experimente una noche de elegancia suprema en nuestra exclusiva cena de gala.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 2,
+        "particular_username": "Manuel",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Fiesta Increíble en la Noche",
+        "date": "2024-08-11",
+        "details": "Organizamos una sorpresa nocturna inolvidable, repleta de diversión y sorpresas para todos.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 5,
+        "particular_username": "Juan",
+        "service_name": "Buffet Real",
+        "catering_company_username": "CocinaAntonio"
+    },
+    {
+        "name": "Recepción especial en el palacio de cristal",
+        "date": "2024-06-29",
+        "details": "Únete a nosotros en un escenario natural idílico para un evento sereno y hermoso en el jardín botánico.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 12,
+        "particular_username": "Pablo",
+        "service_name": "Eventos Elegantes",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Boda espectacular en la playa",
+        "date": "2024-06-17",
+        "details": "Celebra tu unión en un escenario de ensueño con vistas al mar y un servicio de catering excepcional.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 19,
+        "particular_username": "David",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Conferencia de Negocios Global",
+        "date": "2024-07-22",
+        "details": "Acompáñanos en una conferencia de negocios con catering de alta gama, diseñada para impresionar a participantes internacionales.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 30,
+        "particular_username": "Antonio",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Degustación Exclusiva de Vinos y Quesos",
+        "date": "2024-08-13",
+        "details": "Explora una selección curada de vinos y quesos en una atmósfera elegante y educativa.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 42,
+        "particular_username": "Luis",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+    {
+        "name": "Cumpleaños Infantil Temático",
+        "date": "2024-09-07",
+        "details": "Haz que el cumpleaños de tu hijo sea mágico con actividades temáticas y un delicioso catering que deleitará a todos.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 54,
+        "particular_username": "Jaime",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Inauguración Corporativa Espectacular",
+        "date": "2024-06-23",
+        "details": "Marca un hito con la inauguración de tu empresa, presentando un espectáculo culinario que establecerá el estándar para futuros eventos.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 10,
+        "particular_username": "Manuel",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
+    },
+    {
+        "name": "Noche de Degustación Gastronómica",
+        "date": "2024-10-12",
+        "details": "Disfruta de una noche donde la gastronomía de vanguardia y la innovación culinaria son las protagonistas.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 25,
+        "particular_username": "David",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+
+    {
+        "name": "Gala de Primavera",
+        "date": "2024-09-15",
+        "details": "Una noche de gala con una exhibición de moda y música en vivo para dar la bienvenida a la primavera.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 18,
+        "particular_username": "Pablo",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Encuentro Empresarial 2024",
+        "date": "2024-08-20",
+        "details": "Evento empresarial con conferencias y networking, incluyendo almuerzos y cenas de trabajo.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 15,
+        "particular_username": "David",
+        "service_name": "Cocina de Autor",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Maratón Musical Nocturno",
+        "date": "2024-07-05",
+        "details": "Una maratón musical que durará toda la noche, con varios artistas en escena y servicios de catering continuos.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 22,
+        "particular_username": "Antonio",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Festival Gastronómico del Mar",
+        "date": "2024-06-10",
+        "details": "Disfrute de un festival gastronómico que celebra los sabores del mar, con platos especiales y presentaciones culinarias.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 7,
+        "particular_username": "Luis",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
+    },
+    {
+        "name": "Retiro de Yoga y Meditación",
+        "date": "2024-07-25",
+        "details": "Un retiro que combina sesiones de yoga y meditación con una alimentación saludable y consciente.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 9,
+        "particular_username": "Jaime",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+    {
+        "name": "Aniversario de Empresa Innovadora",
+        "date": "2024-08-15",
+        "details": "Celebración del décimo aniversario de una empresa líder en innovación, incluyendo discursos, premiaciones y un excelente catering.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 2,
+        "particular_username": "Mateo",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+    {
+        "name": "Noche de Gala Benéfica",
+        "date": "2024-09-30",
+        "details": "Una gala benéfica para recaudar fondos para la educación de niños desfavorecidos, con un menú exquisito y actuaciones en vivo.",
+        "booking_state": "CANCELLED",
+        "number_guests": 15,
+        "particular_username": "Juan",
+        "service_name": "Buffet Real",
+        "catering_company_username": "CocinaAntonio"
+    },
+
+    {
+        "name": "Tarde de Cata de Tés",
+        "date": "2024-10-22",
+        "details": "Una tarde dedicada a la cata de tés de todo el mundo, acompañada de una selección de bocadillos finos.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 4,
+        "particular_username": "Pablo",
+        "service_name": "Eventos Elegantes",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Exposición de Arte Contemporáneo",
+        "date": "2024-11-18",
+        "details": "Una exclusiva exposición de arte contemporáneo con un servicio de catering que refleja las tendencias actuales en la gastronomía.",
+        "booking_state": "CANCELLED",
+        "number_guests": 12,
+        "particular_username": "Mateo",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Encuentro de Escritores",
+        "date": "2024-12-05",
+        "details": "Un encuentro para escritores emergentes y consagrados, ofreciendo un espacio para la discusión creativa y la inspiración.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 7,
+        "particular_username": "Luis",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Simposio de Tecnología y Sostenibilidad",
+        "date": "2024-08-19",
+        "details": "Un simposio que aborda los últimos avances en tecnología sostenible, con pausas para disfrutar de un excelente catering ecológico.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 8,
+        "particular_username": "David",
+        "service_name": "Cocina de Autor",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Festival de Cine al Aire Libre",
+        "date": "2024-07-14",
+        "details": "Disfruta de clásicos del cine y estrenos en nuestro festival al aire libre, con opciones de catering para todos los gustos.",
+        "booking_state": "CANCELLED",
+        "number_guests": 20,
+        "particular_username": "Antonio",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Cena Romántica bajo las Estrellas",
+        "date": "2024-09-21",
+        "details": "Una cena íntima bajo el cielo estrellado, perfecta para parejas que buscan celebrar un momento especial.",
+        "booking_state": "CONFIRMED",
+        "number_guests": 17,
+        "particular_username": "Jaime",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+
+    {
+        "name": "Gala Anual de Beneficencia",
+        "date": "2024-09-30",
+        "details": "Una noche dedicada a la recaudación de fondos para causas benéficas, acompañada de una cena de gala preparada por los mejores chefs.",
+        "booking_state": "CANCELLED",
+        "number_guests": 100,
+        "particular_username": "Manuel",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Retiro de Yoga y Meditación",
+        "date": "2024-11-10",
+        "details": "Un retiro espiritual que combina yoga y meditación con una alimentación consciente y nutritiva, perfecto para renovar cuerpo y mente.",
+        "booking_state": "CANCELLED",
+        "number_guests": 60,
+        "particular_username": "Jaime",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+    {
+        "name": "Torneo de Golf de Primavera",
+        "date": "2024-04-20",
+        "details": "Disfrute de un día en el campo de golf con servicios de catering premium que garantizan una experiencia de primera clase.",
+        "booking_state": "CANCELLED",
+        "number_guests": 80,
+        "particular_username": "David",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
+    },
+    {
+        "name": "Maratón Musical de Verano",
+        "date": "2024-06-15",
+        "details": "Vive la música de verano con un festival que ofrece actuaciones en vivo y un excelente servicio de catering para energizar a los asistentes.",
+        "booking_state": "CANCELLED",
+        "number_guests": 150,
+        "particular_username": "Luis",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Conferencia Internacional de Diseño",
+        "date": "2024-10-05",
+        "details": "Una conferencia que reúne a los principales nombres del diseño mundial, con pausas gourmet que inspiran creatividad.",
+        "booking_state": "CANCELLED",
+        "number_guests": 130,
+        "particular_username": "Juan",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Noche de Comedia en la Ciudad",
+        "date": "2024-08-22",
+        "details": "Disfruta de una noche de risas y diversión con una selección de los mejores comediantes, acompañados de un menú especial.",
+        "booking_state": "CANCELLED",
+        "number_guests": 70,
+        "particular_username": "Mateo",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    }
+
+
+
+    
+]
