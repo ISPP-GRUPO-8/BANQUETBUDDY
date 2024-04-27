@@ -14,6 +14,9 @@ from catering_owners.models import CateringCompany, CateringService, CuisineType
 from catering_particular.models import Particular
 from django.contrib.auth import get_user_model
 import datetime
+import decimal
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 
 
 from faker import Faker
@@ -145,108 +148,30 @@ def create_catering_services():
             )
 
 
-events_details = [
-    "Una elegante recepción al aire libre en un jardín botánico.",
-    "Una cena íntima con vista a la ciudad desde el piso 50 de un rascacielos.",
-    "Una fiesta temática con música en vivo y cócteles creativos.",
-    "Un buffet de postres para un baby shower de ensueño.",
-    "Una degustación de vinos y quesos en una bodega histórica.",
-    "Una celebración familiar con juegos y actividades para niños.",
-    "Una boda de destino en una playa paradisíaca.",
-    "Una cena de gala en un lujoso salón de eventos.",
-    "Una inauguración de empresa con catering de comida internacional.",
-    "Una fiesta sorpresa con entretenimiento en vivo y baile hasta el amanecer."
-]
-
-menus_restrictions = [
-    "Sin restricciones: este menú incluye una variedad de platos para todos los gustos y necesidades dietéticas.",
-    "Vegetariano: todos los platos de este menú son aptos para vegetarianos, sin carne ni productos de origen animal.",
-    "Sin gluten: ideal para personas con intolerancia al gluten, este menú ofrece platos libres de trigo y otros cereales con gluten.",
-    "Bajo en calorías: diseñado para aquellos que desean controlar su ingesta de calorías, este menú ofrece opciones saludables y equilibradas.",
-    "Sin lactosa: adecuado para personas con intolerancia a la lactosa, este menú excluye productos lácteos de la dieta.",
-    "Vegano: todos los platos de este menú son aptos para veganos, sin ingredientes de origen animal.",
-    "Orgánico: ingredientes frescos y orgánicos se utilizan en este menú para una experiencia culinaria más saludable y sostenible.",
-    "Bajo en carbohidratos: perfecto para aquellos que siguen una dieta baja en carbohidratos, este menú ofrece opciones sin azúcares añadidos ni alimentos ricos en carbohidratos.",
-    "Sin frutos secos: ideal para personas con alergias a los frutos secos, este menú excluye cualquier tipo de fruto seco de los platos.",
-    "Sin azúcar: diseñado para aquellos que desean reducir su consumo de azúcar, este menú ofrece postres y platos sin azúcares añadidos."
-]
-
 def create_menus():
-    companies = CateringCompany.objects.all()
+    with open('populate/menus.json', 'r', encoding='utf-8') as file:
+        menus_data = json.load(file)
 
-    for company in companies:
-        available_menu_names = list(menus_name)
-        num_menus_to_create = min(len(available_menu_names), random.randint(1, len(available_menu_names)))
+    for company_data in menus_data:
+        try:
+            company = CateringCompany.objects.get(name=company_data['cateringcompany'])
+            service = CateringService.objects.get(name=company_data['cateringservice'], cateringcompany=company)
+        except CateringCompany.DoesNotExist:
+            print(f"La compañía {company_data['cateringcompany']} no existe en la base de datos.")
+            continue
+        except CateringService.DoesNotExist:
+            print(f"El servicio {company_data['cateringservice']} no existe para la compañía {company_data['cateringcompany']}.")
+            continue
 
-        # Obtén todos los servicios de catering de la compañía actual
-        company_services = CateringService.objects.filter(cateringcompany=company)
+        for menu_data in company_data['menus']:
+            Menu.objects.create(
+                cateringcompany=company,
+                cateringservice=service,
+                name=menu_data['name'],
+                description=menu_data['description'],
+                diet_restrictions=menu_data['diet_restrictions']
+            )
 
-        for _ in range(num_menus_to_create):
-            name = choice(available_menu_names)
-            available_menu_names.remove(name)
-
-            description = choice(menus_descriptions)
-            diet_restrictions = choice(menus_restrictions)
-
-            if company_services:
-                # Elige al azar uno de los servicios de catering de esta compañía
-                catering_service = choice(company_services)
-
-                Menu.objects.create(
-                    cateringcompany=company,
-                    cateringservice=catering_service,
-                    name=name,
-                    description=description,
-                    diet_restrictions=diet_restrictions
-                )
-            else:
-                # Si la compañía no tiene servicios de catering, crea el menú sin asociarlo a un servicio específico
-                Menu.objects.create(
-                    cateringcompany=company,
-                    name=name,
-                    description=description,
-                    diet_restrictions=diet_restrictions
-                )
-
-
-menus_name = [
-    "Menú Degustación Mediterráneo",
-    "Menú Vegetariano Gourmet",
-    "Menú BBQ Americana",
-    "Menú Asiático Fusion",
-    "Menú Clásico Italiano",
-    "Menú Tapas Españolas",
-    "Menú Saludable y Equilibrado",
-    "Menú Internacional Variado",
-    "Menú de Lujo Gourmet",
-    "Menú Tradicional de la Abuela"
-]
-
-menus_descriptions = [
-    "Descubre los sabores del Mediterráneo con este exquisito menú degustación. Desde frescos mariscos hasta platos tradicionales, cada bocado te transportará a la costa del sur de Europa.",
-    "Disfruta de una experiencia culinaria sin carne con nuestro menú vegetariano gourmet. Cada plato está cuidadosamente elaborado para resaltar los sabores naturales de los ingredientes frescos y de temporada.",
-    "Celebra al estilo estadounidense con nuestro menú BBQ. Desde jugosas hamburguesas hasta costillas ahumadas, este menú es perfecto para una fiesta al aire libre con amigos y familiares.",
-    "Embárcate en un viaje culinario por Asia con nuestro menú asiático fusion. Del sushi japonés a los rollitos de primavera vietnamitas, cada plato está inspirado en los sabores y técnicas de cocina de la región.",
-    "Viaja a Italia sin salir de tu evento con nuestro menú clásico italiano. Desde la pasta fresca hasta la pizza recién horneada, cada plato te hará sentir como si estuvieras en el corazón de la Toscana.",
-    "Disfruta de la variedad y la autenticidad de la cocina española con nuestro menú de tapas. Desde patatas bravas hasta jamón ibérico, cada bocado es una deliciosa explosión de sabor.",
-    "Cuida tu bienestar con nuestro menú saludable y equilibrado. Cada plato está diseñado para ofrecer una combinación perfecta de nutrientes y sabor, para que puedas disfrutar de una comida deliciosa sin comprometer tu salud.",
-    "Viaja por el mundo con nuestro menú internacional variado. Desde platos tradicionales hasta creaciones innovadoras, este menú ofrece una experiencia culinaria única que satisfará los paladares más exigentes.",
-    "Eleva tu evento a otro nivel con nuestro menú de lujo gourmet. Cada plato está elaborado con ingredientes de primera calidad y presentado de manera impecable, para una experiencia gastronómica verdaderamente memorable.",
-    "Recupera el sabor de la cocina casera con nuestro menú tradicional de la abuela. Desde platos reconfortantes hasta postres caseros, cada bocado te recordará el hogar y la familia."
-]
-
-menus_plates = [
-    ["Paella de mariscos", "Ensalada griega", "Pulpo a la gallega", "Pasta al pesto", "Tiramisú"],
-    ["Risotto de champiñones", "Tartaleta de espinacas y queso de cabra", "Curry de verduras", "Sushi vegetariano", "Helado de frutas frescas"],
-    ["Hamburguesa clásica con papas fritas", "Costillas de cerdo BBQ", "Pollo a la parrilla con salsa barbacoa", "Ensalada de col", "Pie de manzana"],
-    ["Sushi variado", "Pad thai de camarones", "Rollitos de primavera con salsa agridulce", "Curry rojo tailandés", "Helado de té verde"],
-    ["Spaghetti carbonara", "Pizza margarita", "Lasagna boloñesa", "Ensalada caprese", "Tiramisú"],
-    ["Patatas bravas", "Croquetas de jamón", "Gambas al ajillo", "Tortilla española", "Churros con chocolate"],
-    ["Ensalada César con pollo a la parrilla", "Salmón al horno con espárragos", "Quinoa con verduras asadas", "Batido de frutas frescas", "Yogur con granola y frutos rojos"],
-    ["Sushi nigiri variado", "Curry de pollo indio", "Tacos mexicanos con guacamole", "Pasta carbonara italiana", "Helado de mochi japonés"],
-    ["Foie gras con confitura de higos", "Filete de ternera Wagyu", "Langosta a la parrilla con mantequilla de trufa", "Carpaccio de vieiras", "Tarta de chocolate negro con oro comestible"],
-    ["Lentejas estofadas", "Estofado de ternera con patatas", "Arroz con leche", "Pastel de manzana", "Galletas de chocolate caseras"]
-]
 
 menu_plates_data = {
     "Menú Degustación Mediterráneo": [
@@ -341,19 +266,44 @@ def generate_plate_description(plate_name):
 
 
 def create_plates():
-    for menu_name, plates_data in menu_plates_data.items():
-        menus = Menu.objects.filter(name=menu_name)
-        for menu in menus:
-            cateringcompany = menu.cateringcompany
-            for plate_data in plates_data:
-                Plate.objects.create(
-                    menu=menu,
-                    cateringcompany=cateringcompany,
-                    name=plate_data["name"],
-                    description=plate_data["description"],
-                    price=faker.random_number(digits=2)
-                )
+    # Asegúrate de que el archivo JSON existe y está correctamente formateado
+    try:
+        with open('populate/plates.json', 'r', encoding='utf-8') as file:
+            plates_data = json.load(file)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        return
 
+    # Procesar cada registro en el JSON
+    for company_data in plates_data:
+        try:
+            # Verifica que exista la clave 'cateringcompany' antes de usarla
+            if 'cateringcompany' not in company_data:
+                print("Missing 'cateringcompany' key in data")
+                continue
+
+            catering_company = CateringCompany.objects.get(name=company_data['cateringcompany'])
+            
+            for menu_data in company_data['menus']:
+                menu = Menu.objects.get(name=menu_data['menu_name'], cateringcompany=catering_company)
+                
+                for plate_data in menu_data['plates']:
+                    try:
+                        Plate.objects.create(
+                            cateringcompany=catering_company,
+                            menu=menu,
+                            name=plate_data['name'],
+                            description=plate_data['description'],
+                            price=decimal.Decimal(plate_data['price'])
+                        )
+                    except IntegrityError as e:
+                        print(f"Error creating plate: {e}")
+        except CateringCompany.DoesNotExist:
+            print(f"Catering company {company_data.get('cateringcompany', 'Unknown')} not found in the database")
+        except Menu.DoesNotExist:
+            print(f"Menu {menu_data.get('menu_name', 'Unknown')} not found for {company_data.get('cateringcompany', 'Unknown')}")
+        except KeyError as e:
+            print(f"Missing key in menu data: {e}")
            
 def create_events():
     with open('populate/events.json', 'r', encoding='utf-8') as file:
