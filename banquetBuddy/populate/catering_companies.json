@@ -1,7 +1,7 @@
 [
     {
         "username": "DeliciasMediterraneas",
-        "password": "deliciasMediterraneas",
+        "password": "deliciasmediterraneas",
         "email": "deliciasmediterraneas@gmail.com",
         "name": "Delicias Mediterráneas",
         "phone_number": "555-1001",
@@ -14,7 +14,7 @@
     },
     {
         "username": "SaborOriental",
-        "password": "saborOriental",
+        "password": "sabororiental",
         "email": "sabororiental@gmail.com",
         "name": "Sabor Oriental",
         "phone_number": "555-1002",

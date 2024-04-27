@@ -173,100 +173,7 @@ def create_menus():
             )
 
 
-menu_plates_data = {
-    "Menú Degustación Mediterráneo": [
-        {"name": "Paella de mariscos", "description": "Deliciosa paella con mariscos frescos y arroz aromático."},
-        {"name": "Ensalada griega", "description": "Ensalada refrescante con tomate, pepino, aceitunas y queso feta."},
-        {"name": "Pulpo a la gallega", "description": "Pulpo tierno cocido a la perfección y sazonado con aceite de oliva y pimentón."},
-        {"name": "Pasta al pesto", "description": "Pasta cocida al dente con salsa pesto casera y queso parmesano."},
-        {"name": "Tiramisú", "description": "Postre italiano clásico con capas de bizcocho, café y mascarpone."},
-    ],
-    "Menú Vegetariano Gourmet": [
-        {"name": "Risotto de champiñones", "description": "Risotto cremoso con champiñones frescos y queso parmesano."},
-        {"name": "Tartaleta de espinacas y queso de cabra", "description": "Tartaleta crujiente rellena de espinacas y queso de cabra."},
-        {"name": "Curry de verduras", "description": "Curry aromático con una variedad de verduras frescas y leche de coco."},
-        {"name": "Sushi vegetariano", "description": "Variedad de sushi roll con vegetales frescos y arroz sazonado."},
-        {"name": "Helado de frutas frescas", "description": "Helado casero con una mezcla de frutas frescas y cremosas."},
-    ],
-    "Menú BBQ Americana": [
-        {"name": "Hamburguesa clásica con papas fritas", "description": "Hamburguesa jugosa con papas fritas crujientes."},
-        {"name": "Costillas de cerdo BBQ", "description": "Costillas de cerdo ahumadas y glaseadas con salsa barbacoa."},
-        {"name": "Pollo a la parrilla con salsa barbacoa", "description": "Pollo marinado a la parrilla con salsa barbacoa."},
-        {"name": "Ensalada de col", "description": "Ensalada fresca de col con aderezo de mayonesa y vinagre."},
-        {"name": "Pie de manzana", "description": "Pastel de manzana con una capa crujiente de masa y relleno de manzanas dulces."},
-    ],
-    "Menú Asiático Fusion": [
-        {"name": "Sushi variado", "description": "Variedad de sushi roll con pescado fresco y arroz sazonado."},
-        {"name": "Pad thai de camarones", "description": "Plato tailandés de fideos de arroz salteados con camarones y vegetales."},
-        {"name": "Rollitos de primavera con salsa agridulce", "description": "Rollitos crujientes rellenos de carne y vegetales, servidos con salsa agridulce."},
-        {"name": "Curry rojo tailandés", "description": "Curry picante tailandés con carne o mariscos, leche de coco y especias."},
-        {"name": "Helado de té verde", "description": "Helado cremoso con sabor a té verde, un postre refrescante y delicioso."},
-    ],
-    "Menú Clásico Italiano": [
-        {"name": "Spaghetti carbonara", "description": "Spaghetti con salsa carbonara cremosa, panceta y queso parmesano."},
-        {"name": "Pizza margarita", "description": "Pizza clásica con salsa de tomate, mozzarella y albahaca fresca."},
-        {"name": "Lasagna boloñesa", "description": "Lasagna con capas de pasta, salsa boloñesa y queso derretido."},
-        {"name": "Ensalada caprese", "description": "Ensalada italiana con tomate, mozzarella fresca y albahaca."},
-        {"name": "Tiramisú", "description": "Postre italiano clásico con capas de bizcocho, café y mascarpone."},
-    ],
-    "Menú Tapas Españolas": [
-        {"name": "Patatas bravas", "description": "Patatas fritas con salsa brava y alioli, un clásico español."},
-        {"name": "Croquetas de jamón", "description": "Croquetas cremosas rellenas de jamón y bechamel."},
-        {"name": "Gambas al ajillo", "description": "Gambas salteadas en aceite de oliva con ajo y guindilla."},
-        {"name": "Tortilla española", "description": "Tortilla de patatas con huevos, patatas y cebolla."},
-        {"name": "Churros con chocolate", "description": "Churros crujientes servidos con chocolate caliente para mojar."},
-    ],
-    "Menú Saludable y Equilibrado": [
-        {"name": "Ensalada César con pollo a la parrilla", "description": "Ensalada fresca con pollo a la parrilla, crutones y aderezo César."},
-        {"name": "Salmón al horno con espárragos", "description": "Salmón fresco al horno con espárragos y limón."},
-        {"name": "Quinoa con verduras asadas", "description": "Quinoa cocida con una variedad de verduras asadas y hierbas."},
-        {"name": "Batido de frutas frescas", "description": "Batido cremoso con una mezcla de frutas frescas y yogur."},
-        {"name": "Yogur con granola y frutos rojos", "description": "Yogur natural con granola crujiente y frutos rojos."},
-    ],
-    "Menú Internacional Variado": [
-        {"name": "Sushi nigiri variado", "description": "Variedad de nigiri sushi con pescado fresco y arroz sazonado."},
-        {"name": "Curry de pollo indio", "description": "Curry picante de pollo con especias indias y arroz basmati."},
-        {"name": "Tacos mexicanos con guacamole", "description": "Tacos rellenos de carne, lechuga, tomate, queso y guacamole."},
-        {"name": "Pasta carbonara italiana", "description": "Pasta cremosa con salsa de huevo, panceta y queso parmesano."},
-        {"name": "Helado de mochi japonés", "description": "Helado japonés envuelto en masa de arroz glutinoso, un postre único y delicioso."},
-    ],
-    "Menú de Lujo Gourmet": [
-        {"name": "Foie gras con confitura de higos", "description": "Foie gras cocido a la perfección con confitura de higos y pan tostado."},
-        {"name": "Filete de ternera Wagyu", "description": "Filete de ternera Wagyu asado a la parrilla con una capa dorada y jugosa."},
-        {"name": "Langosta a la parrilla con mantequilla de trufa", "description": "Langosta fresca a la parrilla con mantequilla de trufa y limón."},
-        {"name": "Carpaccio de vieiras", "description": "Vieiras frescas en láminas finas con aceite de oliva, limón y sal."},
-        {"name": "Tarta de chocolate negro con oro comestible", "description": "Tarta de chocolate negro con hojas de oro comestible, un postre lujoso y decadente."},
-    ],
-    "Menú Tradicional de la Abuela": [
-        {"name": "Lentejas estofadas", "description": "Lentejas cocidas a fuego lento con verduras y chorizo, un plato reconfortante."},
-        {"name": "Estofado de ternera con patatas", "description": "Ternera estofada con patatas, zanahorias y guisantes, una comida casera clásica."},
-        {"name": "Arroz con leche", "description": "Arroz cocido con leche y azúcar, aromatizado con canela y ralladura de limón."},
-        {"name": "Pastel de manzana", "description": "Pastel casero con una base de masa crujiente y relleno de manzanas dulces y canela."},
-        {"name": "Galletas de chocolate caseras", "description": "Galletas de chocolate crujientes y llenas de sabor, perfectas para un postre o tentempié."},
-    ],
-}
-
-
-def generate_plate_name():
-    plate_names = ['Ensalada César', 'Tacos al Pastor', 'Paella Valenciana', 'Pasta Carbonara', 'Risotto de Setas', 'Curry de Pollo']
-    return choice(plate_names)  # Esto selecciona un nombre de plato al azar de la lista
-
-def generate_plate_description(plate_name):
-    descriptions = {
-        'Ensalada César': 'Clásica ensalada con lechuga romana, crutones, parmesano y nuestro aderezo César casero.',
-        'Tacos al Pastor': 'Sabrosos tacos rellenos de carne al pastor marinada, piña, cebolla y cilantro, servidos con salsa verde.',
-        'Paella Valenciana': 'Auténtica paella española con arroz, mariscos frescos, pollo, chorizo y una mezcla de hierbas aromáticas.',
-        'Pasta Carbonara': 'Deliciosa pasta con una cremosa salsa carbonara, tocino crujiente, yema de huevo y queso parmesano.',
-        'Risotto de Setas': 'Cremoso risotto italiano con una variedad de setas, ajo, vino blanco y queso parmesano.',
-        'Curry de Pollo': 'Pollo tierno cocinado en una rica salsa de curry con especias, servido con arroz basmati aromático.'
-    }
-
-    # Devuelve la descripción si el nombre del plato se encuentra en el diccionario, de lo contrario, devuelve una descripción genérica
-    return descriptions.get(plate_name, 'Delicioso plato preparado con ingredientes frescos y de alta calidad.')
-
-
 def create_plates():
-    # Asegúrate de que el archivo JSON existe y está correctamente formateado
     try:
         with open('populate/plates.json', 'r', encoding='utf-8') as file:
             plates_data = json.load(file)
@@ -274,10 +181,8 @@ def create_plates():
         print(f"Error decoding JSON: {e}")
         return
 
-    # Procesar cada registro en el JSON
     for company_data in plates_data:
         try:
-            # Verifica que exista la clave 'cateringcompany' antes de usarla
             if 'cateringcompany' not in company_data:
                 print("Missing 'cateringcompany' key in data")
                 continue
