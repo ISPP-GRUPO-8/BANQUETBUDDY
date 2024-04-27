@@ -1,0 +1,136 @@
+[
+    {
+        "username": "DeliciasMediterraneas",
+        "password": "deliciasMediterraneas",
+        "email": "deliciasmediterraneas@gmail.com",
+        "name": "Delicias Mediterráneas",
+        "phone_number": "555-1001",
+        "service_description": "Sumérgete en un festín de sabores inspirados en los países bañados por el mar Mediterráneo...",
+        "logo": "lamediterranea.jpg",
+        "is_verified": true,
+        "price_plan": "PREMIUM_PRO",
+        "address": "Av. del Mar, 123",
+        "cuisine_types": ["MEDITERRANEAN"]
+    },
+    {
+        "username": "SaborOriental",
+        "password": "saborOriental",
+        "email": "sabororiental@gmail.com",
+        "name": "Sabor Oriental",
+        "phone_number": "555-1002",
+        "service_description": "Embárcate en un viaje culinario a través de Asia con nuestra exquisita selección de platos orientales...",
+        "logo": "sabororiental.jpg",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Calle Asia, 456",
+        "cuisine_types": ["ORIENTAL"]
+    },
+    {
+        "username": "RinconMexicano",
+        "password": "rinconmexicano",
+        "email": "rinconmexicano@gmail.com",
+        "name": "Rincón Mexicano",
+        "phone_number": "555-1003",
+        "service_description": "Vive la vibrante cultura y los intensos sabores de México con nuestro auténtico menú mexicano...",
+        "logo": "rinconmexicano.jpg",
+        "is_verified": false,
+        "price_plan": "NO_SUBSCRIBED",
+        "address": "Plaza México, 789",
+        "cuisine_types": ["MEXICAN"]
+    },
+    {
+        "username": "GourmetFusion",
+        "password": "gourmetfusion",
+        "email": "gourmetfusion@gmail.com",
+        "name": "Gourmet Fusion",
+        "phone_number": "555-1004",
+        "service_description": "Explora la innovadora fusión de sabores de nuestra cocina gourmet...",
+        "logo": "fusiongourmet.png",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Calle Innovación, 321",
+        "cuisine_types": ["FUSION"]
+    },
+    {
+        "username": "CocinaAntonio",
+        "password": "cocinaantonio",
+        "email": "cocinaantonio@gmail.com",
+        "name": "Cocina Antonio",
+        "phone_number": "555-1005",
+        "service_description": "Redescubre los sabores reconfortantes de la cocina tradicional con nuestro menú clásico...",
+        "logo": "cocinaantonio.jpg",
+        "is_verified": true,
+        "price_plan": "PREMIUM_PRO",
+        "address": "Av. de la Tradición, 555",
+        "cuisine_types": ["TRADITIONAL", "ITALIAN"]
+    },
+    {
+        "username": "ExquisitezGastronomica",
+        "password": "exquisitezgastronomica",
+        "email": "exquisitezgastronomica@gmail.com",
+        "name": "Exquisitez Gastronómica",
+        "phone_number": "555-1006",
+        "service_description": "Déjate seducir por la sofisticación y la elegancia de nuestra exquisitez gastronómica...",
+        "logo": "mediterranea.jpg",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Calle Gourmet, 404",
+        "cuisine_types": ["GOURMET"]
+    },
+    {
+        "username": "CateringBenito",
+        "password": "cateringbenito",
+        "email": "cateringbenito@gmail.com",
+        "name": "Catering Benito",
+        "phone_number": "555-1007",
+        "service_description": "Embriágate con los aromas y sabores exóticos de Oriente con nuestra deliciosa cocina asiática...",
+        "logo": "cateringbenito.png",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Avenida Asia, 678",
+        "cuisine_types": ["ORIENTAL", "THAI"]
+    },
+    {
+        "username": "SaboresdelMar",
+        "password": "saboresdelmar",
+        "email": "saboresdelmar@gmail.com",
+        "name": "Sabores del Mar",
+        "phone_number": "555-1008",
+        "service_description": "Sumérgete en una experiencia culinaria costera con nuestros deliciosos sabores del mar...",
+        "logo": "",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Calle del Puerto, 212",
+        "cuisine_types": ["SEAFOOD"]
+    },
+    {
+        "username": "SazonCasera",
+        "password": "sazoncasera",
+        "email": "sazoncasera@gmail.com",
+        "name": "Sazón Casera",
+        "phone_number": "555-1009",
+        "service_description": "Disfruta del auténtico sabor de la comida casera con nuestro menú reconfortante y familiar...",
+        "logo": "",
+        "is_verified": true,
+        "price_plan": "PREMIUM",
+        "address": "Calle de la Familia, 333",
+        "cuisine_types": ["TRADITIONAL"]
+    },
+
+    
+    {
+        "username": "DulcesCaprichos",
+        "password": "dulcescaprichos",
+        "email": "dulcescaprichos@gmail.com",
+        "name": "Dulces Caprichos",
+        "phone_number": "555-1010",
+        "service_description": "Déjate seducir por la tentación de nuestros dulces caprichos...",
+        "logo": "dulcescaprichos.jpg",
+        "is_verified": false,
+        "price_plan": "PREMIUM",
+        "address": "Calle Dulzura, 1010",
+        "cuisine_types": ["DESSERTS"]
+    }
+    
+    
+]
