@@ -1,0 +1,691 @@
+[
+    {
+        "employee": "AmeliaP",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de Gala Elegante",
+        "start_date": "2024-07-11",
+        "end_date": "2024-07-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LucasR",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de Gala Elegante",
+        "start_date": "2024-07-11",
+        "end_date": "2024-07-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EthanD",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de Gala Elegante",
+        "start_date": "2024-07-11",
+        "end_date": "2024-07-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LoganC",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de lujo en la playa",
+        "start_date": "2024-07-14",
+        "end_date": "2024-07-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "MiaB",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de lujo en la playa",
+        "start_date": "2024-07-14",
+        "end_date": "2024-07-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JacksonV",
+        "cateringservice": "Banquete Estelar",
+        "event": "Cena de lujo en la playa",
+        "start_date": "2024-07-14",
+        "end_date": "2024-07-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "SophiaL",
+        "cateringservice": "Banquete Estelar",
+        "event": "Gala de Primavera",
+        "start_date": "2024-09-14",
+        "end_date": "2024-09-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ScarlettZ",
+        "cateringservice": "Banquete Estelar",
+        "event": "Gala de Primavera",
+        "start_date": "2024-09-14",
+        "end_date": "2024-09-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JulianF",
+        "cateringservice": "Banquete Estelar",
+        "event": "Gala de Primavera",
+        "start_date": "2024-09-14",
+        "end_date": "2024-09-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+
+    {
+        "employee": "ElijahM",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna",
+        "start_date": "2024-07-09",
+        "end_date": "2024-07-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GraceH",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna",
+        "start_date": "2024-07-09",
+        "end_date": "2024-07-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "OwenK",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Sorpresa Nocturna",
+        "start_date": "2024-07-09",
+        "end_date": "2024-07-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "IsabellaC",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Increíble en la Noche",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HannahL",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Increíble en la Noche",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GabrielM",
+        "cateringservice": "Buffet Real",
+        "event": "Fiesta Increíble en la Noche",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+
+    {
+        "employee": "ZoeS",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción Jardín Botánico",
+        "start_date": "2024-07-27",
+        "end_date": "2024-07-29",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HenryT",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción Jardín Botánico",
+        "start_date": "2024-07-27",
+        "end_date": "2024-07-29",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EvelynR",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción Jardín Botánico",
+        "start_date": "2024-07-27",
+        "end_date": "2024-07-29",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "AvaM",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción especial en el palacio de cristal",
+        "start_date": "2024-06-28",
+        "end_date": "2024-06-30",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "TheoW",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción especial en el palacio de cristal",
+        "start_date": "2024-06-28",
+        "end_date": "2024-06-30",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ClaireD",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Recepción especial en el palacio de cristal",
+        "start_date": "2024-06-28",
+        "end_date": "2024-06-30",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "NoahH",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Tarde de Cata de Tés",
+        "start_date": "2024-10-21",
+        "end_date": "2024-10-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EmmaW",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Tarde de Cata de Tés",
+        "start_date": "2024-10-21",
+        "end_date": "2024-10-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LiamG",
+        "cateringservice": "Eventos Elegantes",
+        "event": "Tarde de Cata de Tés",
+        "start_date": "2024-10-21",
+        "end_date": "2024-10-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+
+    {
+        "employee": "CharlotteN",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda Playa Paradisíaca",
+        "start_date": "2024-06-14",
+        "end_date": "2024-06-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LucasR",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda Playa Paradisíaca",
+        "start_date": "2024-06-14",
+        "end_date": "2024-06-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "MiaB",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda Playa Paradisíaca",
+        "start_date": "2024-06-14",
+        "end_date": "2024-06-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JacksonV",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda espectacular en la playa",
+        "start_date": "2024-06-16",
+        "end_date": "2024-06-18",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ScarlettZ",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda espectacular en la playa",
+        "start_date": "2024-06-16",
+        "end_date": "2024-06-18",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JulianF",
+        "cateringservice": "Celebración Soñada",
+        "event": "Boda espectacular en la playa",
+        "start_date": "2024-06-16",
+        "end_date": "2024-06-18",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GraceH",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Internacional",
+        "start_date": "2024-07-19",
+        "end_date": "2024-07-21",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "OwenK",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Internacional",
+        "start_date": "2024-07-19",
+        "end_date": "2024-07-21",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HannahL",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Internacional",
+        "start_date": "2024-07-19",
+        "end_date": "2024-07-21",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GabrielM",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Global",
+        "start_date": "2024-07-21",
+        "end_date": "2024-07-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ZoeS",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Global",
+        "start_date": "2024-07-21",
+        "end_date": "2024-07-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HenryT",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Conferencia de Negocios Global",
+        "start_date": "2024-07-21",
+        "end_date": "2024-07-23",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EvelynR",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Maratón Musical Nocturno",
+        "start_date": "2024-07-04",
+        "end_date": "2024-07-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "TheoW",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Maratón Musical Nocturno",
+        "start_date": "2024-07-04",
+        "end_date": "2024-07-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ClaireD",
+        "cateringservice": "Fiesta Gourmet",
+        "event": "Maratón Musical Nocturno",
+        "start_date": "2024-07-04",
+        "end_date": "2024-07-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+
+    {
+        "employee": "NoahH",
+        "cateringservice": "Menús Especiales",
+        "event": "Cata de Vinos y Quesos",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EmmaW",
+        "cateringservice": "Menús Especiales",
+        "event": "Cata de Vinos y Quesos",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LiamG",
+        "cateringservice": "Menús Especiales",
+        "event": "Cata de Vinos y Quesos",
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-12",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "AmeliaP",
+        "cateringservice": "Menús Especiales",
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "start_date": "2024-08-12",
+        "end_date": "2024-08-14",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LoganC",
+        "cateringservice": "Menús Especiales",
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "start_date": "2024-08-12",
+        "end_date": "2024-08-14",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "SophiaL",
+        "cateringservice": "Menús Especiales",
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "start_date": "2024-08-12",
+        "end_date": "2024-08-14",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ElijahM",
+        "cateringservice": "Menús Especiales",
+        "event": "Fiesta saludable y sostenible",
+        "start_date": "2024-07-24",
+        "end_date": "2024-07-26",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "IsabellaC",
+        "cateringservice": "Menús Especiales",
+        "event": "Fiesta saludable y sostenible",
+        "start_date": "2024-07-24",
+        "end_date": "2024-07-26",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EthanD",
+        "cateringservice": "Menús Especiales",
+        "event": "Fiesta saludable y sostenible",
+        "start_date": "2024-07-24",
+        "end_date": "2024-07-26",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "AvaM",
+        "cateringservice": "Menús Especiales",
+        "event": "Cena Romántica bajo las Estrellas",
+        "start_date": "2024-09-20",
+        "end_date": "2024-09-22",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "IsabellaC",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Temático para Niños",
+        "start_date": "2024-09-04",
+        "end_date": "2024-09-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EthanD",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Temático para Niños",
+        "start_date": "2024-09-04",
+        "end_date": "2024-09-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "AvaM",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Temático para Niños",
+        "start_date": "2024-09-04",
+        "end_date": "2024-09-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EmmaW",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Infantil Temático",
+        "start_date": "2024-09-06",
+        "end_date": "2024-09-08",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LiamG",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Infantil Temático",
+        "start_date": "2024-09-06",
+        "end_date": "2024-09-08",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "CharlotteN",
+        "cateringservice": "Delicias del Chef",
+        "event": "Cumpleaños Infantil Temático",
+        "start_date": "2024-09-06",
+        "end_date": "2024-09-08",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LucasR",
+        "cateringservice": "Delicias del Chef",
+        "event": "Encuentro de Escritores",
+        "start_date": "2024-12-04",
+        "end_date": "2024-12-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "MiaB",
+        "cateringservice": "Delicias del Chef",
+        "event": "Encuentro de Escritores",
+        "start_date": "2024-12-04",
+        "end_date": "2024-12-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JacksonV",
+        "cateringservice": "Delicias del Chef",
+        "event": "Encuentro de Escritores",
+        "start_date": "2024-12-04",
+        "end_date": "2024-12-06",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+
+    {
+        "employee": "ScarlettZ",
+        "cateringservice": "Catering Premium",
+        "event": "Fiesta de Inauguración Corporativa",
+        "start_date": "2024-06-30",
+        "end_date": "2024-07-02",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JulianF",
+        "cateringservice": "Catering Premium",
+        "event": "Fiesta de Inauguración Corporativa",
+        "start_date": "2024-06-30",
+        "end_date": "2024-07-02",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GraceH",
+        "cateringservice": "Catering Premium",
+        "event": "Fiesta de Inauguración Corporativa",
+        "start_date": "2024-06-30",
+        "end_date": "2024-07-02",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "OwenK",
+        "cateringservice": "Catering Premium",
+        "event": "Inauguración Corporativa Espectacular",
+        "start_date": "2024-06-22",
+        "end_date": "2024-06-24",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HannahL",
+        "cateringservice": "Catering Premium",
+        "event": "Inauguración Corporativa Espectacular",
+        "start_date": "2024-06-22",
+        "end_date": "2024-06-24",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "GabrielM",
+        "cateringservice": "Catering Premium",
+        "event": "Inauguración Corporativa Espectacular",
+        "start_date": "2024-06-22",
+        "end_date": "2024-06-24",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ZoeS",
+        "cateringservice": "Catering Premium",
+        "event": "Festival Gastronómico del Mar",
+        "start_date": "2024-06-09",
+        "end_date": "2024-06-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "HenryT",
+        "cateringservice": "Catering Premium",
+        "event": "Festival Gastronómico del Mar",
+        "start_date": "2024-06-09",
+        "end_date": "2024-06-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EvelynR",
+        "cateringservice": "Catering Premium",
+        "event": "Festival Gastronómico del Mar",
+        "start_date": "2024-06-09",
+        "end_date": "2024-06-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "TheoW",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Degustación Gastronómica Exclusiva",
+        "start_date": "2024-10-09",
+        "end_date": "2024-10-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "ClaireD",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Degustación Gastronómica Exclusiva",
+        "start_date": "2024-10-09",
+        "end_date": "2024-10-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "NoahH",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Degustación Gastronómica Exclusiva",
+        "start_date": "2024-10-09",
+        "end_date": "2024-10-11",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "EmmaW",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Noche de Degustación Gastronómica",
+        "start_date": "2024-10-11",
+        "end_date": "2024-10-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LiamG",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Noche de Degustación Gastronómica",
+        "start_date": "2024-10-11",
+        "end_date": "2024-10-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "CharlotteN",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Noche de Degustación Gastronómica",
+        "start_date": "2024-10-11",
+        "end_date": "2024-10-13",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "LucasR",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Aniversario de Empresa Innovadora",
+        "start_date": "2024-08-14",
+        "end_date": "2024-08-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "MiaB",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Aniversario de Empresa Innovadora",
+        "start_date": "2024-08-14",
+        "end_date": "2024-08-16",
+        "termination_reason": null,
+        "termination_details": ""
+    },
+    {
+        "employee": "JacksonV",
+        "cateringservice": "Sabor Exclusivo",
+        "event": "Aniversario de Empresa Innovadora",
+        "start_date": "2024-08-14",
+        "end_date": "2024-08-16",
+        "termination_reason": null,
+        "termination_details": ""
+    }
+]
