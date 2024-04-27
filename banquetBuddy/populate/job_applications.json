@@ -1,0 +1,153 @@
+[
+    {
+        "employee_username": "OliverS",
+        "offer_title": "Chef Ejecutivo para Cena de Gala",
+        "date_application": "2024-04-12",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "WillJ98",
+        "offer_title": "Coordinador de Fiesta Sorpresa",
+        "date_application": "2024-04-15",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "HarryB_22",
+        "offer_title": "Especialista en Eventos al Aire Libre",
+        "date_application": "2024-04-11",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "GeorgeM_10",
+        "offer_title": "Organizador de Bodas en la Playa",
+        "date_application": "2024-04-22",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "JackW",
+        "offer_title": "Coordinador de Conferencias Internacionales",
+        "date_application": "2024-04-08",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "AmeliaW",
+        "offer_title": "Experto en Cata de Vinos y Quesos",
+        "date_application": "2024-04-21",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "OliviaT",
+        "offer_title": "Especialista en Fiestas Infantiles",
+        "date_application": "2024-04-18",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "IsabellaG",
+        "offer_title": "Coordinador de Eventos Corporativos",
+        "date_application": "2024-04-10",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "AvaJ",
+        "offer_title": "Curador de Experiencias Gastronómicas",
+        "date_application": "2024-04-14",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "SophiaM99",
+        "offer_title": "Chef Especialista para Cena de Lujo",
+        "date_application": "2024-04-20",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "EthanH",
+        "offer_title": "Organizador de Eventos Nocturnos",
+        "date_application": "2024-04-17",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "MiaK",
+        "offer_title": "Coordinador para Recepciones Elegantes",
+        "date_application": "2024-04-13",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "NoahP",
+        "offer_title": "Chef Principal para Boda en la Playa",
+        "date_application": "2024-04-09",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "EmmaL",
+        "offer_title": "Coordinador de Conferencias de Negocios",
+        "date_application": "2024-04-19",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "LiamS",
+        "offer_title": "Experto en Vinos y Quesos para Degustación",
+        "date_application": "2024-04-16",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "CharlotteD",
+        "offer_title": "Organizador de Fiestas Infantiles Temáticas",
+        "date_application": "2024-04-24",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "LucasB",
+        "offer_title": "Coordinador de Inauguración Corporativa",
+        "date_application": "2024-04-23",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "EllaR",
+        "offer_title": "Maestro de Ceremonias para Degustación Gastronómica",
+        "date_application": "2024-04-27",
+        "state": "PENDING"
+    },
+
+    {
+        "employee_username": "JamesF",
+        "offer_title": "Coordinador de Conferencias Internacionales",
+        "date_application": "2024-04-03",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "AveryG",
+        "offer_title": "Chef Especialista para Cena de Lujo",
+        "date_application": "2024-04-06",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "NathanT",
+        "offer_title": "Especialista en Fiestas Infantiles",
+        "date_application": "2024-04-05",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "LilyJ",
+        "offer_title": "Experto en Vinos y Quesos para Degustación",
+        "date_application": "2024-04-02",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "MasonK",
+        "offer_title": "Organizador de Eventos Nocturnos",
+        "date_application": "2024-04-07",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "ZoeA",
+        "offer_title": "Coordinador para Recepciones Elegantes",
+        "date_application": "2024-04-09",
+        "state": "PENDING"
+    },
+    {
+        "employee_username": "OliverF",
+        "offer_title": "Maestro de Ceremonias para Degustación Gastronómica",
+        "date_application": "2024-04-10",
+        "state": "PENDING"
+    }
+]
