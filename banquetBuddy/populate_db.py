@@ -16,6 +16,7 @@ import datetime
 import decimal
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
+from django.utils.dateparse import parse_date
 
 
 from faker import Faker
@@ -95,13 +96,11 @@ def create_employees():
     with open('populate/employees.json', 'r', encoding='utf-8') as file:
         employees = json.load(file)
         for emp in employees:
-            # Crear usuario asociado
             user = CustomUser.objects.create_user(
                 username=emp['username'], 
                 password=emp['password'], 
                 email=emp['email']
             )
-            # Crear instancia de empleado
             Employee.objects.create(
                 user=user,
                 profession=emp['profession'],
@@ -212,7 +211,7 @@ def create_events():
             catering_company = CateringCompany.objects.get(user__username=event_data['catering_company_username'])
             selected_service = CateringService.objects.get(name=event_data['service_name'], cateringcompany=catering_company)
             particular = Particular.objects.get(user__username=event_data['particular_username'])
-            menu = Menu.objects.filter(cateringservice=selected_service).first()  # Omitir si no necesitas asociar menús específicos
+            menu = Menu.objects.filter(cateringservice=selected_service).first()  
             
             Event.objects.create(
                 cateringservice=selected_service,
@@ -227,46 +226,35 @@ def create_events():
             )
 
 
-reviews_data = [
-    {"description": "¡Excelente servicio y comida deliciosa! Definitivamente recomendaré este catering a mis amigos y familiares.", "rating": 5},
-    {"description": "La presentación de los platos fue impecable, pero algunos sabores podrían mejorar. En general, una experiencia satisfactoria.", "rating": 4},
-    {"description": "¡Increíble! Desde la atención del personal hasta el sabor de los alimentos, todo fue excepcional. Sin duda volveré a contratarlos para futuros eventos.", "rating": 5},
-    {"description": "Buena relación calidad-precio, aunque la variedad de opciones en el menú podría ampliarse. El equipo de catering fue amable y profesional.", "rating": 4},
-    {"description": "El servicio fue puntual y eficiente, pero algunos invitados expresaron preocupaciones sobre la temperatura de los platos. En general, una experiencia decente.", "rating": 3},
-    {"description": "Nos encantaron los postres, ¡fueron el punto destacado del evento! Sin embargo, la comunicación inicial fue un poco confusa. Recomendaría mejorar la coordinación.", "rating": 4},
-    {"description": "La comida estuvo deliciosa y bien presentada. Sin embargo, hubo algunos problemas con la disponibilidad de ciertos platos según lo acordado previamente.", "rating": 4},
-    {"description": "Los platos principales estaban deliciosos, pero los aperitivos fueron un poco decepcionantes. En general, una experiencia satisfactoria pero con margen de mejora.", "rating": 3},
-    {"description": "¡Una experiencia gastronómica excepcional! Los invitados elogiaron la calidad de la comida y el servicio atento del personal. ¡Sin duda volveremos a contratarlos!", "rating": 5},
-    {"description": "La comida era deliciosa, pero hubo algunos retrasos en el servicio durante el evento. A pesar de eso, el equipo de catering fue receptivo a nuestras necesidades.", "rating": 3}
-]
-
-
-def create_reviews(num_reviews):
-    particulars = Particular.objects.all()
-    services = CateringService.objects.all()
-    for _ in range(num_reviews):
-        Review.objects.create(
-            particular=choice(particulars),
-            cateringservice=choice(services),
-            rating=reviews_data[_]['rating'],
-            description=reviews_data[_]['description'],
-            date=faker.date_between(start_date='-1y', end_date='today')
+def create_reviews():
+    with open('populate/review.json', 'r', encoding='utf-8') as file:
+        reviews_data = json.load(file)
+    
+    for item in reviews_data:
+        particular = Particular.objects.get(user__username=item['particular'])
+        cateringservice = CateringService.objects.get(name=item['cateringservice'])
+        review = Review(
+            particular=particular,
+            cateringservice=cateringservice,
+            rating=item['rating'],
+            description=item['description'],
+            date=parse_date(item['date'])
         )
+        review.save()
+        print(f"Review for {item['cateringservice']} by {item['particular']} on {item['date']} added successfully.")
 
 
 def create_employee_work_services():
-    # Asegúrate de que la ruta al archivo JSON sea la correcta
     with open('populate/employee_work_services.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     for item in data:
         employee = Employee.objects.get(user__username=item['employee'])
         cateringservice = CateringService.objects.get(name=item['cateringservice'])
-        event_name = item['event'].split(' (')[0]  # Asumiendo que el evento se guarda sin fecha en la base de datos
+        event_name = item['event'].split(' (')[0]  
         
         try:
             event = Event.objects.get(name=event_name)
-            # Crear EmployeeWorkService asegurándose que no hay duplicados para un servicio en curso
             EmployeeWorkService.objects.create(
                 employee=employee,
                 cateringservice=cateringservice,
@@ -278,9 +266,6 @@ def create_employee_work_services():
             )
         except Event.MultipleObjectsReturned:
             print(f"Error: Se encontró más de un evento con el nombre '{event_name}'.")
-            # Opcionalmente, manejar el error como sea adecuado para la aplicación
-
-# Nota: Asegúrate de tener las importaciones correctas para `timezone` y otros módulos que estés usando.
 
 
 
@@ -303,7 +288,6 @@ def create_offers():
             )
 
 def create_job_applications():
-    # Cargar datos desde un archivo JSON
     with open('populate/job_applications.json', 'r', encoding='utf-8') as file:
         job_applications_data = json.load(file)
 
@@ -311,10 +295,8 @@ def create_job_applications():
         employee = Employee.objects.get(user__username=application_data['employee_username'])
         offer = Offer.objects.get(title=application_data['offer_title'])
 
-        # Parsear las fechas y hacerlas timezone-aware
         date_application = make_aware(datetime.datetime.strptime(application_data['date_application'], '%Y-%m-%d'))
 
-        # Crear la aplicación de trabajo
         JobApplication.objects.create(
             employee=employee,
             offer=offer,
@@ -412,7 +394,7 @@ def populate_database():
     create_menus()
     create_events()
     create_plates()
-    create_reviews(10)
+    create_reviews()
     create_employee_work_services()
     create_offers()
     create_job_applications()
