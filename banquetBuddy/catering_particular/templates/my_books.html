@@ -3,19 +3,20 @@
 {% block content %}
 
 <div class="container mt-4">
-    <header class="text-center mb-4">
-        <h1>My books</h1>
-        <p>Find and manage your events</p>
-    </header>
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        My Books</h2>
+    <p class="mb-4 text-center small-font" style="color: #02483E;">Find and manage your events</p>
     <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for event in events %}
         <div class="col-md-12">
             <div class="card rounded shadow">
+                {% if event.cateringcompany.logo %}
+                    <img src="/media/{{ event.cateringcompany.logo }}" class="img-fluid logo-corner" alt="Logo">
+                {% endif %}
                 <div class="card-body">
-                    <h3 class="card-title">{{ event.name }}</h3>
-                    <h6 class="card-text">{{ event.date }}</h6>
+                    <h4 class="card-title">{{ event.name }}</h4>
+                    <p class="card-text">{{ event.date }}</p>
                     <p class="card-text">{{ event.details }}</p>
-                    <img src="{% static 'core/images/rinconmexicano_ooPTU83.jpg' %}" width="70" height="auto" alt="Logo" loading="lazy">
                     <div class="row">
                         <div class="col-md-8">
                             <p class="{% if event.booking_state == 'CONTRACT_PENDING' %}text-warning{% elif event.booking_state == 'CANCELLED' %}text-danger{% elif event.booking_state == 'CONFIRMED' %}text-success{% endif %}">
@@ -28,10 +29,10 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-8">
                             {% if event.booking_state == 'CONTRACT_PENDING' or event.booking_state == 'CONFIRMED' %}
-                                <a href="{% url 'book_edit' event.id %}" class="btn btn-primary" style="background-color: #54BFAF;">Edit</a>
-                                <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}" style="background-color: #BF5454;">Cancel</button>
+                                <a href="{% url 'book_edit' event.id %}" class="btn btn-custom-blue">Edit</a>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}">Cancel</button>
                             {% endif %}
                         </div>
                     </div>
@@ -41,23 +42,28 @@
         {% endfor %}
     </div>
 
-    <div class="pagination mt-4">
-        <span class="step-links">
+    <!-- Paginación -->
+    <nav aria-label="Books pagination">
+        <ul class="pagination justify-content-center">
             {% if events.has_previous %}
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page={{ events.previous_page_number }}">Previous</a>
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.previous_page_number }}"><</a></li>
             {% endif %}
 
-            <span class="current">
-                Page {{ events.number }} de {{ events.paginator.num_pages }}.
-            </span>
+            {% for num in events.paginator.page_range %}
+            {% if events.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
 
             {% if events.has_next %}
-                <a href="?page={{ events.next_page_number }}">Next</a>
-                <a href="?page={{ events.paginator.num_pages }}">Last &raquo;</a>
+            <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.paginator.num_pages }}">>></a></li>
             {% endif %}
-        </span>
-    </div>
+        </ul>
+    </nav>
 </div>
 
 {% for event in events %}
@@ -84,44 +90,22 @@
 {% endfor %}
 
 <style>
-    .custom-card {
-        background-color: #ffffff;
-        border-radius: 20px;
-        padding: 20px;
-        height: auto;
-        margin-bottom: 20px;
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
     }
 
-    .rating {
-        unicode-bidi: bidi-override;
-        direction: ltr;
-    }
-
-    .rating > span {
-        display: inline-block;
-        font-size: 1.5em; /* Tamaño de las estrellas */
-        margin-right: 5px; /* Espacio entre las estrellas */
-        color: gray; /* Color de las estrellas vacías */
-        pointer-events: none; /* Evitar eventos de ratón sobre las estrellas */
-    }
-
-    .rating > span.empty {
-        color: transparent; /* Las estrellas vacías son transparentes */
-    }
-
-    .rating > span:hover:before,
-    .rating > span:hover ~ span:before {
-        content: "\2605";
-        color: gold;
-    }
-
-    .pagination {
-        margin-top: 20px; /* Agrega margen superior para espacio entre la paginación y las tarjetas */
-    }
-
-    .card-text strong {
-        font-family: Arial, sans-serif; /* Cambia la fuente */
-        font-size: 20px; /* Tamaño de la fuente */
+    .logo-corner {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 90px; /* Ajusta el tamaño según sea necesario */
+        height: auto; /* Ajusta el tamaño según sea necesario */
+        max-height: 90px;
     }
 </style>
 

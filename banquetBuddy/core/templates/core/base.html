@@ -2,19 +2,15 @@
 {% load static %}
 
 <style>
-    .bell i {
+    .bell a {
         position: relative;
-        right: 0.5cm;
+        right: 0.6cm;
         color: #54BFAF;
+        text-decoration: none !important;
     }
 
-    .bell i:hover {
+    .bell a:hover {
         color: #3f8c7f;
-    }
-
-    .notifications_not_read {
-        position: relative;
-        right: 0.5cm;
     }
 
     header {
@@ -141,10 +137,11 @@
                         <i class="fas fa-bell"></i>
                         <span class="notifications_not_read">{{ notification_number }}</span>
                     </a>
-                    </div>
-                    {% if request.user.ParticularUsername %}
-                        {% comment %} <a class="nav-link" href="{% url 'my_books' %}">My Books</a> {% endcomment %}
-                        <a href="{% url 'profile' %}" class="text-decoration-none">
+                </div>
+                {% if request.user.ParticularUsername %}
+                <div class="name">
+                    {% comment %} <a class="nav-link" href="{% url 'my_books' %}">My Books</a> {% endcomment %}
+                    <a href="{% url 'profile' %}" class="text-decoration-none">
                         <i class="fas fa-user"></i>
                         {{ user.username }}
                     </a>
@@ -164,6 +161,7 @@
                         <i class="fa-solid fa-utensils"></i>
                         {{ user.username }}
                     </a>
+                </div>
                 {% endif %}
                 <form class="form-inline my-2 my-lg-0 ml-4">
                     <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>

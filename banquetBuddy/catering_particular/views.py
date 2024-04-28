@@ -38,15 +38,9 @@ def my_books(request):
     user = request.user
     events_list = Event.objects.filter(particular_id=user.id).order_by('-date')
 
-    paginator = Paginator(events_list, 10)
-    page = request.GET.get('page')
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        events = paginator.page(1)
-    except EmptyPage:
-        events = paginator.page(paginator.num_pages)
+    paginator = Paginator(events_list, 3)
+    page_number = request.GET.get('page')
+    events = paginator.get_page(page_number)
 
     context = {
         "events": events,
@@ -91,15 +85,31 @@ def book_edit(request, event_id):
         context["events"] = events
 
         if number_guests == "0":
-            context["error"] = "The number of guests can not be 0."
+            context["error"] = "The number of guests can not be 0"
             return render(request, "book_edit.html", context)
 
         date2 = datetime.strptime(date, "%Y-%m-%d").date()
 
         if datetime.now().date() > date2:
-            context["error"] = "The selected date cannot be in the past."
+            context["error"] = "The selected date cannot be in the past"
+            return render(request, "book_edit.html", context)
+        
+        if datetime.now().date() == date2:
+            context["error"] = "Reservations must be made at least one day before the event"
+            return render(request, "book_edit.html", context)
+        
+        if not menu:
+            context["error"] = "Please select a menu"
             return render(request, "book_edit.html", context)
 
+        if not (date and number_guests and menu):
+            context["error"] = "Please complete all fields"
+            return render(request, "book_edit.html", context)
+            
+        if int(number_guests) > catering_service.capacity:
+            context["error"] = "Number of guests exceeds the catering capacity"
+            return render(request, "book_edit.html", context)
+            
         event.date = date
         event.number_guests = number_guests
         event.menu = Menu.objects.get(id=menu)
@@ -388,18 +398,18 @@ def booking_process(request, catering_id):
         selected_menu = request.POST.get("selected_menu")
 
         # Validación y lógica de reserva aquí
+        if number_guests == "0":
+            context["form_error_guests"] = True
+        
         if not selected_menu:
-            messages.error(request, "Please select a menu")
             context["form_error_menu"] = True
 
         if not (event_date and number_guests and selected_menu):
-            messages.error(request, "Please complete all fields")
             context["form_error"] = (
                 True  # Agregar marcador para mostrar mensajes de error
             )
 
         if int(number_guests) > cateringservice.capacity:
-            messages.error(request, "Number of guests exceeds the catering capacity")
             context["form_error_capacity"] = True
 
         # Validar que la fecha no esté en el pasado y sea al menos un día en el futuro
@@ -407,18 +417,13 @@ def booking_process(request, catering_id):
         selected_date = datetime.strptime(event_date, "%Y-%m-%d").date()
 
         if selected_date < today:
-            messages.error(request, "The event date cannot be in the past")
             context["form_error_date"] = True
         elif selected_date == today:
-            messages.error(
-                request, "Reservations must be made at least one day before the event"
-            )
             context["form_error_date"] = True
 
         if Event.objects.filter(
             cateringservice=cateringservice, date=event_date
         ).exists():
-            messages.error(request, "The selected date is already booked")
             context["form_error_date_selected"] = True
 
         # Verificar si hay errores en el formulario y, si los hay, volver a renderizar la página con los errores
@@ -426,6 +431,8 @@ def booking_process(request, catering_id):
             key in context
             for key in [
                 "form_error",
+                "form_error_guests",
+                "form_error_menu",
                 "form_error_capacity",
                 "form_error_date",
                 "form_error_date_selected",
