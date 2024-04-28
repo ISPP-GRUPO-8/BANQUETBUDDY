@@ -21,7 +21,7 @@
         "service_description": "Embárcate en un viaje culinario a través de Asia con nuestra exquisita selección de platos orientales...",
         "logo": "sabororiental.jpg",
         "is_verified": true,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle Asia, 456",
         "cuisine_types": ["ORIENTAL"]
     },
@@ -47,7 +47,7 @@
         "service_description": "Explora la innovadora fusión de sabores de nuestra cocina gourmet...",
         "logo": "fusiongourmet.png",
         "is_verified": true,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle Innovación, 321",
         "cuisine_types": ["FUSION"]
     },
@@ -73,7 +73,7 @@
         "service_description": "Déjate seducir por la sofisticación y la elegancia de nuestra exquisitez gastronómica...",
         "logo": "mediterranea.jpg",
         "is_verified": true,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle Gourmet, 404",
         "cuisine_types": ["GOURMET"]
     },
@@ -99,7 +99,7 @@
         "service_description": "Sumérgete en una experiencia culinaria costera con nuestros deliciosos sabores del mar...",
         "logo": "",
         "is_verified": true,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle del Puerto, 212",
         "cuisine_types": ["SEAFOOD"]
     },
@@ -112,7 +112,7 @@
         "service_description": "Disfruta del auténtico sabor de la comida casera con nuestro menú reconfortante y familiar...",
         "logo": "",
         "is_verified": true,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle de la Familia, 333",
         "cuisine_types": ["TRADITIONAL"]
     },
@@ -127,7 +127,7 @@
         "service_description": "Déjate seducir por la tentación de nuestros dulces caprichos...",
         "logo": "dulcescaprichos.jpg",
         "is_verified": false,
-        "price_plan": "PREMIUM",
+        "price_plan": "PREMIUM_PRO",
         "address": "Calle Dulzura, 1010",
         "cuisine_types": ["DESSERTS"]
     }

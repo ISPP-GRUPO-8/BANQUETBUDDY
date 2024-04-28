@@ -300,7 +300,7 @@ def create_recommendation_letters():
         data = json.load(file)
     
     for entry in data:
-        employee = Employee.objects.get(user__username=entry['employee'].split(' ')[0])  # Suponiendo que el username está antes del espacio
+        employee = Employee.objects.get(user__username=entry['employee'].split(' ')[0]) 
         catering = CateringCompany.objects.get(user__username=entry['catering'])
         
         recommendation = RecommendationLetter(
