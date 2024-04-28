@@ -4,7 +4,7 @@
 {% block content %}
 <body>
     <div class="container">
-        <h1>List of Jobs applications:</h1>
+        <h1 class="mt-2 mb-4 text-center">List of jobs applications</h1>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -22,6 +22,9 @@
                     <td>{{ application.date_application }}</td>
                     <td>{{ application.state }}</td>
                 </tr>
+                {% empty%}
+                <tr>
+                    <td colspan="4">No applications found</td>
                 {% endfor %}
             </tbody>
         </table>

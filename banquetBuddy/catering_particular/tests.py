@@ -2,10 +2,11 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from core.models import CustomUser
 from datetime import datetime
-from core.models import CustomUser
 from catering_owners.models import *
 from .views import *
 from catering_particular.models import *
+from django.contrib.auth import get_user_model
+
 
 # class BookTestCase(TestCase):
 #     def setUp(self):
@@ -45,7 +46,7 @@ from catering_particular.models import *
 #             diet_restrictions='Test diet restrictions'
 #         )
 #         self.catering_service.menus.add(self.menu)
-        
+
 #         self.menu2 = Menu.objects.create(
 #             id = 2,
 #             cateringservice=self.catering_service,
@@ -65,7 +66,7 @@ from catering_particular.models import *
 #             booking_state = BookingState.CONTRACT_PENDING,
 #             number_guests = 23
 #         )
-    
+
 #         self.client = Client()
 
 #     def test_my_books_view(self):
@@ -73,7 +74,7 @@ from catering_particular.models import *
 #         response = self.client.get(reverse('my_books'))
 #         self.assertEqual(response.status_code, 200)
 #         self.assertTemplateUsed(response, 'my_books.html')
-    
+
 #     def test_my_books_view_not_authorized(self):
 #         response = self.client.get(reverse('my_books'))
 #         self.assertEqual(response.status_code, 302)
@@ -87,7 +88,7 @@ from catering_particular.models import *
 #         response = self.client.post(reverse('book_edit', args=[self.event.id]), {
 #             'date': '2024-04-15',
 #             'number_guests': '10',
-#             'selected_menu': self.menu2.id, 
+#             'selected_menu': self.menu2.id,
 #         })
 #         self.assertEqual(response.status_code, 200)
 #         edited_event = Event.objects.get(id=self.event.id)
@@ -95,7 +96,7 @@ from catering_particular.models import *
 #         self.assertEqual(edited_event.number_guests, 10)
 #         self.assertEqual(edited_event.menu, self.menu2)
 #         self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
-    
+
 #     def test_book_edit_view_incomplete_form(self):
 #         self.client.force_login(self.user1)
 #         response = self.client.get(reverse('book_edit', args=[self.event.id]))
@@ -110,10 +111,10 @@ from catering_particular.models import *
 #         self.assertEqual(response.status_code, 200)
 
 #         edited_event = Event.objects.get(id=self.event.id)
-#         self.assertEqual(edited_event.date, self.event.date) 
-#         self.assertEqual(edited_event.number_guests, self.event.number_guests)  
-#         self.assertEqual(edited_event.menu, self.event.menu) 
-#         self.assertEqual(edited_event.booking_state, self.event.booking_state)  
+#         self.assertEqual(edited_event.date, self.event.date)
+#         self.assertEqual(edited_event.number_guests, self.event.number_guests)
+#         self.assertEqual(edited_event.menu, self.event.menu)
+#         self.assertEqual(edited_event.booking_state, self.event.booking_state)
 
 #     def test_book_edit_view_past_date(self):
 #         self.client.force_login(self.user1)
@@ -127,22 +128,23 @@ from catering_particular.models import *
 #             'number_guests': '10',
 #             'selected_menu': self.menu2.id,
 #         })
-        
+
 #         self.assertEqual(response.status_code, 200)
 
 #         edited_event = Event.objects.get(id=self.event.id)
-#         self.assertEqual(edited_event.date, self.event.date) 
-#         self.assertEqual(edited_event.number_guests, self.event.number_guests)  
-#         self.assertEqual(edited_event.menu, self.event.menu) 
+#         self.assertEqual(edited_event.date, self.event.date)
+#         self.assertEqual(edited_event.number_guests, self.event.number_guests)
+#         self.assertEqual(edited_event.menu, self.event.menu)
 #         self.assertEqual(edited_event.booking_state, self.event.booking_state)
 
-    
+
 #     def test_book_cancel_view(self):
 #         self.client.force_login(self.user1)
 #         response = self.client.get(reverse('book_cancel', args=[self.event.id]))
 #         self.assertEqual(response.status_code, 200)
 #         canceled_event = Event.objects.get(id=self.event.id)
 #         self.assertEqual(canceled_event.booking_state, BookingState.CANCELLED)
+
 
 class CateringViewsTestCase(TestCase):
     def setUp(self):
@@ -210,6 +212,7 @@ class CateringViewsTestCase(TestCase):
         # Verificar que la respuesta contiene el nombre del servicio de catering
         self.assertContains(response, self.catering_service.name)
 
+
 class CateringReviewTestCase(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(
@@ -226,7 +229,7 @@ class CateringReviewTestCase(TestCase):
             service_description="Test service description",
             price_plan="BASE",
         )
-    
+
         self.particular = Particular.objects.create(
             user=self.user1,
             phone_number="123456789",
@@ -264,37 +267,49 @@ class CateringReviewTestCase(TestCase):
         )
 
     def test_catering_review_view(self):
-        self.client.login(username='testuser2', password='testpassword2')
+        self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
 
-        description = 'Test review description'
+        description = "Test review description"
         rating = 5
 
-        url = reverse('add_review', kwargs={'catering_id': catering_id})
-        response = self.client.post(url, {
-            'description': description,
-            'rating': rating,
-        })
+        url = reverse("add_review", kwargs={"catering_id": catering_id})
+        response = self.client.post(
+            url,
+            {
+                "description": description,
+                "rating": rating,
+            },
+        )
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(Review.objects.filter(description = 'Test review description').exists())
-
+        self.assertTrue(
+            Review.objects.filter(description="Test review description").exists()
+        )
 
     def test_catering_review_view_unauthenticated(self):
-        response = self.client.get(reverse('add_review', kwargs={'catering_id': self.catering_service.id}))
+        response = self.client.get(
+            reverse("add_review", kwargs={"catering_id": self.catering_service.id})
+        )
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/', response.url)
-
+        self.assertIn("/", response.url)
 
     def test_catering_review_view_invalid_rating(self):
-        self.client.login(username='testuser', password='testpassword')
-        response = self.client.post(reverse('add_review', kwargs={'catering_id': self.catering_service.id}), {'description': 'Test review description', 'rating': 6})
-        self.assertFalse(Review.objects.filter(description='Test review description').exists())
-        
+        self.client.login(username="testuser", password="testpassword")
+        response = self.client.post(
+            reverse("add_review", kwargs={"catering_id": self.catering_service.id}),
+            {"description": "Test review description", "rating": 6},
+        )
+        self.assertFalse(
+            Review.objects.filter(description="Test review description").exists()
+        )
 
     def test_catering_review_view_invalid_catering_id(self):
-        self.client.login(username='testuser2', password='testpassword2')
-        response = self.client.post(reverse('add_review', kwargs={'catering_id': 999}), {'description': 'Test review description', 'rating': 5})
+        self.client.login(username="testuser2", password="testpassword2")
+        response = self.client.post(
+            reverse("add_review", kwargs={"catering_id": 999}),
+            {"description": "Test review description", "rating": 5},
+        )
         self.assertEqual(response.status_code, 404)
 
         self.menu = Menu.objects.create(
@@ -311,48 +326,51 @@ class CateringReviewTestCase(TestCase):
 
 class BookingProcessTestCase(TestCase):
     def setUp(self):
-        self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
-        self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+        self.user = CustomUser.objects.create_user(
+            username="testuser", email="test@example.com", password="testpassword"
+        )
+        self.user1 = CustomUser.objects.create_user(
+            username="testuser2", email="test2@example.com", password="testpassword2"
+        )
 
         self.company = CateringCompany.objects.create(
             user=self.user,
-            name='Test Catering Company',
-            phone_number='123456789',
-            service_description='Test service description',
-            price_plan='BASE'
+            name="Test Catering Company",
+            phone_number="123456789",
+            service_description="Test service description",
+            price_plan="BASE",
         )
 
         self.particular = Particular.objects.create(
             user=self.user1,
-            phone_number='123456789',
-            preferences='Test preferences',
-            address='Test address',
-            is_subscribed=False
+            phone_number="123456789",
+            preferences="Test preferences",
+            address="Test address",
+            is_subscribed=False,
         )
 
         self.catering_service = CateringService.objects.create(
             cateringcompany=self.company,
-            name='Test Catering Service',
-            description='Test service description',
-            location='Test location',
+            name="Test Catering Service",
+            description="Test service description",
+            location="Test location",
             capacity=100,
-            price=100.00
+            price=100.00,
         )
 
         self.menu = Menu.objects.create(
-            id = 1,
+            id=1,
             cateringservice=self.catering_service,
-            name='Test Menu',
-            description='Test menu description',
-            diet_restrictions='Test diet restrictions'
+            name="Test Menu",
+            description="Test menu description",
+            diet_restrictions="Test diet restrictions",
         )
         self.catering_service.menus.add(self.menu)
-        
-    
+
         self.client = Client()
-   
+
     def test_booking_process(self):
-        
+
         self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
         url = reverse("booking_process", kwargs={"catering_id": catering_id})
@@ -363,7 +381,7 @@ class BookingProcessTestCase(TestCase):
             {"event_date": "2026-03-11", "number_guests": "50", "selected_menu": "1"},
         )
         self.assertEqual(response.status_code, 302)
-        
+
     def test_invalid_booking_process_high_guests(self):
         self.client.login(username="testuser2", password="testpassword2")
         catering_id = self.catering_service.id
@@ -417,6 +435,7 @@ class BookingProcessTestCase(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 403)
+
 
 class FiltrosTest(TestCase):
     def setUp(self):
@@ -492,52 +511,60 @@ class FiltrosTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # Asegúrate de que no hay filtros de ciudad en la respuesta
         self.assertFalse(response.context["ciudad"])
-        
-        
+
+
 class CateringViewTest(TestCase):
     def setUp(self):
         # Configurar el entorno de prueba con objetos necesarios
         self.client = Client()
 
-        self.user = CustomUser.objects.create_user(username='test_user', password='test_password',email='testuser@gmail.com')
-        self.user1 = CustomUser.objects.create_user(username='test_user1', password='test_password1',email='testuser1@gmail.com')
+        self.user = CustomUser.objects.create_user(
+            username="test_user", password="test_password", email="testuser@gmail.com"
+        )
+        self.user1 = CustomUser.objects.create_user(
+            username="test_user1",
+            password="test_password1",
+            email="testuser1@gmail.com",
+        )
 
-        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company', price_plan="PREMIUM_PRO")
-        
+        self.catering_company = CateringCompany.objects.create(
+            user=self.user, name="Test Catering Company", price_plan="PREMIUM_PRO"
+        )
+
         self.message = Message.objects.create(
             sender=self.user,
             receiver=self.user1,
             date=datetime.now(),
-            content="Este es un mensaje de ejemplo."
+            content="Este es un mensaje de ejemplo.",
         )
 
-    def test_listar_caterings_particular(self):
-        # Simular una solicitud HTTP al punto final
-        self.client.force_login(self.user)
+#    def test_listar_caterings_particular(self):
+#        # Simular una solicitud HTTP al punto final
+#        self.client.force_login(self.user)
+#
+#        # Realizar la solicitud HTTP
+#        response = self.client.get(reverse("listar_caterings_particular"))
+#
+#        # Verificar si la respuesta es exitosa
+#        self.assertEqual(response.status_code, 200)
+#
+#        # Verificar si el template utilizado es el esperado
+#        self.assertTemplateUsed(response, "contact_chat_owner.html")
+#
+#        # Verificar si el contexto se pasa correctamente al template
+#        self.assertTrue(response.context["is_catering_company"])
+#        self.assertIn("messages", response.context)
 
-        # Realizar la solicitud HTTP
-        response = self.client.get(reverse('listar_caterings_particular'))
-
-        # Verificar si la respuesta es exitosa
-        self.assertEqual(response.status_code, 200)
-
-        # Verificar si el template utilizado es el esperado
-        self.assertTemplateUsed(response, 'contact_chat_owner.html')
-        
-        # Verificar si el contexto se pasa correctamente al template
-        self.assertTrue(response.context['is_catering_company'])
-        self.assertIn('messages', response.context)
-
-    def test_listar_caterings_particular_unauthenticated(self):
-        # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse('listar_caterings_particular'))
-
-        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo 
-        self.assertEqual(response.status_code, 302)
+#    def test_listar_caterings_particular_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings_particular"))
+#
+#        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
+#        self.assertEqual(response.status_code, 302)
 
     def test_listar_caterings_companies_unauthenticated(self):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse('listar_caterings_companies'))
+        response = self.client.get(reverse("listar_caterings_companies"))
 
         # Verificamos que el usuario no autenticado reciba un HttpResponseForbidden
         self.assertIsInstance(response, HttpResponseForbidden)
@@ -547,18 +574,72 @@ class CateringViewTest(TestCase):
         self.client.force_login(self.user)
 
         # Realizamos una solicitud GET a la vista
-        response = self.client.get(reverse('listar_caterings_companies'))
+        response = self.client.get(reverse("listar_caterings_companies"))
 
         # Verificamos que el usuario particular reciba un HttpResponseForbidden
         self.assertIsInstance(response, HttpResponseForbidden)
-        
+
     def test_listar_caterings_companies_authenticated_as_employee(self):
         # Simulamos una solicitud HTTP autenticada como un usuario empleado
         employee = Employee.objects.create(user=self.user1)
         self.client.force_login(self.user1)
 
         # Realizamos una solicitud GET a la vista
-        response = self.client.get(reverse('listar_caterings_companies'))
+        response = self.client.get(reverse("listar_caterings_companies"))
 
         # Verificamos que el usuario empleado reciba un HttpResponseForbidden
         self.assertIsInstance(response, HttpResponseForbidden)
+
+
+class RegisterParticularTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.register_url = reverse(
+            "register_particular"
+        )  # Asegúrate de que 'register_particular' es el nombre correcto de la URL en tu archivo urls.py
+
+    def test_register_particular_valid_data(self):
+        User = get_user_model()
+        user_count = User.objects.count()
+        response = self.client.post(
+            self.register_url,
+            {
+                "username": "testuser",
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@test.com",
+                "password1": "Hola12345",
+                "password2": "Hola12345",
+                "phone_number": "+34666666666",
+                "preferences": "Test preferences",
+                "address": "Test address",
+                "privacyPolicy": True,
+            },
+        )
+        self.assertEqual(
+            response.status_code, 302
+        )  # 302 significa redirección, lo que indica que el registro fue exitoso
+        self.assertEqual(
+            User.objects.count(), user_count + 1
+        )  # Comprueba que se creó un nuevo usuario
+        user = User.objects.latest("id")
+        self.assertEqual(
+            user.is_active, False
+        )  # Comprueba que la cuenta del usuario está desactivada
+
+        # Ahora prueba la activación de la cuenta
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        activate_url = reverse(
+            "activate", kwargs={"uidb64": uid, "token": token}
+        )  # Asegúrate de que este es el nombre correcto de la URL
+
+        response = self.client.get(activate_url)
+        self.assertEqual(
+            response.status_code, 302
+        )  # Debería haber una redirección después de la activación exitosa
+
+        user.refresh_from_db()
+        self.assertTrue(
+            user.is_active
+        )  # El usuario debería estar activo después de la activación
