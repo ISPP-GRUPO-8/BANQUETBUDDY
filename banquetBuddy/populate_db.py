@@ -1,4 +1,3 @@
-from datetime import timedelta
 import json
 import os
 import django
@@ -6,7 +5,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'banquetBuddy.settings')
 django.setup()
 from django.core.files import File
 from django.utils import timezone
-from faker.providers import person, address
 from django.conf import settings
 from catering_employees.models import CustomUser, Employee, Message
 from catering_owners.models import CateringCompany, CateringService, CuisineTypeModel, EmployeeWorkService, Event, JobApplication, Menu, Offer, Plate, Review, Task, RecommendationLetter
@@ -14,19 +12,11 @@ from catering_particular.models import Particular
 from django.contrib.auth import get_user_model
 import datetime
 import decimal
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.utils.dateparse import parse_date
-
-
-from faker import Faker
 from core.models import *
-from random import randint, choice
 from django.utils.timezone import make_aware
 from django.db import transaction
-faker = Faker(['es_ES'])
-faker.add_provider(person)
-faker.add_provider(address)
 CustomUser = get_user_model()
 
 
@@ -305,34 +295,24 @@ def create_job_applications():
         )
 
         
-recommendation_descriptions = [
-    "El empleado demostró una habilidad excepcional para trabajar en equipo, destacándose por su compromiso y dedicación en cada proyecto.",
-    "Durante su tiempo con nosotros, el empleado mostró una actitud proactiva y una capacidad innata para resolver problemas de manera eficiente.",
-    "Recomiendo encarecidamente al empleado, quien ha demostrado una excelente capacidad de liderazgo y habilidades interpersonales, contribuyendo significativamente al éxito de nuestro equipo.",
-    "El desempeño del empleado fue sobresaliente en todas las áreas, mostrando una gran iniciativa y creatividad en la resolución de problemas.",
-    "El empleado es altamente confiable y demuestra un alto nivel de integridad en todas sus interacciones profesionales.",
-    "Destaco la capacidad del empleado para adaptarse rápidamente a nuevos entornos y desafíos, demostrando una notable flexibilidad y capacidad de aprendizaje.",
-    "El empleado es extremadamente eficiente y meticuloso en su trabajo, asegurando siempre la entrega de resultados de alta calidad dentro de los plazos establecidos.",
-    "El compromiso del empleado con la excelencia y su constante búsqueda de la mejora continua lo hacen un activo valioso para cualquier equipo.",
-    "Durante su tiempo con nosotros, el empleado demostró una ética de trabajo excepcional y una capacidad para superar expectativas en todas las tareas asignadas.",
-    "Recomiendo al empleado sin reservas, ya que su actitud positiva y su enfoque orientado a resultados lo convierten en un miembro invaluable de cualquier equipo."
-]
+def create_recommendation_letters():
+    with open('populate/recommendationLetter.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    
+    for entry in data:
+        employee = Employee.objects.get(user__username=entry['employee'].split(' ')[0])  # Suponiendo que el username está antes del espacio
+        catering = CateringCompany.objects.get(user__username=entry['catering'])
         
-def create_recommendation_letters(num_recommendations):
-    employees = Employee.objects.all()
-    caterings = CateringCompany.objects.all()
-    for _ in range(num_recommendations):
-        employee=choice(employees)
-        catering = choice(caterings) 
-        description = choice(recommendation_descriptions)
-        date = faker.date_this_decade()
-        # Crea la carta de recomendación
-        RecommendationLetter.objects.create(
+        recommendation = RecommendationLetter(
             employee=employee,
             catering=catering,
-            description=description,
-            date=date
-    )
+            description=entry['description'],
+            date=datetime.datetime.strptime(entry['date'], '%Y-%m-%d').date()
+        )
+        
+        recommendation.save()
+
+    print("Las cartas de recomendación han sido creadas y guardadas exitosamente.")
 
 
 def create_task_employee():
@@ -398,7 +378,7 @@ def populate_database():
     create_employee_work_services()
     create_offers()
     create_job_applications()
-    create_recommendation_letters(10)
+    create_recommendation_letters()
     create_task_employee()
     create_superusers()
 
