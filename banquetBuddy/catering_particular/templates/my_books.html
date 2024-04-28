@@ -15,7 +15,7 @@
                     <h3 class="card-title">{{ event.name }}</h3>
                     <h6 class="card-text">{{ event.date }}</h6>
                     <p class="card-text">{{ event.details }}</p>
-                    <img src="{% static 'core/images/rinconmexicano_ooPTU83.jpg' %}" width="70" height="auto" alt="Logo" loading="lazy">
+                    <!-- <img src="{% static 'core/images/rinconmexicano_ooPTU83.jpg' %}" width="70" height="auto" alt="Logo" loading="lazy"> -->
                     <div class="row">
                         <div class="col-md-8">
                             <p class="{% if event.booking_state == 'CONTRACT_PENDING' %}text-warning{% elif event.booking_state == 'CANCELLED' %}text-danger{% elif event.booking_state == 'CONFIRMED' %}text-success{% endif %}">

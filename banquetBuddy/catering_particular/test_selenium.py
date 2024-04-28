@@ -72,4 +72,31 @@ class TestBooking():
     self.driver.find_element(By.NAME, "number_guests").send_keys("100")
     self.driver.find_element(By.CSS_SELECTOR, ".col-md-4:nth-child(1) .btn").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+
+
+class TestReviewTestCase():
+  def setup_method(self, method):
+    self.driver = webdriver.Chrome()
+    self.vars = {}
+  
+  def teardown_method(self, method):
+    self.driver.quit()
+  
+  def test_reviewTestCase(self):
+    self.driver.get("http://localhost:8000/")
+    self.driver.set_window_size(1296, 1400)
+    self.driver.find_element(By.LINK_TEXT, "Log in").click()
+    self.driver.find_element(By.ID, "id_username").send_keys("Pablo@gmail.com")
+    self.driver.find_element(By.ID, "id_password").send_keys("Pablo")
+    self.driver.find_element(By.CSS_SELECTOR, ".form-group:nth-child(2)").click()
+    self.driver.find_element(By.CSS_SELECTOR, "form").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".login-form").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn").click()
+    self.driver.find_element(By.LINK_TEXT, "Caterings").click()
+    self.driver.find_element(By.LINK_TEXT, "View details").click()
+    self.driver.find_element(By.LINK_TEXT, "Add Review").click()
+    self.driver.find_element(By.NAME, "description").click()
+    self.driver.find_element(By.NAME, "description").send_keys("Ha sido un placer disfrutar de este restaurante")
+    self.driver.find_element(By.CSS_SELECTOR, "label:nth-child(9) > .fa-solid").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
   
