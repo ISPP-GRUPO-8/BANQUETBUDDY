@@ -1,37 +1,24 @@
-from django.shortcuts import render, redirect
-from banquetBuddy import settings
-from catering_employees.models import Employee
-from catering_particular.models import Particular
-
-from catering_owners.models import CateringCompany
-from .forms import EmailAuthenticationForm
-
-
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.mail import send_mail
-from .forms import ErrorForm
-
-from django.contrib import messages
+from .forms import EmailAuthenticationForm, ErrorForm
 from .models import CustomUser
-from catering_owners.models import CateringService, Offer
+from catering_employees.models import Employee
+from catering_owners.models import CateringCompany, CateringService, Event, NotificationEvent, NotificationJobApplication, Offer
+from catering_particular.models import Particular
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
-from django.core.mail import send_mail
-from django.conf import settings
-from django.urls import reverse
-from django.contrib.auth import update_session_auth_hash
-
-from random import sample
-from django.utils import timezone
-from datetime import timedelta
-from catering_owners.models import NotificationEvent, NotificationJobApplication
-from catering_owners.models import Event
-
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.utils import timezone
+from random import sample
+
 
 
 def get_user_type(user):
@@ -234,11 +221,19 @@ def login_view(request):
     elif request.method == "POST":
         form = EmailAuthenticationForm(request, request.POST)
 
+        # Custom validation for the email field
+        username = request.POST.get('username')
+        try:
+            validate_email(username)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address.')
+            return render(request, "core/login.html", {"form": form})
+
         if form.is_valid():
             user = form.get_user()
             login(request, user)
 
-            # Comprueba si el usuario es particular o empresa
+            # Check if user is particular or company
             try:
                 particular_username = request.user.ParticularUsername
                 is_particular = True
@@ -256,9 +251,7 @@ def login_view(request):
                 send_notifications_next_events_catering_company(request)
             return redirect("/")
     else:
-        # Si la solicitud no es POST, crea un nuevo formulario vacío
         form = EmailAuthenticationForm()
-    # Renderiza la plantilla de inicio de sesión con el formulario
     return render(request, "core/login.html", {"form": form})
 
 
