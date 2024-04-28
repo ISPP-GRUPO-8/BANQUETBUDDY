@@ -374,9 +374,211 @@
         "particular_username": "Mateo",
         "service_name": "Menús Especiales",
         "catering_company_username": "SazonCasera"
+    },
+
+
+    {
+        "name": "Cata de Cervezas Artesanales",
+        "date": "2024-04-10",
+        "details": "Una noche para explorar una variedad de cervezas artesanales locales e internacionales.",
+        "booking_state": "FINALIZED",
+        "number_guests": 45,
+        "particular_username": "Ricardo",
+        "service_name": "Eventos Elegantes",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Tarde de Té Gourmet",
+        "date": "2024-02-20",
+        "details": "Una selección de los mejores tés del mundo, acompañados de pastelería fina y delicatessen.",
+        "booking_state": "FINALIZED",
+        "number_guests": 20,
+        "particular_username": "Isabel",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+    {
+        "name": "Noche de Tapas y Flamenco",
+        "date": "2024-03-25",
+        "details": "Disfrute de una auténtica experiencia española con música en vivo y una selección de tapas.",
+        "booking_state": "FINALIZED",
+        "number_guests": 55,
+        "particular_username": "Carmen",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Workshop de Cocina Vegana",
+        "date": "2024-04-22",
+        "details": "Aprende a preparar deliciosos platos veganos con ingredientes frescos y técnicas innovadoras.",
+        "booking_state": "FINALIZED",
+        "number_guests": 35,
+        "particular_username": "Elena",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Encuentro de Innovación Culinaria",
+        "date": "2024-01-30",
+        "details": "Un evento para profesionales de la gastronomía enfocado en las últimas tendencias e innovaciones.",
+        "booking_state": "FINALIZED",
+        "number_guests": 65,
+        "particular_username": "Gonzalo",
+        "service_name": "Cocina de Autor",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Fiesta de Invierno",
+        "date": "2024-02-10",
+        "details": "Celebre el invierno con una fiesta temática que incluye música en vivo y comidas de temporada.",
+        "booking_state": "FINALIZED",
+        "number_guests": 75,
+        "particular_username": "Jorge",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Gala de Premiación Tecnológica",
+        "date": "2024-03-10",
+        "details": "Una noche para celebrar los logros en tecnología con un menú excepcional y entretenimiento.",
+        "booking_state": "FINALIZED",
+        "number_guests": 90,
+        "particular_username": "Carlos",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+    {
+        "name": "Encuentro de Aficionados al Vino",
+        "date": "2024-02-28",
+        "details": "Un evento dedicado a los amantes del vino con catas dirigidas por sommeliers expertos.",
+        "booking_state": "FINALIZED",
+        "number_guests": 30,
+        "particular_username": "Roberto",
+        "service_name": "Buffet Real",
+        "catering_company_username": "CocinaAntonio"
+    },
+    {
+        "name": "Festival de Comida y Música",
+        "date": "2024-04-20",
+        "details": "Disfruta de un festival al aire libre con los mejores platos y bandas en vivo.",
+        "booking_state": "FINALIZED",
+        "number_guests": 130,
+        "particular_username": "Patricia",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Retiro de Yoga y Nutrición",
+        "date": "2024-03-05",
+        "details": "Un retiro que combina sesiones de yoga con un enfoque en nutrición saludable y consciente.",
+        "booking_state": "FINALIZED",
+        "number_guests": 40,
+        "particular_username": "Veronica",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
+    },
+
+
+
+    {
+        "name": "Cata de Aceites de Oliva",
+        "date": "2024-03-15",
+        "details": "Experimente las variedades de aceite de oliva premium con expertos que guiarán su paladar.",
+        "booking_state": "FINALIZED",
+        "number_guests": 20,
+        "particular_username": "Fernando",
+        "service_name": "Banquete Estelar",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Exposición de Arte Moderno",
+        "date": "2024-02-05",
+        "details": "Disfrute de una noche de arte y cultura con un servicio de catering que complementa la experiencia.",
+        "booking_state": "FINALIZED",
+        "number_guests": 50,
+        "particular_username": "Sofia",
+        "service_name": "Cocina de Autor",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Semana de la Moda Gastronómica",
+        "date": "2024-04-08",
+        "details": "Un evento que fusiona la moda y la gastronomía, ofreciendo experiencias culinarias innovadoras.",
+        "booking_state": "FINALIZED",
+        "number_guests": 80,
+        "particular_username": "Natalia",
+        "service_name": "Fiesta Gourmet",
+        "catering_company_username": "GourmetFusion"
+    },
+    {
+        "name": "Degustación de Chocolates Premium",
+        "date": "2024-03-25",
+        "details": "Un dulce recorrido por los mejores chocolates, dirigido por maestros chocolateros.",
+        "booking_state": "FINALIZED",
+        "number_guests": 30,
+        "particular_username": "Lucia",
+        "service_name": "Delicias del Chef",
+        "catering_company_username": "SaborOriental"
+    },
+    {
+        "name": "Festival de Jazz y Gastronomía",
+        "date": "2024-02-25",
+        "details": "Vive la combinación perfecta de música jazz en vivo y una selección exquisita de platos.",
+        "booking_state": "FINALIZED",
+        "number_guests": 60,
+        "particular_username": "Oscar",
+        "service_name": "Celebración Soñada",
+        "catering_company_username": "DulcesCaprichos"
+    },
+    {
+        "name": "Encuentro de Cocina Mediterránea",
+        "date": "2024-01-30",
+        "details": "Descubre los secretos de la cocina mediterránea con chefs reconocidos y ingredientes auténticos.",
+        "booking_state": "FINALIZED",
+        "number_guests": 25,
+        "particular_username": "Marta",
+        "service_name": "Eventos Elegantes",
+        "catering_company_username": "DeliciasMediterraneas"
+    },
+    {
+        "name": "Noche de Cocteles y Tapas",
+        "date": "2024-02-15",
+        "details": "Una velada con los cocteles más innovadores acompañados de una selección de tapas gourmet.",
+        "booking_state": "FINALIZED",
+        "number_guests": 40,
+        "particular_username": "Diego",
+        "service_name": "Sabor Exclusivo",
+        "catering_company_username": "ExquisitezGastronomica"
+    },
+    {
+        "name": "Taller de Cocina Vegana Creativa",
+        "date": "2024-03-10",
+        "details": "Aprende a cocinar platos veganos creativos y deliciosos en un ambiente interactivo y divertido.",
+        "booking_state": "FINALIZED",
+        "number_guests": 15,
+        "particular_username": "Ana",
+        "service_name": "Menús Especiales",
+        "catering_company_username": "SazonCasera"
+    },
+    {
+        "name": "Celebración de Año Nuevo Chino",
+        "date": "2024-04-01",
+        "details": "Celebra el Año Nuevo Chino con una auténtica fiesta llena de tradiciones y delicias culinarias.",
+        "booking_state": "FINALIZED",
+        "number_guests": 100,
+        "particular_username": "Jorge",
+        "service_name": "Buffet Real",
+        "catering_company_username": "CocinaAntonio"
+    },
+    {
+        "name": "Fiesta de Primavera al Aire Libre",
+        "date": "2024-04-15",
+        "details": "Disfruta de la llegada de la primavera con una fiesta al aire libre, con juegos, música y deliciosa comida.",
+        "booking_state": "FINALIZED",
+        "number_guests": 55,
+        "particular_username": "Isabel",
+        "service_name": "Catering Premium",
+        "catering_company_username": "SaboresdelMar"
     }
-
-
-
     
 ]
