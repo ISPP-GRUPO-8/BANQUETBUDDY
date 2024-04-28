@@ -232,72 +232,6 @@ def create_events():
             )
 
 
-tasks_descriptions = [
-    "Preparación de menú para evento corporativo.",
-    "Coordinación de servicio de catering para boda.",
-    "Organización de degustación de platos para evento promocional.",
-    "Diseño de menú especializado para cena de gala.",
-    "Supervisión de cocina en evento benéfico.",
-    "Planificación de servicio de banquetes para conferencia.",
-    "Preparación y presentación de platos para sesión de fotos gastronómica.",
-    "Gestión de catering para inauguración de local.",
-    "Creación de menú temático para fiesta privada.",
-    "Coordinación logística para servicio de catering en festival gastronómico."
-]
-
-
-tasks_data = [
-    {
-        'event_name': 'Fiesta Sorpresa Nocturna',
-        'catering_service_name': 'Buffet Real',
-        'description': 'Preparación de menú para evento corporativo.',
-        'assignment_date': datetime.date(2024, 4, 10),
-        'assignment_state': 'PENDING',
-        'expiration_date': datetime.date(2024, 5, 10),
-        'priority': 'LOW'
-    },
-    {
-        'event_name': 'Fiesta Sorpresa Nocturna',
-        'catering_service_name': 'Buffet Real',
-        'description': 'Coordinación de servicio de catering para boda.',
-        'assignment_date': datetime.date(2024, 4, 10),
-        'assignment_state': 'PENDING',
-        'expiration_date': datetime.date(2024, 5, 15),
-        'priority': 'MEDIUM'
-    },
-    {
-        'event_name': 'Degustación Vinos y Quesos',
-        'catering_service_name': 'Buffet Real',
-        'description': 'Supervisión de cocina.',
-        'assignment_date': datetime.date(2024, 4, 10),
-        'assignment_state': 'PENDING',
-        'expiration_date': datetime.date(2024, 5, 15),
-        'priority': 'MEDIUM'
-    },
-    # Agrega los otros campos según sea necesario para cada tarea
-]
-
-def create_tasks_from_data(tasks_data):
-    for task_data in tasks_data:
-        try:
-            event = Event.objects.get(name=task_data['event_name'])
-            catering_service = CateringService.objects.get(name=task_data['catering_service_name'])
-            Task.objects.create(
-                event=event,
-                cateringservice=catering_service,
-                cateringcompany=catering_service.cateringcompany,
-                description=task_data['description'],
-                assignment_date=task_data['assignment_date'],
-                assignment_state=task_data['assignment_state'],
-                expiration_date=task_data['expiration_date'],
-                priority=task_data['priority']
-            )
-        except (Event.DoesNotExist, CateringService.DoesNotExist) as e:
-            print(f"Error: {e}")
-
-
-
-
 reviews_data = [
     {"description": "¡Excelente servicio y comida deliciosa! Definitivamente recomendaré este catering a mis amigos y familiares.", "rating": 5},
     {"description": "La presentación de los platos fue impecable, pero algunos sabores podrían mejorar. En general, una experiencia satisfactoria.", "rating": 4},
@@ -488,7 +422,6 @@ def populate_database():
     create_catering_services()
     create_menus()
     create_events()
-    create_tasks_from_data(tasks_data)
     create_plates()
     create_reviews(10)
     create_employee_work_services()
