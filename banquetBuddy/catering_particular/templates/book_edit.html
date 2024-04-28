@@ -5,7 +5,7 @@
 
 <div class="container mt-4">
     <h1>Edit Event: {{ event.name }}</h1>
-    <form method="post" action="/particular/{{ event.id }}/edit">
+    <form method="post" action="/particular/my_books/{{ event.id }}/edit">
     <form method="post" action="{% url 'book_edit' event.id %}">
         {% csrf_token %}
 

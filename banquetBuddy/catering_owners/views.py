@@ -1239,10 +1239,22 @@ def chat_view(request, id):
 @login_required
 def listar_caterings_particular(request):
     context = {}
-    context["is_catering_company"] = is_catering_company(request)
-    catering_company = get_object_or_404(CateringCompany, user=request.user)
-    messages = Message.objects.filter(receiver=catering_company.user).distinct("sender")
-    context["messages"] = messages
+    context['is_catering_company'] = is_catering_company(request)
+    catering_company = get_object_or_404(CateringCompany, user = request.user)
+
+    messages_o = Message.objects.filter(receiver = catering_company.user)
+    unique_senders = set()  # Mantener un registro de los remitentes únicos
+    messages = []    # Lista para almacenar mensajes únicos
+
+    for message in messages_o:
+        sender_id = message.sender.id
+        
+        # Verificar si el remitente ya se ha encontrado antes
+        if sender_id not in unique_senders:
+            unique_senders.add(sender_id)  # Agregar el remitente a los remitentes únicos
+            messages.append(message)  # Agregar el mensaje a la lista de mensajes únicos
+    
+    context['messages'] = messages
     return render(request, "contact_chat_owner.html", context)
 
 

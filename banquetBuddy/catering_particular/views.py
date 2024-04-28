@@ -33,69 +33,83 @@ NOT_PARTICULAR_ERROR = "You are not registered as a particular"
 FORBIDDEN_ACCESS_ERROR = "You are not allowed to access to the following page"
 
 
-# @login_required
-# def my_books(request):
-#     user = request.user
-#     events = Event.objects.filter(particular_id=user.id)
-#     context = {"events": events}
-#     return render(request, "my_books.html", context)
+@login_required
+def my_books(request):
+    user = request.user
+    events_list = Event.objects.filter(particular_id=user.id).order_by('-date')
+
+    paginator = Paginator(events_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        events = paginator.page(1)
+    except EmptyPage:
+        events = paginator.page(paginator.num_pages)
+
+    context = {
+        "events": events,
+    }
+    return render(request, "my_books.html", context)
 
 
-# @login_required
-# def book_cancel(request, event_id):
-#     user = request.user
-#     events = Event.objects.filter(particular_id=user.id)
-#     context = {"events": events}
-#     event = get_object_or_404(Event, id=event_id)
-#     if user.id == event.particular_id:
-#         event.booking_state = BookingState.CANCELLED
-#         event.save()
-#     return render(request, "my_books.html", context)
+
+@login_required
+def book_cancel(request, event_id):
+    user = request.user
+    events = Event.objects.filter(particular_id=user.id)
+    context = {"events": events}
+    event = get_object_or_404(Event, id=event_id)
+    if user.id == event.particular_id:
+        event.booking_state = BookingState.CANCELLED
+        event.save()
+    return redirect('my_books')
 
 
-# @login_required
-# def book_edit(request, event_id):
-#     context = {}
-#     event = get_object_or_404(Event, id=event_id)
-#     events = Event.objects.filter(particular_id=request.user.id)
-#     catering_service = get_object_or_404(CateringService, id=event.cateringservice_id)
-#     catering = get_object_or_404(
-#         CateringCompany, user_id=catering_service.cateringcompany_id
-#     )
-#     menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
-#     context["menus"] = menus
-#     context["event"] = event
+@login_required
+def book_edit(request, event_id):
+    context = {}
+    event = get_object_or_404(Event, id=event_id)
+    events = Event.objects.filter(particular_id=request.user.id)
+    catering_service = get_object_or_404(CateringService, id=event.cateringservice_id)
+    catering = get_object_or_404(
+        CateringCompany, user_id=catering_service.cateringcompany_id
+    )
+    menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
+    context["menus"] = menus
+    context["event"] = event
 
-#     if request.method == "POST":
-#         date = request.POST.get("date")
-#         number_guests = request.POST.get("number_guests")
-#         menu = request.POST.get("selected_menu")
+    if request.method == "POST":
+        date = request.POST.get("date")
+        number_guests = request.POST.get("number_guests")
+        menu = request.POST.get("selected_menu")
 
-#         context["date"] = date
-#         context["number_guests"] = number_guests
-#         context["menu"] = menu
-#         context["events"] = events
+        context["date"] = date
+        context["number_guests"] = number_guests
+        context["menu"] = menu
+        context["events"] = events
 
-#         if number_guests == "0":
-#             context["error"] = "The number of guests can not be 0."
-#             return render(request, "book_edit.html", context)
+        if number_guests == "0":
+            context["error"] = "The number of guests can not be 0."
+            return render(request, "book_edit.html", context)
 
-#         date2 = datetime.strptime(date, "%Y-%m-%d").date()
+        date2 = datetime.strptime(date, "%Y-%m-%d").date()
 
-#         if datetime.now().date() > date2:
-#             context["error"] = "The selected date cannot be in the past."
-#             return render(request, "book_edit.html", context)
+        if datetime.now().date() > date2:
+            context["error"] = "The selected date cannot be in the past."
+            return render(request, "book_edit.html", context)
 
-#         event.date = date
-#         event.number_guests = number_guests
-#         event.menu = Menu.objects.get(id=menu)
-#         event.booking_state = BookingState.CONTRACT_PENDING
-#         event.details = f"Reservation for {number_guests} guests"
-#         event.save()
+        event.date = date
+        event.number_guests = number_guests
+        event.menu = Menu.objects.get(id=menu)
+        event.booking_state = BookingState.CONTRACT_PENDING
+        event.details = f"Reservation for {number_guests} guests"
+        event.save()
 
-#         return render(request, "my_books.html", context)
+        return redirect('my_books')
 
-#     return render(request, "book_edit.html", context)
+    return render(request, "book_edit.html", context)
 
 
 # Create your views here.
@@ -362,7 +376,7 @@ def booking_process(request, catering_id):
     # Obtener el menú para el catering actual
     highlighted_dates_str = [date.strftime("%Y-%m-%d") for date in highlighted_dates]
 
-    menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
+    menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
     # Coloca el menú dentro del contexto correctamente
     context = {
