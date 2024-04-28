@@ -275,7 +275,7 @@
         "event": "Boda Playa Paradisíaca",
         "employees": ["CharlotteN"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Supervisar la configuración del espacio de la ceremonia en la playa, asegurando que la decoración y el arreglo floral estén perfectamente alineados con los deseos de la pareja.",
         "assignment_date": "2024-06-14",
         "expiration_date": "2024-06-16",
@@ -286,7 +286,7 @@
         "event": "Boda Playa Paradisíaca",
         "employees": ["LucasR"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Coordinar con el equipo de música y entretenimiento para garantizar una integración fluida con el programa del evento, asegurando ensayos y ajustes técnicos previos.",
         "assignment_date": "2024-06-14",
         "expiration_date": "2024-06-16",
@@ -297,7 +297,7 @@
         "event": "Boda Playa Paradisíaca",
         "employees": ["MiaB"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Organizar el servicio de catering, desde la selección del menú hasta la disposición de los bufetes, asegurando que todas las consideraciones dietéticas estén atendidas y que la presentación sea impecable.",
         "assignment_date": "2024-06-14",
         "expiration_date": "2024-06-16",
@@ -309,7 +309,7 @@
         "event": "Boda espectacular en la playa",
         "employees": ["JacksonV"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Coordinar con el fotógrafo y el equipo de video para asegurar una cobertura completa del evento, enfocándose en los momentos clave y las peticiones especiales de los novios.",
         "assignment_date": "2024-06-16",
         "expiration_date": "2024-06-18",
@@ -320,7 +320,7 @@
         "event": "Boda espectacular en la playa",
         "employees": ["ScarlettZ"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Supervisar el montaje de las áreas de recepción y ceremonia, asegurando que cada detalle, desde los asientos hasta la iluminación, esté perfectamente configurado según el plan.",
         "assignment_date": "2024-06-16",
         "expiration_date": "2024-06-18",
@@ -331,7 +331,7 @@
         "event": "Boda espectacular en la playa",
         "employees": ["JulianF"],
         "cateringservice": "Celebración Soñada",
-        "cateringcompany": "Dulces Caprichos",
+        "cateringcompany": "DulcesCaprichos",
         "description": "Administrar la logística del catering, incluyendo la coordinación de tiempos, la distribución de alimentos y bebidas y la atención a requerimientos dietéticos especiales de los invitados.",
         "assignment_date": "2024-06-16",
         "expiration_date": "2024-06-18",
@@ -405,6 +405,448 @@
         "expiration_date": "2024-07-23",
         "assignment_state": "PENDING",
         "priority": "HIGH"
+    },
+
+    {
+        "event": "Maratón Musical Nocturno",
+        "employees": ["EvelynR"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Supervisar la instalación y operación del área de bebidas, asegurando un suministro continuo y una presentación atractiva durante el evento nocturno.",
+        "assignment_date": "2024-07-04",
+        "expiration_date": "2024-07-06",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Maratón Musical Nocturno",
+        "employees": ["TheoW"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Coordinar la logística del servicio de alimentos para los artistas y el personal técnico, asegurando tiempos de entrega eficientes y opciones alimenticias adecuadas.",
+        "assignment_date": "2024-07-04",
+        "expiration_date": "2024-07-06",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Maratón Musical Nocturno",
+        "employees": ["ClaireD"],
+        "cateringservice": "Fiesta Gourmet",
+        "cateringcompany": "GourmetFusion",
+        "description": "Gestionar el área de descanso VIP, proporcionando un servicio excepcional y atención personalizada a los invitados VIP durante todo el evento.",
+        "assignment_date": "2024-07-04",
+        "expiration_date": "2024-07-06",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Cata de Vinos y Quesos",
+        "employees": ["NoahH"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Preparar y supervisar la estación de quesos, asegurando la correcta disposición y variedad adecuada para complementar la selección de vinos.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Cata de Vinos y Quesos",
+        "employees": ["EmmaW"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Coordinar con sommeliers para el montaje y presentación de vinos, facilitando información detallada sobre cada selección.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Cata de Vinos y Quesos",
+        "employees": ["LiamG"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Organizar y supervisar el área de degustación, garantizando una experiencia fluida y agradable para todos los participantes.",
+        "assignment_date": "2024-08-10",
+        "expiration_date": "2024-08-12",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "employees": ["AmeliaP"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Supervisar y coordinar la configuración de la estación de vinos exclusivos, asegurando la presentación adecuada y la temperatura óptima de cada vino.",
+        "assignment_date": "2024-08-12",
+        "expiration_date": "2024-08-14",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "employees": ["LoganC"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Coordinar la logística del evento, asegurando la sincronización entre la llegada de invitados y la disponibilidad inmediata de las degustaciones.",
+        "assignment_date": "2024-08-12",
+        "expiration_date": "2024-08-14",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Degustación Exclusiva de Vinos y Quesos",
+        "employees": ["SophiaL"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Gestionar y dirigir el equipo de atención al cliente durante el evento, asegurando una experiencia excepcional para todos los asistentes.",
+        "assignment_date": "2024-08-12",
+        "expiration_date": "2024-08-14",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Fiesta saludable y sostenible",
+        "employees": ["ElijahM"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Coordinar la selección y preparación de alimentos sostenibles, asegurando que todos los productos sean de origen local y ecológico.",
+        "assignment_date": "2024-07-24",
+        "expiration_date": "2024-07-26",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta saludable y sostenible",
+        "employees": ["IsabellaC"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Dirigir las actividades de reciclaje y gestión de desechos durante el evento, promoviendo prácticas de sostenibilidad entre los asistentes.",
+        "assignment_date": "2024-07-24",
+        "expiration_date": "2024-07-26",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Fiesta saludable y sostenible",
+        "employees": ["EthanD"],
+        "cateringservice": "Menús Especiales",
+        "cateringcompany": "SazonCasera",
+        "description": "Supervisar la estación de bebidas para garantizar opciones saludables y sostenibles, incluyendo jugos naturales y agua filtrada.",
+        "assignment_date": "2024-07-24",
+        "expiration_date": "2024-07-26",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Cumpleaños Temático para Niños",
+        "employees": ["IsabellaC"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Preparar y decorar la mesa de dulces temáticos, asegurando que todos los elementos sean aptos para niños y visualmente atractivos.",
+        "assignment_date": "2024-09-04",
+        "expiration_date": "2024-09-06",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Cumpleaños Temático para Niños",
+        "employees": ["EthanD"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Coordinar las actividades culinarias, incluyendo talleres de cocina sencillos para niños, fomentando la interacción y el aprendizaje.",
+        "assignment_date": "2024-09-04",
+        "expiration_date": "2024-09-06",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Cumpleaños Temático para Niños",
+        "employees": ["AvaM"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Supervisar y garantizar la seguridad alimentaria, especialmente en la preparación de alimentos sin alérgenos comunes para proteger la salud de los niños.",
+        "assignment_date": "2024-09-04",
+        "expiration_date": "2024-09-06",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Cumpleaños Infantil Temático",
+        "employees": ["EmmaW"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Organizar y supervisar las estaciones de comida interactivas para niños, asegurando actividades seguras y divertidas.",
+        "assignment_date": "2024-09-06",
+        "expiration_date": "2024-09-08",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Cumpleaños Infantil Temático",
+        "employees": ["LiamG"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Preparar los menús temáticos adaptados a las preferencias y restricciones alimenticias de los niños asistentes.",
+        "assignment_date": "2024-09-06",
+        "expiration_date": "2024-09-08",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Cumpleaños Infantil Temático",
+        "employees": ["CharlotteN"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Encargarse de la decoración del evento, coordinando con el tema elegido y asegurando una ambientación alegre y colorida.",
+        "assignment_date": "2024-09-06",
+        "expiration_date": "2024-09-08",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Encuentro de Escritores",
+        "employees": ["LucasR"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Preparar y servir bebidas y aperitivos durante las sesiones de escritura, manteniendo un ambiente confortable y estimulante para la creatividad.",
+        "assignment_date": "2024-12-04",
+        "expiration_date": "2024-12-06",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Encuentro de Escritores",
+        "employees": ["MiaB"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Organizar el área de comedor para el almuerzo y la cena, asegurando que los escritores tengan un espacio tranquilo y ordenado para intercambiar ideas.",
+        "assignment_date": "2024-12-04",
+        "expiration_date": "2024-12-06",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Encuentro de Escritores",
+        "employees": ["JacksonV"],
+        "cateringservice": "Delicias del Chef",
+        "cateringcompany": "SaborOriental",
+        "description": "Coordinar los descansos para café y snacks, optimizando los tiempos entre sesiones para maximizar la productividad y satisfacción de los participantes.",
+        "assignment_date": "2024-12-04",
+        "expiration_date": "2024-12-06",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Fiesta de Inauguración Corporativa",
+        "employees": ["ScarlettZ"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Supervisar la recepción de invitados, asegurando una bienvenida cálida y eficiente.",
+        "assignment_date": "2024-06-30",
+        "expiration_date": "2024-07-02",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Fiesta de Inauguración Corporativa",
+        "employees": ["JulianF"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Gestionar la estación principal de catering durante el evento, coordinando la presentación y distribución de alimentos.",
+        "assignment_date": "2024-06-30",
+        "expiration_date": "2024-07-02",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Fiesta de Inauguración Corporativa",
+        "employees": ["GraceH"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Encargada de coordinar el equipo de servicio para asegurar un flujo constante y profesional durante las horas pico del evento.",
+        "assignment_date": "2024-06-30",
+        "expiration_date": "2024-07-02",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+
+    {
+        "event": "Inauguración Corporativa Espectacular",
+        "employees": ["OwenK"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Encargado de la logística y montaje inicial del evento, asegurando que todos los recursos estén preparados y disponibles para el equipo antes de la llegada de los invitados.",
+        "assignment_date": "2024-06-22",
+        "expiration_date": "2024-06-24",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Inauguración Corporativa Espectacular",
+        "employees": ["HannahL"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Responsable de la coordinación de actividades durante el evento, asegurando que el programa se desarrolle sin contratiempos y que todos los servicios estén alineados con los horarios planeados.",
+        "assignment_date": "2024-06-22",
+        "expiration_date": "2024-06-24",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Inauguración Corporativa Espectacular",
+        "employees": ["GabrielM"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Supervisa el desmontaje post-evento y el manejo de los residuos de manera sostenible, garantizando que se cumplan las normas de la compañía en materia de sostenibilidad.",
+        "assignment_date": "2024-06-22",
+        "expiration_date": "2024-06-24",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Festival Gastronómico del Mar",
+        "employees": ["ZoeS"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Coordinar la presentación de mariscos frescos en los puestos del festival, asegurando la calidad y frescura de todos los productos ofrecidos.",
+        "assignment_date": "2024-06-09",
+        "expiration_date": "2024-06-11",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Festival Gastronómico del Mar",
+        "employees": ["HenryT"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Supervisar el montaje de las estaciones de cocina en vivo, garantizando que todas las demostraciones culinarias se realicen sin interrupciones y de manera segura.",
+        "assignment_date": "2024-06-09",
+        "expiration_date": "2024-06-11",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Festival Gastronómico del Mar",
+        "employees": ["EvelynR"],
+        "cateringservice": "Catering Premium",
+        "cateringcompany": "SaboresdelMar",
+        "description": "Administrar las actividades de reciclaje y manejo de desechos durante el evento, asegurando que se sigan las prácticas de sostenibilidad ambiental.",
+        "assignment_date": "2024-06-09",
+        "expiration_date": "2024-06-11",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Degustación Gastronómica Exclusiva",
+        "employees": ["TheoW"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Preparar y presentar una selección de platos gourmet exclusivos, destacando técnicas culinarias modernas y ingredientes de alta calidad.",
+        "assignment_date": "2024-10-09",
+        "expiration_date": "2024-10-11",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Degustación Gastronómica Exclusiva",
+        "employees": ["ClaireD"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Coordinar la logística del evento, asegurando que cada detalle desde la decoración hasta la disposición del lugar cumpla con los estándares de exclusividad y calidad esperados.",
+        "assignment_date": "2024-10-09",
+        "expiration_date": "2024-10-11",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Degustación Gastronómica Exclusiva",
+        "employees": ["NoahH"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Supervisar y asistir en la selección y preparación de bebidas que complementen los platos servidos, destacando vinos y espirituosos de calidad superior.",
+        "assignment_date": "2024-10-09",
+        "expiration_date": "2024-10-11",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Noche de Degustación Gastronómica",
+        "employees": ["EmmaW"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Coordinar la presentación de los platos de degustación, asegurando la secuencia adecuada y la explicación detallada de cada plato a los invitados.",
+        "assignment_date": "2024-10-11",
+        "expiration_date": "2024-10-13",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Noche de Degustación Gastronómica",
+        "employees": ["LiamG"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Responsable de la estación de bebidas, seleccionando y preparando bebidas que mariden perfectamente con cada plato servido durante la noche.",
+        "assignment_date": "2024-10-11",
+        "expiration_date": "2024-10-13",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Noche de Degustación Gastronómica",
+        "employees": ["CharlotteN"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Asistir en la organización general del evento y supervisar el montaje de mesas y el área de recepción de invitados para garantizar una experiencia impecable.",
+        "assignment_date": "2024-10-11",
+        "expiration_date": "2024-10-13",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
+    },
+
+    {
+        "event": "Aniversario de Empresa Innovadora",
+        "employees": ["LucasR"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Gestionar la presentación visual del evento, asegurando que la decoración y el montaje reflejen la temática innovadora de la empresa.",
+        "assignment_date": "2024-08-14",
+        "expiration_date": "2024-08-16",
+        "assignment_state": "PENDING",
+        "priority": "HIGH"
+    },
+    {
+        "event": "Aniversario de Empresa Innovadora",
+        "employees": ["MiaB"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Supervisar el servicio de catering durante el evento para garantizar la excelencia y rapidez en el servicio, adaptándose a las necesidades de los asistentes.",
+        "assignment_date": "2024-08-14",
+        "expiration_date": "2024-08-16",
+        "assignment_state": "PENDING",
+        "priority": "MEDIUM"
+    },
+    {
+        "event": "Aniversario de Empresa Innovadora",
+        "employees": ["JacksonV"],
+        "cateringservice": "Sabor Exclusivo",
+        "cateringcompany": "ExquisitezGastronomica",
+        "description": "Coordinar la logística de audio y video para las presentaciones durante el evento, asegurando que todos los aspectos técnicos funcionen sin problemas.",
+        "assignment_date": "2024-08-14",
+        "expiration_date": "2024-08-16",
+        "assignment_state": "PENDING",
+        "priority": "LOW"
     }
 
 
