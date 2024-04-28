@@ -28,11 +28,6 @@ faker.add_provider(person)
 faker.add_provider(address)
 CustomUser = get_user_model()
 
-def create_cuisine_types():
-    for cuisine in CuisineType.choices:
-        CuisineTypeModel.objects.get_or_create(type=cuisine[0])
-
-create_cuisine_types()
 
 
 def truncate_all_tables():
@@ -327,11 +322,6 @@ def create_job_applications():
             state=application_data['state']
         )
 
-
-
-def create_cuisine_types():
-    for cuisine in CuisineType.choices:
-        CuisineTypeModel.objects.get_or_create(type=cuisine[0])
         
 recommendation_descriptions = [
     "El empleado demostró una habilidad excepcional para trabajar en equipo, destacándose por su compromiso y dedicación en cada proyecto.",
@@ -414,7 +404,6 @@ def create_superusers():
 
 def populate_database():
     truncate_all_tables()
-    create_cuisine_types()  # Crear los tipos de cocina antes de crear las compañías de catering
     create_particulars()
     create_catering_companies()
     create_employees()
