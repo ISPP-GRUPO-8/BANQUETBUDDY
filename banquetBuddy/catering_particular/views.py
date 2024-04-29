@@ -319,19 +319,21 @@ def catering_review(request, catering_id):
     catering = get_object_or_404(CateringService, id=catering_id)
     if not is_user_particular(user):
         return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    
     has_been_booked = False
     particular = Particular.objects.filter(user_id=user.id)
-    particular_events = Event.objects.filter(particular=particular[0])
+    particular_events = Event.objects.filter(particular=particular[0], cateringservice=catering)
+    
     for event in particular_events:
-        if event.cateringservice == catering:
+        if event.date <= timezone.now().date():
             has_been_booked = True
             break
+        else:
+            messages.error(request, "You cannot leave a review until after the event date has passed.")
+            return redirect("listar_caterings")
 
     if not has_been_booked:
-        messages.error(
-            request,
-            "You must have a booking with this catering service before reviewing it",
-        )
+        messages.error(request, "You must have attended an event with this catering service before reviewing it.")
         return redirect("listar_caterings")
 
     if particular:
