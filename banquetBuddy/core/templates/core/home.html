@@ -42,7 +42,7 @@
   <form method="post" action="{% url 'employeeOfferList' %}" id="miFormulario" class="mb-4">
     {% csrf_token %}
     <div class="input-group">
-      <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." id="search" name="search"
+      <input type="text" class="form-control bg-light border-0 small" placeholder="Search offers..." id="search" name="search"
         value="{{ search }}" />
       <div class="input-group-append">
         <button class="btn btn-primary  mb-3" type="submit">
