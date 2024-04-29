@@ -2,7 +2,7 @@
     {
         "name": "Cena de Gala Elegante",
         "date": "2024-07-12",
-        "details": "Disfrute de una noche de elegancia y sofisticación en nuestra cena de gala.",
+        "details": "Requerimos un ambiente íntimo y sofisticado para una reunión familiar especial. Favor de incluir música suave de fondo y una selección de vinos finos.",
         "booking_state": "CONFIRMED",
         "number_guests": 15,
         "particular_username": "Manuel",
@@ -12,7 +12,7 @@
     {
         "name": "Fiesta Sorpresa Nocturna",
         "date": "2024-07-10",
-        "details": "Sorprende a tus seres queridos con una fiesta sorpresa nocturna. Nuestro equipo se encargará de todos los detalles para que puedas disfrutar de una velada llena de diversión y emoción.",
+        "details": "La fiesta es para celebrar el cumpleaños sorpresa de mi esposo. Nos gustaría una decoración temática de los años 80 y una lista de reproducción personalizada que incluya sus canciones favoritas.",
         "booking_state": "CONFIRMED",
         "number_guests": 5,
         "particular_username": "Juan",
@@ -22,7 +22,7 @@
     {
         "name": "Recepción Jardín Botánico",
         "date": "2024-07-28",
-        "details": "Celebre su evento en un entorno natural único. Nuestra recepción en el Jardín Botánico ofrece un ambiente sereno y elegante, perfecto para cualquier ocasión especial.",
+        "details": "Deseamos una ceremonia al aire libre tranquila con enfoque en la naturaleza. Por favor, incluyan arreglos florales que complementen el entorno del jardín botánico.",
         "booking_state": "CONFIRMED",
         "number_guests": 3,
         "particular_username": "Pablo",
@@ -34,7 +34,7 @@
     {
         "name": "Boda Playa Paradisíaca",
         "date": "2024-06-15",
-        "details": "Haga realidad su sueño de una boda en la playa con nosotros. Con nuestras impresionantes vistas y servicios de catering excepcionales, su día especial será inolvidable.",
+        "details": "Queremos un evento romántico al atardecer en la playa, con antorchas en la arena y un banquete basado en mariscos frescos.",
         "booking_state": "CONFIRMED",
         "number_guests": 20,
         "particular_username": "David",
@@ -44,7 +44,7 @@
     {
         "name": "Conferencia de Negocios Internacional",
         "date": "2024-07-20",
-        "details": "Organizamos su conferencia de negocios con un servicio de catering de primera clase que impresionará a todos sus asistentes. Ofrecemos una variedad de opciones culinarias para adaptarnos a todas las dietas.",
+        "details": "Necesitamos facilidades para varios talleres simultáneos y un área de networking con servicios de catering que puedan adaptarse a diversas preferencias alimenticias internacionales.",
         "booking_state": "CONFIRMED",
         "number_guests": 12,
         "particular_username": "Antonio",
@@ -54,7 +54,7 @@
     {
         "name": "Cata de Vinos y Quesos",
         "date": "2024-08-11",
-        "details": "Descubra los mejores maridajes de vinos y quesos en nuestra degustación especial. Únete a nosotros para una experiencia sensorial única llena de sabores y aromas.",
+        "details": "Buscamos una experiencia educativa con expertos que puedan explicar las características de cada vino y queso ofrecidos, enfocado en productos locales.",
         "booking_state": "CONFIRMED",
         "number_guests": 40,
         "particular_username": "Luis",
@@ -64,7 +64,7 @@
     {
         "name": "Cumpleaños Temático para Niños",
         "date": "2024-09-05",
-        "details": "Celebra el cumpleaños de tu hijo con un tema especial y un catering que encantará tanto a niños como a adultos. Desde juegos hasta menús divertidos, todo está organizado para tu comodidad.",
+        "details": "El tema del cumpleaños es 'Superhéroes'. Necesitamos decoraciones coloridas, actividades y un menú adecuado para niños, incluyendo opciones sin alérgenos comunes.",
         "booking_state": "CONFIRMED",
         "number_guests": 19,
         "particular_username": "Jaime",
@@ -74,7 +74,7 @@
     {
         "name": "Fiesta de Inauguración Corporativa",
         "date": "2024-07-01",
-        "details": "Marca la inauguración de tu empresa con un evento espectacular. Ofrecemos una amplia gama de servicios de catering para garantizar que su evento sea un éxito rotundo.",
+        "details": "Es una inauguración de nuestra nueva sede. Queremos impresionar a nuestros invitados con una exhibición de fuegos artificiales y una selección gourmet de canapés y cócteles.",
         "booking_state": "CONFIRMED",
         "number_guests": 11,
         "particular_username": "Manuel",
@@ -84,7 +84,7 @@
     {
         "name": "Degustación Gastronómica Exclusiva",
         "date": "2024-10-10",
-        "details": "Únete a nosotros para una exclusiva noche de degustación gastronómica. Explora sabores únicos y platos innovadores creados por nuestros chefs de primera línea.",
+        "details": "Este evento es para un grupo de aficionados culinarios. Esperamos una exploración de platos innovadores que desafíen el paladar, acompañados de un sommelier.",
         "booking_state": "CONFIRMED",
         "number_guests": 20,
         "particular_username": "David",
@@ -95,7 +95,7 @@
     {
         "name": "Cena de lujo en la playa",
         "date": "2024-07-15",
-        "details": "Experimente una noche de elegancia suprema en nuestra exclusiva cena de gala.",
+        "details": "La cena es para un aniversario de bodas y deseamos un menú personalizado que incluya los platos favoritos de la pareja, con un enfoque en ingredientes de temporada y locales.",
         "booking_state": "CONFIRMED",
         "number_guests": 2,
         "particular_username": "Manuel",
@@ -105,7 +105,7 @@
     {
         "name": "Fiesta Increíble en la Noche",
         "date": "2024-08-11",
-        "details": "Organizamos una sorpresa nocturna inolvidable, repleta de diversión y sorpresas para todos.",
+        "details": "Solicito una noche llena de luces brillantes y música electrizante, ideal para celebrar el aniversario de nuestra empresa.",
         "booking_state": "CONFIRMED",
         "number_guests": 5,
         "particular_username": "Juan",
@@ -115,7 +115,7 @@
     {
         "name": "Recepción especial en el palacio de cristal",
         "date": "2024-06-29",
-        "details": "Únete a nosotros en un escenario natural idílico para un evento sereno y hermoso en el jardín botánico.",
+        "details": "Deseamos una recepción con un ambiente elegante y decoración minimalista, destacando la arquitectura del palacio.",
         "booking_state": "CONFIRMED",
         "number_guests": 12,
         "particular_username": "Pablo",
@@ -125,7 +125,7 @@
     {
         "name": "Boda espectacular en la playa",
         "date": "2024-06-17",
-        "details": "Celebra tu unión en un escenario de ensueño con vistas al mar y un servicio de catering excepcional.",
+        "details": "Queremos una ceremonia íntima con decoración floral natural y un buffet de mariscos frescos al atardecer.",
         "booking_state": "CONFIRMED",
         "number_guests": 19,
         "particular_username": "David",
@@ -135,7 +135,7 @@
     {
         "name": "Conferencia de Negocios Global",
         "date": "2024-07-22",
-        "details": "Acompáñanos en una conferencia de negocios con catering de alta gama, diseñada para impresionar a participantes internacionales.",
+        "details": "Necesitamos servicios de catering que incluyan opciones veganas y sin gluten para nuestros invitados internacionales.",
         "booking_state": "CONFIRMED",
         "number_guests": 30,
         "particular_username": "Antonio",
@@ -145,7 +145,7 @@
     {
         "name": "Degustación Exclusiva de Vinos y Quesos",
         "date": "2024-08-13",
-        "details": "Explora una selección curada de vinos y quesos en una atmósfera elegante y educativa.",
+        "details": "Organizamos una velada para expertos en vinos, con énfasis en variedades locales y quesos artesanales.",
         "booking_state": "CONFIRMED",
         "number_guests": 42,
         "particular_username": "Luis",
@@ -155,7 +155,7 @@
     {
         "name": "Cumpleaños Infantil Temático",
         "date": "2024-09-07",
-        "details": "Haz que el cumpleaños de tu hijo sea mágico con actividades temáticas y un delicioso catering que deleitará a todos.",
+        "details": "Buscamos un cumpleaños temático de dinosaurios con actividades educativas y snacks saludables para niños.",
         "booking_state": "CONFIRMED",
         "number_guests": 54,
         "particular_username": "Jaime",
@@ -165,7 +165,7 @@
     {
         "name": "Inauguración Corporativa Espectacular",
         "date": "2024-06-23",
-        "details": "Marca un hito con la inauguración de tu empresa, presentando un espectáculo culinario que establecerá el estándar para futuros eventos.",
+        "details": "Para nuestra inauguración deseamos canapés de alta cocina y una selección de champán y cócteles de autor.",
         "booking_state": "CONFIRMED",
         "number_guests": 10,
         "particular_username": "Manuel",
@@ -175,7 +175,7 @@
     {
         "name": "Noche de Degustación Gastronómica",
         "date": "2024-10-12",
-        "details": "Disfruta de una noche donde la gastronomía de vanguardia y la innovación culinaria son las protagonistas.",
+        "details": "Organizamos una cena para gourmets con platos experimentales que reflejen las últimas tendencias culinarias.",
         "booking_state": "CONFIRMED",
         "number_guests": 25,
         "particular_username": "David",
@@ -186,7 +186,7 @@
     {
         "name": "Gala de Primavera",
         "date": "2024-09-15",
-        "details": "Una noche de gala con una exhibición de moda y música en vivo para dar la bienvenida a la primavera.",
+        "details": "La gala de primavera debe incluir un menú ligero y refrescante con flores comestibles y sabores primaverales.",
         "booking_state": "CONFIRMED",
         "number_guests": 18,
         "particular_username": "Pablo",
@@ -196,7 +196,7 @@
     {
         "name": "Encuentro Empresarial 2024",
         "date": "2024-08-20",
-        "details": "Evento empresarial con conferencias y networking, incluyendo almuerzos y cenas de trabajo.",
+        "details": "Esperamos un ambiente formal con servicios de catering que faciliten la interacción y el networking.",
         "booking_state": "CONFIRMED",
         "number_guests": 15,
         "particular_username": "David",
@@ -206,7 +206,7 @@
     {
         "name": "Maratón Musical Nocturno",
         "date": "2024-07-05",
-        "details": "Una maratón musical que durará toda la noche, con varios artistas en escena y servicios de catering continuos.",
+        "details": "Necesitamos estaciones de comida rápida gourmet accesibles durante el evento para los asistentes.",
         "booking_state": "CONFIRMED",
         "number_guests": 22,
         "particular_username": "Antonio",
@@ -216,7 +216,7 @@
     {
         "name": "Festival Gastronómico del Mar",
         "date": "2024-06-10",
-        "details": "Disfrute de un festival gastronómico que celebra los sabores del mar, con platos especiales y presentaciones culinarias.",
+        "details": "Favor incluir platos que destaquen ingredientes del mar, con demostraciones de cocina en vivo.",
         "booking_state": "CONFIRMED",
         "number_guests": 7,
         "particular_username": "Luis",
@@ -226,7 +226,7 @@
     {
         "name": "Fiesta saludable y sostenible",
         "date": "2024-07-25",
-        "details": "Un retiro que combina sesiones de yoga y meditación con una alimentación saludable y consciente.",
+        "details": "Deseamos un enfoque en alimentos orgánicos y sostenibles, con opciones vegetarianas y sin desperdicio.",
         "booking_state": "CONFIRMED",
         "number_guests": 9,
         "particular_username": "Jaime",
@@ -236,7 +236,7 @@
     {
         "name": "Aniversario de Empresa Innovadora",
         "date": "2024-08-15",
-        "details": "Celebración del décimo aniversario de una empresa líder en innovación, incluyendo discursos, premiaciones y un excelente catering.",
+        "details": "La celebración debe ser vanguardista, reflejando la innovación de nuestra empresa con una cocina moderna y creativa.",
         "booking_state": "CONFIRMED",
         "number_guests": 2,
         "particular_username": "Mateo",
@@ -246,7 +246,7 @@
     {
         "name": "Noche de Gala Benéfica",
         "date": "2024-09-30",
-        "details": "Una gala benéfica para recaudar fondos para la educación de niños desfavorecidos, con un menú exquisito y actuaciones en vivo.",
+        "details": "Queremos una gala que refleje sofisticación y solidaridad, con una subasta benéfica y música clásica de fondo.",
         "booking_state": "CANCELLED",
         "number_guests": 15,
         "particular_username": "Juan",
@@ -257,7 +257,7 @@
     {
         "name": "Tarde de Cata de Tés",
         "date": "2024-10-22",
-        "details": "Una tarde dedicada a la cata de tés de todo el mundo, acompañada de una selección de bocadillos finos.",
+        "details": "Favor de organizar una tarde tranquila con una variedad de tés internacionales y pastelería fina.",
         "booking_state": "CONFIRMED",
         "number_guests": 4,
         "particular_username": "Pablo",
@@ -267,7 +267,7 @@
     {
         "name": "Exposición de Arte Contemporáneo",
         "date": "2024-11-18",
-        "details": "Una exclusiva exposición de arte contemporáneo con un servicio de catering que refleja las tendencias actuales en la gastronomía.",
+        "details": "Requerimos un servicio de catering que complemente la estética moderna de la exposición con aperitivos artísticos.",
         "booking_state": "CANCELLED",
         "number_guests": 12,
         "particular_username": "Mateo",
@@ -277,7 +277,7 @@
     {
         "name": "Encuentro de Escritores",
         "date": "2024-12-05",
-        "details": "Un encuentro para escritores emergentes y consagrados, ofreciendo un espacio para la discusión creativa y la inspiración.",
+        "details": "Buscamos un ambiente inspirador con cafés artesanales y bocadillos literarios para los participantes.",
         "booking_state": "CONFIRMED",
         "number_guests": 7,
         "particular_username": "Luis",
@@ -287,7 +287,7 @@
     {
         "name": "Simposio de Tecnología y Sostenibilidad",
         "date": "2024-08-19",
-        "details": "Un simposio que aborda los últimos avances en tecnología sostenible, con pausas para disfrutar de un excelente catering ecológico.",
+        "details": "Es esencial un servicio de catering ecológico que refleje los temas de tecnología y sostenibilidad del evento.",
         "booking_state": "CONFIRMED",
         "number_guests": 8,
         "particular_username": "David",
@@ -297,7 +297,7 @@
     {
         "name": "Festival de Cine al Aire Libre",
         "date": "2024-07-14",
-        "details": "Disfruta de clásicos del cine y estrenos en nuestro festival al aire libre, con opciones de catering para todos los gustos.",
+        "details": "Solicito un ambiente cómodo y relajado con proyecciones de películas clásicas y recientes, junto con puestos de comida variada y palomitas de maíz gourmet.",
         "booking_state": "CANCELLED",
         "number_guests": 20,
         "particular_username": "Antonio",
@@ -307,7 +307,7 @@
     {
         "name": "Cena Romántica bajo las Estrellas",
         "date": "2024-09-21",
-        "details": "Una cena íntima bajo el cielo estrellado, perfecta para parejas que buscan celebrar un momento especial.",
+        "details": "Deseo una mesa decorada con luces suaves y un menú de cinco platos que incluya mariscos y una selección de vinos.",
         "booking_state": "CONFIRMED",
         "number_guests": 17,
         "particular_username": "Jaime",
@@ -318,7 +318,7 @@
     {
         "name": "Gala Anual de Beneficencia",
         "date": "2024-09-30",
-        "details": "Una noche dedicada a la recaudación de fondos para causas benéficas, acompañada de una cena de gala preparada por los mejores chefs.",
+        "details": "Organizamos una gala elegante con actuaciones en vivo y un menú de lujo que incluya platos veganos y sin gluten.",
         "booking_state": "CANCELLED",
         "number_guests": 100,
         "particular_username": "Manuel",
@@ -328,7 +328,7 @@
     {
         "name": "Retiro de Yoga y Meditación",
         "date": "2024-11-10",
-        "details": "Un retiro espiritual que combina yoga y meditación con una alimentación consciente y nutritiva, perfecto para renovar cuerpo y mente.",
+        "details": "Requerimos comidas vegetarianas y jugos naturales en un entorno tranquilo que fomente la paz interior y la relajación.",
         "booking_state": "CANCELLED",
         "number_guests": 60,
         "particular_username": "Jaime",
@@ -338,7 +338,7 @@
     {
         "name": "Torneo de Golf de Primavera",
         "date": "2024-04-20",
-        "details": "Disfrute de un día en el campo de golf con servicios de catering premium que garantizan una experiencia de primera clase.",
+        "details": "Esperamos una variedad de bocadillos saludables y opciones de almuerzo para los participantes, servidos en puntos estratégicos del campo.",
         "booking_state": "CANCELLED",
         "number_guests": 80,
         "particular_username": "David",
@@ -348,7 +348,7 @@
     {
         "name": "Maratón Musical de Verano",
         "date": "2024-06-15",
-        "details": "Vive la música de verano con un festival que ofrece actuaciones en vivo y un excelente servicio de catering para energizar a los asistentes.",
+        "details": "Organizamos un festival musical de verano con una amplia variedad de géneros y opciones gastronómicas para satisfacer a todos los asistentes.",
         "booking_state": "CANCELLED",
         "number_guests": 150,
         "particular_username": "Luis",
@@ -358,7 +358,7 @@
     {
         "name": "Conferencia Internacional de Diseño",
         "date": "2024-10-05",
-        "details": "Una conferencia que reúne a los principales nombres del diseño mundial, con pausas gourmet que inspiran creatividad.",
+        "details": "Solicitamos pausas gourmet durante la conferencia para mantener a los asistentes inspirados y energizados con opciones de catering internacional.",
         "booking_state": "CANCELLED",
         "number_guests": 130,
         "particular_username": "Juan",
@@ -368,7 +368,7 @@
     {
         "name": "Noche de Comedia en la Ciudad",
         "date": "2024-08-22",
-        "details": "Disfruta de una noche de risas y diversión con una selección de los mejores comediantes, acompañados de un menú especial.",
+        "details": "Deseamos una noche divertida con comedia en vivo y un menú especial que incluya platos reconfortantes y ligeros para todos los gustos.",
         "booking_state": "CANCELLED",
         "number_guests": 70,
         "particular_username": "Mateo",
@@ -380,7 +380,7 @@
     {
         "name": "Cata de Cervezas Artesanales",
         "date": "2024-04-10",
-        "details": "Una noche para explorar una variedad de cervezas artesanales locales e internacionales.",
+        "details": "Celebramos una noche dedicada a explorar una amplia variedad de cervezas artesanales acompañadas de aperitivos seleccionados para realzar los sabores.",
         "booking_state": "FINALIZED",
         "number_guests": 45,
         "particular_username": "Ricardo",
@@ -390,7 +390,7 @@
     {
         "name": "Tarde de Té Gourmet",
         "date": "2024-02-20",
-        "details": "Una selección de los mejores tés del mundo, acompañados de pastelería fina y delicatessen.",
+        "details": "Ofrecemos una selección exclusiva de tés gourmet de todo el mundo, complementados con exquisitos dulces y bocados.",
         "booking_state": "FINALIZED",
         "number_guests": 20,
         "particular_username": "Isabel",
@@ -400,7 +400,7 @@
     {
         "name": "Noche de Tapas y Flamenco",
         "date": "2024-03-25",
-        "details": "Disfrute de una auténtica experiencia española con música en vivo y una selección de tapas.",
+        "details": "Brindamos una experiencia española auténtica con música en vivo y una selección de tapas tradicionales y creativas.",
         "booking_state": "FINALIZED",
         "number_guests": 55,
         "particular_username": "Carmen",
@@ -410,7 +410,7 @@
     {
         "name": "Workshop de Cocina Vegana",
         "date": "2024-04-22",
-        "details": "Aprende a preparar deliciosos platos veganos con ingredientes frescos y técnicas innovadoras.",
+        "details": "Proporcionamos un ambiente educativo y divertido para aprender a preparar platos veganos deliciosos y nutritivos.",
         "booking_state": "FINALIZED",
         "number_guests": 35,
         "particular_username": "Elena",
@@ -420,7 +420,7 @@
     {
         "name": "Encuentro de Innovación Culinaria",
         "date": "2024-01-30",
-        "details": "Un evento para profesionales de la gastronomía enfocado en las últimas tendencias e innovaciones.",
+        "details": "Organizamos un evento dinámico para profesionales de la gastronomía centrado en las últimas tendencias y técnicas culinarias innovadoras.",
         "booking_state": "FINALIZED",
         "number_guests": 65,
         "particular_username": "Gonzalo",
@@ -430,7 +430,7 @@
     {
         "name": "Fiesta de Invierno",
         "date": "2024-02-10",
-        "details": "Celebre el invierno con una fiesta temática que incluye música en vivo y comidas de temporada.",
+        "details": "Celebramos el invierno con una fiesta temática llena de música, entretenimiento y delicias culinarias de temporada.",
         "booking_state": "FINALIZED",
         "number_guests": 75,
         "particular_username": "Jorge",
@@ -440,7 +440,7 @@
     {
         "name": "Gala de Premiación Tecnológica",
         "date": "2024-03-10",
-        "details": "Una noche para celebrar los logros en tecnología con un menú excepcional y entretenimiento.",
+        "details": "Organizamos una gala elegante para celebrar los avances tecnológicos con un menú gourmet y entretenimiento de primera clase.",
         "booking_state": "FINALIZED",
         "number_guests": 90,
         "particular_username": "Carlos",
@@ -450,7 +450,7 @@
     {
         "name": "Encuentro de Aficionados al Vino",
         "date": "2024-02-28",
-        "details": "Un evento dedicado a los amantes del vino con catas dirigidas por sommeliers expertos.",
+        "details": "Deseamos una reunión especial para degustar vinos selectos, guiada por sommeliers destacados, acompañada de aperitivos que complementen los vinos.",
         "booking_state": "FINALIZED",
         "number_guests": 30,
         "particular_username": "Roberto",
@@ -460,7 +460,7 @@
     {
         "name": "Festival de Comida y Música",
         "date": "2024-04-20",
-        "details": "Disfruta de un festival al aire libre con los mejores platos y bandas en vivo.",
+        "details": "Queremos celebrar un festival que combine música en vivo con una oferta culinaria diversa para satisfacer a todos los asistentes.",
         "booking_state": "FINALIZED",
         "number_guests": 130,
         "particular_username": "Patricia",
@@ -470,7 +470,7 @@
     {
         "name": "Retiro de Yoga y Nutrición",
         "date": "2024-03-05",
-        "details": "Un retiro que combina sesiones de yoga con un enfoque en nutrición saludable y consciente.",
+        "details": "Buscamos un retiro que ofrezca sesiones de yoga y meditación, combinadas con menús saludables y balanceados, en un entorno tranquilo.",
         "booking_state": "FINALIZED",
         "number_guests": 40,
         "particular_username": "Veronica",
@@ -483,7 +483,7 @@
     {
         "name": "Cata de Aceites de Oliva",
         "date": "2024-03-15",
-        "details": "Experimente las variedades de aceite de oliva premium con expertos que guiarán su paladar.",
+        "details": "Solicitamos una cata educativa de aceites de oliva premium, con expertos que puedan explicar las características y procesos de cada selección.",
         "booking_state": "FINALIZED",
         "number_guests": 20,
         "particular_username": "Fernando",
@@ -493,7 +493,7 @@
     {
         "name": "Exposición de Arte Moderno",
         "date": "2024-02-05",
-        "details": "Disfrute de una noche de arte y cultura con un servicio de catering que complementa la experiencia.",
+        "details": "Necesitamos un servicio de catering que complemente una noche de arte moderno, con bocados estéticos y sofisticados.",
         "booking_state": "FINALIZED",
         "number_guests": 50,
         "particular_username": "Sofia",
@@ -503,7 +503,7 @@
     {
         "name": "Semana de la Moda Gastronómica",
         "date": "2024-04-08",
-        "details": "Un evento que fusiona la moda y la gastronomía, ofreciendo experiencias culinarias innovadoras.",
+        "details": "Organizamos una semana de eventos que fusionan moda y gastronomía, donde cada plato sirva como una extensión de la expresión artística.",
         "booking_state": "FINALIZED",
         "number_guests": 80,
         "particular_username": "Natalia",
@@ -513,7 +513,7 @@
     {
         "name": "Degustación de Chocolates Premium",
         "date": "2024-03-25",
-        "details": "Un dulce recorrido por los mejores chocolates, dirigido por maestros chocolateros.",
+        "details": "Planeamos una sesión de degustación de chocolates finos, donde los expertos puedan guiar a los invitados a través de una variedad de sabores y texturas.",
         "booking_state": "FINALIZED",
         "number_guests": 30,
         "particular_username": "Lucia",
@@ -523,7 +523,7 @@
     {
         "name": "Festival de Jazz y Gastronomía",
         "date": "2024-02-25",
-        "details": "Vive la combinación perfecta de música jazz en vivo y una selección exquisita de platos.",
+        "details": "Deseamos un festival que combine actuaciones de jazz con una selección culinaria que refleje la vibra y el estilo del jazz.",
         "booking_state": "FINALIZED",
         "number_guests": 60,
         "particular_username": "Oscar",
@@ -533,7 +533,7 @@
     {
         "name": "Encuentro de Cocina Mediterránea",
         "date": "2024-01-30",
-        "details": "Descubre los secretos de la cocina mediterránea con chefs reconocidos y ingredientes auténticos.",
+        "details": "Queremos un evento que destaque los sabores de la cocina mediterránea con demostraciones en vivo por chefs expertos.",
         "booking_state": "FINALIZED",
         "number_guests": 25,
         "particular_username": "Marta",
@@ -543,7 +543,7 @@
     {
         "name": "Noche de Cocteles y Tapas",
         "date": "2024-02-15",
-        "details": "Una velada con los cocteles más innovadores acompañados de una selección de tapas gourmet.",
+        "details": "Organizamos una noche de cocteles artesanales y tapas innovadoras, en un ambiente relajado y festivo.",
         "booking_state": "FINALIZED",
         "number_guests": 40,
         "particular_username": "Diego",
@@ -553,7 +553,7 @@
     {
         "name": "Taller de Cocina Vegana Creativa",
         "date": "2024-03-10",
-        "details": "Aprende a cocinar platos veganos creativos y deliciosos en un ambiente interactivo y divertido.",
+        "details": "Buscamos un taller interactivo donde los participantes puedan aprender sobre cocina vegana moderna y técnicas creativas.",
         "booking_state": "FINALIZED",
         "number_guests": 15,
         "particular_username": "Ana",
@@ -563,7 +563,7 @@
     {
         "name": "Celebración de Año Nuevo Chino",
         "date": "2024-04-01",
-        "details": "Celebra el Año Nuevo Chino con una auténtica fiesta llena de tradiciones y delicias culinarias.",
+        "details": "Planificamos una celebración vibrante del Año Nuevo Chino con auténticas tradiciones, danzas y una gastronomía que honre esta rica cultura.",
         "booking_state": "FINALIZED",
         "number_guests": 100,
         "particular_username": "Jorge",
@@ -573,7 +573,7 @@
     {
         "name": "Fiesta de Primavera al Aire Libre",
         "date": "2024-04-15",
-        "details": "Disfruta de la llegada de la primavera con una fiesta al aire libre, con juegos, música y deliciosa comida.",
+        "details": "Queremos dar la bienvenida a la primavera con una fiesta al aire libre que incluya actividades recreativas, música en vivo y una variedad de comidas frescas de temporada.",
         "booking_state": "FINALIZED",
         "number_guests": 55,
         "particular_username": "Isabel",
