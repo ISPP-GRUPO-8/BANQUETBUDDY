@@ -438,6 +438,13 @@ def listar_caterings_companies(request):
     if not is_particular(request):
         return HttpResponseForbidden("You are not a particular")
     caterings = CateringCompany.objects.all()
+    if "search" not in context:
+       busqueda = ""
+
+    if request.method == "POST":
+        busqueda = request.POST.get("search", "")
+        caterings = CateringCompany.objects.filter(Q(name__icontains=busqueda))
+    
 
     context["caterings"] = caterings
     return render(request, "contact_chat.html", context)

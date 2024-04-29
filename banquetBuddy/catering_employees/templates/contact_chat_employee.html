@@ -5,7 +5,32 @@
   <h1 class="mb-4 text-center">Chats</h1>
   <hr />
   {% if is_employee %}
-
+  <form
+  method="post"
+  action="{% url 'listar_caterings_companies_employee' %}"
+  id="miFormulario"
+  class="mb-4"
+>
+  {% csrf_token %}
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control bg-light border-0 small"
+      placeholder="Search..."
+      id="search"
+      name="search"
+      value="{{ search }}"
+    />
+    <div class="input-group-append">
+      <button class="btn btn-primary  mb-3" type="submit">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-secondary mb-3" type="button" id="limpiarFiltros">
+        <i class="fa fa-times" aria-hidden="true"></i> Limpiar Filtros
+      </button>
+    </div>
+  </div>
+</form>
     <div class="row">
       {% for catering in caterings %}
       <div class="col-md-6">
@@ -39,4 +64,16 @@
     });
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Obtener el botón de limpiar filtros
+    var limpiarFiltrosBtn = document.getElementById("limpiarFiltros");
+    
+    // Agregar un event listener para limpiar el campo de búsqueda cuando se haga clic en el botón
+    limpiarFiltrosBtn.addEventListener("click", function() {
+      document.getElementById("search").value = ""; // Limpiar el campo de búsqueda
+      document.getElementById("miFormulario").submit(); // Enviar el formulario
+    });
+  });
+  </script>
 {% endblock %}
