@@ -105,13 +105,13 @@
 
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'my_books' %}">My bookings</a>
+                            <a class="nav-link" href="{% url 'my_books' %}">My Bookings</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'listar_caterings_companies' %}">Chats</a>
                         </li>
                     {% endif %}
-                    {% if request.user.is_authenticated and is_catering_company %}
+                    {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_particular' %}">Chats</a>
                     </li>
@@ -121,7 +121,7 @@
                         <a class="nav-link" href="/employeeOfferList">Offers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/JobApplicationList">Offers applied</a>
+                        <a class="nav-link" href="/JobApplicationList">Offers Applied</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'listar_caterings_companies_employee' %}">Chats</a>
@@ -164,7 +164,7 @@
                 </div>
                 {% endif %}
                 <form class="form-inline my-2 my-lg-0 ml-4">
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log out</a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log Out</a>
                 </form>
                 {% endif %}
             </div>

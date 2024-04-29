@@ -836,6 +836,9 @@ def update_catering_service(request, service_id):
         form = CateringServiceForm(request.POST, instance=catering_service)
         if form.is_valid():
             form.save()
+            messages.success(
+                request, "Catering Service updated successfully."
+            )
             return redirect("services")
     else:
         form = CateringServiceForm(instance=catering_service)

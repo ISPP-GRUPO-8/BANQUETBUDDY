@@ -5,7 +5,7 @@
 
 <style>
   .card {
-    height: 400px
+    height: 450px
   }
 
   .btn-create {
@@ -19,11 +19,6 @@
     cursor: pointer;
     margin-left: 10%;
     margin-right: 10%;
-  }
-
-  .btn-employees {
-    background-color: #047967;
-    color: white;
   }
 
   .btn-create:hover {
@@ -42,7 +37,7 @@
 
   {% if messages %}
   {% for message in messages %}
-  <div class="alert alert-danger" role="alert">{{ message }}</div>
+  <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
   {% endfor %}
   {% endif %}
 
@@ -57,39 +52,39 @@
     <div class="col-md-4">
       <div class="card mb-4 rounded-lg shadow">
         <h4 class="card-title mt-4" style="text-align: center;">{{ service.name }}</h4>
-        <div class="card-body text-dark">
+        <div class="card-body">
           <hr style="margin-top: 1px; border-top: 2px solid black; width: 50%;">
           <p class="card-text" style="text-align: center;">{{ service.description }}</p>
-          <p class="card-text" style="text-align: center;">{{ service.location }}</p>
-          <p class="card-text" style="text-align: center;">{{ service.capacity }} guests</p>
-          <p class="card-text" style="text-align: center;">{{ service.price }} €</p>
+          <p class="card-text" style="text-align: center;"><strong>Location: </strong> {{ service.location }} </p>
+          <p class="card-text" style="text-align: center;"><strong>Number of Guests: </strong> {{ service.capacity }} guests</p>
+          <p class="card-text" style="text-align: center;"><strong>Price: </strong> {{ service.price }} €</p>
         </div>
-        <div class="card-footer" style="text-align: center;">
+        <br>
+        <div style="text-align: center;">
           <a href="{% url 'list_employee' service.id %}">
-            <button class="btn btn-employees">
+            <button class="btn btn-custom">
                 Employees
             </button>
           </a>
           <a href="{% url 'update_service' service.id %}">
-            <button class="btn btn-info">
+            <button class="btn btn-custom-blue" style="margin-left: 5px;">
               Edit
             </button>
           </a>
           <a href="{% url 'delete_service' service.id %}">
-            <button class="btn btn-danger">
+            <button class="btn btn-danger" style="margin-left: 5px;">
               Delete
             </button>
           </a>
         </div>
+        <br>
       </div>
     </div>
 
     {% empty %}
-      <div class="d-flex justify-content-center align-items-center" style="width: 100%;">
-        <div class="list-group-item text-center">
-          <p>No services published.</p>
-        </div> 
-      </div>
+    <div class="col">
+      <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No services published</p>
+    </div>
     {% endfor %}
   </div>
 </div>

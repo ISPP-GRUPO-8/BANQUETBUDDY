@@ -1,51 +1,67 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Employee Termination Details</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .status-active { color: green; }
-        .status-terminated { color: red; }
-        .section-header { margin-top: 20px; font-size: 24px; }
-        .edit-form { margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Edit Termination Details for {{ employee_service.employee.user.username }}</h1>
-        <div class="list-group-item">
-            <h3>{{ employee_service.employee.user.get_full_name }}</h3>
-            <p>Username: {{ employee_service.employee.user.username }}</p>
-            <p>Email: {{ employee_service.employee.user.email }}</p>
-            <p>Profession: {{ employee_service.employee.profession }}</p>
-            <p>Event: {{ employee_service.event.name }}</p>
-            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default_if_none:"Current" }}</p>
-            <p class="status-{{ employee_service.current_status|lower }}">
-                
+<style>
+    .content-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .content-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        strong {
+            margin-right: 5px;
+            color: #02483E;
+        }
+</style>
+<div class="content-wrapper">
+    <div class="content-container">
+        <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Edit Termination Details for {{ employee_service.employee.user.username }}</h2>
+        <ul>
+            <li><strong>Username:</strong> {{ employee_service.employee.user.username }}</li>
+            <li><strong>Email:</strong> {{ employee_service.employee.user.email }}</li>
+            <li><strong>Profession:</strong> {{ employee_service.employee.profession }}</li>
+            <li><strong>Event:</strong> {{ employee_service.event.name }}</li>
+            <li><strong>Date Range:</strong> {{ employee_service.start_date }} to {{ employee_service.end_date|default_if_none:"Current" }}</li>
+            <li><p class="{% if employee_service.current_status == 'Activo' %}text-success{% elif employee_service.current_status == 'Terminado' %}text-danger{% endif %}">
                 {% if employee_service.current_status == 'Activo' %}
-                   State: Active
+                    Active
                 {% endif %}
-
-                {% if employee_service.current_status == 'Terminado' %}
-                    State: Terminated
-                {% endif %}
-            </p>
             
+                {% if employee_service.current_status == 'Terminado' %}
+                    Terminated
+                {% endif %}
+                </p>
+            </li>
             <!-- Edit form for termination details -->
             <form method="post" class="edit-form">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Update Termination</button>
+                {% for field in form %}
+                    <strong>{{ field.label }}:</strong>{{ field }} <br><br>
+                {% endfor %}
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-custom">Save Changes</button>
+                </div>
             </form>
-        </div>
+        </ul>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+</div>
 {% endblock %}
