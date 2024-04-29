@@ -32,10 +32,9 @@
     text-decoration: none !important;
   }
 </style>
-</style>
 
 <div class="container mt-3">
-  <h1 class="mb-4">Services list</h1>
+  <h1 class="mb-4 text-center">Services list</h1>
   <hr />
 
   {% if messages %}
@@ -80,11 +79,14 @@
           </a>
         </div>
       </div>
-      </a>
     </div>
 
     {% empty %}
-    <div>No services available.</div>
+      <div class="d-flex justify-content-center align-items-center" style="width: 100%;">
+        <div class="list-group-item text-center">
+          <p>No services published.</p>
+        </div> 
+      </div>
     {% endfor %}
   </div>
 </div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from core.models import BookingState
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,7 +6,6 @@ from django.urls import reverse
 from core.forms import CustomUserCreationForm
 from catering_owners.models import *
 from .forms import ParticularForm
-import re
 from django.http import HttpResponseForbidden
 from core.views import *
 from django.contrib.auth.decorators import login_required
@@ -16,75 +15,101 @@ from datetime import datetime
 import stripe
 from django.conf import settings
 from decimal import Decimal
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from core.permission_checks import is_user_particular
+import random
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
-# @login_required
-# def my_books(request):
-#     user = request.user
-#     events = Event.objects.filter(particular_id=user.id)
-#     context = {"events": events}
-#     return render(request, "my_books.html", context)
+NOT_PARTICULAR_ERROR = "You are not registered as a particular"
+FORBIDDEN_ACCESS_ERROR = "You are not allowed to access to the following page"
 
 
-# @login_required
-# def book_cancel(request, event_id):
-#     user = request.user
-#     events = Event.objects.filter(particular_id=user.id)
-#     context = {"events": events}
-#     event = get_object_or_404(Event, id=event_id)
-#     if user.id == event.particular_id:
-#         event.booking_state = BookingState.CANCELLED
-#         event.save()
-#     return render(request, "my_books.html", context)
+@login_required
+def my_books(request):
+    user = request.user
+    events_list = Event.objects.filter(particular_id=user.id).order_by('-date')
+
+    paginator = Paginator(events_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        events = paginator.page(1)
+    except EmptyPage:
+        events = paginator.page(paginator.num_pages)
+
+    context = {
+        "events": events,
+    }
+    return render(request, "my_books.html", context)
 
 
-# @login_required
-# def book_edit(request, event_id):
-#     context = {}
-#     event = get_object_or_404(Event, id=event_id)
-#     events = Event.objects.filter(particular_id=request.user.id)
-#     catering_service = get_object_or_404(CateringService, id=event.cateringservice_id)
-#     catering = get_object_or_404(
-#         CateringCompany, user_id=catering_service.cateringcompany_id
-#     )
-#     menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
-#     context["menus"] = menus
-#     context["event"] = event
 
-#     if request.method == "POST":
-#         date = request.POST.get("date")
-#         number_guests = request.POST.get("number_guests")
-#         menu = request.POST.get("selected_menu")
+@login_required
+def book_cancel(request, event_id):
+    user = request.user
+    events = Event.objects.filter(particular_id=user.id)
+    context = {"events": events}
+    event = get_object_or_404(Event, id=event_id)
+    if user.id == event.particular_id:
+        event.booking_state = BookingState.CANCELLED
+        event.save()
+    return redirect('my_books')
 
-#         context["date"] = date
-#         context["number_guests"] = number_guests
-#         context["menu"] = menu
-#         context["events"] = events
 
-#         if number_guests == "0":
-#             context["error"] = "The number of guests can not be 0."
-#             return render(request, "book_edit.html", context)
+@login_required
+def book_edit(request, event_id):
+    context = {}
+    event = get_object_or_404(Event, id=event_id)
+    events = Event.objects.filter(particular_id=request.user.id)
+    catering_service = get_object_or_404(CateringService, id=event.cateringservice_id)
+    catering = get_object_or_404(
+        CateringCompany, user_id=catering_service.cateringcompany_id
+    )
+    menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
+    context["menus"] = menus
+    context["event"] = event
 
-#         date2 = datetime.strptime(date, "%Y-%m-%d").date()
+    if request.method == "POST":
+        date = request.POST.get("date")
+        number_guests = request.POST.get("number_guests")
+        menu = request.POST.get("selected_menu")
 
-#         if datetime.now().date() > date2:
-#             context["error"] = "The selected date cannot be in the past."
-#             return render(request, "book_edit.html", context)
+        context["date"] = date
+        context["number_guests"] = number_guests
+        context["menu"] = menu
+        context["events"] = events
 
-#         event.date = date
-#         event.number_guests = number_guests
-#         event.menu = Menu.objects.get(id=menu)
-#         event.booking_state = BookingState.CONTRACT_PENDING
-#         event.details = f"Reservation for {number_guests} guests"
-#         event.save()
+        if number_guests == "0":
+            context["error"] = "The number of guests can not be 0."
+            return render(request, "book_edit.html", context)
 
-#         return render(request, "my_books.html", context)
+        date2 = datetime.strptime(date, "%Y-%m-%d").date()
 
-#     return render(request, "book_edit.html", context)
+        if datetime.now().date() > date2:
+            context["error"] = "The selected date cannot be in the past."
+            return render(request, "book_edit.html", context)
+
+        event.date = date
+        event.number_guests = number_guests
+        event.menu = Menu.objects.get(id=menu)
+        event.booking_state = BookingState.CONTRACT_PENDING
+        event.details = f"Reservation for {number_guests} guests"
+        event.save()
+
+        return redirect('my_books')
+
+    return render(request, "book_edit.html", context)
 
 
 # Create your views here.
@@ -97,12 +122,43 @@ def register_particular(request):
 
         if user_form.is_valid() and particular_form.is_valid():
 
-            user = user_form.save()
+            user = user_form.save(commit=False)
+            user.is_active = (
+                False  # Desactiva la cuenta hasta que se confirme el correo electrónico
+            )
+            user.save()
 
             particular_profile = particular_form.save(commit=False)
             particular_profile.user = user
             particular_profile.save()
-            messages.success(request, "Registration successful!")
+
+            # Genera un token único para el usuario
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            # Obtiene el dominio actual
+            domain = get_current_site(request).domain
+            # Crea el enlace de confirmación
+            link = f"http://{domain}/activate/{uid}/{token}/particular"
+            # Renderiza el correo electrónico
+            mail_subject = "Activate your account"
+            message = render_to_string(
+                "core/activation_email.html",
+                {
+                    "user": user,
+                    "domain": domain,
+                    "uid": uid,
+                    "token": token,
+                },
+            )
+            # Envia el correo electrónico
+            send_mail(
+                mail_subject, message, "banquetbuddyoficial@gmail.com", [user.email]
+            )
+
+            messages.success(
+                request,
+                "Registration successful! Please confirm your email address to complete the registration",
+            )
 
             return redirect("home")
 
@@ -119,8 +175,11 @@ def register_particular(request):
 
 @login_required
 def catering_contratados(request):
+    current_user = request.user
     context = {}
-    particular = get_object_or_404(Particular, user=request.user)
+    if not is_user_particular(current_user):
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    particular = get_object_or_404(Particular, user=current_user)
     events = Event.objects.filter(particular=particular)
     context["events"] = events
     context["is_particular"] = is_particular(request)
@@ -192,7 +251,7 @@ def listar_caterings(request):
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
     if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     caterings = CateringService.objects.all()
 
     # Obtener tipos de cocina únicos
@@ -248,16 +307,32 @@ def catering_detail(request, catering_id):
 
     context["reviews"] = reviews
     if not is_particular(request):
-        return HttpResponseForbidden("No eres cliente")
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
     catering = get_object_or_404(CateringService, id=catering_id)
     context["catering"] = catering
     return render(request, "catering_detail.html", context)
 
+
 @login_required
 def catering_review(request, catering_id):
-    catering = get_object_or_404(CateringService, id=catering_id)
     user = request.user
+    catering = get_object_or_404(CateringService, id=catering_id)
+    if not is_user_particular(user):
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    has_been_booked = False
     particular = Particular.objects.filter(user_id=user.id)
+    particular_events = Event.objects.filter(particular=particular[0])
+    for event in particular_events:
+        if event.cateringservice == catering:
+            has_been_booked = True
+            break
+
+    if not has_been_booked:
+        messages.error(
+            request,
+            "You must have a booking with this catering service before reviewing it",
+        )
+        return redirect("listar_caterings")
 
     if particular:
         context = {"catering": catering, "particular": particular}
@@ -291,8 +366,8 @@ def booking_process(request, catering_id):
     )
     user = request.user
     if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
-    
+        return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+
     eventos = Event.objects.filter(cateringservice_id=catering.user_id)
     highlighted_dates = []
 
@@ -301,7 +376,7 @@ def booking_process(request, catering_id):
     # Obtener el menú para el catering actual
     highlighted_dates_str = [date.strftime("%Y-%m-%d") for date in highlighted_dates]
 
-    menus = Menu.objects.filter(cateringcompany_id=catering.user_id)
+    menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
     # Coloca el menú dentro del contexto correctamente
     context = {
@@ -372,8 +447,11 @@ def booking_process(request, catering_id):
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, "booking_process.html", context)
 
+
 @login_required
-def payment_process(request, catering_service_id, selected_menu, number_guests, event_date):
+def payment_process(
+    request, catering_service_id, selected_menu, number_guests, event_date
+):
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
     request.session["selected_menu"] = selected_menu
     if request.method == "POST":
@@ -413,15 +491,20 @@ def payment_completed(request):
     menu = Menu.objects.get(id=request.session["selected_menu"])
     catering_service_id = request.session["catering_service_id"]
     catering_service = get_object_or_404(CateringService, id=catering_service_id)
+
+    # Asignar la empresa de catering vinculada al servicio de catering
+    catering_company = catering_service.cateringcompany
+    random_number = random.randint(1, 999)
     # Crear el evento y hacer la reserva
     event = Event.objects.create(
         cateringservice=catering_service,
+        cateringcompany=catering_company,  # Asignar la empresa de catering
         particular=get_object_or_404(Particular, user=request.user),
-        name=f"Reservation for {catering_service.cateringcompany.name} by {request.user.username}",
+        name=f"Reservation for {catering_service.cateringcompany.name} by {request.user.username} #{random_number}",
         date=request.session["event_date"],
         details=f'Reservation for {request.session["number_guests"]} guests',
         menu=menu,
-        booking_state=BookingState.CONTRACT_PENDING,
+        booking_state=BookingState.CONFIRMED,
         number_guests=request.session["number_guests"],
     )
     return render(request, "payment/completed.html")
@@ -430,13 +513,12 @@ def payment_completed(request):
 def payment_canceled(request):
     return render(request, "payment/canceled.html")
 
+
 def listar_caterings_companies(request):
     context = {}
     context["is_particular"] = is_particular(request)
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
-    if not is_particular(request):
-        return HttpResponseForbidden("You are not a particular")
     caterings = CateringCompany.objects.all()
     if "search" not in context:
        busqueda = ""
