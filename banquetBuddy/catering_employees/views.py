@@ -135,29 +135,28 @@ def employee_offer_list(request):
     context = {}
 
     current_user = request.user
-    offers = Offer.objects.all()
-
     if not is_user_employee(current_user):
         return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
 
     employee = Employee.objects.get(user=current_user)
-    search = ""
-    offers = Offer.objects.all()
-    if request.method == "POST":
-        search = request.POST.get("search", "")
-        if search:
-            offers = Offer.objects.filter(Q(title__icontains=search))
+    search = request.POST.get("search", "") if request.method == "POST" else ""
+    offers = Offer.objects.filter(title__icontains=search) if search else Offer.objects.all()
+
+    # Obtenemos todas las asignaciones de trabajo para el empleado
+    work_services = EmployeeWorkService.objects.filter(employee=employee).select_related('cateringservice')
+
+    # Filtramos por aquellas que están actualmente activas según el método current_status
+    active_hirings = {ws.cateringservice.id for ws in work_services if ws.current_status() == 'Activo'}
 
     applications = {
         offer.id: offer.job_applications.filter(employee=employee).exists()
         for offer in offers
     }
     hirings = {
-        offer.id: EmployeeWorkService.objects.filter(
-            employee=employee, cateringservice=offer.cateringservice
-        ).exists()
+        offer.id: offer.cateringservice.id in active_hirings
         for offer in offers
     }
+
     context = {
         "offers": offers,
         "applications": applications,
