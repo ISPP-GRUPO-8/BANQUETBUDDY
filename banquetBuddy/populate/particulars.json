@@ -253,5 +253,26 @@
         "preferences": ["Comida gourmet", "Comida española"],
         "address": "2626 Avenida de la Estrella",
         "is_subscribed": true
+    },
+
+    {
+        "username": "AlbertoP",
+        "password": "JkKY!g24ul",
+        "email": "albper54@correoweb.pro",
+        "phone_number": "555-6789",
+        "preferences": ["Comida italiana", "Comida mediterránea", "Ensaladas"],
+        "address": "1010 Avenida de los Olivos",
+        "is_subscribed": true
+    },
+    
+    {
+        "username": "PedroSimon",
+        "password": "JLglH3KUhl",
+        "email": "pedrosimon45@correoweb.pro",
+        "phone_number": "555-7890",
+        "preferences": ["Comida española", "Mariscos", "Tapas"],
+        "address": "204 Calle de la Costa",
+        "is_subscribed": true
     }
+    
 ]

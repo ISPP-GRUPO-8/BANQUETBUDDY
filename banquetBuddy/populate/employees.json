@@ -552,6 +552,31 @@
         "english_level": "A2",
         "location": "5050 Calle Innovación",
         "curriculum":  "curriculums/curriculum.pdf"
+    },
+
+    {
+        "username": "AlbertoChef",
+        "password": "GhFK4l3!it",
+        "email": "alberto_cocinero@correoweb.pro",
+        "profession": "Chef de Cocina Internacional",
+        "experience": "Chef con más de 10 años de experiencia en cocinas de múltiples culturas",
+        "skills": "Adaptabilidad, manejo de múltiples técnicas culinarias, creación de menús",
+        "english_level": "B2",
+        "location": "1000 Avenida Gastronómica",
+        "curriculum":  "curriculums/curriculum.pdf"
+    },
+    
+    {
+        "username": "PedroCamarero",
+        "password": "Jkgliu!G42I",
+        "email": "pedro_camarero@correoweb.pro",
+        "profession": "Camarero Profesional",
+        "experience": "Camarero líder con experiencia en restaurantes de alta cocina y eventos exclusivos",
+        "skills": "Excelente atención al cliente, rapidez y eficacia en el servicio, conocimientos de enología",
+        "english_level": "C1",
+        "location": "2020 Calle Servicio",
+        "curriculum":  "curriculums/curriculum.pdf"
     }
+    
 
 ]

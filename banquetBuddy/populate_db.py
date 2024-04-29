@@ -356,6 +356,7 @@ def create_superusers():
     superusers_data = [
         {'username': 'admin1', 'email': 'admin1@example.com', 'password': 'admin1'},
         {'username': 'admin2', 'email': 'admin2@example.com', 'password': 'admin2'},
+        {'username': 'admin', 'email': 'admin@admin.com', 'password': 'admin'},
     ]
     for data in superusers_data:
         if not CustomUser.objects.filter(username=data['username']).exists():

@@ -130,6 +130,34 @@
         "price_plan": "PREMIUM_PRO",
         "address": "Calle Dulzura, 1010",
         "cuisine_types": ["DESSERTS"]
+    },
+
+    {
+        "username": "CocinaItaliana",
+        "password": "LJy-Lk!gk34",
+        "email": "cocina_italiana@correoweb.pro",
+        "name": "Cocina Italiana Gourmet",
+        "phone_number": "555-2020",
+        "service_description": "Disfruta de la auténtica cocina italiana directamente en tu mesa con nuestras recetas tradicionales y toques gourmet.",
+        "logo": "",
+        "is_verified": true,
+        "price_plan": "BASE",
+        "address": "Via Roma, 112",
+        "cuisine_types": ["ITALIAN"]
+    },
+
+    {
+        "username": "SushiOriginal",
+        "password": "hk34gLJ!KH@LGjlGH",
+        "email": "sushi_original@correoweb.pro",
+        "name": "Sushi Original Club",
+        "phone_number": "555-3030",
+        "service_description": "Explora la frescura del mar con nuestro sushi original, preparado por chefs expertos en la auténtica cocina japonesa.",
+        "logo": "",
+        "is_verified": true,
+        "price_plan": "BASE",
+        "address": "Avenida del Mar, 303",
+        "cuisine_types": ["JAPANESE"]
     }
     
     
