@@ -380,12 +380,14 @@ def error_report(request):
 
             send_mail(subject, message, from_email, to_email, html_message=message)
 
-            return redirect("/")
+            return redirect("/error-report-send")
     else:
         form = ErrorForm()
 
     return render(request, "core/error_report.html", {"form": form})
 
+def error_report_send(request):
+    return render(request, "core/error_report_send.html")
 
 def listar_caterings_home(request):
     context = {}

@@ -27,6 +27,7 @@ urlpatterns = [
     ),
     path("profilex-edit", profile_edit_view, name="profile_edit"),
     path("error-report", error_report, name="error-report"),
+    path("error-report-send", error_report_send, name="error-report-send"),
     path("notifications", notification_view, name="notifications"),
     path("privacy-policy/", actual_privacy_policy, name="privacy_policy"),
     path(
