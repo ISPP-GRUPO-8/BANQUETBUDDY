@@ -226,7 +226,7 @@ def login_view(request):
         try:
             validate_email(username)
         except ValidationError:
-            messages.error(request, 'Please enter a valid email address.')
+            form.add_error(None, 'Please enter a valid email address.')
             return render(request, "core/login.html", {"form": form})
 
         if form.is_valid():
@@ -234,16 +234,8 @@ def login_view(request):
             login(request, user)
 
             # Check if user is particular or company
-            try:
-                particular_username = request.user.ParticularUsername
-                is_particular = True
-            except:
-                is_particular = False
-            try:
-                company_username = request.user.CateringCompanyusername
-                is_company = True
-            except:
-                is_company = False
+            is_particular = hasattr(user, 'ParticularUsername')
+            is_company = hasattr(user, 'CateringCompanyusername')
 
             if is_particular:
                 send_notifications_next_events_particular(request)
