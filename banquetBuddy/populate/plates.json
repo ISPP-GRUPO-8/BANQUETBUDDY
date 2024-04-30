@@ -1,0 +1,1067 @@
+[
+    {
+    "cateringcompany": "Delicias Mediterráneas",
+    "menus": [
+      {
+        "menu_name": "Menú Degustación Mediterráneo",
+        "plates": [
+          {
+            "name": "Entrante de Mariscos",
+            "description": "Una selección de mariscos frescos del Mediterráneo, servidos con una vinagreta ligera.",
+            "price": "15.50"
+          },
+          {
+            "name": "Paella Valenciana",
+            "description": "Arroz con pollo, conejo y verduras, cocinado en caldo de azafrán y una variedad de hierbas locales.",
+            "price": "18.00"
+          },
+          {
+            "name": "Tarta de Santiago",
+            "description": "Postre tradicional de almendra con un toque de limón y azúcar glas.",
+            "price": "7.00"
+          },
+          {
+            "name": "Vino Blanco Español",
+            "description": "Una copa de vino blanco perfectamente equilibrada para complementar los sabores del menú.",
+            "price": "5.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Vegetariano Gourmet",
+        "plates": [
+          {
+            "name": "Carpaccio de Tomate Heirloom",
+            "description": "Tomates heirloom con aceite de oliva virgen extra, albahaca y sal marina.",
+            "price": "12.00"
+          },
+          {
+            "name": "Risotto de Setas Silvestres",
+            "description": "Cremoso arroz arborio con una mezcla de setas silvestres, ajo y queso parmesano.",
+            "price": "16.00"
+          },
+          {
+            "name": "Mousse de Chocolate Vegano",
+            "description": "Mousse hecho con chocolate oscuro y aguacate, endulzado con sirope de arce.",
+            "price": "7.00"
+          },
+          {
+            "name": "Infusión de Hierbas Frescas",
+            "description": "Una relajante mezcla de hierbas frescas para terminar la comida.",
+            "price": "3.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Fusión Mediterráneo-Asiático",
+        "plates": [
+          {
+            "name": "Sashimi Mediterráneo",
+            "description": "Fino corte de pescado fresco servido con un toque de aceite de oliva y wasabi suave.",
+            "price": "14.00"
+          },
+          {
+            "name": "Curry de Verduras al Estilo Griego",
+            "description": "Curry ligero con una selección de verduras al estilo griego, cocinado lentamente en una salsa de coco y curry.",
+            "price": "15.00"
+          },
+          {
+            "name": "Sorbete de Limón con Menta",
+            "description": "Fresco sorbete de limón con un toque de menta para refrescar el paladar.",
+            "price": "6.00"
+          },
+          {
+            "name": "Té Verde Helado",
+            "description": "Refrescante bebida de té verde helado con un toque de miel.",
+            "price": "4.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Clásico Francés",
+        "plates": [
+          {
+            "name": "Quiche Lorraine",
+            "description": "Clásico quiche francés con jamón y queso en una base crujiente.",
+            "price": "12.00"
+          },
+          {
+            "name": "Boeuf Bourguignon",
+            "description": "Ternera estofada en vino tinto con setas, tocino y cebolla.",
+            "price": "20.00"
+          },
+          {
+            "name": "Crème Brûlée",
+            "description": "Cremoso postre francés con una capa crujiente de azúcar caramelizado.",
+            "price": "8.00"
+          },
+          {
+            "name": "Copa de Vino Tinto",
+            "description": "Selección de vino tinto francés para acompañar la cena.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Noche de Barbacoa",
+        "plates": [
+          {
+            "name": "Selección de Carnes a la Parrilla",
+            "description": "Variedad de carnes asadas, incluyendo chorizo, costillas y pollo, acompañadas de salsa barbacoa casera.",
+            "price": "18.00"
+          },
+          {
+            "name": "Ensalada Fresca de la Casa",
+            "description": "Ensalada con ingredientes de temporada y un aderezo ligero.",
+            "price": "10.00"
+          },
+          {
+            "name": "Brownie de Chocolate",
+            "description": "Brownie denso y rico, servido con helado de vainilla.",
+            "price": "7.00"
+          },
+          {
+            "name": "Cerveza Artesanal",
+            "description": "Una selección de cerveza artesanal para complementar la barbacoa.",
+            "price": "5.00"
+          }
+        ]
+      }
+    ]
+  }
+,
+{
+    "cateringcompany": "Sabores del Mar",
+    "menus": [
+      {
+        "menu_name": "Menú de Postres Decadentes",
+        "plates": [
+          {
+            "name": "Tarta de Chocolate y Frambuesa",
+            "description": "Una rica tarta de chocolate con un relleno de frambuesas frescas y una ganache de chocolate oscuro.",
+            "price": "8.50"
+          },
+          {
+            "name": "Cheesecake de Limón y Merengue",
+            "description": "Suave cheesecake de limón coronado con un ligero merengue tostado.",
+            "price": "7.50"
+          },
+          {
+            "name": "Macarons Surtidos",
+            "description": "Selección de macarons franceses en variedad de sabores como pistacho, vainilla y fresa.",
+            "price": "6.00"
+          },
+          {
+            "name": "Café Gourmet",
+            "description": "Un café gourmet seleccionado para complementar los sabores ricos y dulces del menú.",
+            "price": "3.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Platos Pequeños y Vinos",
+        "plates": [
+          {
+            "name": "Tabla de Quesos y Charcutería",
+            "description": "Una selección de quesos finos y embutidos, servidos con pan artesano y mermeladas caseras.",
+            "price": "15.00"
+          },
+          {
+            "name": "Mini Tacos de Atún",
+            "description": "Tacos pequeños llenos de atún fresco marinado y una salsa de aguacate y lima.",
+            "price": "12.00"
+          },
+          {
+            "name": "Croquetas de Jamón Ibérico",
+            "description": "Croquetas crujientes por fuera y cremosas por dentro, rellenas de jamón ibérico de calidad.",
+            "price": "10.00"
+          },
+          {
+            "name": "Selección de Vinos",
+            "description": "Una cuidadosa selección de vinos que maridan perfectamente con los platos pequeños.",
+            "price": "20.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Inspirado en el Medio Oriente",
+        "plates": [
+          {
+            "name": "Hummus con Pan Pita Recién Hecho",
+            "description": "Cremoso hummus servido con pan pita tibio y aceite de oliva extra virgen.",
+            "price": "8.00"
+          },
+          {
+            "name": "Kebabs de Cordero",
+            "description": "Kebabs de cordero marinados en especias tradicionales y servidos con tzatziki.",
+            "price": "14.00"
+          },
+          {
+            "name": "Baklava",
+            "description": "Postre dulce de hojaldre, nueces y miel, típico de la región.",
+            "price": "6.00"
+          },
+          {
+            "name": "Té de Menta",
+            "description": "Té fresco de menta, perfecto para acompañar una comida del Medio Oriente.",
+            "price": "3.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Noche de Pizzas Gourmet",
+        "plates": [
+          {
+            "name": "Pizza de Trufa Negra",
+            "description": "Pizza gourmet con trufa negra, mozzarella de búfala y aceite de trufa.",
+            "price": "16.00"
+          },
+          {
+            "name": "Pizza Margarita Especial",
+            "description": "Versión elevada de la clásica margarita con tomates cherry asados y albahaca fresca.",
+            "price": "14.00"
+          },
+          {
+            "name": "Gelato Italiano",
+            "description": "Selección de gelato italiano para terminar la noche, sabores de vainilla y pistacho.",
+            "price": "5.00"
+          },
+          {
+            "name": "Sangría Fresca",
+            "description": "Jarra de sangría hecha en casa con frutas frescas y vino español.",
+            "price": "12.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Cocina de Confort",
+        "plates": [
+          {
+            "name": "Estofado de Ternera",
+            "description": "Ternera cocida lentamente en una rica salsa de vino tinto con hierbas y vegetales.",
+            "price": "18.00"
+          },
+          {
+            "name": "Puré de Papas Trufado",
+            "description": "Puré de papas cremoso con un toque de aceite de trufa blanca.",
+            "price": "7.00"
+          },
+          {
+            "name": "Brownie de Chocolate Caliente",
+            "description": "Brownie de chocolate intenso servido con helado de vainilla y salsa de chocolate caliente.",
+            "price": "8.00"
+          },
+          {
+            "name": "Chocolate Caliente Gourmet",
+            "description": "Una taza de chocolate caliente, rica y espesa, perfecta para una comida reconfortante.",
+            "price": "4.00"
+          }
+        ]
+      }
+    ]
+  },
+  
+  {
+    "cateringcompany": "Delicias Mediterráneas",
+    "menus": [
+      {
+        "menu_name": "Menú Clásico Italiano",
+        "plates": [
+          {
+            "name": "Bruschetta al Pomodoro",
+            "description": "Tostadas de pan crujiente con tomate fresco, albahaca y un toque de ajo y aceite de oliva.",
+            "price": "7.00"
+          },
+          {
+            "name": "Osso Buco alla Milanese",
+            "description": "Jarrete de ternera estofado lentamente con vino blanco y verduras, servido con risotto al azafrán.",
+            "price": "22.00"
+          },
+          {
+            "name": "Tiramisú",
+            "description": "Capas de bizcochos empapados en café con mascarpone y un toque de cacao en polvo.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Internacional Variado",
+        "plates": [
+          {
+            "name": "Sushi y Sashimi Mixto",
+            "description": "Selección de sushi y sashimi, incluyendo atún, salmón y unagi, acompañado de salsa de soja y wasabi.",
+            "price": "22.00"
+          },
+          {
+            "name": "Paella de Mariscos",
+            "description": "Auténtica paella española cargada de mariscos frescos, arroz safronado y verduras.",
+            "price": "18.00"
+          },
+          {
+            "name": "Gelato Italiano Trío",
+            "description": "Tres sabores de gelato: chocolate, fresa y pistacho, servidos con galletas de amaretto.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Carnes Premium",
+        "plates": [
+          {
+            "name": "Filete Mignon",
+            "description": "Filete mignon perfectamente asado, servido con puré de papas y espárragos trigueros.",
+            "price": "25.00"
+          },
+          {
+            "name": "Lomo de Cordero",
+            "description": "Lomo de cordero en costra de hierbas, servido con ratatouille de verduras.",
+            "price": "22.00"
+          },
+          {
+            "name": "Tiramisú",
+            "description": "Clásico postre italiano con capas de mascarpone y bizcocho empapado en café espresso.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Mar y Tierra",
+        "plates": [
+          {
+            "name": "Langosta Thermidor",
+            "description": "Langosta cocida y gratinada con una cremosa salsa Thermidor.",
+            "price": "35.00"
+          },
+          {
+            "name": "Entrecot de Ternera",
+            "description": "Entrecot de ternera jugoso, servido con una salsa de pimienta verde.",
+            "price": "20.00"
+          },
+          {
+            "name": "Fondant de Chocolate",
+            "description": "Postre de chocolate con corazón líquido, acompañado de helado de vainilla.",
+            "price": "7.50"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Temporada",
+        "plates": [
+          {
+            "name": "Ensalada de Burrata con Tomates Heirloom",
+            "description": "Burrata fresca servida con tomates heirloom, albahaca y un aderezo balsámico.",
+            "price": "10.00"
+          },
+          {
+            "name": "Risotto de Calabaza y Salvia",
+            "description": "Risotto cremoso hecho con calabaza de temporada y un toque de salvia fresca.",
+            "price": "14.00"
+          },
+          {
+            "name": "Tarta Tatin de Manzana",
+            "description": "Clásica tarta francesa invertida, con manzanas caramelizadas y servida con crema fresca.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Inspiración India",
+        "plates": [
+          {
+            "name": "Samosas de Cordero",
+            "description": "Samosas crujientes rellenas de cordero picado y especias indias, servidas con chutney de menta.",
+            "price": "9.00"
+          },
+          {
+            "name": "Butter Chicken",
+            "description": "Pollo marinado y cocido en una rica salsa de mantequilla y tomate, servido con arroz basmati.",
+            "price": "13.00"
+          },
+          {
+            "name": "Kulfi de Pistacho",
+            "description": "Helado tradicional indio de pistacho, denso y cremoso.",
+            "price": "5.00"
+          }
+        ]
+      }
+    ]
+  },
+  
+  {
+    "cateringcompany": "Delicias Mediterráneas",
+    "menus": [
+      {
+        "menu_name": "Menú Tapas Españolas",
+        "plates": [
+          {
+            "name": "Patatas Bravas",
+            "description": "Patatas fritas en cubos con salsa picante y alioli.",
+            "price": "7.00"
+          },
+          {
+            "name": "Gambas al Ajillo",
+            "description": "Gambas cocinadas en aceite de oliva con ajo y guindilla.",
+            "price": "12.00"
+          },
+          {
+            "name": "Churros con Chocolate",
+            "description": "Churros crujientes servidos con una taza de chocolate caliente para mojar.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Saludable y Equilibrado",
+        "plates": [
+          {
+            "name": "Ensalada de Quinoa y Aguacate",
+            "description": "Quinoa, aguacate, tomate cherry, pepino y un aderezo de limón y aceite de oliva.",
+            "price": "10.00"
+          },
+          {
+            "name": "Salmón al Horno con Espárragos",
+            "description": "Salmón fresco al horno servido con espárragos trigueros y una salsa ligera de eneldo.",
+            "price": "15.00"
+          },
+          {
+            "name": "Yogur Griego con Miel y Nueces",
+            "description": "Yogur griego natural con un toque de miel pura y nueces crujientes.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Vegetariano Creativo",
+        "plates": [
+          {
+            "name": "Tacos de Jackfruit",
+            "description": "Tacos rellenos de jackfruit cocinado con especias, servidos con salsa de mango.",
+            "price": "9.00"
+          },
+          {
+            "name": "Curry de Verduras y Coco",
+            "description": "Una rica mezcla de verduras estacionales en una cremosa salsa de coco y curry.",
+            "price": "12.00"
+          },
+          {
+            "name": "Pastel de Zanahoria Vegano",
+            "description": "Pastel de zanahoria sin productos animales, esponjoso y delicioso, con un glaseado de coco.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Bajo en Carbohidratos",
+        "plates": [
+          {
+            "name": "Ensalada César con Pollo a la Parrilla",
+            "description": "Pollo jugoso a la parrilla sobre lechuga romana con un aderezo César sin carbohidratos.",
+            "price": "11.00"
+          },
+          {
+            "name": "Hamburguesa Sin Pan",
+            "description": "Hamburguesa de res premium servida con queso y una ensalada en lugar de pan.",
+            "price": "13.00"
+          },
+          {
+            "name": "Panna Cotta de Vainilla",
+            "description": "Postre italiano clásico con vainilla y frutos rojos, sin azúcar añadido.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Cocina Fusión Latino-Asiática",
+        "plates": [
+          {
+            "name": "Ceviche Nikkei",
+            "description": "Ceviche al estilo peruano-japonés con pescado fresco, lima, jengibre y ají amarillo.",
+            "price": "14.00"
+          },
+          {
+            "name": "Tacos de Carnitas con Salsa Hoisin",
+            "description": "Tacos suaves de carnitas, aderezadas con una salsa hoisin casera, cilantro y cebolla.",
+            "price": "12.00"
+          },
+          {
+            "name": "Mochi de Té Verde",
+            "description": "Postre japonés de mochi relleno con helado de té verde.",
+            "price": "7.00"
+          },
+          {
+            "name": "Sake Sangría",
+            "description": "Una fusión única de sangría tradicional con un toque de sake suave.",
+            "price": "8.00"
+          }
+        ]
+      }
+    ]
+  },
+  
+  {
+    "cateringcompany": "Sabor Oriental",
+    "menus": [
+      {
+        "menu_name": "Menú Asiático Fusion",
+        "plates": [
+          {
+            "name": "Rollitos de Primavera Vietnamita",
+            "description": "Rollitos frescos con camarones, verduras crujientes y hierbas aromáticas, acompañados de salsa hoisin.",
+            "price": "9.00"
+          },
+          {
+            "name": "Pad Thai de Pollo",
+            "description": "Fideos de arroz salteados con pollo, tamarindo, cacahuetes y brotes de soja.",
+            "price": "12.00"
+          },
+          {
+            "name": "Mousse de Mango y Coco",
+            "description": "Un postre ligero y tropical con sabores de mango y coco, perfecto para finalizar una comida picante.",
+            "price": "7.00"
+          },
+          {
+            "name": "Té de Jazmín",
+            "description": "Té de jazmín aromático, ideal para acompañar una comida fusión.",
+            "price": "4.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú BBQ Americana",
+        "plates": [
+          {
+            "name": "Costillas BBQ al Estilo Texano",
+            "description": "Costillas de cerdo ahumadas lentamente, bañadas en salsa BBQ casera y servidas con coleslaw.",
+            "price": "16.00"
+          },
+          {
+            "name": "Hamburguesa de Angus con Queso",
+            "description": "Hamburguesa de carne de Angus, queso cheddar, lechuga, tomate y cebolla en un pan brioche.",
+            "price": "12.00"
+          },
+          {
+            "name": "Brownie de Chocolate con Nueces",
+            "description": "Brownie denso y rico, con trozos de chocolate y nueces, servido con helado de vainilla.",
+            "price": "6.00"
+          },
+          {
+            "name": "Cerveza Artesanal",
+            "description": "Una selección de cerveza artesanal local para maridar con los sabores intensos de la BBQ.",
+            "price": "5.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Temporada",
+        "plates": [
+          {
+            "name": "Ensalada de Burrata con Tomates Heirloom",
+            "description": "Burrata fresca servida con tomates heirloom, albahaca y un aderezo balsámico.",
+            "price": "10.00"
+          },
+          {
+            "name": "Risotto de Calabaza y Salvia",
+            "description": "Risotto cremoso hecho con calabaza de temporada y un toque de salvia fresca.",
+            "price": "14.00"
+          },
+          {
+            "name": "Tarta Tatin de Manzana",
+            "description": "Clásica tarta francesa invertida, con manzanas caramelizadas y servida con crema fresca.",
+            "price": "7.00"
+          },
+          {
+            "name": "Vino Blanco de Cosecha",
+            "description": "Un vino blanco seleccionado que complementa los sabores frescos y otoñales del menú.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Inspiración India",
+        "plates": [
+          {
+            "name": "Samosas de Cordero",
+            "description": "Samosas crujientes rellenas de cordero picado y especias indias, servidas con chutney de menta.",
+            "price": "9.00"
+          },
+          {
+            "name": "Butter Chicken",
+            "description": "Pollo marinado y cocido en una rica salsa de mantequilla y tomate, servido con arroz basmati.",
+            "price": "13.00"
+          },
+          {
+            "name": "Kulfi de Pistacho",
+            "description": "Helado tradicional indio de pistacho, denso y cremoso.",
+            "price": "5.00"
+          },
+          {
+            "name": "Lassi de Cardamomo",
+            "description": "Bebida refrescante de yogur con cardamomo y un toque de azúcar.",
+            "price": "4.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Festival de Sopas",
+        "plates": [
+          {
+            "name": "Sopa de Cebolla Francesa",
+            "description": "Clásica sopa de cebolla gratinada con queso Gruyère y crutones.",
+            "price": "8.00"
+          },
+          {
+            "name": "Gazpacho Andaluz",
+            "description": "Sopa fría de tomate y vegetales, perfecta para refrescar en días calurosos.",
+            "price": "7.00"
+          },
+          {
+            "name": "Crema de Calabacín",
+            "description": "Sopa cremosa de calabacín con un toque de queso parmesano y pimienta negra.",
+            "price": "7.50"
+          },
+          {
+            "name": "Pan Artesanal",
+            "description": "Una selección de panes artesanales para acompañar las sopas.",
+            "price": "3.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Experiencia Vegana Gourmet",
+        "plates": [
+          {
+            "name": "Tartar de Aguacate y Mango",
+            "description": "Tartar refrescante y ligero con aguacate, mango y un aliño cítrico.",
+            "price": "10.00"
+          },
+          {
+            "name": "Curry Vegano de Garbanzos",
+            "description": "Curry rico y especiado con garbanzos, tomate y coco, servido con arroz integral.",
+            "price": "12.00"
+          },
+          {
+            "name": "Cheesecake de Frutos Rojos Vegano",
+            "description": "Cheesecake sin productos de origen animal, con una base de nueces y un topping de frutos rojos frescos.",
+            "price": "7.00"
+          },
+          {
+            "name": "Smoothie Detox Verde",
+            "description": "Smoothie lleno de antioxidantes con espinacas, kiwi, manzana y jengibre.",
+            "price": "5.00"
+          }
+        ]
+      }
+    ]
+  },
+  
+  {
+    "cateringcompany": "Gourmet Fusion",
+    "menus": [
+      {
+        "menu_name": "Menú de Lujo Gourmet",
+        "plates": [
+          {
+            "name": "Carpaccio de Lomo de Res con Aceite de Trufa",
+            "description": "Fino carpaccio de res con rúcula, parmesano y un toque de aceite de trufa.",
+            "price": "20.00"
+          },
+          {
+            "name": "Langosta Thermidor",
+            "description": "Langosta cocida y gratinada con una cremosa salsa Thermidor.",
+            "price": "35.00"
+          },
+          {
+            "name": "Soufflé de Chocolate con Centro Líquido",
+            "description": "Soufflé de chocolate intenso con un corazón líquido y una bola de helado de vainilla.",
+            "price": "15.00"
+          },
+          {
+            "name": "Copa de Champagne Francés",
+            "description": "Copa de champagne seleccionado para maridar perfectamente con los platos de lujo.",
+            "price": "25.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Tradicional de la Abuela",
+        "plates": [
+          {
+            "name": "Guiso de Pollo Casero",
+            "description": "Pollo cocido lentamente en una salsa de tomate con hierbas y vegetales.",
+            "price": "12.00"
+          },
+          {
+            "name": "Puré de Papas con Mantequilla",
+            "description": "Puré de papas cremoso con un toque de mantequilla y pimienta negra.",
+            "price": "6.00"
+          },
+          {
+            "name": "Tarta de Manzana de la Abuela",
+            "description": "Clásica tarta de manzana con masa casera y un toque de canela.",
+            "price": "7.00"
+          },
+          {
+            "name": "Vino Tinto de la Casa",
+            "description": "Un vaso de vino tinto suave, perfecto para acompañar una comida reconfortante.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Desayuno Continental Clásico",
+        "plates": [
+          {
+            "name": "Selección de Panes Europeos",
+            "description": "Variedad de panes frescos, incluyendo baguette, croissant y pan de centeno.",
+            "price": "10.00"
+          },
+          {
+            "name": "Tabla de Quesos y Fiambres",
+            "description": "Selección de quesos europeos y fiambres cortados, acompañados de mermeladas y mantequilla.",
+            "price": "15.00"
+          },
+          {
+            "name": "Café Espresso o Capuccino",
+            "description": "Tu elección de un espresso fuerte o un capuccino cremoso.",
+            "price": "3.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Brunch Neoyorquino",
+        "plates": [
+          {
+            "name": "Bagels con Lox y Crema de Queso",
+            "description": "Bagels recién horneados con salmón ahumado, crema de queso y alcaparras.",
+            "price": "14.00"
+          },
+          {
+            "name": "Huevos Benedict con Jamón",
+            "description": "Huevos pochados sobre un muffin inglés con jamón y salsa holandesa.",
+            "price": "12.00"
+          },
+          {
+            "name": "Pancakes de Buttermilk con Sirope de Arce",
+            "description": "Pancakes esponjosos servidos con sirope de arce natural y una pizca de mantequilla.",
+            "price": "9.00"
+          },
+          {
+            "name": "Mimosa o Bloody Mary",
+            "description": "Elige entre una mimosa refrescante o un Bloody Mary picante para completar tu brunch.",
+            "price": "8.00"
+          }
+        ]
+      }
+    ]
+  },
+
+
+{
+    "cateringcompany": "Cocina Antonio",
+    "menus": [
+      {
+        "menu_name": "Menú Internacional Variado",
+        "plates": [
+          {
+            "name": "Sushi y Sashimi Mixto",
+            "description": "Selección de sushi y sashimi, incluyendo atún, salmón y unagi, acompañado de salsa de soja y wasabi.",
+            "price": "22.00"
+          },
+          {
+            "name": "Paella de Mariscos",
+            "description": "Auténtica paella española cargada de mariscos frescos, arroz safronado y verduras.",
+            "price": "18.00"
+          },
+          {
+            "name": "Gelato Italiano Trío",
+            "description": "Tres sabores de gelato: chocolate, fresa y pistacho, servidos con galletas de amaretto.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú BBQ Americana",
+        "plates": [
+          {
+            "name": "Pulled Pork Slider",
+            "description": "Mini hamburguesas de cerdo desmenuzado cocinado lentamente, servido en panecillos con cole slaw.",
+            "price": "14.00"
+          },
+          {
+            "name": "Alitas de Pollo BBQ",
+            "description": "Alitas de pollo marinadas y glaseadas en salsa BBQ, acompañadas de apio y salsa de queso azul.",
+            "price": "12.00"
+          },
+          {
+            "name": "Apple Pie a la Mode",
+            "description": "Tarta de manzana clásica americana, servida caliente con helado de vainilla.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Carnes Premium",
+        "plates": [
+          {
+            "name": "Filete Mignon",
+            "description": "Filete mignon perfectamente asado, servido con puré de papas y espárragos trigueros.",
+            "price": "25.00"
+          },
+          {
+            "name": "Lomo de Cordero",
+            "description": "Lomo de cordero en costra de hierbas, servido con ratatouille de verduras.",
+            "price": "22.00"
+          },
+          {
+            "name": "Tiramisú",
+            "description": "Clásico postre italiano con capas de mascarpone y bizcocho empapado en café espresso.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Temporada",
+        "plates": [
+          {
+            "name": "Ensalada de Espárragos y Parmesano",
+            "description": "Espárragos frescos con lascas de parmesano y una vinagreta de limón y aceite de oliva.",
+            "price": "12.00"
+          },
+          {
+            "name": "Trucha al Horno",
+            "description": "Trucha al horno con hierbas frescas y limón, servida con patatas al vapor.",
+            "price": "18.00"
+          },
+          {
+            "name": "Panna Cotta con Coulis de Frambuesa",
+            "description": "Panna cotta suave con coulis de frambuesa fresca.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Detox",
+        "plates": [
+          {
+            "name": "Smoothie Verde Detox",
+            "description": "Smoothie hecho con espinacas, kale, manzana verde, pepino y jengibre.",
+            "price": "5.00"
+          },
+          {
+            "name": "Ensalada Detox",
+            "description": "Ensalada con mix de hojas verdes, semillas de chía, nueces, aguacate y aderezo de limón.",
+            "price": "10.00"
+          },
+          {
+            "name": "Sopa de Miso",
+            "description": "Sopa de miso con tofu, algas y cebolla verde, ligera y nutritiva.",
+            "price": "7.00"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    "cateringcompany": "Exquisitez Gastronómica",
+    "menus": [
+      {
+        "menu_name": "Menú Saludable y Equilibrado",
+        "plates": [
+          {
+            "name": "Ensalada de Quinoa y Espinacas",
+            "description": "Quinoa mezclada con espinacas frescas, granadas, nueces y un aderezo ligero de limón y aceite de oliva.",
+            "price": "12.00"
+          },
+          {
+            "name": "Salmón al Vapor con Jengibre",
+            "description": "Salmón fresco al vapor, servido con una salsa ligera de soja y jengibre, acompañado de arroz integral.",
+            "price": "18.00"
+          },
+          {
+            "name": "Mousse de Aguacate y Cacao",
+            "description": "Un postre suave y cremoso hecho con aguacate, cacao en polvo y un toque de miel.",
+            "price": "9.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú Mediterráneo de Mariscos",
+        "plates": [
+          {
+            "name": "Paella de Mariscos",
+            "description": "Auténtica paella cargada con langostinos, mejillones y calamares, cocinada en un caldo sazonado con azafrán.",
+            "price": "22.00"
+          },
+          {
+            "name": "Calamares a la Romana",
+            "description": "Anillos de calamar fritos hasta que estén crujientes, servidos con un alioli de ajo y limón.",
+            "price": "15.00"
+          },
+          {
+            "name": "Tarta de Santiago",
+            "description": "Postre tradicional español hecho con almendras, huevos y azúcar, decorado con la cruz de Santiago.",
+            "price": "8.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Banquete Mexicano",
+        "plates": [
+          {
+            "name": "Tacos de Carnitas",
+            "description": "Carnitas tiernas servidas en tortillas de maíz con cebolla, cilantro y salsa verde.",
+            "price": "10.00"
+          },
+          {
+            "name": "Enchiladas Suizas",
+            "description": "Tortillas rellenas de pollo, cubiertas con salsa verde cremosa y queso gratinado.",
+            "price": "12.00"
+          },
+          {
+            "name": "Flan de Caramelo",
+            "description": "Flan suave y cremoso con una capa rica de caramelo dulce.",
+            "price": "7.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Cena Japonesa Tradicional",
+        "plates": [
+          {
+            "name": "Sushi y Sashimi Assortment",
+            "description": "Una variedad de sushi y sashimi, incluyendo atún, salmón y pez mantequilla, servido con wasabi fresco y jengibre encurtido.",
+            "price": "25.00"
+          },
+          {
+            "name": "Tempura de Verduras y Camarones",
+            "description": "Camarones y verduras variadas, fritas en una cobertura ligera de tempura, servidas con una salsa de inmersión tensuyu.",
+            "price": "18.00"
+          },
+          {
+            "name": "Mochi de Té Verde",
+            "description": "Pastelitos de arroz suaves y masticables, rellenos de helado de té verde matcha.",
+            "price": "6.00"
+          }
+        ]
+      },
+      {
+        "menu_name": "Menú de Carne y Vino",
+        "plates": [
+          {
+            "name": "Chuletón de Res",
+            "description": "Chuletón de res grueso, asado a la perfección y servido con una reducción de vino tinto.",
+            "price": "30.00"
+          },
+          {
+            "name": "Patatas al Montón",
+            "description": "Patatas rojas asadas en aceite de oliva y hierbas.",
+            "price": "6.00"
+          },
+          {
+            "name": "Brownie de Chocolate y Vino",
+            "description": "Brownie enriquecido con chocolate oscuro y vino tinto, servido con crema batida.",
+            "price": "9.00"
+          }
+        ]
+      }
+    ]
+  },
+  
+  {
+    "cateringcompanies": [
+      {
+        "cateringcompany": "Sazón Casera",
+        "menus": [
+          {
+            "menu_name": "Menú de Lujo Gourmet",
+            "plates": [
+              {
+                "name": "Carpaccio de Res con Trufa",
+                "description": "Delgado carpaccio de res adornado con láminas de trufa negra y rociado con aceite de oliva extra virgen.",
+                "price": "20.00"
+              },
+              {
+                "name": "Risotto de Langosta",
+                "description": "Risotto cremoso con trozos de langosta fresca y un toque de azafrán.",
+                "price": "22.00"
+              },
+              {
+                "name": "Opera Cake",
+                "description": "Delicado pastel de capas con ganache de chocolate y crema de café, cubierto con glaseado de chocolate brillante.",
+                "price": "10.00"
+              }
+            ]
+          },
+          {
+            "menu_name": "Menú Italiano Auténtico",
+            "plates": [
+              {
+                "name": "Antipasto Italiano",
+                "description": "Selección de embutidos italianos, quesos, aceitunas y vegetales en escabeche.",
+                "price": "15.00"
+              },
+              {
+                "name": "Lasagna Bolognese",
+                "description": "Capas de pasta fresca, ragú boloñés rico, bechamel y queso parmesano, horneada hasta la perfección.",
+                "price": "18.00"
+              },
+              {
+                "name": "Panna Cotta con Compota de Frutas Rojas",
+                "description": "Postre de panna cotta suave y cremoso con una compota de frutas rojas ácidas.",
+                "price": "8.00"
+              }
+            ]
+          },
+          {
+            "menu_name": "Menú de Carne y Vino",
+            "plates": [
+              {
+                "name": "Filete de Res al Cabernet",
+                "description": "Filete de res asado, servido con una salsa de reducción de vino Cabernet y acompañado de puré de papas trufado.",
+                "price": "30.00"
+              },
+              {
+                "name": "Espárragos Gratinados",
+                "description": "Espárragos frescos gratinados con queso parmesano y un toque de limón.",
+                "price": "12.00"
+              },
+              {
+                "name": "Tarta de Queso con Salsa de Vino Tinto",
+                "description": "Tarta de queso cremosa con una salsa de vino tinto reducido y frutos del bosque.",
+                "price": "9.00"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cateringcompany": "Dulces Caprichos",
+        "menus": [
+          {
+            "menu_name": "Menú Español de Tapas",
+            "plates": [
+              {
+                "name": "Jamon Iberico con Pan de Cristal",
+                "description": "Fino jamón ibérico servido sobre pan de cristal con tomate rallado y aceite de oliva.",
+                "price": "18.00"
+              },
+              {
+                "name": "Tortilla Española",
+                "description": "Clásica tortilla de patatas española, cocinada lentamente y servida con alioli.",
+                "price": "10.00"
+              },
+              {
+                "name": "Crema Catalana",
+                "description": "Postre tradicional catalán similar a la crème brûlée, aromatizado con canela y cáscara de limón.",
+                "price": "7.00"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
+    
+]
