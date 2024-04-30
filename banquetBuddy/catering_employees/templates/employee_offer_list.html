@@ -40,8 +40,10 @@
     {% for offer in offers %}
     <div class="offer">
         <h3 class="offerTitle">{{ offer.title }}</h3>
-        <h5>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h5>
-        <h5>{{ offer.location }}</h5>
+        <h5>Job Dates: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h5>
+        <h5>Company: {{offer.cateringservice.cateringcompany }}</h5>
+        <h5>Service: {{offer.cateringservice }}</h5>
+        <h5>Location: {{ offer.location }}</h5>
         <p>{{ offer.description }}</p>
         {% if applications|get_item:offer.id %}
             <p style="color: red;">You've already applied for this offer</p>

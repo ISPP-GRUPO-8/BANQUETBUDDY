@@ -1,0 +1,278 @@
+[
+    {
+        "username": "Pablo",
+        "password": "pablo",
+        "email": "pablo@gmail.com",
+        "phone_number": "555-1234",
+        "preferences": ["Comida italiana", "Comida vegetariana", "Postres"],
+        "address": "123 Calle Principal",
+        "is_subscribed": true
+    },
+    {
+        "username": "Juan",
+        "password": "juan",
+        "email": "juan@gmail.com",
+        "phone_number": "555-5678",
+        "preferences": ["Comida mexicana", "Comida rápida"],
+        "address": "456 Avenida Central",
+        "is_subscribed": true
+    },
+    {
+        "username": "Antonio",
+        "password": "antonio",
+        "email": "antonio@gmail.com",
+        "phone_number": "555-9012",
+        "preferences": ["Comida asiática", "Comida vegana", "Bebidas"],
+        "address": "789 Paseo de la Montaña",
+        "is_subscribed": true
+    },
+    {
+        "username": "David",
+        "password": "david",
+        "email": "david@gmail.com",
+        "phone_number": "555-3456",
+        "preferences": ["Comida italiana", "Comida casera"],
+        "address": "101 Ruta del Sol",
+        "is_subscribed": true
+    },
+    {
+        "username": "Manuel",
+        "password": "manuel",
+        "email": "manuel@gmail.com",
+        "phone_number": "555-7890",
+        "preferences": ["Comida rápida", "Postres"],
+        "address": "202 Camino Real",
+        "is_subscribed": true
+    },
+    {
+        "username": "Jaime",
+        "password": "jaime",
+        "email": "jaime@gmail.com",
+        "phone_number": "555-2345",
+        "preferences": ["Comida vegetariana", "Bebidas"],
+        "address": "303 Boulevard Norte",
+        "is_subscribed": true
+    },
+    {
+        "username": "Luis",
+        "password": "luis",
+        "email": "luis@gmail.com",
+        "phone_number": "555-6789",
+        "preferences": ["Comida gourmet", "Comida casera"],
+        "address": "404 Carrera Sur",
+        "is_subscribed": true
+    },
+    {
+        "username": "Mateo",
+        "password": "mateo",
+        "email": "mateo@gmail.com",
+        "phone_number": "555-0123",
+        "preferences": ["Comida mexicana", "Comida vegana", "Comida rápida"],
+        "address": "505 Callejón Este",
+        "is_subscribed": true
+    },
+
+
+    {
+        "username": "Lucia",
+        "password": "lucia",
+        "email": "lucia@gmail.com",
+        "phone_number": "555-6781",
+        "preferences": ["Comida mediterránea", "Comida vegetariana"],
+        "address": "606 Via del Mar",
+        "is_subscribed": true
+    },
+    {
+        "username": "Sofia",
+        "password": "sofia",
+        "email": "sofia@gmail.com",
+        "phone_number": "555-1235",
+        "preferences": ["Comida italiana", "Comida china"],
+        "address": "707 Paseo Largo",
+        "is_subscribed": true
+    },
+    {
+        "username": "Carlos",
+        "password": "carlos",
+        "email": "carlos@gmail.com",
+        "phone_number": "555-3457",
+        "preferences": ["Comida mexicana", "Comida rápida", "Postres"],
+        "address": "808 Calle Del Puente",
+        "is_subscribed": true
+    },
+    {
+        "username": "Marta",
+        "password": "marta",
+        "email": "marta@gmail.com",
+        "phone_number": "555-9102",
+        "preferences": ["Comida gourmet", "Bebidas"],
+        "address": "909 Avenida de los Árboles",
+        "is_subscribed": true
+    },
+    {
+        "username": "Elena",
+        "password": "elena",
+        "email": "elena@gmail.com",
+        "phone_number": "555-1122",
+        "preferences": ["Comida vegana", "Comida japonesa"],
+        "address": "110 Calle Nuevo Amanecer",
+        "is_subscribed": true
+    },
+    {
+        "username": "Roberto",
+        "password": "roberto",
+        "email": "roberto@gmail.com",
+        "phone_number": "555-3344",
+        "preferences": ["Comida peruana", "Comida casera"],
+        "address": "1212 Vía Esperanza",
+        "is_subscribed": true
+    },
+    {
+        "username": "Ana",
+        "password": "ana",
+        "email": "ana@gmail.com",
+        "phone_number": "555-5567",
+        "preferences": ["Comida tailandesa", "Comida italiana"],
+        "address": "1313 Camino Antiguo",
+        "is_subscribed": true
+    },
+    {
+        "username": "Fernando",
+        "password": "fernando",
+        "email": "fernando@gmail.com",
+        "phone_number": "555-7891",
+        "preferences": ["Comida rápida", "Comida mexicana"],
+        "address": "1414 Calle del Ocaso",
+        "is_subscribed": true
+    },
+    {
+        "username": "Isabel",
+        "password": "isabel",
+        "email": "isabel@gmail.com",
+        "phone_number": "555-2346",
+        "preferences": ["Comida vegetariana", "Comida mediterránea"],
+        "address": "1515 Paseo del Rio",
+        "is_subscribed": true
+    },
+    {
+        "username": "Diego",
+        "password": "diego",
+        "email": "diego@gmail.com",
+        "phone_number": "555-3458",
+        "preferences": ["Comida argentina", "Bebidas alcohólicas"],
+        "address": "1616 Avenida del Sol",
+        "is_subscribed": true
+    },
+
+    {
+        "username": "Raquel",
+        "password": "raquel",
+        "email": "raquel@gmail.com",
+        "phone_number": "555-6571",
+        "preferences": ["Comida vegana", "Postres"],
+        "address": "1717 Calle de la Paz",
+        "is_subscribed": true
+    },
+    {
+        "username": "Sergio",
+        "password": "sergio",
+        "email": "sergio@gmail.com",
+        "phone_number": "555-9823",
+        "preferences": ["Comida italiana", "Comida mexicana"],
+        "address": "1818 Avenida de la Luz",
+        "is_subscribed": true
+    },
+    {
+        "username": "Carmen",
+        "password": "carmen",
+        "email": "carmen@gmail.com",
+        "phone_number": "555-4562",
+        "preferences": ["Comida española", "Comida mediterránea"],
+        "address": "1919 Vía de la Rosa",
+        "is_subscribed": true
+    },
+    {
+        "username": "Gonzalo",
+        "password": "gonzalo",
+        "email": "gonzalo@gmail.com",
+        "phone_number": "555-8721",
+        "preferences": ["Comida gourmet", "Comida francesa"],
+        "address": "2020 Calle de Oro",
+        "is_subscribed": true
+    },
+    {
+        "username": "Patricia",
+        "password": "patricia",
+        "email": "patricia@gmail.com",
+        "phone_number": "555-2342",
+        "preferences": ["Comida rápida", "Bebidas"],
+        "address": "2121 Calle del Parque",
+        "is_subscribed": true
+    },
+    {
+        "username": "Jorge",
+        "password": "jorge",
+        "email": "jorge@gmail.com",
+        "phone_number": "555-5413",
+        "preferences": ["Comida china", "Postres"],
+        "address": "2222 Avenida del Mar",
+        "is_subscribed": true
+    },
+    {
+        "username": "Veronica",
+        "password": "veronica",
+        "email": "veronica@gmail.com",
+        "phone_number": "555-7865",
+        "preferences": ["Comida vegetariana", "Comida japonesa"],
+        "address": "2323 Paseo del Lago",
+        "is_subscribed": true
+    },
+    {
+        "username": "Oscar",
+        "password": "oscar",
+        "email": "oscar@gmail.com",
+        "phone_number": "555-9087",
+        "preferences": ["Comida tailandesa", "Comida rápida"],
+        "address": "2424 Calle de la Industria",
+        "is_subscribed": true
+    },
+    {
+        "username": "Natalia",
+        "password": "natalia",
+        "email": "natalia@gmail.com",
+        "phone_number": "555-3245",
+        "preferences": ["Comida mexicana", "Comida italiana"],
+        "address": "2525 Vía del Sol",
+        "is_subscribed": true
+    },
+    {
+        "username": "Ricardo",
+        "password": "ricardo",
+        "email": "ricardo@gmail.com",
+        "phone_number": "555-4645",
+        "preferences": ["Comida gourmet", "Comida española"],
+        "address": "2626 Avenida de la Estrella",
+        "is_subscribed": true
+    },
+
+    {
+        "username": "AlbertoP",
+        "password": "JkKY!g24ul",
+        "email": "albper54@correoweb.pro",
+        "phone_number": "555-6789",
+        "preferences": ["Comida italiana", "Comida mediterránea", "Ensaladas"],
+        "address": "1010 Avenida de los Olivos",
+        "is_subscribed": true
+    },
+    
+    {
+        "username": "PedroSimon",
+        "password": "JLglH3KUhl",
+        "email": "pedrosimon45@correoweb.pro",
+        "phone_number": "555-7890",
+        "preferences": ["Comida española", "Mariscos", "Tapas"],
+        "address": "204 Calle de la Costa",
+        "is_subscribed": true
+    }
+    
+]

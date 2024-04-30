@@ -66,7 +66,9 @@
             <h3 class="offerTitle">{{ offer.title }}</h3>
             <h5>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h5>
             <h5>{{ offer.location }}</h5>
+            <h5>Catering Service: {{ offer.cateringservice }}</h5>
             <p>{{ offer.description }}</p>
+
             <!-- Aquí puedes agregar más detalles de la oferta -->
             {% if user.is_authenticated and user == offer.cateringservice.cateringcompany.user %}
                 <div class="row justify-content">

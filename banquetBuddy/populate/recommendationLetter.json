@@ -1,0 +1,580 @@
+[
+    {
+        "employee": "OliviaT",
+        "catering": "DeliciasMediterraneas",
+        "description": "Excelente desempeño y profesionalismo durante el evento, mostrando habilidades superiores en servicio al cliente.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "IsabellaG",
+        "catering": "DeliciasMediterraneas",
+        "description": "Contribución destacada en la coordinación del evento, asegurando una experiencia memorable para todos los asistentes.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "AvaJ",
+        "catering": "DeliciasMediterraneas",
+        "description": "Demostró habilidades excepcionales en la gestión de la cocina, garantizando la calidad y eficiencia del servicio.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "SophiaM99",
+        "catering": "DeliciasMediterraneas",
+        "description": "Creatividad e innovación en la presentación de platos, elevando el estándar del servicio ofrecido.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "EthanH",
+        "catering": "DeliciasMediterraneas",
+        "description": "Impresionante atención al detalle y compromiso con la excelencia en cada tarea asignada.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "MiaK",
+        "catering": "DeliciasMediterraneas",
+        "description": "Liderazgo efectivo en el equipo de servicio, fomentando un ambiente de trabajo cooperativo y eficiente.",
+        "date": "2024-04-10"
+    },
+    {
+        "employee": "NoahP",
+        "catering": "DeliciasMediterraneas",
+        "description": "Manejo sobresaliente de situaciones bajo presión, asegurando que todos los aspectos del evento fluyeran sin problemas.",
+        "date": "2024-01-30"
+    },
+    {
+        "employee": "EmmaL",
+        "catering": "DeliciasMediterraneas",
+        "description": "Dedicación y pasión por el servicio al cliente, recibiendo elogios consistentes de los invitados.",
+        "date": "2024-01-30"
+    },
+    {
+        "employee": "LiamS",
+        "catering": "DeliciasMediterraneas",
+        "description": "Contribuciones innovadoras que mejoraron la eficiencia del servicio y la satisfacción del cliente.",
+        "date": "2024-01-30"
+    },
+    {
+        "employee": "CharlotteD",
+        "catering": "DeliciasMediterraneas",
+        "description": "Excelencia en la gestión del personal y recursos, asegurando una ejecución impecable del evento.",
+        "date": "2024-01-30"
+    },
+    {
+        "employee": "LucasB",
+        "catering": "DeliciasMediterraneas",
+        "description": "Experto en manejo de la logística del evento, desde la planificación hasta la ejecución final.",
+        "date": "2024-01-30"
+    },
+    {
+        "employee": "EllaR",
+        "catering": "DeliciasMediterraneas",
+        "description": "Capacidad excepcional para adaptarse a cambios de última hora, manteniendo siempre un alto nivel de servicio.",
+        "date": "2024-01-30"
+    },
+
+    {
+        "employee": "EmmaL",
+        "catering": "SaborOriental",
+        "description": "Gran capacidad de liderazgo y organización, fundamental para el éxito del evento.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "LiamS",
+        "catering": "SaborOriental",
+        "description": "Eficiencia y creatividad destacadas en la preparación de platos, contribuyendo significativamente a la experiencia culinaria.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "CharlotteD",
+        "catering": "SaborOriental",
+        "description": "Dedicación excepcional y atención al detalle en cada aspecto del servicio proporcionado.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "LucasB",
+        "catering": "SaborOriental",
+        "description": "Demostró ser invaluable en la gestión de equipos bajo presión, asegurando la fluidez del evento.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "EllaR",
+        "catering": "SaborOriental",
+        "description": "Innovación en técnicas de presentación, mejorando la estética y la funcionalidad del servicio de catering.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "JamesF",
+        "catering": "SaborOriental",
+        "description": "Compromiso con la calidad y la satisfacción del cliente, logrando excelentes críticas por su participación.",
+        "date": "2024-04-22"
+    },
+    {
+        "employee": "AveryG",
+        "catering": "SaborOriental",
+        "description": "Habilidad sobresaliente en la coordinación de eventos, asegurando una ejecución impecable de cada detalle.",
+        "date": "2024-03-25"
+    },
+    {
+        "employee": "NathanT",
+        "catering": "SaborOriental",
+        "description": "Excelente en la gestión de recursos culinarios, optimizando el uso de ingredientes y minimizando desechos.",
+        "date": "2024-03-25"
+    },
+    {
+        "employee": "LilyJ",
+        "catering": "SaborOriental",
+        "description": "Profesionalismo y habilidad para mantener altos estándares de higiene y seguridad durante el evento.",
+        "date": "2024-03-25"
+    },
+    {
+        "employee": "MasonK",
+        "catering": "SaborOriental",
+        "description": "Proactivo en todas las fases del evento, desde la preparación hasta el servicio final al cliente.",
+        "date": "2024-03-25"
+    },
+    {
+        "employee": "ZoeA",
+        "catering": "SaborOriental",
+        "description": "Capacidad de respuesta y adaptabilidad frente a los requerimientos cambiantes de los asistentes al evento.",
+        "date": "2024-03-25"
+    },
+    {
+        "employee": "OliverF",
+        "catering": "SaborOriental",
+        "description": "Creatividad excepcional en la creación de menús que capturaron la esencia del evento, dejando una impresión duradera en los invitados.",
+        "date": "2024-03-25"
+    },
+
+    {
+        "employee": "MiaB",
+        "catering": "GourmetFusion",
+        "description": "Extraordinaria habilidad en la preparación de platos que destacaron en el festival, aportando un toque único y memorable.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "LucasR",
+        "catering": "GourmetFusion",
+        "description": "Liderazgo efectivo en la cocina, asegurando que todos los procesos se ejecutaran a la perfección durante el evento.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "CharlotteN",
+        "catering": "GourmetFusion",
+        "description": "Gestión impecable del equipo, manteniendo la moral alta y la eficiencia en todo momento.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "LiamG",
+        "catering": "GourmetFusion",
+        "description": "Innovador en la creación de menús, ofreciendo platos que deleitaron a los invitados y elevando la reputación del servicio de catering.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "EmmaW",
+        "catering": "GourmetFusion",
+        "description": "Excelente en la coordinación de logística y suministros, crucial para el éxito del evento sin contratiempos.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "NoahH",
+        "catering": "GourmetFusion",
+        "description": "Destacada habilidad culinaria, especialmente en la preparación de platos gourmet que fueron la sensación del festival.",
+        "date": "2024-04-20"
+    },
+    {
+        "employee": "AvaM",
+        "catering": "GourmetFusion",
+        "description": "Creatividad excepcional en la presentación de platos, enriqueciendo la experiencia gastronómica de la Semana de la Moda.",
+        "date": "2024-04-08"
+    },
+    {
+        "employee": "EthanD",
+        "catering": "GourmetFusion",
+        "description": "Compromiso y pasión por la cocina, mostrando una excelente habilidad para adaptarse a los temas del evento.",
+        "date": "2024-04-08"
+    },
+    {
+        "employee": "IsabellaC",
+        "catering": "GourmetFusion",
+        "description": "Eficaz en el manejo del tiempo y los recursos, asegurando que todos los platos se sirvieran a tiempo y perfectamente preparados.",
+        "date": "2024-04-08"
+    },
+    {
+        "employee": "ElijahM",
+        "catering": "GourmetFusion",
+        "description": "Excelente en el manejo de situaciones de alta presión, manteniendo siempre un alto estándar de calidad.",
+        "date": "2024-04-08"
+    },
+    {
+        "employee": "SophiaL",
+        "catering": "GourmetFusion",
+        "description": "Capacidad para liderar y motivar al equipo, logrando un ambiente de trabajo colaborativo y productivo.",
+        "date": "2024-04-08"
+    },
+    {
+        "employee": "LoganC",
+        "catering": "GourmetFusion",
+        "description": "Proactivo y orientado a detalles, garantizando que cada aspecto del servicio cumpliera con las expectativas del cliente.",
+        "date": "2024-04-08"
+    },
+
+    {
+        "employee": "ClaireD",
+        "catering": "CocinaAntonio",
+        "description": "Desempeño excepcional en la organización y ejecución de la cata, contribuyendo a una experiencia inolvidable para los asistentes.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "TheoW",
+        "catering": "CocinaAntonio",
+        "description": "Mostró una habilidad excepcional en el manejo de la logística del evento, asegurando un flujo sin contratiempos.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "EvelynR",
+        "catering": "CocinaAntonio",
+        "description": "Capacidad destacada para gestionar equipos bajo presión, manteniendo la calidad y la eficiencia.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "HenryT",
+        "catering": "CocinaAntonio",
+        "description": "Contribuciones innovadoras en la preparación y presentación de los vinos, enriqueciendo la experiencia de cata.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "ZoeS",
+        "catering": "CocinaAntonio",
+        "description": "Excelente en el servicio al cliente y en la creación de una atmósfera acogedora y profesional durante el evento.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "GabrielM",
+        "catering": "CocinaAntonio",
+        "description": "Eficiencia y profesionalidad en el manejo de los detalles del evento, garantizando una ejecución impecable.",
+        "date": "2024-02-28"
+    },
+    {
+        "employee": "HannahL",
+        "catering": "CocinaAntonio",
+        "description": "Liderazgo en la coordinación del equipo durante el Año Nuevo Chino, resultando en un evento excepcionalmente celebrado.",
+        "date": "2024-04-01"
+    },
+    {
+        "employee": "OwenK",
+        "catering": "CocinaAntonio",
+        "description": "Destacado en la gestión de operaciones de cocina, asegurando la calidad de los alimentos servidos.",
+        "date": "2024-04-01"
+    },
+    {
+        "employee": "GraceH",
+        "catering": "CocinaAntonio",
+        "description": "Excelente en fomentar un ambiente de trabajo en equipo que elevó la moral y la productividad del personal.",
+        "date": "2024-04-01"
+    },
+    {
+        "employee": "JulianF",
+        "catering": "CocinaAntonio",
+        "description": "Innovador en la creación de menús especiales que destacaron en el evento, recibiendo elogios de los asistentes.",
+        "date": "2024-04-01"
+    },
+    {
+        "employee": "ScarlettZ",
+        "catering": "CocinaAntonio",
+        "description": "Comprometida con la excelencia en el servicio, garantizando la satisfacción de los clientes y la calidad de la experiencia.",
+        "date": "2024-04-01"
+    },
+    {
+        "employee": "JacksonV",
+        "catering": "CocinaAntonio",
+        "description": "Proactivo en todas las fases del evento, desde la planificación hasta la ejecución, asegurando el éxito del mismo.",
+        "date": "2024-04-01"
+    },
+
+
+    {
+        "employee": "HannahL",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su capacidad para manejar tareas múltiples fue crucial para el éxito del evento tecnológico.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "GabrielM",
+        "catering": "ExquisitezGastronomica",
+        "description": "Mostró una destreza excepcional en la gestión de los recursos culinarios, optimizando costes sin sacrificar calidad.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "ZoeS",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su atención al detalle y su habilidad para anticipar necesidades del cliente aseguraron un servicio impecable.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "HenryT",
+        "catering": "ExquisitezGastronomica",
+        "description": "Contribuyó de manera significativa al éxito del evento con su conocimiento en la selección de bebidas adecuadas.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "EvelynR",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su liderazgo en la cocina fue fundamental para mantener al equipo enfocado y eficiente bajo presión.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "TheoW",
+        "catering": "ExquisitezGastronomica",
+        "description": "Desarrolló soluciones creativas a desafíos inesperados, manteniendo la excelencia del servicio.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "ClaireD",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su enfoque innovador en la presentación de los platos enriqueció la experiencia culinaria del evento de cocteles.",
+        "date": "2024-02-15"
+    },
+    {
+        "employee": "HannahL",
+        "catering": "ExquisitezGastronomica",
+        "description": "Repetidamente demostró su habilidad para manejar eventos de alta presión con calma y profesionalismo.",
+        "date": "2024-02-15"
+    },
+    {
+        "employee": "GabrielM",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su gestión efectiva de inventarios y suministros fue clave para evitar interrupciones durante el servicio.",
+        "date": "2024-02-15"
+    },
+    {
+        "employee": "ZoeS",
+        "catering": "ExquisitezGastronomica",
+        "description": "Excelente en la gestión de personal, fomentando un ambiente de trabajo colaborativo y eficiente.",
+        "date": "2024-02-15"
+    },
+    {
+        "employee": "HenryT",
+        "catering": "ExquisitezGastronomica",
+        "description": "Su capacidad para adaptarse rápidamente a los cambios en el menú fue crucial para satisfacer las preferencias de todos los invitados.",
+        "date": "2024-02-15"
+    },
+    {
+        "employee": "EvelynR",
+        "catering": "ExquisitezGastronomica",
+        "description": "Impresionante desempeño en la coordinación de la logística del evento, garantizando que todo transcurriera sin inconvenientes.",
+        "date": "2024-02-15"
+    },
+
+    {
+        "employee": "OliverS",
+        "catering": "SaboresdelMar",
+        "description": "Su habilidad para coordinar eventos al aire libre fue impresionante, mostrando gran profesionalismo.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "WillJ98",
+        "catering": "SaboresdelMar",
+        "description": "Excelente en el trato con los clientes, siempre asegurando que sus necesidades fueran satisfechas de manera eficiente.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "HarryB_22",
+        "catering": "SaboresdelMar",
+        "description": "Demostró una excepcional habilidad para gestionar los recursos durante el evento, optimizando el uso de cada elemento.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "GeorgeM_10",
+        "catering": "SaboresdelMar",
+        "description": "Su liderazgo y capacidad para manejar situaciones de estrés garantizaron el éxito del evento.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "JackW",
+        "catering": "SaboresdelMar",
+        "description": "Su creatividad en la presentación de los platos enriqueció la experiencia culinaria del retiro de yoga.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "AmeliaW",
+        "catering": "SaboresdelMar",
+        "description": "Amelia destacó por su meticulosa atención al detalle, asegurando que cada aspecto del servicio fuera perfecto.",
+        "date": "2024-03-05"
+    },
+    {
+        "employee": "OliviaT",
+        "catering": "SaboresdelMar",
+        "description": "Su enfoque proactivo en la resolución de problemas ayudó a manejar eficazmente los desafíos durante la fiesta de primavera.",
+        "date": "2024-04-15"
+    },
+    {
+        "employee": "IsabellaG",
+        "catering": "SaboresdelMar",
+        "description": "Isabella demostró una excepcional habilidad para el trabajo en equipo, mejorando la dinámica del grupo y la eficiencia.",
+        "date": "2024-04-15"
+    },
+    {
+        "employee": "AvaJ",
+        "catering": "SaboresdelMar",
+        "description": "Ava jugó un papel crucial en la planificación del evento, garantizando que cada detalle fuese considerado.",
+        "date": "2024-04-15"
+    },
+    {
+        "employee": "SophiaM99",
+        "catering": "SaboresdelMar",
+        "description": "Su capacidad para adaptarse rápidamente a las necesidades cambiantes del evento fue vital para nuestro éxito.",
+        "date": "2024-04-15"
+    },
+    {
+        "employee": "EthanH",
+        "catering": "SaboresdelMar",
+        "description": "Ethan exhibió una impresionante habilidad para manejar grandes volúmenes de invitados con facilidad y eficiencia.",
+        "date": "2024-04-15"
+    },
+    {
+        "employee": "MiaK",
+        "catering": "SaboresdelMar",
+        "description": "Su experticia en logística fue fundamental para la fluidez del evento, asegurando que todo se ejecutara sin contratiempos.",
+        "date": "2024-04-15"
+    },
+
+    {
+        "employee": "JamesF",
+        "catering": "SazonCasera",
+        "description": "Contribuyó significativamente al éxito del evento con su meticulosa atención y profesionalismo.",
+        "date": "2024-02-20"
+    },
+    {
+        "employee": "AveryG",
+        "catering": "SazonCasera",
+        "description": "Avery mostró excelencia y dedicación, asegurando que cada detalle del catering fuera excepcional.",
+        "date": "2024-02-20"
+    },
+    {
+        "employee": "NathanT",
+        "catering": "SazonCasera",
+        "description": "Nathan gestionó efectivamente todos los aspectos logísticos, superando las expectativas en cada paso.",
+        "date": "2024-02-20"
+    },
+    {
+        "employee": "LilyJ",
+        "catering": "SazonCasera",
+        "description": "Lily jugó un papel crucial en el manejo de la cocina, garantizando una ejecución impecable de los menús.",
+        "date": "2024-02-20"
+    },
+    {
+        "employee": "MasonK",
+        "catering": "SazonCasera",
+        "description": "Mason destacó por su liderazgo y habilidad para inspirar a su equipo, lo que resultó en un servicio excepcional.",
+        "date": "2024-02-20"
+    },
+    {
+        "employee": "ZoeA",
+        "catering": "SazonCasera",
+        "description": "Zoe mostró una creatividad impresionante en la planificación y ejecución del taller de cocina vegana.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "OliverF",
+        "catering": "SazonCasera",
+        "description": "Su capacidad para adaptarse a los cambios de última hora fue crucial para el éxito del taller.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "AmeliaP",
+        "catering": "SazonCasera",
+        "description": "Amelia fue fundamental en la organización del evento, asegurando que cada detalle se cuidara meticulosamente.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "LoganC",
+        "catering": "SazonCasera",
+        "description": "Logan mostró un enfoque innovador y proactivo, enriqueciendo la experiencia del evento con su habilidad culinaria.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "SophiaL",
+        "catering": "SazonCasera",
+        "description": "Su profesionalismo y dedicación fueron evidentes en cada plato que preparó, destacando por su calidad excepcional.",
+        "date": "2024-03-10"
+    },
+    {
+        "employee": "ElijahM",
+        "catering": "SazonCasera",
+        "description": "Elijah demostró ser un miembro invaluable del equipo, con un compromiso constante hacia la excelencia.",
+        "date": "2024-03-10"
+    },
+
+    {
+        "employee": "AvaM",
+        "catering": "DulcesCaprichos",
+        "description": "Ava mostró un dominio excepcional en la preparación de postres, elevando el nivel del evento con su talento culinario.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "NoahH",
+        "catering": "DulcesCaprichos",
+        "description": "Noah contribuyó con su experiencia y creatividad, garantizando la satisfacción total de los asistentes.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "EmmaW",
+        "catering": "DulcesCaprichos",
+        "description": "Emma fue instrumental en la coordinación del servicio, asegurando que todo se desarrollara a la perfección.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "LiamG",
+        "catering": "DulcesCaprichos",
+        "description": "Liam desempeñó un papel clave en la gestión del equipo, manteniendo altos estándares de calidad y servicio.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "CharlotteN",
+        "catering": "DulcesCaprichos",
+        "description": "Charlotte demostró habilidades excepcionales en la organización de eventos, contribuyendo significativamente al éxito del festival.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "LucasR",
+        "catering": "DulcesCaprichos",
+        "description": "Lucas destacó por su habilidad para adaptar menús a las necesidades específicas del evento, garantizando la satisfacción de todos.",
+        "date": "2024-02-10"
+    },
+    {
+        "employee": "MiaB",
+        "catering": "DulcesCaprichos",
+        "description": "Mia brilló por su creatividad y originalidad en la presentación de los platos durante el festival de jazz.",
+        "date": "2024-02-25"
+    },
+    {
+        "employee": "JacksonV",
+        "catering": "DulcesCaprichos",
+        "description": "Jackson gestionó eficazmente los recursos del evento, asegurando una ejecución impecable sin exceder el presupuesto.",
+        "date": "2024-02-25"
+    },
+    {
+        "employee": "ScarlettZ",
+        "catering": "DulcesCaprichos",
+        "description": "Scarlett sobresalió en la gestión logística del evento, supervisando los detalles más finos para un servicio sin fallos.",
+        "date": "2024-02-25"
+    },
+    {
+        "employee": "JulianF",
+        "catering": "DulcesCaprichos",
+        "description": "Julian mostró un compromiso excepcional con la calidad, lo que fue crucial para el éxito del evento.",
+        "date": "2024-02-25"
+    },
+    {
+        "employee": "GraceH",
+        "catering": "DulcesCaprichos",
+        "description": "Grace jugó un papel fundamental en el servicio al cliente, garantizando que cada asistente se sintiera valorado y bien atendido.",
+        "date": "2024-02-25"
+    },
+    {
+        "employee": "OwenK",
+        "catering": "DulcesCaprichos",
+        "description": "Owen demostró ser un líder eficaz, coordinando a su equipo para proporcionar un servicio rápido y eficiente durante el evento.",
+        "date": "2024-02-25"
+    }
+]

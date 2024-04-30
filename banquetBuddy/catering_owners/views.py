@@ -725,6 +725,9 @@ def edit_offer(request, offer_id):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     if current_user != offer.cateringservice.cateringcompany.user:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
+    
+    catering_company = request.user.CateringCompanyusername
+    events = Event.objects.filter(cateringcompany=catering_company)
 
     if request.method == "POST":
         form = OfferForm(request.POST, instance=offer)
@@ -741,7 +744,7 @@ def edit_offer(request, offer_id):
     else:
         messages.error(request, "Please correct the errors below.")
 
-    return render(request, "offers/edit_offer.html", {"form": form, "offer": offer})
+    return render(request, "offers/edit_offer.html", {"form": form, "offer": offer, "events": events})
 
 
 @login_required

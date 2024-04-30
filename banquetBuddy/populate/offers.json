@@ -1,0 +1,187 @@
+[
+    {
+        "title": "Chef Ejecutivo para Cena de Gala",
+        "description": "Buscamos un chef ejecutivo para liderar nuestra cena de gala, ofreciendo un menú sofisticado y una experiencia culinaria inolvidable.",
+        "requirements": "Experiencia comprobada en cenas de gala, habilidades excepcionales en cocina de alta gama.",
+        "location": "DeliciasMediterraneas - Salón de Eventos Principal",
+        "service_name": "Banquete Estelar",
+        "event_name": "Cena de Gala Elegante",
+        "start_date": "2024-07-02",
+        "end_date": "2024-07-12"
+    },
+    {
+        "title": "Coordinador de Fiesta Sorpresa",
+        "description": "Se requiere un coordinador experimentado para organizar una fiesta sorpresa nocturna que deleitará y sorprenderá a todos los invitados.",
+        "requirements": "Habilidades avanzadas en organización de eventos, creatividad y atención al detalle.",
+        "location": "CocinaAntonio - Local Nocturno VIP",
+        "service_name": "Buffet Real",
+        "event_name": "Fiesta Sorpresa Nocturna",
+        "start_date": "2024-07-01",
+        "end_date": "2024-07-10"
+    },
+    {
+        "title": "Especialista en Eventos al Aire Libre",
+        "description": "Necesitamos un especialista para administrar una recepción elegante en nuestro famoso Jardín Botánico, garantizando un servicio impecable y una atmósfera encantadora.",
+        "requirements": "Experiencia en la gestión de eventos al aire libre, capacidad para manejar logísticas complejas.",
+        "location": "DeliciasMediterraneas - Jardín Botánico",
+        "service_name": "Eventos Elegantes",
+        "event_name": "Recepción Jardín Botánico",
+        "start_date": "2024-07-18",
+        "end_date": "2024-07-28"
+    },
+
+    {
+        "title": "Organizador de Bodas en la Playa",
+        "description": "Buscamos un organizador de bodas con experiencia para crear una experiencia mágica en la playa, asegurando que todos los detalles sean perfectos para un día inolvidable.",
+        "requirements": "Experiencia en la planificación de bodas en la playa, excelentes habilidades de comunicación y atención al detalle.",
+        "location": "DulcesCaprichos - Playa Privada",
+        "service_name": "Celebración Soñada",
+        "event_name": "Boda Playa Paradisíaca",
+        "start_date": "2024-06-05",
+        "end_date": "2024-06-15"
+    },
+    {
+        "title": "Coordinador de Conferencias Internacionales",
+        "description": "Necesitamos un profesional para coordinar una conferencia de negocios internacional, garantizando que todos los aspectos del servicio de catering superen las expectativas.",
+        "requirements": "Experiencia en conferencias internacionales, capacidad para manejar grandes grupos y adaptarse a diversas necesidades dietéticas.",
+        "location": "GourmetFusion - Centro de Conferencias",
+        "service_name": "Fiesta Gourmet",
+        "event_name": "Conferencia de Negocios Internacional",
+        "start_date": "2024-07-10",
+        "end_date": "2024-07-20"
+    },
+    {
+        "title": "Experto en Cata de Vinos y Quesos",
+        "description": "Estamos en busca de un experto en vinos y quesos para liderar una cata que promete ser una experiencia sensorial memorable.",
+        "requirements": "Amplio conocimiento en vinos y quesos, habilidades excepcionales en la presentación y organización de eventos.",
+        "location": "SazonCasera - Sala de Catas Especializadas",
+        "service_name": "Menús Especiales",
+        "event_name": "Cata de Vinos y Quesos",
+        "start_date": "2024-08-01",
+        "end_date": "2024-08-11"
+    },
+
+        {
+            "title": "Especialista en Fiestas Infantiles",
+            "description": "¡Buscamos a alguien creativo y energético para organizar un cumpleaños temático inolvidable para niños! Deberá coordinar actividades y asegurarse de que la comida sea adecuada y divertida para los pequeños.",
+            "requirements": "Experiencia en la organización de eventos infantiles, creatividad y habilidad para trabajar con niños.",
+            "location": "SaborOriental - Salón de Fiestas",
+            "service_name": "Delicias del Chef",
+            "event_name": "Cumpleaños Temático para Niños",
+            "start_date": "2024-08-26",
+            "end_date": "2024-09-05"
+        },
+        {
+            "title": "Coordinador de Eventos Corporativos",
+            "description": "Necesitamos un coordinador para nuestra próxima inauguración corporativa, capaz de manejar logística compleja y garantizar la ejecución perfecta del evento.",
+            "requirements": "Fuertes habilidades organizativas, experiencia en eventos corporativos de gran escala, y habilidad para manejar múltiples tareas.",
+            "location": "SaboresdelMar - Centro Corporativo",
+            "service_name": "Catering Premium",
+            "event_name": "Fiesta de Inauguración Corporativa",
+            "start_date": "2024-06-21",
+            "end_date": "2024-07-01"
+        },
+        {
+            "title": "Curador de Experiencias Gastronómicas",
+            "description": "Buscamos un experto en gastronomía para curar una noche de degustación única, que muestre la innovación y la calidad excepcional de nuestros chefs.",
+            "requirements": "Profundo conocimiento culinario, experiencia en eventos de degustación de alta gama, y excelentes habilidades de presentación.",
+            "location": "ExquisitezGastronomica - Lounge Gourmet",
+            "service_name": "Sabor Exclusivo",
+            "event_name": "Degustación Gastronómica Exclusiva",
+            "start_date": "2024-10-01",
+            "end_date": "2024-10-10"
+        },
+
+        {
+            "title": "Chef Especialista para Cena de Lujo",
+            "description": "Se busca chef con experiencia en cenas de gala para liderar una cena de lujo en la playa, enfocado en ofrecer una experiencia gastronómica excepcional bajo las estrellas.",
+            "requirements": "Experiencia en cenas de gala, excelente manejo de cocina gourmet, y capacidad para trabajar en entornos al aire libre.",
+            "location": "Playa Privada - DeliciasMediterraneas",
+            "service_name": "Banquete Estelar",
+            "event_name": "Cena de lujo en la playa",
+            "start_date": "2024-07-05",
+            "end_date": "2024-07-15"
+        },
+        {
+            "title": "Organizador de Eventos Nocturnos",
+            "description": "Necesitamos un organizador para planificar y ejecutar una fiesta sorpresa nocturna, asegurando entretenimiento, decoración y catering excepcional.",
+            "requirements": "Experiencia en la organización de fiestas nocturnas, habilidades creativas, y capacidad para gestionar eventos bajo presión.",
+            "location": "CocinaAntonio - Salón Nocturno",
+            "service_name": "Buffet Real",
+            "event_name": "Fiesta Increíble en la Noche",
+            "start_date": "2024-08-01",
+            "end_date": "2024-08-11"
+        },
+        {
+            "title": "Coordinador para Recepciones Elegantes",
+            "description": "Buscamos un coordinador experimentado para manejar una recepción especial en un palacio de cristal, asegurando una atmósfera elegante y detallada.",
+            "requirements": "Experiencia en la gestión de eventos de lujo, atención al detalle, y excelentes habilidades de comunicación.",
+            "location": "DeliciasMediterraneas - Palacio de Cristal",
+            "service_name": "Eventos Elegantes",
+            "event_name": "Recepción especial en el palacio de cristal",
+            "start_date": "2024-06-19",
+            "end_date": "2024-06-29"
+        },
+
+        {
+            "title": "Chef Principal para Boda en la Playa",
+            "description": "Buscamos un chef principal para dirigir el servicio de catering en una boda espectacular en la playa. El candidato ideal deberá tener experiencia en eventos grandes y gestionar menús personalizados.",
+            "requirements": "Experiencia en bodas y grandes eventos, capacidad para trabajar en entornos al aire libre, conocimientos en cocina de mar.",
+            "location": "DulcesCaprichos - Playa Privada",
+            "service_name": "Celebración Soñada",
+            "event_name": "Boda espectacular en la playa",
+            "start_date": "2024-06-07",
+            "end_date": "2024-06-17"
+        },
+        {
+            "title": "Coordinador de Conferencias de Negocios",
+            "description": "Necesitamos un coordinador con experiencia en conferencias de negocios para manejar todos los aspectos de nuestro evento global, desde la logística hasta la ejecución del catering de alta gama.",
+            "requirements": "Experiencia previa en conferencias, habilidades organizativas, y capacidad para coordinar con múltiples proveedores.",
+            "location": "GourmetFusion - Centro de Convenciones Global",
+            "service_name": "Fiesta Gourmet",
+            "event_name": "Conferencia de Negocios Global",
+            "start_date": "2024-07-12",
+            "end_date": "2024-07-22"
+        },
+        {
+            "title": "Experto en Vinos y Quesos para Degustación",
+            "description": "Se busca un experto en vinos y quesos para liderar una degustación exclusiva. El candidato debe tener un conocimiento profundo de maridajes y la capacidad de educar y entretener a los invitados.",
+            "requirements": "Conocimiento experto en vinos y quesos, habilidades de presentación, experiencia en eventos de degustación.",
+            "location": "SazonCasera - Sala de Catas Elegante",
+            "service_name": "Menús Especiales",
+            "event_name": "Degustación Exclusiva de Vinos y Quesos",
+            "start_date": "2024-08-03",
+            "end_date": "2024-08-13"
+        },
+
+        {
+            "title": "Organizador de Fiestas Infantiles Temáticas",
+            "description": "Buscamos un profesional creativo para organizar un cumpleaños infantil temático. Debe ser capaz de crear una atmósfera mágica y adaptar actividades para niños de todas las edades.",
+            "requirements": "Experiencia en eventos infantiles, creatividad, habilidad para trabajar con niños.",
+            "location": "SaborOriental - Salón de Eventos Infantis",
+            "service_name": "Delicias del Chef",
+            "event_name": "Cumpleaños Infantil Temático",
+            "start_date": "2024-08-28",
+            "end_date": "2024-09-07"
+        },
+        {
+            "title": "Coordinador de Inauguración Corporativa",
+            "description": "Se busca un coordinador con experiencia en lanzamientos y inauguraciones de empresas para garantizar un evento impecable y profesional.",
+            "requirements": "Experiencia en inauguraciones, capacidad organizativa, atención al detalle.",
+            "location": "SaboresdelMar - Centro Corporativo",
+            "service_name": "Catering Premium",
+            "event_name": "Inauguración Corporativa Espectacular",
+            "start_date": "2024-06-13",
+            "end_date": "2024-06-23"
+        },
+        {
+            "title": "Maestro de Ceremonias para Degustación Gastronómica",
+            "description": "Necesitamos un maestro de ceremonias con conocimientos en gastronomía de vanguardia para dirigir una noche de degustación exclusiva, interactuando con los invitados y explicando los conceptos detrás de cada plato.",
+            "requirements": "Conocimientos en gastronomía moderna, excelentes habilidades de comunicación, experiencia en eventos de alta cocina.",
+            "location": "ExquisitezGastronomica - Lounge de Degustación",
+            "service_name": "Sabor Exclusivo",
+            "event_name": "Noche de Degustación Gastronómica",
+            "start_date": "2024-10-02",
+            "end_date": "2024-10-12"
+        }
+]
