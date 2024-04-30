@@ -236,6 +236,12 @@ def listar_caterings_companies(request):
     if not is_employee(request):
         return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
     caterings = CateringCompany.objects.all()
+    if "search" not in context:
+       busqueda = ""
+
+    if request.method == "POST":
+        busqueda = request.POST.get("search", "")
+        caterings = CateringCompany.objects.filter(Q(name__icontains=busqueda))
 
     context["caterings"] = caterings
     return render(request, "contact_chat_employee.html", context)
