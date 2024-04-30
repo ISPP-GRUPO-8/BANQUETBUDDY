@@ -12,28 +12,17 @@
       <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
       <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€/guest
 
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
       <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
           {% csrf_token %}
 
-          {% if form_error %}
-              <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
-          {% endif %}
-
-          {% if form_error_menu %}
-              <div class="alert alert-danger">You have to select a menu</div>
-          {% endif %}
-
-          {% if form_error_capacity %}
-              <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{ catering.capacity }}. Please choose a lower number of guests.</div>
-          {% endif %}
-
-          {% if form_error_date %}
-              <div class="alert alert-danger">Bookings can only be made for future dates.</div>
-          {% endif %}
-
-          {% if form_error_date_selected %}
-              <div class="alert alert-danger">The selected date is already booked.</div>
-          {% endif %}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
