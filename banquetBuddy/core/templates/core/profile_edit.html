@@ -72,7 +72,7 @@
             </div>
             {% if user.EmployeeUsername %}
               <div class="form-group">
-                <label for="curriculum" class="text-white">Currículum:</label>
+                <label for="curriculum" class="text-white">Curriculum:</label>
                 {% if user.EmployeeUsername.curriculum %}
                   <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
                 {% else %}
