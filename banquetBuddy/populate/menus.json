@@ -1,0 +1,303 @@
+[
+    {
+      "cateringcompany": "Delicias Mediterráneas",
+      "cateringservice": "Banquete Estelar",
+      "menus": [
+        {
+          "name": "Menú Degustación Mediterráneo",
+          "description": "Descubre los sabores del Mediterráneo con este exquisito menú degustación. Desde frescos mariscos hasta platos tradicionales, cada bocado te transportará a la costa del sur de Europa.",
+          "diet_restrictions": "Sin restricciones"
+        },
+        {
+          "name": "Menú Vegetariano Gourmet",
+          "description": "Disfruta de una experiencia culinaria sin carne con nuestro menú vegetariano gourmet. Cada plato está cuidadosamente elaborado para resaltar los sabores naturales de los ingredientes frescos y de temporada.",
+          "diet_restrictions": "Vegetariano"
+        },
+        {
+            "name": "Menú Fusión Mediterráneo-Asiático",
+            "description": "Combina lo mejor de ambos mundos con este menú fusión. Disfruta de platos que mezclan sabores mediterráneos con técnicas asiáticas, ofreciendo una experiencia culinaria única y emocionante.",
+            "diet_restrictions": "Vegano"
+          },
+          {
+            "name": "Menú Clásico Francés",
+            "description": "Sumérgete en la rica cultura gastronómica de Francia con nuestro menú clásico francés. Desde coq au vin hasta ratatouille, cada plato es una obra maestra culinaria tradicional.",
+            "diet_restrictions": "Sin restricciones"
+          },
+          {
+            "name": "Noche de Barbacoa",
+            "description": "Disfruta de una noche de barbacoa con todo incluido, desde costillas ahumadas hasta pollo asado y una selección de salsas caseras para embadurnar.",
+            "diet_restrictions": "Sin restricciones"
+          }
+
+      ]
+    },
+
+
+    {
+        "cateringcompany": "Sabores del Mar",
+        "cateringservice": "Catering Premium",
+        "menus": [
+            {
+              "name": "Menú de Postres Decadentes",
+              "description": "Indulge in a dessert menu that features everything from rich chocolate cakes to delicate pastries and fruit tarts, each paired with the perfect dessert wine or coffee.",
+              "diet_restrictions": "Sin restricciones"
+            },
+            {
+              "name": "Platos Pequeños y Vinos",
+              "description": "Una selección de platos pequeños perfectamente emparejados con vinos boutique, ideal para una noche de degustación o un evento especial.",
+              "diet_restrictions": "Sin restricciones"
+            },
+            {
+              "name": "Menú Inspirado en el Medio Oriente",
+              "description": "Experimenta los aromas y sabores del Medio Oriente con platos como kebabs, falafel y hummus, cada uno hecho con autenticidad y pasión.",
+              "diet_restrictions": "Vegetariano"
+            },
+            {
+              "name": "Noche de Pizzas Gourmet",
+              "description": "Eleva tu noche de pizza con opciones gourmet que incluyen ingredientes premium como trufas, prosciutto y quesos artesanales.",
+              "diet_restrictions": "Sin restricciones"
+            },
+            {
+              "name": "Menú de Cocina de Confort",
+              "description": "Disfruta de platos reconfortantes que te harán sentir como en casa, desde guisos y cazuelas hasta postres cálidos y reconfortantes.",
+              "diet_restrictions": "Sin lactosa"
+            }
+  
+        ]
+      },
+
+
+
+    {
+      "cateringcompany": "Delicias Mediterráneas",
+      "cateringservice": "Cocina de Autor",
+      "menus": [
+        {
+          "name": "Menú Clásico Italiano",
+          "description": "Viaja a Italia sin salir de tu evento con nuestro menú clásico italiano. Desde la pasta fresca hasta la pizza recién horneada, cada plato te hará sentir como si estuvieras en el corazón de la Toscana.",
+          "diet_restrictions": "Sin gluten"
+        },
+        {
+          "name": "Menú Internacional Variado",
+          "description": "Viaja por el mundo con nuestro menú internacional variado. Desde platos tradicionales hasta creaciones innovadoras, este menú ofrece una experiencia culinaria única que satisfará los paladares más exigentes.",
+          "diet_restrictions": "Orgánico"
+        },
+        {
+            "name": "Menú de Carnes Premium",
+            "description": "Este menú está diseñado para los amantes de la carne, ofreciendo cortes premium asados a la perfección. Acompañados de guarniciones que resaltan los sabores ricos y robustos de cada plato.",
+            "diet_restrictions": "Sin restricciones"
+          },
+          {
+            "name": "Menú Mar y Tierra",
+            "description": "Disfruta de lo mejor del mar y la tierra con nuestro menú Mar y Tierra. Langosta fresca y filete mignon se sirven con salsas y acompañamientos que realzan sus sabores naturales.",
+            "diet_restrictions": "Sin restricciones"
+          },
+            {
+                "name": "Menú de Temporada",
+                "description": "Celebra los sabores de la temporada con platos que utilizan los ingredientes más frescos y disponibles localmente, cambiando según la estación para ofrecer siempre una experiencia nueva.",
+                "diet_restrictions": "Orgánico"
+            },
+            {
+                "name": "Menú de Inspiración India",
+                "description": "Deleita tus sentidos con este menú inspirado en la rica cultura culinaria de la India, con platos llenos de especias y aromas que transportan directamente al corazón de Delhi.",
+                "diet_restrictions": "Vegetariano"
+            }
+      ]
+    },
+    {
+      "cateringcompany": "Delicias Mediterráneas",
+      "cateringservice": "Eventos Elegantes",
+      "menus": [
+        {
+          "name": "Menú Tapas Españolas",
+          "description": "Disfruta de la variedad y la autenticidad de la cocina española con nuestro menú de tapas. Desde patatas bravas hasta jamón ibérico, cada bocado es una deliciosa explosión de sabor.",
+          "diet_restrictions": "Sin frutos secos"
+        },
+        {
+          "name": "Menú Saludable y Equilibrado",
+          "description": "Cuida tu bienestar con nuestro menú saludable y equilibrado. Cada plato está diseñado para ofrecer una combinación perfecta de nutrientes y sabor, para que puedas disfrutar de una comida deliciosa sin comprometer tu salud.",
+          "diet_restrictions": "Bajo en calorías"
+        },
+        {
+            "name": "Menú Vegetariano Creativo",
+            "description": "Explora la creatividad sin límites de la cocina vegetariana con platos que destacan la frescura y la calidad de los ingredientes locales y de temporada.",
+            "diet_restrictions": "Vegetariano"
+          },
+          {
+            "name": "Menú Bajo en Carbohidratos",
+            "description": "Perfecto para quienes siguen una dieta baja en carbohidratos, este menú ofrece platos deliciosos y satisfactorios sin el exceso de carbohidratos.",
+            "diet_restrictions": "Bajo en carbohidratos"
+          },
+          
+          {
+            "name": "Cocina Fusión Latino-Asiática",
+            "description": "Un menú emocionante que fusiona lo mejor de la cocina latinoamericana y asiática, creando platos únicos que son vibrantes tanto en sabor como en presentación.",
+            "diet_restrictions": "Sin gluten"
+          }
+      ]
+    },
+    {
+      "cateringcompany": "Sabor Oriental",
+      "cateringservice": "Delicias del Chef",
+      "menus": [
+        {
+          "name": "Menú Asiático Fusion",
+          "description": "Embárcate en un viaje culinario por Asia con nuestro menú asiático fusion. Del sushi japonés a los rollitos de primavera vietnamitas, cada plato está inspirado en los sabores y técnicas de cocina de la región.",
+          "diet_restrictions": "Vegano"
+        },
+        {
+          "name": "Menú BBQ Americana",
+          "description": "Celebra al estilo estadounidense con nuestro menú BBQ. Desde jugosas hamburguesas hasta costillas ahumadas, este menú es perfecto para una fiesta al aire libre con amigos y familiares.",
+          "diet_restrictions": "Sin gluten"
+        },
+        {
+            "name": "Menú de Temporada",
+            "description": "Celebra los sabores de la temporada con platos que utilizan los ingredientes más frescos y disponibles localmente, cambiando según la estación para ofrecer siempre una experiencia nueva.",
+            "diet_restrictions": "Orgánico"
+          },
+          {
+            "name": "Menú de Inspiración India",
+            "description": "Deleita tus sentidos con este menú inspirado en la rica cultura culinaria de la India, con platos llenos de especias y aromas que transportan directamente al corazón de Delhi.",
+            "diet_restrictions": "Vegetariano"
+          }, 
+          {
+            "name": "Festival de Sopas",
+            "description": "Explora una variedad de sopas ricas y reconfortantes, cada una con su propio conjunto de sabores complejos y satisfactorios, perfectas para cualquier clima.",
+            "diet_restrictions": "Bajo en calorías"
+          },
+          {
+            "name": "Experiencia Vegana Gourmet",
+            "description": "Descubre lo mejor de la cocina vegana con platos gourmet que utilizan técnicas innovadoras y los mejores ingredientes vegetales para platos deliciosos y sin crueldad.",
+            "diet_restrictions": "Vegano"
+          }
+      ]
+    },
+    {
+      "cateringcompany": "Gourmet Fusion",
+      "cateringservice": "Fiesta Gourmet",
+      "menus": [
+        {
+          "name": "Menú de Lujo Gourmet",
+          "description": "Eleva tu evento a otro nivel con nuestro menú de lujo gourmet. Cada plato está elaborado con ingredientes de primera calidad y presentado de manera impecable, para una experiencia gastronómica verdaderamente memorable.",
+          "diet_restrictions": "Sin lactosa"
+        },
+        {
+          "name": "Menú Tradicional de la Abuela",
+          "description": "Recupera el sabor de la cocina casera con nuestro menú tradicional de la abuela. Desde platos reconfortantes hasta postres caseros, cada bocado te recordará el hogar y la familia.",
+          "diet_restrictions": "Sin azúcar"
+        },
+        {
+            "name": "Desayuno Continental Clásico",
+            "description": "Comienza el día con un desayuno continental tradicional, incluyendo una variedad de panes, pastelería, frutas, y selección de quesos y embutidos.",
+            "diet_restrictions": "Sin restricciones"
+          },
+          {
+            "name": "Brunch Neoyorquino",
+            "description": "Experimenta un brunch al estilo de Nueva York con bagels, lox, huevos benedictinos y una selección de cócteles de brunch para empezar el día con energía.",
+            "diet_restrictions": "Sin restricciones"
+          }
+      ]
+    },
+    {
+      "cateringcompany": "Cocina Antonio",
+      "cateringservice": "Buffet Real",
+      "menus": [
+        {
+          "name": "Menú Internacional Variado",
+          "description": "Viaja por el mundo con nuestro menú internacional variado. Desde platos tradicionales hasta creaciones innovadoras, este menú ofrece una experiencia culinaria única que satisfará los paladares más exigentes.",
+          "diet_restrictions": "Orgánico"
+        },
+        {
+          "name": "Menú BBQ Americana",
+          "description": "Celebra al estilo estadounidense con nuestro menú BBQ. Desde jugosas hamburguesas hasta costillas ahumadas, este menú es perfecto para una fiesta al aire libre con amigos y familiares.",
+          "diet_restrictions": "Sin gluten"
+        },
+        {
+            "name": "Menú de Carnes Premium",
+            "description": "Este menú está diseñado para los amantes de la carne, ofreciendo cortes premium asados a la perfección. Acompañados de guarniciones que resaltan los sabores ricos y robustos de cada plato.",
+            "diet_restrictions": "Sin restricciones"
+          },
+          {
+            "name": "Menú de Temporada",
+            "description": "Celebra los sabores de la temporada con platos que utilizan los ingredientes más frescos y disponibles localmente, cambiando según la estación para ofrecer siempre una experiencia nueva.",
+            "diet_restrictions": "Orgánico"
+          },
+          {
+            "name": "Menú Detox",
+            "description": "Renueva y revitaliza con nuestro menú detox, diseñado para limpiar y nutrir el cuerpo con jugos frescos, sopas, y ensaladas llenas de nutrientes.",
+            "diet_restrictions": "Vegano"
+          }
+      ]
+    },
+    {
+      "cateringcompany": "Exquisitez Gastronómica",
+      "cateringservice": "Sabor Exclusivo",
+      "menus": [
+        
+        {
+          "name": "Menú Saludable y Equilibrado",
+          "description": "Cuida tu bienestar con nuestro menú saludable y equilibrado. Cada plato está diseñado para ofrecer una combinación perfecta de nutrientes y sabor, para que puedas disfrutar de una comida deliciosa sin comprometer tu salud.",
+          "diet_restrictions": "Bajo en calorías"
+        },
+        {
+            "name": "Menú Mediterráneo de Mariscos",
+            "description": "Sumérgete en los sabores del Mediterráneo con una selección de mariscos frescos, preparados con hierbas y aceite de oliva extra virgen para resaltar sus sabores naturales.",
+            "diet_restrictions": "Bajo en calorías"
+          },
+          {
+            "name": "Banquete Mexicano",
+            "description": "Disfruta de un festín mexicano con tacos, enchiladas, y guacamole, acompañado de margaritas auténticas para una comida festiva y llena de sabor.",
+            "diet_restrictions": "Sin gluten"
+          },
+          {
+            "name": "Cena Japonesa Tradicional",
+            "description": "Experimenta la serenidad y el refinamiento de una cena japonesa tradicional, con sushi, sashimi y tempura servidos junto a sake seleccionado.",
+            "diet_restrictions": "Sin gluten"
+          },
+          {
+            "name": "Menú de Carne y Vino",
+            "description": "Cada plato de este menú está cuidadosamente emparejado con un vino específico, destacando cortes de carne premium y vinos finos para una experiencia culinaria elevada.",
+            "diet_restrictions": "Sin restricciones"
+          }   
+      ]
+    },
+
+
+
+    {
+        "cateringcompany": "Sazón Casera",
+        "cateringservice": "Menús Especiales",
+        "menus": [
+          {
+            "name": "Menú de Lujo Gourmet",
+            "description": "Eleva tu evento a otro nivel con nuestro menú de lujo gourmet. Cada plato está elaborado con ingredientes de primera calidad y presentado de manera impecable, para una experiencia gastronómica verdaderamente memorable.",
+            "diet_restrictions": "Sin lactosa"
+          },
+          {
+            "name": "Menú Italiano Auténtico",
+            "description": "Disfruta de la auténtica cocina italiana con platos clásicos como la pasta carbonara, risotto y tiramisú, cada uno hecho siguiendo tradiciones centenarias.",
+            "diet_restrictions": "Sin restricciones"
+          },
+          
+
+            {
+                "name": "Menú de Carne y Vino",
+                "description": "Cada plato de este menú está cuidadosamente emparejado con un vino específico, destacando cortes de carne premium y vinos finos para una experiencia culinaria elevada.",
+                "diet_restrictions": "Sin restricciones"
+            }
+        ]
+      },
+
+      {
+        "cateringcompany": "Dulces Caprichos",
+        "cateringservice": "Celebración Soñada",
+        "menus": [
+            {
+                "name": "Menú Español de Tapas",
+                "description": "Comparte un menú de tapas españolas, perfecto para una noche informal con amigos. Incluye una variedad de pequeños platos como patatas bravas, croquetas y más.",
+                "diet_restrictions": "Sin frutos secos"
+              }
+        ]
+      }
+  ]
+  
