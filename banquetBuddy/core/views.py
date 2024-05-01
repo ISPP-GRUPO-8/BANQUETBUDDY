@@ -287,6 +287,8 @@ def profile_view(request):
     return render(request, "core/profile.html", context)
 
 
+import re
+
 @login_required
 def profile_edit_view(request):
     context = {"user": request.user}
@@ -298,12 +300,12 @@ def profile_edit_view(request):
         employee_instance = None
 
     if request.method == "POST":
-        email = request.POST.get("email", "")
-        username = request.POST.get("username", "")
-        first_name = request.POST.get("first_name", "")
-        last_name = request.POST.get("last_name", "")
-        experience = request.POST.get("experience", "")
-        profession = request.POST.get("profession", "")
+        email = request.POST.get("email", "").strip()
+        username = request.POST.get("username", "").strip()
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        experience = request.POST.get("experience", "").strip()
+        profession = request.POST.get("profession", "").strip()
 
         # Pasar valores al contexto
         context["email"] = email
@@ -334,6 +336,14 @@ def profile_edit_view(request):
             messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
+        if not re.match("^[A-Za-z]*$", first_name) or not re.match("^[A-Za-z]*$", last_name):
+            messages.error(request, "First name and last name can only contain letters")
+            return render(request, "core/profile_edit.html", context)
+
+        if len(first_name) < 3 or len(last_name) < 3:
+            messages.error(request, "First name and last name must be at least 3 characters long")
+            return render(request, "core/profile_edit.html", context)
+
         if is_employee:
             curriculum_file = request.FILES.get("curriculum")
             if curriculum_file:
@@ -345,7 +355,10 @@ def profile_edit_view(request):
                 employee_instance.curriculum = curriculum_file
                 employee_instance.save()
 
-            # Actualizar experience y profession si el usuario es un empleado
+            if not experience or not profession:
+                messages.error(request, "Please provide both experience and profession")
+                return render(request, "core/profile_edit.html", context)
+
             employee_instance.experience = experience
             employee_instance.profession = profession
             employee_instance.save()
@@ -361,6 +374,7 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
+
 
 
 
