@@ -2,12 +2,6 @@
 {% load static %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Reservation</title>
     <style>
         .content-wrapper {
             display: flex;
@@ -15,7 +9,6 @@
             align-items: center;
             padding: 20px;
             margin: 0;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
         .content-container {
             max-width: 600px;
@@ -24,11 +17,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #02483E;
-            text-align: center;
-            margin-bottom: 30px;
+            margin-top: 30px;
         }
         ul {
             list-style-type: none;
@@ -39,17 +28,16 @@
             margin-bottom: 10px;
         }
         li strong {
-            font-weight: bold;
-            margin-right: 10px;
+            margin-right: 5px;
             color: #02483E;
         }
         @media screen and (max-width: 600px) and (min-width: 451px) {
-          h1 {
+          h2 {
               font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
           }
         }
         @media screen and (max-width: 450px) {
-          h1 {
+          h2 {
               font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
           }
         }
@@ -64,12 +52,12 @@
           }
         }
     </style>
-</head>
 <body>
 
 <div class="content-wrapper">
     <div class="content-container">
-        <h1>Booking Details</h1>
+        <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Booking Details</h2>
         <ul>
             <li><strong>Name:</strong> {{ event.name }}</li>
             <li><strong>Date:</strong> {{ event.date }}</li>
@@ -82,5 +70,4 @@
 </div>
 
 </body>
-</html>
 {% endblock %}
