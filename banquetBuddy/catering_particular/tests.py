@@ -578,7 +578,7 @@ class CateringViewTest(TestCase):
 
     def test_listar_caterings_companies_unauthenticated(self):
         # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings_companies"))
+        response = self.client.get(reverse("listar_caterings_companies"))   
 
         # Verificamos que el usuario no autenticado reciba un HttpResponseForbidden
         self.assertIsInstance(response, HttpResponseForbidden)
