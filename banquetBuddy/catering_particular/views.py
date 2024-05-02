@@ -520,6 +520,13 @@ def listar_caterings_companies(request):
     context["is_employee"] = is_employee(request)
     context["is_catering_company"] = is_catering_company(request)
     caterings = CateringCompany.objects.all()
+    if "search" not in context:
+       busqueda = ""
+
+    if request.method == "POST":
+        busqueda = request.POST.get("search", "")
+        caterings = CateringCompany.objects.filter(Q(name__icontains=busqueda))
+    
 
     context["caterings"] = caterings
     return render(request, "contact_chat.html", context)
