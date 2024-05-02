@@ -5,11 +5,10 @@
   html {
     height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif;
   }
 
   .register-form {
-    background-color: #54bfaf;
+    background-color: #54BFAF;
     padding: 20px;
     height: 100%;
     width: 100%;
@@ -34,13 +33,19 @@
   }
 
   .btn {
-    background-color: #02483e;
+    background-color: #02483E;
     color: white;
     border: none;
     cursor: pointer;
     width: 30%;
     border-radius: 10px;
   }
+
+  .btn:hover {
+    background-color: #01352e;
+    color: white;
+  }
+  
   .alert.alert-danger {
     font-size: 12px; /* Tamaño de la fuente más pequeño */
   }
@@ -84,7 +89,7 @@
               {% for field in employee_form %}
               <div class="form-group">
                 {% if field.html_name == 'curriculum' %}
-                <label for="{{ field.html_name }}">Currículum:</label>
+                <label for="{{ field.html_name }}">Curriculum:</label>
                 {% endif %}
                 <input
                   type="{{ field.field.widget.input_type }}"

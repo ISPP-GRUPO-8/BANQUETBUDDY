@@ -46,7 +46,7 @@
                   {% for field in company_form %}
                   <div class="form-group">
                     {% if field.name == 'verification_document' %}
-                    <strong>Tax Identification Document or Commercial Record</strong>
+                    Tax Identification Document or Commercial Record:
                     {% endif %}
                     {% if field.field.widget.input_type != 'file' %}
                     {% if field.name == 'price_plan' %}
@@ -105,11 +105,10 @@
     html {
       height: 100%;
       margin: 0;
-      font-family: Arial, sans-serif;
     }
 
     .register-form {
-      background-color: #54bfaf;
+      background-color: #54BFAF;
       padding: 20px;
       height: 100%;
       width: 100%;
@@ -134,12 +133,17 @@
     }
 
     .btn {
-      background-color: #02483e;
+      background-color: #02483E;
       color: white;
       border: none;
       cursor: pointer;
       width: 30%;
       border-radius: 10px;
+    }
+
+    .btn:hover {
+      background-color: #01352e;
+      color: white;
     }
 
     .alert.alert-danger {

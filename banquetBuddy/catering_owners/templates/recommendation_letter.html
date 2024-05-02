@@ -3,7 +3,8 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>New Recommendation: {{ employee.user.first_name }}</h1>
+    <h2 class="mb-4" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        New Recommendation for {{ employee.user.username }}</h2>
 
     <form method="post" action="{% url 'recommendation_letter' service_id=service.id employee_id=employee.user.id %}">
         {% csrf_token %}
@@ -13,11 +14,11 @@
         {% endif %}
 
         <div class="form-group">
-            <label for="description">Description:</label>
+            <label for="description" style="color: #02483E;">Description:</label>
             <input type="text" name="description" class="form-control {% if form_error %}is-invalid{% endif %}" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Confirm Letter</button>
+        <button type="submit" class="btn btn-custom">Confirm Letter</button>
     </form>
 </div>
 

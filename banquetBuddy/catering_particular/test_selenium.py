@@ -28,22 +28,25 @@ class TestLogin():
     self.driver.find_element(By.CSS_SELECTOR, ".form-group:nth-child(3)").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
 
+
 class TestLogout():
-  def setup_method(self, method):
-    self.driver = webdriver.Chrome()
-    self.vars = {}
-  
-  def teardown_method(self, method):
-    self.driver.quit()
-  
-  def test_logout(self):
-    self.driver.get("http://127.0.0.1:8000/")
-    self.driver.set_window_size(1294, 1392)
-    self.driver.find_element(By.LINK_TEXT, "Log in").click()
-    self.driver.find_element(By.ID, "id_username").send_keys("pablo@gmail.com")
-    self.driver.find_element(By.ID, "id_password").send_keys("pablo")
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
-    self.driver.find_element(By.LINK_TEXT, "Log out").click()
+    def setup_method(self, method):
+        self.driver = webdriver.Chrome()
+        self.vars = {}
+
+    def teardown_method(self, method):
+        self.driver.quit()
+
+    def test_logout(self):
+        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.set_window_size(1294, 1392)
+        self.driver.find_element(By.LINK_TEXT, "Log in").click()
+        self.driver.find_element(By.ID, "id_username").send_keys("pablo@gmail.com")
+        self.driver.find_element(By.ID, "id_password").send_keys("pablo")
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+        self.driver.find_element(By.CSS_SELECTOR, "a[href='/logout/']").click()
+
+
   
   
 class TestBooking():
@@ -71,7 +74,7 @@ class TestBooking():
     self.driver.find_element(By.NAME, "number_guests").click()
     self.driver.find_element(By.NAME, "number_guests").send_keys("100")
     self.driver.find_element(By.CSS_SELECTOR, ".col-md-4:nth-child(1) .btn").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-custom").click()
 
 
 class TestReviewTestCase():
@@ -98,5 +101,5 @@ class TestReviewTestCase():
     self.driver.find_element(By.NAME, "description").click()
     self.driver.find_element(By.NAME, "description").send_keys("Ha sido un placer disfrutar de este restaurante")
     self.driver.find_element(By.CSS_SELECTOR, "label:nth-child(9) > .fa-solid").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-custom").click()
   
