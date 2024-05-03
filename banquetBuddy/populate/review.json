@@ -1,0 +1,144 @@
+[
+    {
+        "particular": "Ricardo",
+        "cateringservice": "Eventos Elegantes",
+        "rating": 5,
+        "description": "El evento superó todas mis expectativas, atención de primera y ambiente inmejorable.",
+        "date": "2024-04-10"
+    },
+    {
+        "particular": "Marta",
+        "cateringservice": "Eventos Elegantes",
+        "rating": 4,
+        "description": "El evento fue organizado con mucha profesionalidad, aunque algunos detalles podrían mejorar.",
+        "date": "2024-01-30"
+    },
+    {
+        "particular": "Isabel",
+        "cateringservice": "Menús Especiales",
+        "rating": 5,
+        "description": "La tarde de té fue exquisita, con una selección impresionante y un servicio excelente.",
+        "date": "2024-02-20"
+    },
+    {
+        "particular": "Ana",
+        "cateringservice": "Menús Especiales",
+        "rating": 4,
+        "description": "Muy informativo y bien organizado, aunque algunas demostraciones se sintieron apresuradas.",
+        "date": "2024-03-10"
+    },
+    {
+        "particular": "Carmen",
+        "cateringservice": "Banquete Estelar",
+        "rating": 4,
+        "description": "La noche fue encantadora con una excelente selección de tapas y flamenco. El servicio fue un poco lento al principio.",
+        "date": "2024-03-25"
+    },
+    {
+        "particular": "Fernando",
+        "cateringservice": "Banquete Estelar",
+        "rating": 5,
+        "description": "La cata de aceites fue una experiencia educativa y deliciosa. Altamente recomendado para los amantes del aceite de oliva.",
+        "date": "2024-03-15"
+    },
+
+    {
+        "particular": "Elena",
+        "cateringservice": "Delicias del Chef",
+        "rating": 5,
+        "description": "El workshop de cocina vegana fue inspirador y educativo, con recetas fáciles de seguir y deliciosas.",
+        "date": "2024-04-22"
+    },
+    {
+        "particular": "Lucia",
+        "cateringservice": "Delicias del Chef",
+        "rating": 5,
+        "description": "La degustación de chocolates fue un sueño hecho realidad. Cada selección fue perfecta y el servicio impecable.",
+        "date": "2024-03-25"
+    },
+    {
+        "particular": "Gonzalo",
+        "cateringservice": "Cocina de Autor",
+        "rating": 4,
+        "description": "El evento de innovación culinaria fue fascinante, aunque esperaba más interacción con los chefs.",
+        "date": "2024-01-30"
+    },
+    {
+        "particular": "Sofia",
+        "cateringservice": "Cocina de Autor",
+        "rating": 4,
+        "description": "La exposición de arte moderno estuvo bien complementada con un servicio excepcional que resaltó la experiencia cultural.",
+        "date": "2024-02-05"
+    },
+    {
+        "particular": "Jorge",
+        "cateringservice": "Celebración Soñada",
+        "rating": 5,
+        "description": "La Fiesta de Invierno fue un evento maravilloso con una atmósfera perfecta y un catering que superó todas las expectativas.",
+        "date": "2024-02-10"
+    },
+    {
+        "particular": "Oscar",
+        "cateringservice": "Celebración Soñada",
+        "rating": 5,
+        "description": "El Festival de Jazz y Gastronomía combinó lo mejor de ambos mundos con una excelente música y comida excepcional.",
+        "date": "2024-02-25"
+    },
+
+    {
+        "particular": "Carlos",
+        "cateringservice": "Sabor Exclusivo",
+        "rating": 5,
+        "description": "La gala de premiación tecnológica estuvo perfectamente organizada, con un servicio que destacó por su calidad y originalidad.",
+        "date": "2024-03-10"
+    },
+    {
+        "particular": "Diego",
+        "cateringservice": "Sabor Exclusivo",
+        "rating": 4,
+        "description": "La noche de cocteles y tapas ofreció una experiencia única, aunque algunos platos podrían haber estado mejor presentados.",
+        "date": "2024-02-15"
+    },
+    {
+        "particular": "Roberto",
+        "cateringservice": "Buffet Real",
+        "rating": 4,
+        "description": "El encuentro de aficionados al vino fue un evento enriquecedor, con una excelente selección de vinos, aunque la organización pudo ser mejor.",
+        "date": "2024-02-28"
+    },
+    {
+        "particular": "Jorge",
+        "cateringservice": "Buffet Real",
+        "rating": 5,
+        "description": "La celebración del Año Nuevo Chino fue espectacular, con autenticidad en cada detalle y un servicio impecable.",
+        "date": "2024-04-01"
+    },
+    {
+        "particular": "Patricia",
+        "cateringservice": "Fiesta Gourmet",
+        "rating": 5,
+        "description": "El festival de comida y música fue un éxito rotundo, cada bocado era delicioso y la música perfectamente seleccionada.",
+        "date": "2024-04-20"
+    },
+    {
+        "particular": "Natalia",
+        "cateringservice": "Fiesta Gourmet",
+        "rating": 4,
+        "description": "La Semana de la Moda Gastronómica fue un evento bien organizado con una fusión interesante de moda y comida.",
+        "date": "2024-04-08"
+    },
+    {
+        "particular": "Veronica",
+        "cateringservice": "Catering Premium",
+        "rating": 5,
+        "description": "El retiro de yoga y nutrición fue una experiencia revitalizante con comidas que complementaron perfectamente las actividades.",
+        "date": "2024-03-05"
+    },
+    {
+        "particular": "Isabel",
+        "cateringservice": "Catering Premium",
+        "rating": 4,
+        "description": "La fiesta de primavera al aire libre fue encantadora, con un menú fresco y vibrante que celebró la estación.",
+        "date": "2024-04-15"
+    }
+]

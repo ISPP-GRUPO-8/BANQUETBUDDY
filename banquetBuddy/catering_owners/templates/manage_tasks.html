@@ -231,15 +231,20 @@
                 </div>
                 <div class="mb-3">
                     <label for="employees" class="form-label">Assign Employees</label>
-                    {% for employee in active_employees %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="employee{{ employee.user.id }}" name="employees" value="{{ employee.user.id }}">
-                        <label class="form-check-label" for="employee{{ employee.user.id }}">
-                            {{ employee.profession }} - {{ employee.user.username }}
-                        </label>
-                    </div>
-                    {% endfor %}
+                    {% if active_employees %}
+                        {% for employee in active_employees %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="employee{{ employee.user.id }}" name="employees" value="{{ employee.user.id }}">
+                                <label class="form-check-label" for="employee{{ employee.user.id }}">
+                                    {{ employee.profession }} - {{ employee.user.username }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>You currently have no employees assigned to this event.</p>
+                    {% endif %}
                 </div>
+                
                 <div class="mb-3">
                     <label for="priority" class="form-label">Priority</label>
                     <select class="form-select" id="priority" name="priority" required>
@@ -281,7 +286,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitEditForm()">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="submitEditForm()">Save Changes</button>
             </div>
         </div>
     </div>

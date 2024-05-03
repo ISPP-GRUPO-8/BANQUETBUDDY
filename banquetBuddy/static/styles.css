@@ -1,3 +1,128 @@
+/* HEADER */
+header {
+    border-bottom: 1px solid #DDD;
+}
+#main-navbar .navbar-nav .nav-item .nav-link {
+    color: #54BFAF;
+    transition: font-size 0.3s ease;
+}
+#main-navbar .navbar-nav .nav-item .nav-link:hover {
+    color: #3f8c7f;
+    font-size: 18px;
+}
+/* SEARCH */
+#search-input {
+    width: 0;
+    opacity: 0;
+    transition: width 0.6s ease, opacity 0.6s ease;
+    position: absolute;
+    right: 100%;
+    top: 0;
+    z-index: 1;
+}
+#search-input.active {
+    width: 400px;
+    opacity: 1;
+}
+#search-icon {
+    border: none; 
+    color: #02483E; 
+    padding: 10px 14px; 
+    cursor: pointer; 
+    background-color: transparent; 
+    font-size: 22px;
+    box-shadow: none;
+}
+/* FOOTER */
+.footer {
+    display: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: #02483E;
+    color: white;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garantiza que el cuerpo ocupe al menos el 100% de la altura de la ventana */
+}
+
+main {
+    flex: 1; /* Hace que el contenido principal ocupe el espacio restante */
+}
+.text-lg {
+    font-size: 17px;
+}
+.icon-lg{
+    font-size: 24px;
+    color: #54BFAF; 
+}
+/* HOME */
+.logo-image {
+    width: 100%; /* Haz que la imagen ocupe el 100% del ancho del contenedor */
+    max-width: 250px; /* Establece un ancho máximo para la imagen */
+    height: auto; /* Permite que la altura se ajuste automáticamente para mantener la proporción */
+}
+.btn-login {
+    background-color: #54BFAF;
+    color: white;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+.btn-login:hover {
+    background-color: #3f8c7f;
+    color: white;
+}
+.btn-signup {
+    background-color: #02483E;
+    color: white;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+.btn-signup:hover {
+    background-color: #01352e;
+    color: white;
+}
+.btn-login,
+.btn-signup {
+    width: 45%; /* Establece el ancho de los botones */
+    margin: 10px auto; /* Centra los botones y agrega un poco de espacio entre ellos */
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 576px) {
+    /* HOME */
+    .btn-container {
+        display: flex; /* Utilizar flexbox */
+        justify-content: center; /* Centrar horizontalmente los elementos dentro del contenedor */
+        align-items: center; /* Centrar verticalmente los elementos dentro del contenedor */
+    }
+    .btn-login,
+    .btn-signup {
+        width: 45%; /* Ancho para que los botones ocupen el 45% del contenedor */
+        margin: 10px; /* Añadir un margen entre los botones */
+    }
+    /* SEARCH */
+    #search-input {
+        width: 0;
+        opacity: 0;
+        transition: width 0.6s ease, opacity 0.6s ease;
+        position: absolute;
+        right: 0; /* Posición desde la derecha */
+        top: 12px; /* Posición desde arriba */
+        z-index: 1;
+    }
+    #search-input.active {
+        width: 350px;
+        opacity: 1;
+    }
+}
 
 /* Estilos para botones --------------------------------------------------------------------------*/
 
@@ -5,18 +130,28 @@
     font-size: 15px; 
 }
 
-.btn-primary-custom {
-    background-color: #ffffff; /* Fondo blanco */
-    color: #02483e; /* Letra verde */
-    border-color: #02483e; /* Borde verde */
+.btn-custom {
+    background-color: #02483E;
+    color: white;
 }
 
 /* Estilo al pasar el ratón sobre el botón */
-.btn-primary-custom:hover {
-    background-color: #02483e; /* Fondo verde */
-    color: #ffffff; /* Letra blanca */
-    border-color: #02483e; /* Borde verde */
+.btn-custom:hover {
+    background-color: #01352e;
+    color: white;
 }
+
+.btn-custom-blue {
+    background-color: #54BFAF;
+    color: white;
+}
+
+/* Estilo al pasar el ratón sobre el botón */
+.btn-custom-blue:hover {
+    background-color: #3f8c7f;
+    color: white;
+}
+
 .btn-add {
     background-color: #ffffff;
     border-color: #02483E;
@@ -38,11 +173,7 @@
     border-color: rgb(195, 148, 62);
     color: #ffffff;
 }
-/* Estilos para cuerpo ----------------------------------------------------------------------------*/
-
-body {
-    background-color: #54bfaf; /* Color verde claro */
-}  
+/* Estilos para cuerpo ----------------------------------------------------------------------------*/  
 * {
     font-family: 'Acme', sans-serif;
 }
@@ -76,6 +207,7 @@ select.form-control {
 .card {
     margin-bottom: 20px; /* Espacio entre las tarjetas */
     border-radius: 6%;
+    border: 1px solid #02483E;
 }
 .card-title {
     font-family: 'Acme', sans-serif;
@@ -83,7 +215,6 @@ select.form-control {
 }
 .card-text {
     font-family: 'Acme', sans-serif;
-    color: #5C5C5C;
 }
 
 
