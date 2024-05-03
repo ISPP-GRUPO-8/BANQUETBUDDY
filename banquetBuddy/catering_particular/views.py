@@ -383,13 +383,20 @@ def booking_process(request, catering_id):
 
     menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
+    menus_plates = {}
+    for m in menus:
+        plates = Plate.objects.filter(menu=m)
+        menus_plates[m] = plates        
+
     # Coloca el menú dentro del contexto correctamente
     context = {
         "cateringservice": cateringservice,
         "catering": catering,
         "menus": menus,
+        "menus_with_plates": menus_plates,
         "dates": highlighted_dates_str,
     }
+
     if request.method == "POST":
         event_date = request.POST.get("event_date")
         request.session["event_date"] = event_date
