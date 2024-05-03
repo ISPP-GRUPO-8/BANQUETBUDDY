@@ -14,13 +14,12 @@
 
 <body>
     <div class="container">
+        <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Chat</h2>
         <div class="row">
-            <div class="col">
-                <h1 class="mt-5">Chat</h1>
-            </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <a href="{% url 'chat' id %}">
-                    <button class="btn btn-success" type="button" id="recargar" style="background-color: #02483e;">Refresh Chat</button>
+                    <button class="btn btn-custom" type="button" id="recargar">Refresh Chat</button>
                 </a>                
             </div>
         </div>
@@ -38,7 +37,7 @@
                 <input type="text" class="form-control" name="content" placeholder="Type your message..."
                     aria-label="Type your message..." aria-describedby="button-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit" id="button-addon2" style="background-color: #54c5cb;">Send</button>
+                    <button class="btn btn-custom-blue" type="submit" id="button-addon2">Send</button>
                 </div>
             </div>
         </form>

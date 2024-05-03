@@ -1,44 +1,41 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block content %}
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportar Error</title>
-    <!-- Agrega el enlace al archivo CSS de Bootstrap -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .error-report-container {
-            margin-top: 50px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-        }
-        textarea {
-            resize: none;
-        }
-        button[type="submit"] {
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="error-report-container mb-4"> 
-        <h2>Report Error</h2>
-        <hr/>
+<style>
+    .error-report-container {
+        margin-top: 30px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #02483E;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+    }
+</style>
+<div class="container">
+    <div class="error-report-container">
+        <h2 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Report Error</h2>
         <form method="post">
             {% csrf_token %}
             <!-- Name -->
@@ -58,7 +55,7 @@
             </div>
             <label for="id_error_type">Error Type:</label>
             <div class="form-group">
-                
+
                 <select id="id_error_type" name="error_type">
                     {% for choice in form.error_type.field.choices %}
                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
@@ -70,12 +67,8 @@
                 <label for="id_mensaje">Observations:</label>
                 <textarea class="form-control" id="id_mensaje" name="message" rows="4" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-custom">Submit</button>
         </form>
     </div>
-    </div>
-    <!-- Agrega el enlace al archivo JavaScript de Bootstrap -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+</div>
 {% endblock %}

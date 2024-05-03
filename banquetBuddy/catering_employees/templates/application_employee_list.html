@@ -2,16 +2,58 @@
 {% load static %}
 
 {% block content %}
+<style>
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        color: #02483E;
+    }
+    .table-container {
+        overflow-x: auto;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #dddddd;
+        width: auto;
+        font-size: 1em;
+    }
+    th {
+        background-color: #02483E;
+        color: #ffffff;
+    }
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+    tr:hover {
+        background-color: #e2e2e2;
+    }
+</style>
+
 <body>
-    <div class="container">
-        <h1 class="mt-2 mb-4 text-center">List of jobs applications</h1>
-        <table class="table table-striped">
+
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Job Applications List</h2>
+
+    {% if applications %}
+    <div class="table-container">
+        <table>
             <thead>
                 <tr>
-                    <th scope="col">Offer</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Application date</th>
-                    <th scope="col">State</th>
+                    <th>Offer</th>
+                    <th>Location</th>
+                    <th>Application Date</th>
+                    <th>State</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,16 +64,16 @@
                     <td>{{ application.date_application }}</td>
                     <td>{{ application.state }}</td>
                 </tr>
-                {% empty%}
-                <tr>
-                    <td colspan="4">No applications found</td>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="col">
+        <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            No applications yet</p>
+    </div>
+    {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFOnpDljFH8zYZVp0LN37AUaRB1 EjwRsYH/@IcsVQTsNznExv0m0MzQK8L" crossorigin="anonymous"></script>
 </body>
-
-
 {% endblock %}

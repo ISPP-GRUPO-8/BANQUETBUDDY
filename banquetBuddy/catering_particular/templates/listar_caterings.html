@@ -1,9 +1,21 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
+
+<style>
+  .logo-corner {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    width: 65px; /* Ajusta el tamaño según sea necesario */
+    height: auto; /* Ajusta el tamaño según sea necesario */
+    max-height: 65px;
+  }
+</style>
 <div class="container mt-4">
-  <h1 class="mb-4 text-center">Caterings List</h1>
-  <hr />
+  <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Caterings List</h2>
+  <hr/>
   {% if messages %} 
     {% for message in messages %}
       <div class="alert alert-danger" role="alert">{{ message }}</div>
@@ -20,13 +32,13 @@
       <input
         type="text"
         class="form-control bg-light border-0 small"
-        placeholder="Search..."
+        placeholder="Search catering by name..."
         id="search"
         name="search"
         value="{{ search }}"
       />
       <div class="input-group-append">
-        <button class="btn btn-primary  mb-3" type="submit">
+        <button class="btn btn-custom mb-3" type="submit">
           <i class="fa fa-search" aria-hidden="true"></i>
         </button>
       </div>
@@ -123,7 +135,7 @@
       </div>
     </div>
 
-    <!-- Filtro por número de invitados -->
+    <!-- Filtro por localización -->
     <div class="form-group">
       <label for="ciudad">Location:</label>
       <div class="input-group">
@@ -153,25 +165,29 @@
 
     <!-- Botón para aplicar filtros -->
     <div class="d-flex justify-content-center">
-      <button type="submit" class="btn btn-primary">Filter</button>
+      <button type="submit" class="btn btn-custom">Filter</button>
     </div>
   </form>
 
-  <hr />
+  <hr/>
 
   <div class="row">
     {% for catering in caterings %}
     <div class="col-md-6">
       <div class="card mb-4">
+          {% if catering.cateringcompany.logo %}
+            <img src="/media/{{ catering.cateringcompany.logo }}" class="img-fluid logo-corner" alt="Logo">
+          {% endif %}
         <div class="card-body">
-          <h5 class="card-title">{{ catering.name }}</h5>
+          <h4 class="card-title">{{ catering.name }}</h4>
+          <p class="card-title">Catering company: {{ catering.cateringcompany.name }}</p>
           <p class="card-text">{{ catering.description }}</p>
           <p class="card-text">Location: {{ catering.location }}</p>
           <p class="card-text">Capacity: {{ catering.capacity }}</p>
           <p class="card-text">Price: {{ catering.price }}</p>
           <a
             href="{% url 'catering_detail' catering.id %}"
-            class="btn btn-primary"
+            class="btn btn-custom"
             >View details</a
           >
         </div>
