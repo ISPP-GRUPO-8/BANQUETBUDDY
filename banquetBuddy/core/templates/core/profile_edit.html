@@ -27,7 +27,7 @@
           <form method="post" action="{% url 'profile_edit' %}" id="userForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-              <label for="email" class="text-white">Mail:</label>
+              <label for="email" class="text-white">Email:</label>
               <input
                 type="email"
                 class="form-control"
@@ -94,7 +94,7 @@
             </div>
             {% if user.EmployeeUsername %}
               <div class="form-group">
-                <label for="curriculum" class="text-white">Currículum:</label>
+                <label for="curriculum" class="text-white">Curriculum:</label>
                 {% if user.EmployeeUsername.curriculum %}
                   <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
                 {% else %}
@@ -105,7 +105,7 @@
             {% endif %}
           
             <div class="text-center mt-3">
-              <button type="submit" class="btn btn-primary" style="background-color: #54bfaf">Save</button>
+              <button type="submit" class="btn btn-custom-blue">Save Changes</button>
             </div>
           </form>
         </div>

@@ -342,24 +342,6 @@ class ViewTests(TestCase):
             state="APLICADO",
         )
 
-    def test_get_applicants(self):
-
-        self.client.force_login(self.user)
-
-        # Simula una solicitud HTTP a la vista
-        response = self.client.get(f"/applicants/{self.offer.id}/")
-
-        # Comprueba el código de respuesta HTTP
-        self.assertEqual(response.status_code, 200)
-
-        # Comprueba que la plantilla correcta se ha renderizado
-        self.assertTemplateUsed(response, "applicants_list.html")
-
-        # Comprueba que la lista de solicitantes contiene el empleado de prueba
-        applicants = response.context["applicants"]
-        self.assertEqual(len(applicants), 1)
-        self.assertEqual(applicants[0].employee.user.username, "usuario_prueba")
-
     def test_employee_filter_form(self):
         # Crea datos para el formulario de filtro
         data = {

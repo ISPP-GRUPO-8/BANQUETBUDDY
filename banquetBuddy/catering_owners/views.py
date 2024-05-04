@@ -208,9 +208,15 @@ def list_menus(request):
     current_user = request.user
     if not is_user_catering_company(current_user):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
-
+    
     catering_company = CateringCompany.objects.get(user=current_user)
-    menus = Menu.objects.filter(cateringcompany=catering_company)
+    menus_query = Menu.objects.filter(cateringcompany=catering_company)
+    
+    # Paginación
+    paginator = Paginator(menus_query, 9)
+    page_number = request.GET.get('page')
+    menus = paginator.get_page(page_number)
+    
     return render(request, "list_menus.html", {"menus": menus})
 
 
@@ -473,7 +479,7 @@ def add_menu(request):
             menu = form.save(commit=False)
             menu.cateringcompany = catering_company
             menu.save()
-            messages.success(request, "Menu created successfully..")
+            messages.success(request, "Menu created successfully.")
             return redirect("list_menus")
     else:
         form = MenuForm(request.user)
@@ -833,6 +839,9 @@ def update_catering_service(request, service_id):
         form = CateringServiceForm(request.POST, instance=catering_service)
         if form.is_valid():
             form.save()
+            messages.success(
+                request, "Catering Service updated successfully."
+            )
             return redirect("services")
     else:
         form = CateringServiceForm(instance=catering_service)
