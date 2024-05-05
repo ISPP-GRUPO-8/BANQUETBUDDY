@@ -345,7 +345,7 @@ def profile_edit_view(request):
             return render(request, "core/profile_edit.html", context)
         
         if len(first_name) > 149  or len(last_name) < 149:
-            messages.error(request, "First name and last name must have lestt than 150 characters")
+            messages.error(request, "First name and last name must have less than 150 characters")
             return render(request, "core/profile_edit.html", context)
 
         if is_employee:
