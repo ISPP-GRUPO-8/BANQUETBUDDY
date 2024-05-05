@@ -92,13 +92,8 @@
     Discover Us</h3>
 </div>
 <div class="col-12 mt-4 d-flex justify-content-center">
-  <div class="video-container">
-    <div class="video-frame">
-      <video controls autoplay muted loop>
-        <source src="{% static 'core/ad.mp4' %}" type="video/mp4">
-        Your browser does not permit the video element
-      </video>
-    </div>
+  <div class="video-frame">
+    <iframe width="900" height="500" src="https://www.youtube.com/embed/1dQrD2Y8fVo" allowfullscreen></iframe>
   </div>
 </div>
 {% endif %}
@@ -156,22 +151,9 @@
     transition: transform 0.8s ease-in-out;
   }
   
-  .video-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 900px;
-    width: 100%;
-  }
-  
   .video-frame {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-  }
-  
-  .video-frame video {
-    width: 100%;
-    height: auto;
   }
 </style>
 

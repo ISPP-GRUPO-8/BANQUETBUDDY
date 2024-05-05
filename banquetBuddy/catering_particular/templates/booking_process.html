@@ -1,6 +1,5 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
 {% block content %}
 
 <div class="container-border">
@@ -12,32 +11,39 @@
     <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
     <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€/guest
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
       {% csrf_token %}
-
-      {% if form_error %}
-      <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
-      {% endif %}
 
       {% if form_error_guests %}
       <div class="alert alert-danger">The number of guests can not be 0.</div>
       {% endif %}
 
+      {% if form_error %}
+        <div class="alert alert-danger">There were errors in the form. Please correct the highlighted fields.</div>
+      {% endif %}
+
       {% if form_error_menu %}
-      <div class="alert alert-danger">You have to select a menu.</div>
+        <div class="alert alert-danger">You have to select a menu</div>
       {% endif %}
 
       {% if form_error_capacity %}
-      <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{
-        catering.capacity }}. Please choose a lower number of guests.</div>
+        <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{ catering.capacity }}. Please choose a lower number of guests.</div>
       {% endif %}
 
       {% if form_error_date %}
-      <div class="alert alert-danger">The event date cannot be in the past.</div>
+        <div class="alert alert-danger">You can only book for future dates.</div>
       {% endif %}
 
       {% if form_error_date_selected %}
-      <div class="alert alert-danger">The selected date is already booked.</div>
+        <div class="alert alert-danger">The selected date is already booked.</div>
       {% endif %}
       <div class="row">
         <div class="col-md-6">
@@ -49,8 +55,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="number_guests">Number of Guests:</label>
-            <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}"
-              required>
+            <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}" required>
           </div>
         </div>
       </div>
@@ -87,7 +92,7 @@
         </br>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-custom" form="bookingForm">Confirm</button>
+        <button type="submit" class="btn btn-primary" form="bookingForm">Confirmar</button>
       </div>
       <p></p>
     </form>
@@ -104,40 +109,5 @@
       });
     });
   });
-  document.addEventListener('DOMContentLoaded', function () {
-    const selectButtons = document.querySelectorAll('.select-menu');
-
-    selectButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        // Remover la clase 'btn-selected' de todos los botones
-        selectButtons.forEach(btn => btn.classList.remove('btn-select'));
-
-        // Agregar la clase 'btn-selected' al botón seleccionado
-        this.classList.add('btn-select');
-
-        const menuId = this.getAttribute('data-menu-id');
-        document.getElementById('selected_menu').value = menuId;
-      });
-    });
-  });
 </script>
-<style>
-  .btn-select {
-    background-color: #02483E;
-    border-color: #02483E;
-    color: #ffffff;
-  }
-
-  .bi-geo-alt-fill {
-    color: #02483E;
-  }
-
-  .bi-person-circle {
-    color: #02483E;
-  }
-
-  .bi-tag-fill {
-    color: #02483E;
-  }
-</style>
 {% endblock %}
