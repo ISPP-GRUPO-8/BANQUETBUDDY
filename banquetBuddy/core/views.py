@@ -302,8 +302,8 @@ def profile_edit_view(request):
     if request.method == "POST":
         email = request.POST.get("email", "").strip()
         username = request.POST.get("username", "").strip()
-        first_name = request.POST.get("first_name", "").strip()
-        last_name = request.POST.get("last_name", "").strip()
+        first_name = request.POST.get("first_name", "").strip()[:149]  # Limitar el nombre a 149 caracteres
+        last_name = request.POST.get("last_name", "").strip()[:149]  # Limitar el apellido a 149 caracteres
         experience = request.POST.get("experience", "").strip()
         profession = request.POST.get("profession", "").strip()
 
@@ -336,12 +336,16 @@ def profile_edit_view(request):
             messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
-        if not re.match("^[A-Za-z]*$", first_name) or not re.match("^[A-Za-z]*$", last_name):
-            messages.error(request, "First name and last name can only contain letters")
+        if not re.match("^[A-Za-z]+(?: [A-Za-z]+)*$", first_name) or not re.match("^[A-Za-z]+(?: [A-Za-z]+)*$", last_name):
+            messages.error(request, "First name and last name can only contain letters and spaces")
             return render(request, "core/profile_edit.html", context)
 
-        if len(first_name) < 3 or len(last_name) < 3:
+        if len(first_name) < 3  or len(last_name) < 3:
             messages.error(request, "First name and last name must be at least 3 characters long")
+            return render(request, "core/profile_edit.html", context)
+        
+        if len(first_name) > 149  or len(last_name) < 149:
+            messages.error(request, "First name and last name must have lestt than 150 characters")
             return render(request, "core/profile_edit.html", context)
 
         if is_employee:
