@@ -289,6 +289,8 @@ def profile_view(request):
 
 import re
 
+import re
+
 @login_required
 def profile_edit_view(request):
     context = {"user": request.user}
@@ -336,7 +338,7 @@ def profile_edit_view(request):
             messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
-        if not re.match("^[A-Za-z]+(?: [A-Za-z]+)*$", first_name) or not re.match("^[A-Za-z]+(?: [A-Za-z]+)*$", last_name):
+        if not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", first_name) or not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", last_name):
             messages.error(request, "First name and last name can only contain letters and spaces")
             return render(request, "core/profile_edit.html", context)
 
@@ -344,7 +346,7 @@ def profile_edit_view(request):
             messages.error(request, "First name and last name must be at least 3 characters long")
             return render(request, "core/profile_edit.html", context)
         
-        if len(first_name) > 149  or len(last_name) < 149:
+        if len(first_name) > 149  or len(last_name) > 149:
             messages.error(request, "First name and last name must have less than 150 characters")
             return render(request, "core/profile_edit.html", context)
 
