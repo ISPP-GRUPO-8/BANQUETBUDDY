@@ -12,6 +12,14 @@
     <i class="bi bi-person-circle"></i> {{ cateringservice.capacity }}<br>
     <i class="bi bi-tag-fill"></i> {{ cateringservice.price }}€/guest
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <form method="post" action="{% url 'booking_process' cateringservice.id %}" id="bookingForm">
       {% csrf_token %}
 
@@ -33,7 +41,7 @@
       {% endif %}
 
       {% if form_error_date %}
-      <div class="alert alert-danger">The event date cannot be in the past.</div>
+      <div class="alert alert-danger">You can only book for future dates.</div>
       {% endif %}
 
       {% if form_error_date_selected %}
@@ -49,8 +57,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="number_guests">Number of Guests:</label>
-            <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}"
-              required>
+            <input type="number" name="number_guests" class="form-control {% if form_error %}is-invalid{% endif %}" required>
           </div>
         </div>
       </div>
@@ -58,21 +65,30 @@
         <label for="menu">Select Menu:</label>
         <div class="row">
           {% for menu in menus %}
-          <div class="col-md-4 mb-4">
-            <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
-              <div class="card-body flex-fill d-flex flex-column">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
+            <div class="card-body flex-fill d-flex flex-column">
                 <h4 class="card-title">{{ menu.name }}</h4>
                 <p class="card-text">{{ menu.description }}</p>
+                <h5 class="card-subtitle mb-2 text-muted">Plates:</h5>
+                <ul>
+                    {% for plate in menus_with_plates.items %}
+                        {% if plate.0 == menu %}
+                            {% for p in plate.1 %}
+                                <li>{{ p.name }}: <span class="text-muted">{{ p.description }}</span></li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
                 <div class="mt-auto">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-add select-menu"
-                      data-menu-id="{{ menu.id }}">Select</button>
-                  </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-add select-menu" data-menu-id="{{ menu.id }}">Select</button>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          {% endfor %}
+        </div>
+    </div>
+{% endfor %}
           <input type="hidden" name="selected_menu" id="selected_menu">
         </div>
         </br>
@@ -85,16 +101,6 @@
   </div>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const selectButtons = document.querySelectorAll('.select-menu');
-
-    selectButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        const menuId = this.getAttribute('data-menu-id');
-        document.getElementById('selected_menu').value = menuId;
-      });
-    });
-  });
   document.addEventListener('DOMContentLoaded', function () {
     const selectButtons = document.querySelectorAll('.select-menu');
 
