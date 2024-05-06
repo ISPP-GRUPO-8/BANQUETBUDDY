@@ -4,20 +4,19 @@
 
 {% block content %}
 <style>
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-    label {
-        display: block;
-        margin-top: 3%;
-    }
-    input[type="text"], textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
+    .large-search-box {
+        height: 50px;
+        /* Ajusta según sea necesario */
+        font-size: 1.2rem;
+        /* Ajusta según sea necesario */
+      }
+    
+      .btn-custom {
+        background-color: #02483E;
+        color: white;
+        border-color: #02483E;
+      }
+
     .list {
         margin-right: 8%;
         margin-left: 8%;
@@ -28,6 +27,7 @@
     }
     .offerTitle {
         font-weight: bold;
+        color: #02483E;
     }
     .button-appearance {
         background-color: #02483E;
@@ -42,28 +42,61 @@
     .button-appearance:hover {
         background-color: #01352e;
     }
+    hr {
+        margin-top: 3%;
+    }
 </style>
 
-<h1 style="margin-top: 2%;">Offer List</h1>
+
+<h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Offers List</h2>
+    <div class="container mt-4">
+        <form method="post" action="{% url 'employeeOfferList' %}" id="miFormulario" class="mb-4">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search offer by name..." id="search" name="search" value="{{ search }}" />
+                <div class="input-group-append">
+                    <button class="btn btn-custom  mb-3" type="submit">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
 <div class="list">
-    {% for offer in offers %}
-    <div class="offer">
-        <h2 class="offerTitle">{{ offer.title }}</h2>
-        <h3>Date Range: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h3>
-        <h4>{{ offer.location }}</h4>
-        <p>{{ offer.description }}</p>
-        {% if applications|get_item:offer.id %}
-            <p style="color: red;">You've already applied for this offer</p>
-        {% elif hirings|get_item:offer.id %}
-            <p style="color: red;">You're already working on this service</p>
-        {% else %}
-            <form id="applyForm{{ offer.id }}" action="/employeeApplication/{{ offer.id }}/" method="post">
-                {% csrf_token %}
-                <button type="button" class="button-appearance" onclick="return confirmApply('{{ offer.id }}', '{{ offer.title }}', '{{ offer.start_date|date:'Y-m-d' }}', '{{ offer.end_date|date:'Y-m-d' }}', '{{ offer.location }}')">Apply</button>
-            </form>
+    {% if offers%}
+        {% for offer in offers %}
+        <div class="offer">
+            <h3 class="offerTitle">{{ offer.title }}</h3>
+            <h5>Job Dates: {{ offer.start_date|date:"Y-m-d" }} to {{ offer.end_date|date:"Y-m-d" }}</h5>
+            <h5>Company: {{offer.cateringservice.cateringcompany }}</h5>
+            <h5>Service: {{offer.cateringservice }}</h5>
+            <h5>Location: {{ offer.location }}</h5>
+            <p>{{ offer.description }}</p>
+            {% if applications|get_item:offer.id %}
+                <p style="color: red;">You've already applied for this offer</p>
+            {% elif hirings|get_item:offer.id %}
+                <p style="color: red;">You're already working on this service</p>
+            {% else %}
+                <form id="applyForm{{ offer.id }}" action="/employeeApplication/{{ offer.id }}/" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="button-appearance" onclick="return confirmApply('{{ offer.id }}', '{{ offer.title }}', '{{ offer.start_date|date:'Y-m-d' }}', '{{ offer.end_date|date:'Y-m-d' }}', '{{ offer.location }}')">Apply</button>
+                </form>
+            {% endif %}
+        {% endfor %}
+
+        <hr></hr>
+    {% elif search %}
+        <div class="alert alert-info mt-4" role="alert">
+            No se encontraron ofertas con el nombre "{{ search }}".
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            No hay ninguna oferta disponible en este momento.
+        </div>
         {% endif %}
     </div>
-    {% endfor %}
 </div>
 
 <script>

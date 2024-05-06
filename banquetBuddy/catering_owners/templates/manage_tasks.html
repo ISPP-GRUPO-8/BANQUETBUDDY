@@ -77,11 +77,12 @@
 {% endfor %}
 {% endif %}
 
-<h1>Manage Tasks for {{ event.name }}</h1>
+<h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Manage Tasks for {{ event.name }}</h2>
 
 <div class="kanban-board">
     <div class="kanban-column pending" data-state="PENDING">
-        <h2>Pending</h2>
+        <h2 style="color: #02483E;">Pending</h2>
         <div class="tasks">
             {% for task in tasks %}
             {% if task.assignment_state == 'PENDING' %}
@@ -117,7 +118,7 @@
         </div>
     </div>
     <div class="kanban-column in_progress" data-state="IN_PROGRESS">
-        <h2>In Progress</h2>
+        <h2 style="color: #02483E;">In Progress</h2>
         <div class="tasks">
             {% for task in tasks %}
             {% if task.assignment_state == 'IN_PROGRESS' %}
@@ -155,7 +156,7 @@
         </div>
     </div>
     <div class="kanban-column completed" data-state="COMPLETED">
-        <h2>Completed</h2>
+        <h2 style="color: #02483E;">Completed</h2>
         <div class="tasks">
             {% for task in tasks %}
             {% if task.assignment_state == 'COMPLETED' %}
@@ -200,9 +201,11 @@
 
     <div class="container mt-4">
         <!-- Botón para desplegar el formulario de añadir tarea -->
-        <button id="toggleAddTaskBtn" class="btn btn-primary">
-            Add Task +
-        </button>
+        <div class="text-center" style="margin-bottom: 10px;">
+            <button id="toggleAddTaskBtn" class="btn btn-add">
+                <i class="bi bi-plus-circle"></i> Add Task
+            </button>
+        </div>
     
         <!-- Formulario desplegable, inicialmente oculto -->
         <div id="addTaskForm" style="display: none;" class="card card-body mt-4">
@@ -231,15 +234,20 @@
                 </div>
                 <div class="mb-3">
                     <label for="employees" class="form-label">Assign Employees</label>
-                    {% for employee in active_employees %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="employee{{ employee.user.id }}" name="employees" value="{{ employee.user.id }}">
-                        <label class="form-check-label" for="employee{{ employee.user.id }}">
-                            {{ employee.profession }} - {{ employee.user.username }}
-                        </label>
-                    </div>
-                    {% endfor %}
+                    {% if active_employees %}
+                        {% for employee in active_employees %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="employee{{ employee.user.id }}" name="employees" value="{{ employee.user.id }}">
+                                <label class="form-check-label" for="employee{{ employee.user.id }}">
+                                    {{ employee.profession }} - {{ employee.user.username }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: red;">You currently have no employees assigned to this event.</p>
+                    {% endif %}
                 </div>
+                
                 <div class="mb-3">
                     <label for="priority" class="form-label">Priority</label>
                     <select class="form-select" id="priority" name="priority" required>
@@ -252,7 +260,9 @@
                         Please select a priority level.
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Task</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-custom">Add Task</button>
+                </div>
             </form>
         </div>
     </div>
@@ -278,10 +288,6 @@
             </div>
             <div class="modal-body">
                 <!-- El formulario se carga aquí dinámicamente -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitEditForm()">Save changes</button>
             </div>
         </div>
     </div>
