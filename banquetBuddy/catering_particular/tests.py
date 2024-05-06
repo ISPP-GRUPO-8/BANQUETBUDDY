@@ -525,7 +525,6 @@ class FiltrosTest(TestCase):
         # Asegúrate de que no hay filtros de ciudad en la respuesta
         self.assertFalse(response.context["ciudad"])
 
-
 class RegisterParticularTest(TestCase):
     def setUp(self):
         self.client = Client()
