@@ -324,19 +324,21 @@ def catering_review(request, catering_id):
     catering = get_object_or_404(CateringService, id=catering_id)
     if not is_user_particular(user):
         return HttpResponseForbidden(NOT_PARTICULAR_ERROR)
+    
     has_been_booked = False
     particular = Particular.objects.filter(user_id=user.id)
-    particular_events = Event.objects.filter(particular=particular[0])
+    particular_events = Event.objects.filter(particular=particular[0], cateringservice=catering)
+    
     for event in particular_events:
-        if event.cateringservice == catering:
+        if event.date <= timezone.now().date():
             has_been_booked = True
             break
+        else:
+            messages.error(request, "You cannot leave a review until after the event date has passed.")
+            return redirect("listar_caterings")
 
     if not has_been_booked:
-        messages.error(
-            request,
-            "You must have a booking with this catering service before reviewing it",
-        )
+        messages.error(request, "You must have attended an event with this catering service before reviewing it.")
         return redirect("listar_caterings")
 
     if particular:
@@ -383,13 +385,20 @@ def booking_process(request, catering_id):
 
     menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
+    menus_plates = {}
+    for m in menus:
+        plates = Plate.objects.filter(menu=m)
+        menus_plates[m] = plates        
+
     # Coloca el menú dentro del contexto correctamente
     context = {
         "cateringservice": cateringservice,
         "catering": catering,
         "menus": menus,
+        "menus_with_plates": menus_plates,
         "dates": highlighted_dates_str,
     }
+
     if request.method == "POST":
         event_date = request.POST.get("event_date")
         request.session["event_date"] = event_date
@@ -427,17 +436,17 @@ def booking_process(request, catering_id):
             context["form_error_date_selected"] = True
 
         # Verificar si hay errores en el formulario y, si los hay, volver a renderizar la página con los errores
-        if any(
-            key in context
-            for key in [
-                "form_error",
+
+        form_errors = {
+            "form_error",
                 "form_error_guests",
                 "form_error_menu",
                 "form_error_capacity",
                 "form_error_date",
                 "form_error_date_selected",
-            ]
-        ):
+        }
+        if any(key in context for key in form_errors):
+
             return render(request, "booking_process.html", context)
 
         # Puedes agregar más lógica según sea necesario
@@ -448,6 +457,7 @@ def booking_process(request, catering_id):
 
     # Si no es una solicitud POST, renderizar la página con el formulario
     return render(request, "booking_process.html", context)
+
 
 
 @login_required

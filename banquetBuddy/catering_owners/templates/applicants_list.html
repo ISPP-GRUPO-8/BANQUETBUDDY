@@ -11,7 +11,7 @@
     }
     .table-container {
         overflow-x: auto;
-        max-width: 800px;
+        max-width: 1000px;
         margin: 20px auto;
     }
     table {
@@ -26,7 +26,6 @@
         padding: 10px;
         border: 1px solid #dddddd;
         width: auto;
-        white-space: nowrap;
         font-size: 1em;
     }
     th {
@@ -108,7 +107,7 @@
                         <form action="{% url 'hire_employee' employee_id=applicant.employee.user.id %}" method="post" onsubmit="return confirmReject('{{ applicant.employee.user.username }}', '{{ offer.title }}');">
                             {% csrf_token %}
                             <input type="hidden" name="offer_id" value="{{ offer.id }}">
-                            <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger" style="margin-top: 5px;">Reject</button>
                         </form>
                     </td>
                 </tr>
