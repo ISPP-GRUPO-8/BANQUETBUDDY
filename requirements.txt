@@ -22,3 +22,4 @@ selenium==4.1.0
 locust==2.5.1
 chromedriver-autoinstaller==0.2.2
 coverage
+python-dotenv
