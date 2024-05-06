@@ -1,0 +1,5 @@
+<form method="post" action="{% url 'update_task' task.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-custom">Save Changes</button>
+</form>

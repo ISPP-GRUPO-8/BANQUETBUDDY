@@ -2,19 +2,11 @@
 
 {% block content %}
 <style>
-  body {
-            font-family:  Verdana, Geneva, Tahoma, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333333;
-        }
-        h1 {
-            margin-top: 50px;
-            font-size: 45px;
-            color: #02483E;
-        }
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
     .custom-card {
         border: 1px solid #02483E;
         border-radius: 0.5rem;
@@ -32,12 +24,12 @@
         margin-right: 15px;
     }
     @media screen and (max-width: 600px) and (min-width: 451px) {
-            h1 {
+            h2 {
                 font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
             }
     }
     @media screen and (max-width: 450px) {
-            h1 {
+            h2 {
                 font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
             }
     }
@@ -60,7 +52,8 @@
     }
 </style>
 
-<h1>Events for {{ selected_date.day }}/{{ selected_date.month }}/{{ selected_date.year }}</h1>
+<h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Events for {{ selected_date.day }}/{{ selected_date.month }}/{{ selected_date.year }}</h2>
   
 {% if reservations %}
 <div class="card-container">
@@ -69,7 +62,7 @@
         <div class="col-md-4">
             <div class="card custom-card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ reservation.name }}</h5>
+                    <h4 class="card-title">{{ reservation.name }}</h4>
                     <p class="card-text"><span class="field-name">Date:</span> {{ reservation.date }}</p>
                     <p class="card-text"><span class="field-name">Details:</span> {{ reservation.details }}</p>
                     {% if reservation.booking_state == "CONTRACT_PENDING" %}
@@ -89,6 +82,9 @@
     </div>
 </div>
 {% else %}
-<p>No hay reservas para este día.</p>
+<div class="col">
+    <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        No bookings for this day</p>
+</div>
 {% endif %}
 {% endblock %}

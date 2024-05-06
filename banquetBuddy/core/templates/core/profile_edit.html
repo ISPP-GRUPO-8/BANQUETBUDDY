@@ -13,7 +13,7 @@
     <div class="col-md-6">
       <div class="card" style="background-color: #02483e">
         <div class="card-body">
-          <h2 class="card-title text-center text-white">Editar Perfil</h2>
+          <h2 class="card-title text-center text-white">Edit Profile</h2>
           {% if messages %}
             {% for message in messages %}
               {% if message.tags == 'error' %}
@@ -27,63 +27,85 @@
           <form method="post" action="{% url 'profile_edit' %}" id="userForm" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-              <label for="email" class="text-white">Correo Electrónico:</label>
+              <label for="email" class="text-white">Email:</label>
               <input
                 type="email"
                 class="form-control"
                 id="email"
-                placeholder="Tu correo electrónico"
+                placeholder="mail@example.com"
                 value="{{ user.email }}"
                 name="email"
               />
             </div>
             <div class="form-group">
-              <label for="username" class="text-white">Nombre de Usuario:</label>
+              <label for="username" class="text-white">Username:</label>
               <input
                 type="text"
                 class="form-control"
                 id="username"
-                placeholder="Tu nombre de usuario"
+                placeholder="username"
                 value="{{ user.username }}"
                 name="username"
               />
             </div>
             <div class="form-group">
-              <label for="firstName" class="text-white">Nombre:</label>
+              <label for="firstName" class="text-white">Name:</label>
               <input
                 type="text"
                 class="form-control"
                 id="firstName"
-                placeholder="Tu nombre"
+                placeholder="Name"
                 value="{{ user.first_name }}"
                 name="first_name"
               />
             </div>
             <div class="form-group">
-              <label for="lastName" class="text-white">Apellido:</label>
+              <label for="lastName" class="text-white">Last name:</label>
               <input
                 type="text"
                 class="form-control"
                 id="lastName"
-                placeholder="Tu apellido"
+                placeholder="Last name"
                 value="{{ user.last_name }}"
                 name="last_name"
               />
             </div>
+            <div class="form-group">
+              <label for="profession" class="text-white">Profession:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="profession"
+                placeholder="Profession"
+                value="{{ user.EmployeeUsername.profession }}"
+                name="profession"
+              />
+            </div>
+            <div class="form-group">
+              <label for="experience" class="text-white">Experience:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="experience"
+                placeholder="Profession"
+                value="{{ user.EmployeeUsername.experience }}"
+                name="experience"
+              />
+            </div>
             {% if user.EmployeeUsername %}
               <div class="form-group">
-                <label for="curriculum" class="text-white">Currículum:</label>
+                <label for="curriculum" class="text-white">Curriculum:</label>
                 {% if user.EmployeeUsername.curriculum %}
                   <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
                 {% else %}
-                  No hay currículum adjunto
+                  There is no CV attached
                 {% endif %}
                 <input type="file" class="form-control-file" id="curriculum" name="curriculum">
               </div>
             {% endif %}
           
             <div class="text-center mt-3">
-              <button type="submit" class="btn btn-primary" style="background-color: #54bfaf">Guardar cambios</button>
+              <button type="submit" class="btn btn-custom-blue">Save Changes</button>
             </div>
           </form>
         </div>

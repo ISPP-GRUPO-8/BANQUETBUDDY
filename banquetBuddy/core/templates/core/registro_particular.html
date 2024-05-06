@@ -1,23 +1,13 @@
 {% extends 'core/base.html' %} {% block content %} {% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Particular Register</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-  </head>
   <style>
     body,
     html {
       height: 100%;
       margin: 0;
-      font-family: Arial, sans-serif;
     }
 
     .register-form {
-      background-color: #54bfaf;
+      background-color: #54BFAF;
       padding: 20px;
       height: 100%;
       width: 100%;
@@ -42,13 +32,19 @@
     }
 
     .btn {
-      background-color: #02483e;
+      background-color: #02483E;
       color: white;
       border: none;
       cursor: pointer;
       width: 30%;
       border-radius: 10px;
     }
+
+    .btn:hover {
+      background-color: #01352e;
+      color: white;
+    }
+    
     .alert.alert-danger {
     font-size: 12px; /* Tamaño de la fuente más pequeño */
     }
@@ -56,9 +52,7 @@
   <body>
     <div class="container mt-4 mb-4">
       <div
-        class="row d-flex align-items-center justify-content-center"
-        style="height: 80vh"
-      >
+        class="row d-flex align-items-center justify-content-center">
         <div class="col-md-7 mx-auto">
           <div class="register-form">
             <h2 class="register-heading"><u>Sign Up</u></h2>
@@ -117,5 +111,4 @@
       </div>
     </div>
   </body>
-</html>
 {% endblock %}

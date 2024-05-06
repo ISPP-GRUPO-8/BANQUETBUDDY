@@ -1,16 +1,20 @@
 {% extends 'core/base.html' %}
 {% load static %}
-
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="mb-4">My books</h1>
-    <div class="row">
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        My Books</h2>
+    <p class="mb-4 text-center small-font" style="color: #02483E;">Find and manage your events</p>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for event in events %}
-        <div class="col-md-6">
-            <div class="card mb-4">
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                {% if event.cateringcompany.logo %}
+                    <img src="/media/{{ event.cateringcompany.logo }}" class="img-fluid logo-corner" alt="Logo">
+                {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ event.name }}</h5>
+                    <h4 class="card-title">{{ event.name }}</h4>
                     <p class="card-text">{{ event.date }}</p>
                     <p class="card-text">{{ event.details }}</p>
                     <div class="row">
@@ -25,9 +29,9 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-8">
                             {% if event.booking_state == 'CONTRACT_PENDING' or event.booking_state == 'CONFIRMED' %}
-                                <a href="{% url 'book_edit' event.id %}" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'book_edit' event.id %}" class="btn btn-custom-blue">Edit</a>
                                 <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}">Cancel</button>
                             {% endif %}
                         </div>
@@ -37,6 +41,29 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Books pagination">
+        <ul class="pagination justify-content-center">
+            {% if events.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.previous_page_number }}"><</a></li>
+            {% endif %}
+
+            {% for num in events.paginator.page_range %}
+            {% if events.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if events.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.paginator.num_pages }}">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 
 {% for event in events %}
@@ -61,5 +88,25 @@
         </div>
     </div>
 {% endfor %}
+
+<style>
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+
+    .logo-corner {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 90px; /* Ajusta el tamaño según sea necesario */
+        height: auto; /* Ajusta el tamaño según sea necesario */
+        max-height: 90px;
+    }
+</style>
 
 {% endblock %}
