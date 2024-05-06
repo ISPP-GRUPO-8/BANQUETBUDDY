@@ -1,70 +1,87 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>List of Jobs</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .status-active { color: green; }
-        .status-terminated { color: red; }
-        .section-header { margin-top: 20px; font-size: 24px; }
-        .pagination { margin-top: 20px; }
-        .form-inline { margin-bottom: 20px; }
-    </style>
-</head>
-<body>
+<style>
+    strong {
+        margin-right: 5px;
+        color: #02483E;
+    }
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+</style>
     <div class="container">
-        <h1 class="text-center mt-2 mb-4">Jobs carried out</h1>
-        <hr/>
-        <div class="d-flex justify-content-center">
-            <form method="get" class="form-inline">
-                <label for="status" class="mr-sm-2">Filter by status:</label>
-                <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
-                    <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
-                    <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
-                </select>
-            </form>
+        <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Jobs Carried Out</h2>
+        <form method="get" class="form-inline my-2 my-lg-0">
+            <label for="status" class="mr-sm-2" style="color: #02483E;">Filter by status:</label>
+            <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
+                <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
+                <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
+            </select>
+        </form>
+        <br>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for employee_service in page_obj %}
+            <div class="col-md-12">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ employee_service.cateringservice.name }}</h4>
+                        <p class="card-text"><strong>Catering company:</strong> {{ employee_service.cateringservice.cateringcompany.name }}</p>
+                        <p class="card-text"><strong>Email:</strong> {{ employee_service.cateringservice.cateringcompany.user.email }}</p>
+                        <p class="card-text"><strong>Phone number:</strong> {{ employee_service.cateringservice.cateringcompany.phone_number }}</p>
+                        <p class="card-text"><strong>Event:</strong> {{ employee_service.event.name }}</p>
+                        <p class="card-text"><strong>Date Range:</strong> {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
+                        <p class="{% if employee_service.current_status == 'Activo' %}text-success{% elif employee_service.current_status == 'Terminado' %}text-danger{% endif %}">
+                            {% if employee_service.current_status == 'Activo' %}
+                               Active
+                            {% endif %}
+            
+                            {% if employee_service.current_status == 'Terminado' %}
+                                Terminated
+                            {% endif %}
+                        </p>
+                        {% if employee_service.current_status == 'Activo' %}
+                        <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-custom">View Tasks</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-md-12">
+                <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No jobs found</p>
+            </div>
+            {% endfor %}
         </div>
-        {% for employee_service in page_obj %}
-        <div class="list-group-item">
-            <h3>{{ employee_service.cateringservice.name }}</h3>
-            <p>Catering company: {{ employee_service.cateringservice.cateringcompany.name }}</p>
-            <p>Email: {{ employee_service.cateringservice.cateringcompany.user.email }}</p>
-            <p>Phone number: {{ employee_service.cateringservice.cateringcompany.phone_number }}</p>
-            <p>Event: {{ employee_service.event.name }}</p>
-            <p>Date Range: {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
-            <p class="status-{{ employee_service.current_status|lower }}">
-                State: {{ employee_service.current_status }}
-            </p>
-            {% if employee_service.current_status == 'Activo' %}
-            <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-primary">View Tasks</a>
-            {% endif %}
-        </div>
-        {% empty %}
-        <div class="list-group-item text-center">
-            <p>No jobs found</p>
-        </div>
-        {% endfor %}
-                <nav aria-label="Employee page navigation">
-          <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-            <li class="page-item disabled"><a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
-            {% endif %}
-          </ul>
+        
+        <!-- Paginación -->
+        <nav aria-label="List work services pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">></a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+                {% endif %}
+            </ul>
         </nav>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
 {% endblock %}

@@ -63,7 +63,8 @@ jobs:
       - name: Crear archivo .env y escribir DB_PASSWORD
         run: |
           echo "DB_PASSWORD=ispp" >  .env
-          echo ".env creado y contraseña de base de datos escrita"
+          echo "EMAIL_HOST_PASSWORD=zsqt bsae cayb atuk" >> .env
+          echo ".env creado y contraseñas escritas"
 
       - name: Aplicar migraciones
         run: |

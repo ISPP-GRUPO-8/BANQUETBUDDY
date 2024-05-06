@@ -1,0 +1,47 @@
+[
+    {
+        "content": "Hola, estamos organizando un evento para celebrar nuestro aniversario de bodas y nos gustaría contratar vuestro servicio de catering. ¿Podrían proporcionarnos más información sobre vuestros menús y precios?",
+        "sender": "Pablo",
+        "receiver": "DeliciasMediterraneas"
+    },
+    {
+        "content": "Buenos días, estamos planeando una fiesta de cumpleaños para nuestro hijo y nos gustaría saber si ofrecen opciones de catering para niños. ¿Podrían ayudarnos con esto?",
+        "sender": "Juan",
+        "receiver": "SaborOriental"
+    },
+    {
+        "content": "¡Hola! Estamos organizando una conferencia de negocios y necesitamos un servicio de catering para el almuerzo. ¿Podrían proporcionarnos un presupuesto para esto?",
+        "sender": "Antonio",
+        "receiver": "GourmetFusion"
+    },
+    {
+        "content": "Hola, estamos interesados en contratar vuestro servicio de catering para nuestra boda el próximo mes. ¿Podrían decirnos si tienen disponibilidad y cuáles son sus opciones de menú?",
+        "sender": "David",
+        "receiver": "CocinaAntonio"
+    },
+    {
+        "content": "Hola, estamos planeando una cena especial para nuestro aniversario y nos gustaría contratar vuestro servicio de catering para la ocasión. ¿Podrían decirnos qué opciones de menú tienen disponibles?",
+        "sender": "Manuel",
+        "receiver": "ExquisitezGastronomica"
+    },
+    {
+        "content": "¡Hola! Nos gustaría organizar una fiesta sorpresa para nuestro amigo y nos preguntábamos si podrían ayudarnos con el catering. ¿Podrían proporcionarnos información sobre vuestros servicios y precios?",
+        "sender": "Jaime",
+        "receiver": "CateringBenito"
+    },
+    {
+        "content": "Hola, estamos organizando un evento benéfico para recaudar fondos y nos gustaría contratar vuestro servicio de catering para la cena. ¿Podrían decirnos si tienen experiencia en eventos de este tipo?",
+        "sender": "Luis",
+        "receiver": "SaboresdelMar"
+    },
+    {
+        "content": "Buenos días, estamos planeando una reunión familiar y nos gustaría contratar vuestro servicio de catering para la comida. ¿Podrían proporcionarnos información sobre vuestras opciones de menú y precios?",
+        "sender": "Mateo",
+        "receiver": "SazonCasera"
+    },
+    {
+        "content": "Hola, nos gustaría organizar una degustación de vinos en nuestra bodega y estamos buscando un servicio de catering para complementar la experiencia. ¿Podrían ayudarnos con esto?",
+        "sender": "Pablo",
+        "receiver": "DulcesCaprichos"
+    }
+]

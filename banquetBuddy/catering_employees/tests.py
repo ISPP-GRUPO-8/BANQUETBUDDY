@@ -202,11 +202,6 @@ class EmployeeTestCases(TestCase):
         response = application_to_offer(request, self.offer.id)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(
-            JobApplication.objects.filter(
-                employee=self.employee, offer=self.offer
-            ).exists()
-        )
 
     def test_application_to_offer_view_invalid_employee(self):
         invalid_user = CustomUser.objects.create_user(

@@ -1,0 +1,82 @@
+[
+    {
+        "username": "DeliciasMediterraneas",
+        "name": "Banquete Estelar",
+        "description": "Experimenta una explosión de sabores con nuestro banquete estelar. Ofrecemos una amplia variedad de platos exquisitos y servicios personalizados para satisfacer tus necesidades.",
+        "location": "Calle Mayor nº 123, Sevilla",
+        "capacity": 150,
+        "price": 25
+    },
+    {
+        "username": "SaborOriental",
+        "name": "Delicias del Chef",
+        "description": "Las delicias del chef te esperan en cada plato. Nuestro equipo de expertos culinarios se encargará de crear una experiencia gastronómica inolvidable para tu evento.",
+        "location": "Avenida de la Constitución nº 45, Madrid",
+        "capacity": 100,
+        "price": 35
+    },
+    {
+        "username": "GourmetFusion",
+        "name": "Fiesta Gourmet",
+        "description": "Haz que tu fiesta sea memorable con nuestro servicio de catering. Desde aperitivos elegantes hasta postres indulgentes, tenemos todo lo que necesitas para impresionar a tus invitados.",
+        "location": "Paseo de la Castellana nº 78, Madrid",
+        "capacity": 200,
+        "price": 45
+    },
+    {
+        "username": "DeliciasMediterraneas",
+        "name": "Cocina de Autor",
+        "description": "Déjanos sorprenderte con nuestra cocina de autor. Cada plato está cuidadosamente diseñado para deleitar tus sentidos y dejar una impresión duradera en tus invitados.",
+        "location": "Avenida de la Libertad nº 10, Málaga",
+        "capacity": 120,
+        "price": 32
+    },
+    {
+        "username": "CocinaAntonio",
+        "name": "Buffet Real",
+        "description": "Disfruta de un buffet real con una selección de platos exquisitos de todo el mundo. Nuestro equipo se encargará de cada detalle para que puedas disfrutar de tu evento sin preocupaciones.",
+        "location": "Avenida de la Marina nº 11, A Coruña",
+        "capacity": 130,
+        "price": 28
+    },
+    {
+        "username": "ExquisitezGastronomica",
+        "name": "Sabor Exclusivo",
+        "description": "Sabor exclusivo es lo que ofrecemos en cada evento. Nuestra pasión por la buena comida se refleja en cada plato que servimos, garantizando una experiencia culinaria excepcional.",
+        "location": "Paseo de la Independencia nº 12, Zaragoza",
+        "capacity": 170,
+        "price": 30
+    },
+    {
+        "username": "DeliciasMediterraneas",
+        "name": "Eventos Elegantes",
+        "description": "Organiza eventos elegantes con nuestro servicio de catering. Desde bodas hasta cenas de gala, nuestro equipo está preparado para hacer realidad tus sueños gastronómicos.",
+        "location": "Calle de la Platería  nº 13, Valencia",
+        "capacity": 180,
+        "price": 40
+    },
+    {
+        "username": "SaboresdelMar",
+        "name": "Catering Premium",
+        "description": "Dale un toque de lujo a tu evento con nuestro catering premium. Desde ingredientes de primera calidad hasta presentaciones elegantes, estamos comprometidos a superar tus expectativas.",
+        "location": "Calle de la Feria nº 14, Sevilla",
+        "capacity": 160,
+        "price": 42
+    },
+    {
+        "username": "SazonCasera",
+        "name": "Menús Especiales",
+        "description": "Descubre menús especiales diseñados para satisfacer tus gustos más exigentes. Nuestro equipo trabajará contigo para crear una experiencia gastronómica única para tu evento.",
+        "location": "Paseo de la Alameda nº 15, Valencia",
+        "capacity": 90,
+        "price": 22
+    },
+    {
+        "username": "DulcesCaprichos",
+        "name": "Celebración Soñada",
+        "description": "Haz realidad la celebración de tus sueños con nuestro servicio de catering. Nos encargaremos de cada detalle para que puedas relajarte y disfrutar junto a tus seres queridos.",
+        "location": "Calle Larios nº 11, Málaga",
+        "capacity": 140,
+        "price": 36
+    }
+]

@@ -25,13 +25,19 @@
             <li class="list-group-item">
               <strong>Last Name:</strong> {{ user.last_name }}
             </li>
+            <li class="list-group-item">
+              <strong>Profession:</strong> {{ user.EmployeeUsername.profession }}
+            </li>
+            <li class="list-group-item">
+              <strong>Experience:</strong> {{ user.EmployeeUsername.experience }}
+            </li>
             {% if user.EmployeeUsername %}
             <li class="list-group-item">
-              <strong>Currículum:</strong>
+              <strong>Curriculum:</strong>
               {% if user.EmployeeUsername.curriculum %}
               <a href="{{ user.EmployeeUsername.curriculum.url }}" target="_blank">{{ user.EmployeeUsername.curriculum.name }}</a>
               {% else %}
-              No hay currículum adjunto
+              There is no CV attached
               {% endif %}
             </li>
             {% endif %}
@@ -39,29 +45,6 @@
         </div>
       </div>
     </div>
-
-    {% if catering_company %}
-    <div class="container my-5">
-      <div class="row justify-content-center mb-4">
-        <div class="col-md-6">
-          <div class="card" style="background-color: #02483e">
-            <div class="card-body">
-              <h2 class="card-title text-center text-white">Management</h2>
-              <ul class="list-group list-group-flush rounded">
-                <li class="list-group-item">
-                  <a href="{% url 'list_menus' %}" class="text-decoration-none"> My menus </a>
-                </li>
-                <li class="list-group-item">
-                  <a href="{% url 'list_plates' %}" class="text-decoration-none"> My plates </a>
-                </li>
-                <li class="list-group-item">
-                  <a href="{% url 'my_bookings' %}" class="text-decoration-none"> My bookings </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {% endif %}
 
         {% if catering_company %}
         <!-- Divisor de columnas solo si hay una empresa de catering asociada -->
@@ -89,7 +72,7 @@
                   <a href="{{ catering_company.verification_document.url }}" target="_blank">
                   {{ catering_company.verification_document.name }}</a>
                   {% else %}
-                  There is no associated verification document.
+                  There is no associated verification document
                   {% endif %}
                 </li>
                 <li class="list-group-item">
@@ -110,7 +93,7 @@
       {% if catering_company %}
       <div class="row justify-content-center">
         <a href="{% url 'catering_profile_edit' %}" class="text-decoration-none">
-          <button class="btn btn-rounded text-white" style="background-color: #54bfaf">
+          <button class="btn btn-custom-blue">
             Edit profile
           </button>
         </a>
@@ -118,15 +101,15 @@
       {% else %}
       <div class="row justify-content-center">
         <a href="{% url 'profile_edit' %}" class="text-decoration-none mr-2">
-          <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
-            Edit profile
+          <button class="btn btn-custom-blue">
+            Edit Profile
           </button>
         </a>
 
         {% if request.user.EmployeeUsername %}
         <a href="{% url 'my_recommendation_letters' user.id %}" class="text-decoration-none ml-2">
-          <button class="btn btn-rounded text-white" style="background-color: #54bfaf;">
-            Recommendation letters
+          <button class="btn btn-custom-blue">
+            Recommendation Letters
           </button>
         </a>
         {% endif %}
