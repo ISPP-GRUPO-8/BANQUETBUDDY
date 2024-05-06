@@ -544,3 +544,49 @@ def listar_caterings_companies(request):
 
     context["caterings"] = caterings
     return render(request, "contact_chat.html", context)
+
+@login_required
+def particular_unsuscribe(request):
+    particular = Particular.objects.get(user=request.user)
+    print(particular.is_subscribed)
+    particular.is_subscribed = False
+    particular.save()
+    print(particular.is_subscribed)
+    return redirect("profile")
+
+@login_required
+def payment_process_premium_particular(request):
+        success_url = request.build_absolute_uri(reverse("completed_premium_particular"))
+        cancel_url = request.build_absolute_uri(reverse("canceled"))
+        # Stripe checkout session data
+        session_data = {
+            "mode": "payment",
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+            "line_items": [],
+        }
+        # add order items to the Stripe checkout session
+        session_data["line_items"].append(
+            {
+                "price_data": {
+                    "unit_amount": int(
+                        499
+                    ),
+                    "currency": "eur",
+                    "product_data": {
+                        "name": f"PREMIUM PLAN SUBSCRIPTION",
+                    },
+                },
+                "quantity": 1,
+            }
+        )
+        # create Stripe checkout session
+        session = stripe.checkout.Session.create(**session_data)
+        # redirect to Stripe payment form
+        return redirect(session.url, code=303)
+
+def payment_completed_premium_particular(request):
+    particular = Particular.objects.get(user=request.user)
+    particular.is_subscribed = True
+    particular.save()
+    return render(request, "payment/completed.html")

@@ -17,4 +17,7 @@ urlpatterns = [
     path('canceled/', payment_canceled, name='canceled'),
     path('<int:catering_id>/review', catering_review, name='add_review'),
     path('chats/', listar_caterings_companies, name='listar_caterings_companies'),
+    path("particular_unsuscribe/", particular_unsuscribe, name="particular_unsuscribe"),
+    path('process_premium_particular/', payment_process_premium_particular, name='process_premium_particular'),
+    path('completed_premium_particular/', payment_completed_premium_particular, name='completed_premium_particular'),
 ]

@@ -83,9 +83,9 @@
     </div>
 </div>
 
-{% if request.user.is_authenticated and request.user.ParticularUsername %}
+{% if request.user.is_authenticated and user.ParticularUsername %}
 <div class="container">
-    <div class="row" style="margin-left: 15%;">
+    <div class="row">
         <div class="col-md-4">
             <div class="head">
                 <span>Free</span>
@@ -122,17 +122,17 @@
                     <li>✔ No fees</li>
                 </ul>
             </div>
-            {% if is_suscribed == TRUE %}
+            {% if not is_subscribed %}
             <div class="plan-btn" style="margin-top:29% ;">
-                <button type="button" href="" class="btn btn-danger"><a href="{% url 'catering_unsuscribe' %}"
-                        class="text-decoration-none text-light">Cancelar subscripción</a></button>
+                <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_premium_particular' %}"
+                        class="text-decoration-none text-light">Get ready</a></button>
             </div>
             {%else%}
             <div class="plan-btn" style="margin-top:29% ;">
-                <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_premium' %}"
-                        class="text-decoration-none text-light">Get ready</a></button>
+                <button type="button" href="" class="btn btn-danger"><a href="{% url 'particular_unsuscribe' %}"
+                        class="text-decoration-none text-light">Cancel subscription</a></button>
             </div>
-            {%endif %}
+            {% endif %}
         </div>
     </div>
 {% endif %}
