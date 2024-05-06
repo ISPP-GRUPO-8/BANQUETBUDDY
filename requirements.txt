@@ -18,3 +18,5 @@ stripe==4.0.2
 tzdata==2024.1
 urllib3
 auto-changelog
+selenium
+python-dotenv
