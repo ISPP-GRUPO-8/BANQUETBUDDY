@@ -82,10 +82,11 @@
   <p style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
     Welcome to BanquetBuddy the definitive catering management app that connects people interested in hiring a catering service, people seeking <br>
     employment in the sector and the caterings themselves that are offered</p>
+    <a href="/about-us" class="btn btn-add">Learn More</a>
 </div>
 <div class="col-12 text-center mt-4 btn-container">
-  <a href="/login" class="btn btn-login mr-3">Log in</a>
-  <a href="/register_choice" class="btn btn-signup ml-3">Sign up</a>
+  <a href="/login" class="btn btn-login mr-3">Log In</a>
+  <a href="/register_choice" class="btn btn-signup ml-3">Sign Up</a>
 </div>
 <div class="col-12 text-center mt-4">
   <h3 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
@@ -111,25 +112,33 @@
     });
   });
 
-  document.addEventListener("DOMContentLoaded", function() {
-    var logo = document.getElementById('logo');
-    var lastMouseX = 0;
-    
-    function rotateLogo(event) {
-      var speed = Math.abs(event.clientX - lastMouseX);
-      logo.style.transitionDuration = '0s';
-      logo.style.transform = 'rotateY(' + (speed * 2) + 'deg)';
+  document.addEventListener("DOMContentLoaded", function () {
+  var logo = document.getElementById("logo");
+  var lastMouseX = 0;
+  var lastTouchX = 0;
+
+  function rotateLogo(event) {
+    var speed;
+    if (event.clientX !== undefined) {
+      speed = Math.abs(event.clientX - lastMouseX);
       lastMouseX = event.clientX;
+    } else if (event.touches[0].clientX !== undefined) {
+      speed = Math.abs(event.touches[0].clientX - lastTouchX);
+      lastTouchX = event.touches[0].clientX;
     }
-    
-    logo.addEventListener('mouseleave', function(event) {
-      logo.style.transitionDuration = '0.3s';
-      logo.style.transform = 'rotateY(0deg)';
-    });
-    
-    logo.addEventListener('mousemove', rotateLogo);
-    
-    logo.style.transform = 'rotateY(360deg)';
+    logo.style.transitionDuration = "0s";
+    logo.style.transform = "rotateY(" + speed * 2 + "deg)";
+  }
+
+  logo.addEventListener("mouseleave", function (event) {
+    logo.style.transitionDuration = "0.3s";
+    logo.style.transform = "rotateY(0deg)";
+  });
+
+  logo.addEventListener("mousemove", rotateLogo);
+  logo.addEventListener("touchmove", rotateLogo);
+
+  logo.style.transform = "rotateY(360deg)";
   });
 </script>
 
@@ -154,6 +163,13 @@
   .video-frame {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+  }
+  
+  @media (max-width: 767px) {
+    .video-frame iframe {
+      width: 450px;
+      height: 300px;
+    }
   }
 </style>
 

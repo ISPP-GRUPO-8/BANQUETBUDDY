@@ -35,6 +35,26 @@
         color: #3f8c7f;
         background-color: #ffffff;
     }
+
+    @media (max-width: 767px) {
+        .bell a {
+            position: relative;
+            left: 0.06cm;
+            top: 0.3cm;
+        }
+
+        .name a {
+            position: relative;
+            left: 0.06cm;
+            top: 0.7cm;
+        }
+
+        .log-out {
+            position: relative;
+            right: 0.6cm;
+            top: 0.6cm;
+        }
+    }
 </style>
 
 <html lang="en">
@@ -124,10 +144,10 @@
                         <a class="nav-link" href="/JobApplicationList">Offers Applied</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'listar_caterings_companies_employee' %}">Chats</a>
+                        <a class="nav-link" href="{% url 'list_catering_services_employee' %}">My Jobs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'list_catering_services_employee' %}">My Jobs</a>
+                        <a class="nav-link" href="{% url 'listar_caterings_companies_employee' %}">Chats</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -163,9 +183,11 @@
                     </a>
                 </div>
                 {% endif %}
-                <form class="form-inline my-2 my-lg-0 ml-4">
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log Out</a>
-                </form>
+                <div class="log-out">
+                    <form class="form-inline my-2 my-lg-0 ml-4">
+                        <a href="{% url 'logout' %}" class="btn btn-outline-danger my-2 my-sm-0">Log Out</a>
+                    </form>
+                </div>
                 {% endif %}
             </div>
 
