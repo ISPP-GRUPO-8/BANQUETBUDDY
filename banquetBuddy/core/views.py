@@ -302,12 +302,12 @@ def profile_edit_view(request):
         employee_instance = None
 
     if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        username = request.POST.get("username", "").strip()
-        first_name = request.POST.get("first_name", "").strip()[:149]  # Limitar el nombre a 149 caracteres
-        last_name = request.POST.get("last_name", "").strip()[:149]  # Limitar el apellido a 149 caracteres
-        experience = request.POST.get("experience", "").strip()
-        profession = request.POST.get("profession", "").strip()
+        email = request.POST.get("email", "")
+        username = request.POST.get("username", "")
+        first_name = request.POST.get("first_name", "")
+        last_name = request.POST.get("last_name", "")
+        experience = request.POST.get("experience", "")
+        profession = request.POST.get("profession", "")
 
         # Pasar valores al contexto
         context["email"] = email
