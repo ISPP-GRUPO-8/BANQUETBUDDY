@@ -13,7 +13,7 @@
           <div class="card-body">
             <h4 class="card-title">{{ message.sender.username }}</h4>
             <p><strong>Nombre:</strong> {{ message.sender.first_name }} {{ message.sender.last_name }}<p>
-            <p class="card-text"><strong>Phone number:</strong> {{ message.sender.email }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ message.sender.email }}</p>
             <a href="{% url 'chat' message.sender.id %}"><button class="btn btn-custom">Chat</button></a>
           </div>
         </div>
