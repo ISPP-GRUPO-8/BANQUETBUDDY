@@ -476,15 +476,13 @@ def payment_process(
             "cancel_url": cancel_url,
             "line_items": [],
         }
-        price_to_pay= catering_service.price * int(number_guests) * Decimal("100")
-        if(request.user.ParticularUsername.is_subscribed == True):
-            price_to_pay = price_to_pay*Decimal(0.95)
-        
         # add order items to the Stripe checkout session
         session_data["line_items"].append(
             {
                 "price_data": {
-                    "unit_amount": int(price_to_pay),
+                    "unit_amount": int(
+                        catering_service.price * int(number_guests) * Decimal("100")
+                    ),
                     "currency": "eur",
                     "product_data": {
                         "name": f"{catering_service.cateringcompany.name} - {catering_service.name} - {number_guests} guests - {selected_menu} - {event_date}",

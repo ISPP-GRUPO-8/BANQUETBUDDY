@@ -90,13 +90,9 @@
                     </li>
                     {% endif %}
                     {% if request.user.is_authenticated and request.user.ParticularUsername %}
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/caterings">Caterings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/subscription-plans">Plan</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/caterings">Caterings</a>
+                    </li>
                     {% endif %}
 
                     {% if request.user.is_authenticated and request.user.CateringCompanyusername %}
