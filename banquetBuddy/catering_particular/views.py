@@ -74,6 +74,13 @@ def book_edit(request, event_id):
     context["menus"] = menus
     context["event"] = event
 
+    menus_plates = {}
+    for m in menus:
+        plates = Plate.objects.filter(menu=m)
+        menus_plates[m] = plates      
+    
+    context["menus_with_plates"] = menus_plates
+
     if request.method == "POST":
         date = request.POST.get("date")
         number_guests = request.POST.get("number_guests")
@@ -332,10 +339,6 @@ def catering_review(request, catering_id):
     for event in particular_events:
         if event.date <= timezone.now().date():
             has_been_booked = True
-            break
-        else:
-            messages.error(request, "You cannot leave a review until after the event date has passed.")
-            return redirect("listar_caterings")
 
     if not has_been_booked:
         messages.error(request, "You must have attended an event with this catering service before reviewing it.")

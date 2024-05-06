@@ -33,6 +33,16 @@
                     <div class="card-body flex-fill d-flex flex-column">
                       <h4 class="card-title">{{ menu.name }}</h4>
                       <p class="card-text">{{ menu.description }}</p>
+                      <h5 class="card-subtitle mb-2 text-muted">Plates:</h5>
+                        <ul>
+                            {% for plate in menus_with_plates.items %}
+                                {% if plate.0 == menu %}
+                                    {% for p in plate.1 %}
+                                        <li>{{ p.name }}: <span class="text-muted">{{ p.description }}</span></li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                       <div class="mt-auto">
                         <div class="btn-group">
                           <button type="button" class="btn btn-add select-menu"

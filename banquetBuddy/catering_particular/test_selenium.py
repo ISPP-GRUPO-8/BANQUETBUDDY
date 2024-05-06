@@ -46,10 +46,7 @@ class TestLogout():
         self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
         self.driver.find_element(By.CSS_SELECTOR, "a[href='/logout/']").click()
 
-
-  
-  
-class TestBooking():
+class TestBook():
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -57,24 +54,24 @@ class TestBooking():
   def teardown_method(self, method):
     self.driver.quit()
   
-  def test_booking(self):
+  def test_book(self):
     self.driver.get("http://127.0.0.1:8000/")
-    self.driver.set_window_size(2576, 1416)
+    self.driver.set_window_size(1936, 1048)
     self.driver.find_element(By.LINK_TEXT, "Log in").click()
-    self.driver.find_element(By.ID, "id_username").click()
     self.driver.find_element(By.ID, "id_username").send_keys("pablo@gmail.com")
-    self.driver.find_element(By.ID, "id_password").click()
     self.driver.find_element(By.ID, "id_password").send_keys("pablo")
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn").click()
     self.driver.find_element(By.LINK_TEXT, "Caterings").click()
-    self.driver.find_element(By.LINK_TEXT, "View details").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".col-md-6:nth-child(2) .btn").click()
     self.driver.find_element(By.LINK_TEXT, "Book").click()
     self.driver.find_element(By.NAME, "event_date").click()
-    self.driver.find_element(By.NAME, "event_date").send_keys("2026-01-19")
+    self.driver.find_element(By.NAME, "event_date").click()
+    self.driver.find_element(By.NAME, "event_date").send_keys("2024-05-18")
     self.driver.find_element(By.NAME, "number_guests").click()
-    self.driver.find_element(By.NAME, "number_guests").send_keys("100")
-    self.driver.find_element(By.CSS_SELECTOR, ".col-md-4:nth-child(1) .btn").click()
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-custom").click()
+    self.driver.find_element(By.NAME, "number_guests").send_keys("80")
+    self.driver.find_element(By.CSS_SELECTOR, ".col-md-4:nth-child(2) .btn").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+  
 
 
 class TestReviewTestCase():

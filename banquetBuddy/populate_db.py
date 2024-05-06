@@ -365,23 +365,25 @@ def create_superusers():
             user.is_staff = True
             user.save()
 
+
 def create_Pablo_event():
     events = Event.objects.all()
     services = CateringService.objects.all()
-    user = CustomUser.objects.get(email="Pablo@gmail.com")
+    user = CustomUser.objects.get(email="pablo@gmail.com")
     particular = Particular.objects.get(user = user)
     menu = Menu.objects.all()
-            
+    date_now = datetime.datetime.now() 
+
     Event.objects.create(
     cateringservice=events[0].cateringservice,
     cateringcompany=services[0].cateringcompany,  
     particular=particular,
     menu=menu[0],
     name=events[0].name,  # Utiliza el nombre del evento correspondiente
-    date=faker.date_between(start_date='today', end_date='+1y'),
+    date = date_now - datetime.timedelta(days=30),
     details="Celebre su evento con nosotros <3",
     booking_state='CONFIRMED',
-    number_guests=randint(20, 200)
+    number_guests=100
     )
 
 def populate_database():
