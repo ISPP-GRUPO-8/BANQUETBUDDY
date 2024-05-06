@@ -25,6 +25,12 @@
             <li class="list-group-item">
               <strong>Last Name:</strong> {{ user.last_name }}
             </li>
+            <li class="list-group-item">
+              <strong>Profession:</strong> {{ user.EmployeeUsername.profession }}
+            </li>
+            <li class="list-group-item">
+              <strong>Experience:</strong> {{ user.EmployeeUsername.experience }}
+            </li>
             {% if user.EmployeeUsername %}
             <li class="list-group-item">
               <strong>Curriculum:</strong>

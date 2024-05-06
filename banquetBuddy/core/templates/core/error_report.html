@@ -36,6 +36,11 @@
     <div class="error-report-container">
         <h2 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
             Report Error</h2>
+
+            <div id="success-message" style="display: none;">
+                <p>Feedback enviado correctamente. Redirigiendo en 5 segundos...</p>
+            </div>
+
         <form method="post">
             {% csrf_token %}
             <!-- Name -->
@@ -71,4 +76,12 @@
         </form>
     </div>
 </div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            document.getElementById("error-report-form").addEventListener("submit", function(event) {
+                window.location.href = "/error_report_send";
+                event.preventDefault();
+            });
+        </script>
 {% endblock %}
