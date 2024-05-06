@@ -365,6 +365,27 @@ def create_superusers():
             user.is_staff = True
             user.save()
 
+
+def create_Pablo_event():
+    events = Event.objects.all()
+    services = CateringService.objects.all()
+    user = CustomUser.objects.get(email="pablo@gmail.com")
+    particular = Particular.objects.get(user = user)
+    menu = Menu.objects.all()
+    date_now = datetime.datetime.now() 
+
+    Event.objects.create(
+    cateringservice=events[0].cateringservice,
+    cateringcompany=services[0].cateringcompany,  
+    particular=particular,
+    menu=menu[0],
+    name=events[0].name,  # Utiliza el nombre del evento correspondiente
+    date = date_now - datetime.timedelta(days=30),
+    details="Celebre su evento con nosotros <3",
+    booking_state='CONFIRMED',
+    number_guests=100
+    )
+
 def populate_database():
     truncate_all_tables()
     create_particulars()
@@ -382,6 +403,7 @@ def populate_database():
     create_recommendation_letters()
     create_task_employee()
     create_superusers()
+    create_Pablo_event()
 
 if __name__ == "__main__":
     populate_database()

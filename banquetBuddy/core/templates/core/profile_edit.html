@@ -70,6 +70,28 @@
                 name="last_name"
               />
             </div>
+            <div class="form-group">
+              <label for="profession" class="text-white">Profession:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="profession"
+                placeholder="Profession"
+                value="{{ user.EmployeeUsername.profession }}"
+                name="profession"
+              />
+            </div>
+            <div class="form-group">
+              <label for="experience" class="text-white">Experience:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="experience"
+                placeholder="Profession"
+                value="{{ user.EmployeeUsername.experience }}"
+                name="experience"
+              />
+            </div>
             {% if user.EmployeeUsername %}
               <div class="form-group">
                 <label for="curriculum" class="text-white">Curriculum:</label>

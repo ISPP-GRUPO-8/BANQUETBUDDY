@@ -74,6 +74,13 @@ def book_edit(request, event_id):
     context["menus"] = menus
     context["event"] = event
 
+    menus_plates = {}
+    for m in menus:
+        plates = Plate.objects.filter(menu=m)
+        menus_plates[m] = plates      
+    
+    context["menus_with_plates"] = menus_plates
+
     if request.method == "POST":
         date = request.POST.get("date")
         number_guests = request.POST.get("number_guests")
@@ -332,10 +339,6 @@ def catering_review(request, catering_id):
     for event in particular_events:
         if event.date <= timezone.now().date():
             has_been_booked = True
-            break
-        else:
-            messages.error(request, "You cannot leave a review until after the event date has passed.")
-            return redirect("listar_caterings")
 
     if not has_been_booked:
         messages.error(request, "You must have attended an event with this catering service before reviewing it.")
@@ -385,13 +388,20 @@ def booking_process(request, catering_id):
 
     menus = Menu.objects.filter(cateringservice=cateringservice.id)
 
+    menus_plates = {}
+    for m in menus:
+        plates = Plate.objects.filter(menu=m)
+        menus_plates[m] = plates        
+
     # Coloca el menú dentro del contexto correctamente
     context = {
         "cateringservice": cateringservice,
         "catering": catering,
         "menus": menus,
+        "menus_with_plates": menus_plates,
         "dates": highlighted_dates_str,
     }
+
     if request.method == "POST":
         event_date = request.POST.get("event_date")
         request.session["event_date"] = event_date
@@ -469,13 +479,15 @@ def payment_process(
             "cancel_url": cancel_url,
             "line_items": [],
         }
+        price_to_pay= catering_service.price * int(number_guests) * Decimal("100")
+        if(request.user.ParticularUsername.is_subscribed == True):
+            price_to_pay = price_to_pay*Decimal(0.95)
+        
         # add order items to the Stripe checkout session
         session_data["line_items"].append(
             {
                 "price_data": {
-                    "unit_amount": int(
-                        catering_service.price * int(number_guests) * Decimal("100")
-                    ),
+                    "unit_amount": int(price_to_pay),
                     "currency": "eur",
                     "product_data": {
                         "name": f"{catering_service.cateringcompany.name} - {catering_service.name} - {number_guests} guests - {selected_menu} - {event_date}",

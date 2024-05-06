@@ -273,6 +273,10 @@ def profile_view(request):
     return render(request, "core/profile.html", context)
 
 
+import re
+
+import re
+
 @login_required
 def profile_edit_view(request):
     context = {"user": request.user}
@@ -288,12 +292,16 @@ def profile_edit_view(request):
         username = request.POST.get("username", "")
         first_name = request.POST.get("first_name", "")
         last_name = request.POST.get("last_name", "")
+        experience = request.POST.get("experience", "")
+        profession = request.POST.get("profession", "")
 
         # Pasar valores al contexto
         context["email"] = email
         context["username"] = username
         context["first_name"] = first_name
         context["last_name"] = last_name
+        context["experience"] = experience
+        context["profession"] = profession
 
         # Validaciones
         if not (email and username and first_name and last_name):
@@ -316,6 +324,18 @@ def profile_edit_view(request):
             messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
+        if not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", first_name) or not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", last_name):
+            messages.error(request, "First name and last name can only contain letters and spaces")
+            return render(request, "core/profile_edit.html", context)
+
+        if len(first_name) < 3  or len(last_name) < 3:
+            messages.error(request, "First name and last name must be at least 3 characters long")
+            return render(request, "core/profile_edit.html", context)
+        
+        if len(first_name) > 149  or len(last_name) > 149:
+            messages.error(request, "First name and last name must have less than 150 characters")
+            return render(request, "core/profile_edit.html", context)
+
         if is_employee:
             curriculum_file = request.FILES.get("curriculum")
             if curriculum_file:
@@ -326,6 +346,14 @@ def profile_edit_view(request):
                     employee_instance.curriculum.delete()
                 employee_instance.curriculum = curriculum_file
                 employee_instance.save()
+
+            if not experience or not profession:
+                messages.error(request, "Please provide both experience and profession")
+                return render(request, "core/profile_edit.html", context)
+
+            employee_instance.experience = experience
+            employee_instance.profession = profession
+            employee_instance.save()
 
         user = request.user
         user.email = email
@@ -338,6 +366,8 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
+
+
 
 
 @login_required
@@ -366,12 +396,14 @@ def error_report(request):
 
             send_mail(subject, message, from_email, to_email, html_message=message)
 
-            return redirect("/")
+            return redirect("/error-report-send")
     else:
         form = ErrorForm()
 
     return render(request, "core/error_report.html", {"form": form})
 
+def error_report_send(request):
+    return render(request, "core/error_report_send.html")
 
 def listar_caterings_home(request):
     context = {}
