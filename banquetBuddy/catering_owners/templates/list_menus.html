@@ -89,6 +89,11 @@
                     <p class="card-text small-font">{{ menu.description }}</p>
                 </div>
                 <div class="card-footer">
+                    <a href="{% url 'list_plates' %}">
+                        <button class="btn btn-custom mr-2">
+                            Add Plate
+                        </button>
+                      </a>
                     <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
