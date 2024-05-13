@@ -16,7 +16,7 @@ Con BanquetBuddy, transformamos la planificación de eventos, mejorando la exper
 
 [Docusaurus](https://docusaurus-banquet-buddy.vercel.app/)
 
-[Despliegue](https://banquetbuddys3.pythonanywhere.com/)
+[Despliegue](https://banquetbuddyppl.pythonanywhere.com/)
 
 
 ## Pre-requisitos 📋
