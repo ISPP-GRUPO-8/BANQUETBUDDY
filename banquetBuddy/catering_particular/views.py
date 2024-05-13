@@ -548,10 +548,8 @@ def listar_caterings_companies(request):
 @login_required
 def particular_unsuscribe(request):
     particular = Particular.objects.get(user=request.user)
-    print(particular.is_subscribed)
     particular.is_subscribed = False
     particular.save()
-    print(particular.is_subscribed)
     return redirect("profile")
 
 @login_required
