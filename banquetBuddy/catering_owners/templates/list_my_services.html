@@ -41,6 +41,11 @@
   {% endfor %}
   {% endif %}
 
+   <!-- Alerta sobre servicios sin menús -->
+   <div class="alert alert-danger text-center" role="alert">
+    If you create a service with no menus associated, it will not be visible to clients.
+  </div>
+
   <a href="{% url 'create_service' %}">
     <button class="btn btn-create mb-4">
       Create New Service
@@ -57,10 +62,15 @@
           <p class="card-text" style="text-align: center;">{{ service.description }}</p>
           <p class="card-text" style="text-align: center;"><strong>Location: </strong> {{ service.location }} </p>
           <p class="card-text" style="text-align: center;"><strong>Number of Guests: </strong> {{ service.capacity }} guests</p>
-          <p class="card-text" style="text-align: center;"><strong>Price: </strong> {{ service.price }} €</p>
+          <p class="card-text" style="text-align: center;"><strong>Price: </strong> {{ service.price }} €/guest</p>
         </div>
         <br>
         <div style="text-align: center;">
+          <a href="{% url 'list_menus' %}">
+            <button class="btn btn-custom">
+                Add Menu
+            </button>
+          </a>
           <a href="{% url 'list_employee' service.id %}">
             <button class="btn btn-custom">
                 Employees

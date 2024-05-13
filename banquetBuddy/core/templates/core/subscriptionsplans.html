@@ -83,9 +83,12 @@
     </div>
 </div>
 
-{% if request.user.is_authenticated and request.user.ParticularUsername %}
+{% if request.user.is_authenticated and user.ParticularUsername or not request.user.is_authenticated %}
 <div class="container">
-    <div class="row" style="margin-left: 15%;">
+    {% if not request.user.is_authenticated %}
+    <h3 style="margin-top: 2%; margin-bottom: 1%;">Particulars</h3>
+    {% endif %}
+    <div class="row">
         <div class="col-md-4">
             <div class="head">
                 <span>Free</span>
@@ -122,22 +125,27 @@
                     <li>✔ No fees</li>
                 </ul>
             </div>
-            {% if is_suscribed == TRUE %}
-            <div class="plan-btn" style="margin-top:29% ;">
-                <button type="button" href="" class="btn btn-danger"><a href="#"
-                        class="text-decoration-none text-light">Cancelar subscripción</a></button>
-            </div>
-            {%else%}
-            <div class="plan-btn" style="margin-top:29% ;">
-                <button type="button" href="" class="btn btn-dark"><a href="#"
-                        class="text-decoration-none text-light">Get ready</a></button>
-            </div>
-            {%endif %}
+            {% if request.user.is_authenticated %}
+                {% if not is_subscribed %}
+                <div class="plan-btn" style="margin-top:29% ;">
+                    <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_premium_particular' %}"
+                            class="text-decoration-none text-light">Get ready</a></button>
+                </div>
+                {%else%}
+                <div class="plan-btn" style="margin-top:29% ;">
+                    <button type="button" href="" class="btn btn-danger"><a href="{% url 'particular_unsuscribe' %}"
+                            class="text-decoration-none text-light">Cancel subscription</a></button>
+                </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endif %}
-{% if request.user.is_authenticated and user.CateringCompanyusername %}
+{% if request.user.is_authenticated and user.CateringCompanyusername or not request.user.is_authenticated %}
 <div class="container">
+    {% if not request.user.is_authenticated %}
+    <h3 style="margin-top: 2%; margin-bottom: 1%;">Catering companies</h3>
+    {% endif %}
     <div class="row">
         <div class="col-md-4">
             <div class="head">
@@ -166,7 +174,7 @@
                     </a>
                 </button>
             </div>
-            {% elif price_plan == "PREMIUM_PRO" or price_plan == "PREMIUM"%}
+            {% elif price_plan == "PREMIUM_PRO" or price_plan == "PREMIUM" or not request.user.is_authenticated %}
 
             {%else%}
             <div class="plan-btn" style="margin-top:30%;">
@@ -207,7 +215,7 @@
                     </a>
                 </button>
             </div>
-            {%elif price_plan == "PREMIUM_PRO"%}
+            {%elif price_plan == "PREMIUM_PRO" or not request.user.is_authenticated%}
 
             {%else%}
             <div class="plan-btn" style="margin-top:20%;">
@@ -249,6 +257,8 @@
                     </a>
                 </button>
             </div>
+            {% elif not request.user.is_authenticated %}
+
             {%else%}
             <div class="plan-btn" style="margin-top:20%;">
                 <button type="button" class="btn btn-ready">
