@@ -205,6 +205,14 @@ def subscription_plans(request):
             "core/subscriptionsplans.html",
             {"price_plan": catering_company.price_plan},
         )
+    elif is_particular(request):
+        particular = Particular.objects.get(user=request.user)
+        print(particular.is_subscribed)
+        return render(
+            request,
+            "core/subscriptionsplans.html",
+            {"is_subscribed": particular.is_subscribed},
+        )
     return render(request, "core/subscriptionsplans.html")
 
 
