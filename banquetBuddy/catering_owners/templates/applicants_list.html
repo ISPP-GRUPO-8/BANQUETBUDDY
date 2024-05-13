@@ -1,0 +1,126 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        color: #02483E;
+    }
+    .table-container {
+        overflow-x: auto;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #dddddd;
+        width: auto;
+        font-size: 1em;
+    }
+    th {
+        background-color: #02483E;
+        color: #ffffff;
+    }
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+    tr:hover {
+        background-color: #e2e2e2;
+    }
+    a {
+        text-decoration: none;
+        color: #54BFAF;
+    }
+    a:hover {
+        color: #3f8c7f;
+    }
+</style>
+
+
+<script>
+    function confirmHire(userName, offerTitle, startDate, endDate) {
+        return confirm(`Are you sure you want to hire ${userName} for the offer "${offerTitle}" from ${startDate} to ${endDate}?`);
+    }
+    
+    function confirmReject(userName, offerTitle) {
+        return confirm(`Are you sure you want to reject ${userName}'s application for "${offerTitle}"?`);
+    }
+</script>
+
+<body>
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Applicants List</h2>
+
+    {% if applicants %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>English Level</th>
+                    <th>Profession</th>
+                    <th>Experience</th>
+                    <th>Skills</th>
+                    <th>Curriculum</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for applicant in applicants %}
+                <tr>
+                    <td>
+                        <a href="{% url 'employee_record' employee_id=applicant.employee.user.id %}">
+                            {{ applicant.employee.user.username }}
+                        </a>
+                    </td>
+                    <td>{{ applicant.employee.english_level }}</td>
+                    <td>{{ applicant.employee.profession }}</td>
+                    <td>{{ applicant.employee.experience }}</td>
+                    <td>{{ applicant.employee.skills }}</td>
+                    <td><a href="{{ applicant.employee.curriculum.url }}" target="_blank">{{ applicant.employee.curriculum.name }}</a></td>
+                    <td>
+                        <form action="{% url 'hire_employee' employee_id=applicant.employee.user.id %}" method="post" onsubmit="return confirmHire('{{ applicant.employee.user.username }}', '{{ offer.title }}', '{{ offer.start_date|date:"Y-m-d" }}', '{{ offer.end_date|date:"Y-m-d" }}');">
+                            {% csrf_token %}
+                            <input type="hidden" name="offer_id" value="{{ offer.id }}">
+                            <button type="submit" name="action" value="hire" class="btn btn-custom">Hire</button>
+                        </form>
+                        <form action="{% url 'hire_employee' employee_id=applicant.employee.user.id %}" method="post" onsubmit="return confirmReject('{{ applicant.employee.user.username }}', '{{ offer.title }}');">
+                            {% csrf_token %}
+                            <input type="hidden" name="offer_id" value="{{ offer.id }}">
+                            <button type="submit" name="action" value="reject" class="btn btn-danger" style="margin-top: 5px;">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="col">
+        <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            No applicants yet</p>
+    </div>
+    {% endif %}
+
+</body>
+{% endblock %}

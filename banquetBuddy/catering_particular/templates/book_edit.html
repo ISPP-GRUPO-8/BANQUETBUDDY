@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h1 class="card-title">Edit Event: {{ event.name }}</h1>
+    <p class="card-title">Catering company: {{ event.cateringcompany.name }}</p>
+
+    <!-- Mensaje de alerta -->
+    <div class="alert alert-warning" role="alert">
+        You can only change the date of the event. If you want to change the number of guests or the menu, you must cancel the event and create a new one.
+    </div>
+    <form method="post" action="/my_books/{{ event.id }}/edit" id="bookingEditForm">
+        {% csrf_token %}
+
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="date">Event Date:</label>
+            <input type="date" name="date" class="form-control" value="{{ event.date|date:'Y-m-d' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Number of Guests:</label>
+            <input type="number" name="number_guests" class="form-control" value="{{ event.number_guests }}" required readonly>
+        </div>
+
+        <!-- Solo mostrar la tarjeta del menú seleccionado -->
+        <div class="form-group">
+            <label for="menu">Selected Menu:</label>
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <div class="card h-100 d-flex flex-column shadow-sm custom-card-bg">
+                        <div class="card-body flex-fill d-flex flex-column">
+                            <h4 class="card-title">{{ event.menu.name }}</h4>
+                            <p class="card-text">{{ event.menu.description }}</p>
+                            <h5 class="card-subtitle mb-2 text-muted">Plates:</h5>
+                            <ul>
+                                {% for plate in event.menu.plates.all %}
+                                    <li>{{ plate.name }}: <span class="text-muted">{{ plate.description }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-custom mb-4" form="bookingEditForm">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .custom-border {
+        border-color: #02483E !important; /* Cambia el color verde aquí */
+    }
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+
+    @media screen and (max-width: 768px) {
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 15px;
+        }
+    }
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+        p {
+            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 15px;
+        }
+        h5 {
+            font-size: 17px;
+        }
+    }
+    @media screen and (max-width: 450px) {
+        p {
+            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        /* Tamaño de fuente más pequeño para dispositivos pequeños */
+        .small-font {
+            font-size: 13px;
+        }
+        h5 {
+            font-size: 14.5px;
+        }
+    }
+</style>
+
+{% if messages %}
+<div class="container mt-3">
+    <div class="alert alert-success" id="messageAlert" role="alert">
+        <ul class="list-unstyled mb-0">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script>
+    setTimeout(function() {
+        document.getElementById('messageAlert').style.display = 'none';
+    }, 4000); // 4 segundos
+</script>
+{% endif %}
+
+
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
+    
+    <div class="row justify-content-end mb-4">
+        <div class="col-md-2">
+            <a href="{% url 'add_menu' %}" class="text-decoration-none">
+                <button class="btn btn-add btn-block small-font">
+                    <i class="bi bi-plus-circle"></i> Add Menu
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for menu in menus %}
+        <div class="col-md-4 mb-4">
+            <div class="card rounded-3 border custom-border">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #02483E;">{{ menu.name }}</h5>
+                    <p class="card-text small-font">{{ menu.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'list_plates' %}">
+                        <button class="btn btn-custom mr-2">
+                            Add Plate
+                        </button>
+                      </a>
+                    <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                    </form>
+                    <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Paginación -->
+    <nav aria-label="Menu pagination">
+        <ul class="pagination justify-content-center">
+            {% if menus.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.previous_page_number }}"><</a></li>
+            {% endif %}
+
+            {% for num in menus.paginator.page_range %}
+            {% if menus.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if menus.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ menus.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.paginator.num_pages }}">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

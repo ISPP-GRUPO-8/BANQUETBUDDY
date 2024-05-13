@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    label {
+        display: block;
+        margin-top: 3%;
+    }
+
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .list {
+        margin-right: 8%;
+        margin-left: 8%;
+        margin-bottom: 3%;
+    }
+    .notification {
+        margin-top: 3%;
+    }
+
+    hr {
+        margin-top: 3%;
+    }
+
+    .notificationTitle {
+        font-weight: bold;
+        color: #02483E;
+    }
+
+</style>
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Notifications</h2>
+    <div class="list">
+        <form method="post" action="{% url 'mark_as_read' %}">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit" style="margin-left: 15px;">Mark as read</button>
+        </form>
+        {% for notification in notifications %}
+        <div class="notification">
+        {% if request.user.is_authenticated and request.user.EmployeeUsername %}
+            <h4 class="notificationTitle">{{ notification.title }}</h4>
+        {% else %}
+            <h4 class="notificationTitle">{{ notification.event.name }}</h4>
+        {% endif %}
+            <h5>{{ notification.message }}</h5>
+        </div>
+        {% empty %}
+        <div class="col">
+            <p class="small-font" style="color: #02483E; margin-top: 10px; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                No notifications</p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

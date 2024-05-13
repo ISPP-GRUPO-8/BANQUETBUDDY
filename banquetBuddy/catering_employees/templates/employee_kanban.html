@@ -1,0 +1,183 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<style>
+    /* Estilos generales para el tablero Kanban */
+    .kanban-board {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+    }
+
+    /* Estilos para cada columna del Kanban */
+    .kanban-column {
+        width: 30%;
+        min-height: 300px;
+        background-color: #f4f4f4;
+        margin: 0 10px;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .kanban-column h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    /* Estilos para las tareas dentro de las columnas */
+    .task {
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        border-radius: 3px;
+        cursor: pointer; /* Indica que la tarea es arrastrable */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .task:hover {
+        border-color: #aaa;
+    }
+
+    /* Estilo para la tarea mientras se arrastra */
+    .task[draggable="true"]:active {
+        opacity: 0.5;
+    }
+
+    /* Estilos para los detalles de la tarea */
+    .task-details {
+        margin-top: 10px;
+        font-size: 0.9em;
+    }
+
+    .btn-edit {
+        color: white;
+        background-color: #4CAF50; /* Verde */
+        border-color: #4CAF50; /* Borde del mismo color verde */
+    }
+
+    .btn-edit:hover, .btn-edit:focus {
+        background-color: #45a049; /* Un verde un poco más oscuro */
+        border-color: #3e8e41; /* Borde del mismo color verde oscuro */
+    }
+
+
+    .priority-low { background-color: #ccffcc; } /* Verde claro para baja prioridad */
+    .priority-medium { background-color: #ffff99; } /* Amarillo para media prioridad */
+    .priority-high { background-color: #ffcccc; } /* Rojo claro para alta prioridad */
+</style>
+
+
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger" role="alert">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<h1>Manage Tasks for {{ event.name }}</h1>
+
+<div class="kanban-board">
+    <div class="kanban-column pending" data-state="PENDING">
+        <h2>Pending</h2>
+        <div class="tasks">
+            {% for task in tasks %}
+            {% if task.assignment_state == 'PENDING' %}
+            <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                <p>{{ task.description }}</p>
+                <div class="task-details">
+                    Assigned to: 
+                    {% with employees=task.employees.all %}
+                        {% if employees %}
+                            {% for employee in employees %}
+                                {{ employee.user.username }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    {% endwith %}
+                    <br>
+                                Priority: <span class="priority-{{ task.priority|lower }}">{{ task.priority }}</span><br>
+                    Start: {{ task.assignment_date|date:"Y-m-d" }}<br>
+                    Due: {{ task.expiration_date|date:"Y-m-d" }}
+                </div>
+
+                
+                
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="kanban-column in_progress" data-state="IN_PROGRESS">
+        <h2>In Progress</h2>
+        <div class="tasks">
+            {% for task in tasks %}
+            {% if task.assignment_state == 'IN_PROGRESS' %}
+            <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                <p>{{ task.description }}</p>
+                <div class="task-details">
+                    Assigned to: 
+                    {% with employees=task.employees.all %}
+                        {% if employees %}
+                            {% for employee in employees %}
+                                {{ employee.user.username }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    {% endwith %}
+                    <br> 
+                        Priority: <span class="priority-{{ task.priority|lower }}">{{ task.priority }}</span><br>
+                    Start: {{ task.assignment_date|date:"Y-m-d" }}<br>
+                    Due: {{ task.expiration_date|date:"Y-m-d" }}
+                </div>
+
+                
+                
+                
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="kanban-column completed" data-state="COMPLETED">
+        <h2>Completed</h2>
+        <div class="tasks">
+            {% for task in tasks %}
+            {% if task.assignment_state == 'COMPLETED' %}
+            <div class="task" draggable="true" data-task-id="{{ task.id }}">
+                <p>{{ task.description }}</p>
+                <div class="task-details">
+                    Assigned to: 
+                    {% with employees=task.employees.all %}
+                        {% if employees %}
+                            {% for employee in employees %}
+                                {{ employee.user.username }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+                    {% endwith %}
+                    <br>
+                                        Priority: <span class="priority-{{ task.priority|lower }}">{{ task.priority }}</span><br>
+                    Start: {{ task.assignment_date|date:"Y-m-d" }}<br>
+                    Due: {{ task.expiration_date|date:"Y-m-d" }}
+                </div>
+
+                
+               
+                
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script src="{% static 'core/kanban_employee.js' %}"></script>
+
+{% endblock %}

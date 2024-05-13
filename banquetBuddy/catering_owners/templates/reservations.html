@@ -1,0 +1,118 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Bookings</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: #02483E;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #dddddd;
+            width: auto;
+            font-size: 1em;
+        }
+        th {
+            background-color: #02483E;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+        tr:hover {
+            background-color: #e2e2e2;
+        }
+        a {
+            text-decoration: none;
+            color: #54BFAF;
+        }
+        a:hover {
+            color: #3f8c7f;
+        }
+
+        @media screen and (max-width: 450px) {
+            td, th {
+                font-size: 0.5em; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 600px) and (min-width: 451px) {
+            td, th {
+                font-size: 0.7em; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+        @media screen and (max-width: 450px) {
+            h2 {
+                font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Event Bookings</h2>
+
+    {% if reservations %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Booking State</th>
+                    <th>Action</th>
+                    <th>Manage Tasks</th> <!-- Nueva columna para gestionar tareas -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.name }}</td>
+                    <td>{{ reservation.date }}</td>
+                    <td>{{ reservation.booking_state }}</td>
+                    <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
+                    <td>
+                        {% if reservation.booking_state == "CONFIRMED" %}
+                        <a href="{% url 'manage_tasks' event_id=reservation.id %}">Manage Tasks</a>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="col">
+        <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            No reservations yet</p>
+    </div>
+    {% endif %}
+
+</body>
+</html>
+{% endblock %}

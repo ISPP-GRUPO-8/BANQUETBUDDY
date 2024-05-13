@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        My Books</h2>
+    <p class="mb-4 text-center small-font" style="color: #02483E;">Find and manage your events</p>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for event in events %}
+        <div class="col-md-12">
+            <div class="card rounded shadow">
+                {% if event.cateringcompany.logo %}
+                    <img src="/media/{{ event.cateringcompany.logo }}" class="img-fluid logo-corner" alt="Logo">
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title">{{ event.name }}</h4>
+                    <p class="card-text">{{ event.date }}</p>
+                    <p class="card-text">{{ event.details }}</p>
+                    <!-- <img src="{% static 'core/images/rinconmexicano_ooPTU83.jpg' %}" width="70" height="auto" alt="Logo" loading="lazy"> -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="{% if event.booking_state == 'CONTRACT_PENDING' %}text-warning{% elif event.booking_state == 'CANCELLED' %}text-danger{% elif event.booking_state == 'CONFIRMED' %}text-success{% endif %}">
+                                {% if event.booking_state == 'CONTRACT_PENDING' %}
+                                    Pending
+                                {% elif event.booking_state == 'CANCELLED' %}
+                                    Cancelled
+                                {% elif event.booking_state == 'CONFIRMED' %}
+                                    Confirmed
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-8">
+                            {% if event.booking_state == 'CONTRACT_PENDING' or event.booking_state == 'CONFIRMED' %}
+                                <a href="{% url 'book_edit' event.id %}" class="btn btn-custom-blue">Edit</a>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal{{ event.id }}">Cancel</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Books pagination">
+        <ul class="pagination justify-content-center">
+            {% if events.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.previous_page_number }}"><</a></li>
+            {% endif %}
+
+            {% for num in events.paginator.page_range %}
+            {% if events.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if events.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ events.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ events.paginator.num_pages }}">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% for event in events %}
+    <div class="modal fade" id="cancelModal{{ event.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to cancel the event "{{ event.name }}"?<br>
+                    Penalizations might be applied.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="{% url 'book_cancel' event.id %}" class="btn btn-danger">Confirm cancellation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<style>
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+
+    .logo-corner {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 90px; /* Ajusta el tamaño según sea necesario */
+        height: auto; /* Ajusta el tamaño según sea necesario */
+        max-height: 90px;
+    }
+</style>
+
+{% endblock %}

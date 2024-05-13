@@ -5,95 +5,199 @@
 <style>
     .container {
         text-align: center;
-        margin-bottom: 50px;
-        margin-top: 20px;
     }
+
     .col-md-4 {
-        display:inline-block;
-        background-color:#f3f3f3;
-        max-width:300px;
-        border-radius:10px;
-        margin-bottom:50px;
-        margin-right: 5%;
+        display: block;
+        margin: 0 auto;
+        background-color: #f3f3f3;
+        text-align: center;
+        max-width: 300px;
+        border-radius: 10px;
+        border: 1px solid #02483E;
+        margin-bottom: 50px;
+        padding: 20px;
+        box-sizing: border-box;
         box-shadow: 0px 2px 5px #ddd;
     }
+
     .price_tag {
         margin-top: 10px;
-        font-size:160%;
+        font-size: 160%;
     }
+
     .feature_list {
         margin-top: 10px;
         list-style: none;
     }
+
     .head {
         font-weight: bold;
         margin-top: 5%;
-        font-size:150%;
-        text-align:left;
+        font-size: 150%;
+        text-align: left;
     }
+
     ul {
         list-style: none;
-        text-align:left
+        text-align: left
     }
-    .title {
-        text-align: center;
-        margin-bottom: 5%;
-        margin-top: 2%;
-    }
+
     .plan-btn {
         margin-bottom: 20px;
         bottom: 10px;
     }
 
+    .btn-ready {
+        background-color: #02483E;
+        color: white;
+    }
+    
+    .btn-ready:hover {
+        background-color: #01352e;
+        color: white;
+    }
+    
+    .btn-text {
+        color: white; 
+    }
 </style>
+{% if messages %}
+<div class="container mt-3">
+    <div class="alert alert-success" id="messageAlert" role="alert">
+        <ul class="list-unstyled mb-0">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="title">
-                <h1>Subscription Plans</h1>
-            </div>
+            <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                Subscription Plans</h2>
         </div>
     </div>
 </div>
-<div class="container" >
+
+{% if request.user.is_authenticated and user.ParticularUsername or not request.user.is_authenticated %}
+<div class="container">
+    {% if not request.user.is_authenticated %}
+    <h3 style="margin-top: 2%; margin-bottom: 1%;">Particulars</h3>
+    {% endif %}
     <div class="row">
         <div class="col-md-4">
             <div class="head">
-                <span>Basic</span>
+                <span>Free</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
+                <span class="price">
+                    <span class="currency">0</span>
+                    <span class="cent">.00</span>
+                    <span class="sign">€</span>
+                    <span class="month">/MON</span>
+                </span>
+            </div>
+            <div class="feature_list" style="margin-top: 15%;">
+                <ul>
+                    <li>✔ Catering hiring</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="head">
+                <span>Premium</span>
+            </div>
+            <div class="price_tag">
+                <span class="price">
+                    <span class="currency">4</span>
+                    <span class="cent">.99</span>
+                    <span class="sign">€</span>
+                    <span class="month">/MON</span>
+                </span>
+            </div>
+            <div class="feature_list" style="margin-top: 15%;">
+                <ul>
+                    <li>✔ Catering hiring</li>
+                    <li>✔ No fees</li>
+                </ul>
+            </div>
+            {% if request.user.is_authenticated %}
+                {% if not is_subscribed %}
+                <div class="plan-btn" style="margin-top:29% ;">
+                    <button type="button" href="" class="btn btn-dark"><a href="{% url 'process_premium_particular' %}"
+                            class="text-decoration-none text-light">Get ready</a></button>
+                </div>
+                {%else%}
+                <div class="plan-btn" style="margin-top:29% ;">
+                    <button type="button" href="" class="btn btn-danger"><a href="{% url 'particular_unsuscribe' %}"
+                            class="text-decoration-none text-light">Cancel subscription</a></button>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% if request.user.is_authenticated and user.CateringCompanyusername or not request.user.is_authenticated %}
+<div class="container">
+    {% if not request.user.is_authenticated %}
+    <h3 style="margin-top: 2%; margin-bottom: 1%;">Catering companies</h3>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="head">
+                <span style="color: #02483E;">Basic</span>
+            </div>
+            <div class="price_tag">
                 <span class="price">
                     <span class="currency">9</span>
                     <span class="cent">.99</span>
                     <span class="sign">€</span>
                     <span class="month">/MON</span>
                 </span>
-            </div>                          
+            </div>
             <div class="feature_list" style="margin-top: 15%;">
                 <ul>
                     <li>✔ Company Publication</li>
                     <li>✔ Chat with Customers</li>
                     <li>✔ Insights Panel</li>
                 </ul>
-                </div>
-                <div class="plan-btn" style="margin-top:20% ;">
-                    <button type="button" href="" class="btn btn-dark">Get ready</button>
-                </div>
-            
+            </div>
+            {% if price_plan == "BASE" %}
+            <div class="plan-btn" style="margin-top:30%;">
+                <button type="button" class="btn btn-danger">
+                    <a href="{% url 'catering_unsuscribe' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Cancel subscription</span>
+                    </a>
+                </button>
+            </div>
+            {% elif price_plan == "PREMIUM_PRO" or price_plan == "PREMIUM" or not request.user.is_authenticated %}
+
+            {%else%}
+            <div class="plan-btn" style="margin-top:30%;">
+                <button type="button" class="btn btn-ready">
+                    <a href="{% url 'process_base' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Get ready</span>
+                    </a>
+                </button>
+            </div>
+            {%endif %}
         </div>
-        
         <div class="col-md-4">
             <div class="head">
-                <span>Premium</span>
+                <span style="color: #02483E;">Premium</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
                 <span class="price">
                     <span class="currency">19</span>
                     <span class="cent">.99</span>
                     <span class="sign">€</span>
                     <span class="month">/MON</span>
                 </span>
-            </div>                           
+            </div>
             <div class="feature_list" style="margin-top: 8%;">
                 <ul>
                     <li>✔ Company Publication</li>
@@ -103,23 +207,38 @@
                     <li>✔ Reports and Proposals</li>
                 </ul>
             </div>
-            <div class="plan-btn" style="margin-top:10% ;">
-                    <button type="button" href="" class="btn btn-dark">Get ready</button>
+            {% if price_plan == "PREMIUM" %}
+            <div class="plan-btn" style="margin-top:20%;">
+                <button type="button" class="btn btn-danger">
+                    <a href="{% url 'catering_unsuscribe' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Cancel subscription</span>
+                    </a>
+                </button>
             </div>
-        </div>
+            {%elif price_plan == "PREMIUM_PRO" or not request.user.is_authenticated%}
 
+            {%else%}
+            <div class="plan-btn" style="margin-top:20%;">
+                <button type="button" class="btn btn-ready">
+                    <a href="{% url 'process_premium' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Get ready</span>
+                    </a>
+                </button>
+            </div>
+            {%endif %}
+        </div>
         <div class="col-md-4">
             <div class="head">
-                <span>Pro</span>
+                <span style="color: #02483E;">Pro</span>
             </div>
-            <div class="price_tag">  
+            <div class="price_tag">
                 <span class="price">
-                <span class="currency">29</span>
-                <span class="cent">.99</span>
-                <span class="sign">€</span>
-                <span class="month">/MON</span>
+                    <span class="currency">29</span>
+                    <span class="cent">.99</span>
+                    <span class="sign">€</span>
+                    <span class="month">/MON</span>
                 </span>
-            </div>                       
+            </div>
             <div class="feature_list">
                 <ul>
                     <li>✔ Company Publication</li>
@@ -130,10 +249,26 @@
                     <li>✔ Employee hiring</li>
                 </ul>
             </div>
-            <div class="plan-btn">
-                <button type="button" href="" class="btn btn-dark">Get ready</button>
-            </div>  
+            {% if price_plan == "PREMIUM_PRO" %}
+            <div class="plan-btn" style="margin-top:15%;">
+                <button type="button" class="btn btn-danger">
+                    <a href="{% url 'catering_unsuscribe' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Cancel subscription</span>
+                    </a>
+                </button>
+            </div>
+            {% elif not request.user.is_authenticated %}
+
+            {%else%}
+            <div class="plan-btn" style="margin-top:20%;">
+                <button type="button" class="btn btn-ready">
+                    <a href="{% url 'process_pro' %}" class="text-decoration-none text-light">
+                        <span class="btn-text">Get ready</span>
+                    </a>
+                </button>
+            </div>
+            {%endif %}
         </div>
-    </div>  
-</div>
+    </div>
+    {% endif %}
 {% endblock %}

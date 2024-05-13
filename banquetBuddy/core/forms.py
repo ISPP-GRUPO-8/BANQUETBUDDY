@@ -1,8 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Particular, CateringCompany, Employee
 from django.contrib.auth.forms import AuthenticationForm
 from .models import CustomUser
+from django.contrib.auth import authenticate, get_user_model
+
+
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, get_user_model
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -13,66 +18,36 @@ class EmailAuthenticationForm(AuthenticationForm):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={"placeholder": "Contraseña", "class": "rounded-input"}
+            attrs={"placeholder": "Password", "class": "rounded-input"}
         )
     )
 
+    def clean(self):
+        email = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
 
-class ParticularForm(forms.ModelForm):
-    class Meta:
-        model = Particular
-        fields = ["phone_number", "preferences", "address"]
-        widgets = {
-            "phone_number": forms.TextInput(
-                attrs={"placeholder": "Número de teléfono", "class": "rounded-input"}
-            ),
-            "preferences": forms.TextInput(
-                attrs={"placeholder": "Preferencias", "class": "rounded-input"}
-            ),
-            "address": forms.TextInput(
-                attrs={"placeholder": "Dirección", "class": "rounded-input"}
-            ),
-        }
+        if email and password:
+            User = get_user_model()
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                raise forms.ValidationError(
+                    "Please enter a correct email and password. Note that both fields may be case-sensitive."
+                )
 
+            if not user.check_password(password):
+                raise forms.ValidationError(
+                    "Please enter a correct email and password. Note that both fields may be case-sensitive."
+                )
+            elif not user.is_active:
+                raise forms.ValidationError(
+                    "You must activate your account first. Check your email."
+                )
+            else:
+                self.user_cache = user
+                self.confirm_login_allowed(self.user_cache)
 
-class CateringCompanyForm(forms.ModelForm):
-    class Meta:
-        model = CateringCompany
-        fields = ["name", "phone_number", "service_description"]
-        widgets = {
-            "name": forms.TextInput(
-                attrs={"placeholder": "Nombre", "class": "rounded-input"}
-            ),
-            "phone_number": forms.TextInput(
-                attrs={"placeholder": "Número de teléfono", "class": "rounded-input"}
-            ),
-            "service_description": forms.TextInput(
-                attrs={
-                    "placeholder": "Descripción del servicio",
-                    "class": "rounded-input",
-                }
-            ),
-        }
-
-
-class EmployeeForm(forms.ModelForm):
-    class Meta:
-        model = Employee
-        fields = ["phone_number", "profession", "experience", "skills"]
-        widgets = {
-            "phone_number": forms.TextInput(
-                attrs={"placeholder": "Número de teléfono", "class": "rounded-input"}
-            ),
-            "profession": forms.TextInput(
-                attrs={"placeholder": "Profesión", "class": "rounded-input"}
-            ),
-            "experience": forms.TextInput(
-                attrs={"placeholder": "Experiencia", "class": "rounded-input"}
-            ),
-            "skills": forms.TextInput(
-                attrs={"placeholder": "Habilidades", "class": "rounded-input"}
-            ),
-        }
+        return self.cleaned_data
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -90,3 +65,19 @@ class CustomUserCreationForm(UserCreationForm):
             "password1",
             "password2",
         ]
+
+
+ERROR_CHOICES = [
+    ("bug", "Bug/Error"),
+    ("feature_request", "Feature Request"),
+    ("usability_issue", "Usability Issue"),
+    ("other", "Other"),
+]
+
+
+class ErrorForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    surname = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    error_type = forms.ChoiceField(choices=ERROR_CHOICES)
+    reporter_email = forms.EmailField()

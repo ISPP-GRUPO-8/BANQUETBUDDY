@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        color: #02483E;
+    }
+    .table-container {
+        overflow-x: auto;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #dddddd;
+        width: auto;
+        font-size: 1em;
+    }
+    th {
+        background-color: #02483E;
+        color: #ffffff;
+    }
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+    tr:hover {
+        background-color: #e2e2e2;
+    }
+</style>
+
+<body>
+
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Job Applications List</h2>
+
+    {% if applications %}
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Offer</th>
+                    <th>Location</th>
+                    <th>Application Date</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.offer.title }}</td>
+                    <td>{{ application.offer.location }}</td>
+                    <td>{{ application.date_application }}</td>
+                    <td>{{ application.state }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="col">
+        <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            No applications yet</p>
+    </div>
+    {% endif %}
+
+</body>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data">
+                <div class="card" style="background-color: #02483e">
+                    <h2 class="mt-4 mb-3 text-white text-center">Edit Menu</h2>
+                    <div class="container">
+                        {% csrf_token %}
+                        <div class="form-group text-white">
+                            <label for="id_name">Name:</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="id_description">Description:</label>
+                            {{ form.description }}
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="id_diet_restrictions">Dietary Restrictions:</label>
+                            {{ form.diet_restrictions }}
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="id_cateringservice">Catering Service:</label>
+                            {{ form.cateringservice }}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-custom">Save Menu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

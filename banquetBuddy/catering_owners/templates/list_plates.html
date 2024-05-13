@@ -1,0 +1,157 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .custom-border {
+        border-color: #02483E !important; /* Cambia el color verde aquí */
+    }
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+    
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+        .card-text {
+            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        .card-title {
+            font-size: 16px; /* Tamaño de fuente para los títulos en dispositivos pequeños */
+        }
+        .btn {
+            font-size: 14px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+        }
+        select.form-control {
+            font-size: 13px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+        }
+        h2{
+            font-size: 40px;
+        }
+    }
+    @media screen and (max-width: 451px) {
+        .card-text {
+            font-size: 12px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        }
+        .card-title {
+            font-size: 15px; /* Tamaño de fuente para los títulos en dispositivos pequeños */
+        }
+        .btn {
+            font-size: 12.5px; /* Cambiar el tamaño de la fuente de los botones en dispositivos pequeños */
+        }
+        select.form-control {
+            font-size: 12px; /* Cambiar el tamaño de la fuente de los elementos <option> en dispositivos pequeños */
+        }
+        h2{
+            font-size: 35px;
+        }
+    }
+
+</style>
+
+<div class="container my-5">
+    {% if messages %}
+    <div class="container mt-3">
+        <div class="alert alert-success" id="messageAlert" role="alert">
+            <ul class="list-unstyled mb-0">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            document.getElementById('messageAlert').style.display = 'none';
+        }, 4000); // 4 segundos
+    </script>
+    {% endif %}
+
+    <div class="container mt-4 mb-4">
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6 text-center">
+                <h2 style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Plates</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-end mb-4">
+            <div class="col-md-2">
+                <a href="{% url 'add_plate' %}" class="text-decoration-none">
+                    <button class="btn btn-add btn-block small-font">
+                        <i class="bi bi-plus-circle"></i> Add Plate
+                    </button>
+                </a>
+            </div>
+        </div>
+        <!-- Filtro de menús -->
+        <form method="get" class="form-inline my-2 my-lg-0">
+            <select name="menu_id" class="form-control mr-sm-2">
+                <option value="">All Menus</option>
+                <option value="none" {% if request.GET.menu_id == 'none' %}selected{% endif %}>Not associated</option>
+                {% for menu in menus %}
+                    <option value="{{ menu.id }}" {% if request.GET.menu_id == menu.id|stringformat:"s" %}selected{% endif %}>{{ menu.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit">Filter</button>
+        </form>
+
+        <br>
+        <div class="row">
+            {% for plate in plates %}
+            <div class="col-md-4 mb-4">
+                <div class="card rounded-3 border custom-border">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ plate.name }}</h5>
+                        <p class="card-text">Menu: {% if plate.menu %}{{ plate.menu.name }}{% else %}Not associated{% endif %}</p>
+                        <p class="card-text">{{ plate.description }}</p>
+                        <p class="card-text">Price: {{ plate.price }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <form action="{% url 'edit_plate' plate.id %}" method="get" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
+                        </form>
+                        <form action="{% url 'delete_plate' plate.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">
+                <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No plates found</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Plate pagination">
+            <ul class="pagination justify-content-center">
+                {% if plates.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.previous_page_number }}"><</a></li>
+                {% endif %}
+
+                {% for num in plates.paginator.page_range %}
+                {% if plates.number == num %}
+                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if plates.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ plates.next_page_number }}">></a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ plates.paginator.num_pages }}">>></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{% endblock %}

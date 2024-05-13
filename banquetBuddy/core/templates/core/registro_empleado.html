@@ -1,15 +1,8 @@
 {% extends 'core/base.html' %} {% block content %}
 
 <style>
-  body,
-  html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-
   .register-form {
-    background-color: #54bfaf;
+    background-color: #54BFAF;
     padding: 20px;
     height: 100%;
     width: 100%;
@@ -34,70 +27,95 @@
   }
 
   .btn {
-    background-color: #02483e;
+    background-color: #02483E;
     color: white;
     border: none;
     cursor: pointer;
     width: 30%;
     border-radius: 10px;
   }
+
+  .btn:hover {
+    background-color: #01352e;
+    color: white;
+  }
+  
   .alert.alert-danger {
     font-size: 12px; /* Tamaño de la fuente más pequeño */
   }
 </style>
-<body>
-  <div class="container mt-4 mb-4">
-    <div
-      class="row d-flex align-items-center justify-content-center"
-      style="height: 80vh"
-    >
-      <div class="col-md-7 mx-auto">
-        <div class="register-form">
-          <h2 class="register-heading"><u>Sign Up</u></h2>
-          <form method="post">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-md-6">
-                {% for field in user_form %}
-                <div class="form-group">
-                  <input
-                    type="{{ field.field.widget.input_type }}"
-                    name="{{ field.html_name }}"
-                    placeholder="{{ field.label }}"
-                    class="rounded-input {% if field.errors %}is-invalid{% endif %}"
-                    value="{% if field.value %}{{ field.value }}{% endif %}"
-                    required
-                  />
-                  {% for error in field.errors %}
-                  <div class="alert alert-danger">{{ error }}</div>
-                  {% endfor %}
-                </div>
+
+<div class="container mt-4 mb-4">
+  <div class="row d-flex align-items-center justify-content-center">
+    <div class="col-md-7 mx-auto">
+      <div class="register-form">
+        <h2 class="register-heading"><u>Sign Up</u></h2>
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="alert alert-danger text-center" role="alert">
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              {% for field in user_form %}
+              <div class="form-group">
+                <input
+                  type="{{ field.field.widget.input_type }}"
+                  name="{{ field.html_name }}"
+                  placeholder="{{ field.label }}"
+                  class="rounded-input {% if field.errors %}is-invalid{% endif %}"
+                  value="{% if field.value %}{{ field.value }}{% endif %}"
+                  required
+                />
+                {% for error in field.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
                 {% endfor %}
               </div>
-              <div class="col-md-6">
-                {% for field in employee_form %}
-                <div class="form-group">
-                  <input
-                    type="{{ field.field.widget.input_type }}"
-                    name="{{ field.html_name }}"
-                    placeholder="{{ field.label }}"
-                    class="rounded-input {% if field.errors %}is-invalid{% endif %}"
-                    value="{% if field.value %}{{ field.value }}{% endif %}"
-                    required
-                  />
-                  {% for error in field.errors %}
-                  <div class="alert alert-danger">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                {% endfor %}
-              </div>
+              {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary">Sign Up</button>
-          </form>
-        </div>
+            <div class="col-md-6">
+              {% for field in employee_form %}
+              <div class="form-group">
+                {% if field.html_name == 'curriculum' %}
+                <label for="{{ field.html_name }}">Curriculum:</label>
+                {% endif %}
+                <input
+                  type="{{ field.field.widget.input_type }}"
+                  name="{{ field.html_name }}"
+                  placeholder="{{ field.label }}"
+                  class="rounded-input {% if field.errors %}is-invalid{% endif %}"
+                  value="{% if field.value %}{{ field.value }}{% endif %}"
+                  {% if field.html_name != 'curriculum' %}required{% endif %}
+                />
+                {% for error in field.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+            <!-- Casilla de Política de Privacidad -->
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="privacyPolicy" name="privacyPolicy"
+                    required
+                    oninvalid="this.setCustomValidity('Please accept the Privacy Policy and Terms and Conditions to continue')"
+                    oninput="this.setCustomValidity('')"
+                    title="Check this box to indicate that you accept the Privacy Policy and Terms and Conditions">
+              <label class="form-check-label" for="privacyPolicy">I accept the <a href="{% url 'privacy_policy' %}">Privacy Policy</a> and <a href="{% url 'terms_and_conditions' %}">Terms and Conditions</a>
+              </label>
+            </div>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
       </div>
     </div>
   </div>
-</body>
+</div>
 
 {% endblock %}

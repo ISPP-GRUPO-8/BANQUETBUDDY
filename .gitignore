@@ -53,6 +53,15 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+**/migrations/*.py
+**/migrations/*.pyc
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+static/images
 
 # Flask stuff:
 instance/

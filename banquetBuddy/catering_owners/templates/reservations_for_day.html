@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    .custom-card {
+        border: 1px solid #02483E;
+        border-radius: 0.5rem;
+        margin-bottom: 20px;
+    }
+    .custom-card .card-body {
+        padding: 20px;
+    }
+    .custom-card .card-title {
+        color: #02483E;
+        font-weight: bold;
+    }
+    .card-container {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+            h2 {
+                font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+    }
+    @media screen and (max-width: 450px) {
+            h2 {
+                font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+    }
+    @media screen and (max-width: 600px) and (min-width: 451px) {
+            p {
+                font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+    }
+    @media screen and (max-width: 450px) {
+            p {
+                font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            }
+    }
+    .field-name {
+      color: #02483E;
+      font-weight: bold;
+    }
+    .field-value {
+        margin-left: 20px;
+    }
+</style>
+
+<h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Events for {{ selected_date.day }}/{{ selected_date.month }}/{{ selected_date.year }}</h2>
+  
+{% if reservations %}
+<div class="card-container">
+    <div class="row">
+        {% for reservation in reservations %}
+        <div class="col-md-4">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ reservation.name }}</h4>
+                    <p class="card-text"><span class="field-name">Date:</span> {{ reservation.date }}</p>
+                    <p class="card-text"><span class="field-name">Details:</span> {{ reservation.details }}</p>
+                    {% if reservation.booking_state == "CONTRACT_PENDING" %}
+                    <p class="card-text"><span class="field-name">Booking State:</span> Contract pending</p>
+                    {% else %}
+                    <p class="card-text"><span class="field-name">Booking State:</span> {{ reservation.booking_state }}</p>
+                    {% endif %}
+                    <p class="card-text"><span class="field-name">Guests Number:</span> {{ reservation.number_guests }}</p>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+    </div>
+    <div class="row">
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="col">
+    <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        No bookings for this day</p>
+</div>
+{% endif %}
+{% endblock %}

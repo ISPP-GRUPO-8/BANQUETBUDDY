@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+    strong {
+        margin-right: 5px;
+        color: #02483E;
+    }
+
+    .pagination .page-link {
+        color: #02483E;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
+    }
+</style>
+    <div class="container">
+        <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+            Jobs Carried Out</h2>
+        <form method="get" class="form-inline my-2 my-lg-0">
+            <label for="status" class="mr-sm-2" style="color: #02483E;">Filter by status:</label>
+            <select name="status" id="status" class="form-control mb-2 mr-sm-2" onchange="this.form.submit()">
+                <option value="Activo" {% if request.GET.status == 'Activo' %}selected{% endif %}>Active</option>
+                <option value="Terminado" {% if request.GET.status == 'Terminado' %}selected{% endif %}>Terminated</option>
+            </select>
+        </form>
+        <br>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for employee_service in page_obj %}
+            <div class="col-md-12">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ employee_service.cateringservice.name }}</h4>
+                        <p class="card-text"><strong>Catering company:</strong> {{ employee_service.cateringservice.cateringcompany.name }}</p>
+                        <p class="card-text"><strong>Email:</strong> {{ employee_service.cateringservice.cateringcompany.user.email }}</p>
+                        <p class="card-text"><strong>Phone number:</strong> {{ employee_service.cateringservice.cateringcompany.phone_number }}</p>
+                        <p class="card-text"><strong>Event:</strong> {{ employee_service.event.name }}</p>
+                        <p class="card-text"><strong>Date Range:</strong> {{ employee_service.start_date }} to {{ employee_service.end_date|default:"Present" }}</p>
+                        <p class="{% if employee_service.current_status == 'Activo' %}text-success{% elif employee_service.current_status == 'Terminado' %}text-danger{% endif %}">
+                            {% if employee_service.current_status == 'Activo' %}
+                               Active
+                            {% endif %}
+            
+                            {% if employee_service.current_status == 'Terminado' %}
+                                Terminated
+                            {% endif %}
+                        </p>
+                        {% if employee_service.current_status == 'Activo' %}
+                        <a href="{% url 'employee_kanban' employee_service.event.id %}" class="btn btn-custom">View Tasks</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-md-12">
+                <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No jobs found</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Paginación -->
+        <nav aria-label="List work services pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">></a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">>></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

@@ -1,0 +1,92 @@
+name: BanquetBuddy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - fix/sonar_coverage#178
+  pull_request:
+    branches:
+      - main
+      - develop
+      - fix/sonar_coverage#178
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10.12']
+    services:
+      postgres:
+        image: postgres:16.2
+        env:
+          POSTGRES_USER: ispp
+          POSTGRES_PASSWORD: ispp
+          POSTGRES_DB: ispp
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          echo "Dependencias instaladas."
+
+      - name: Verificar el directorio actual y listar archivos
+        run: |
+          pwd
+          ls -la
+
+      - name: Cambiar al directorio del proyecto Django y listar archivos
+        run: |
+          cd banquetBuddy
+          pwd
+          ls -la
+
+      - name: Dar permisos al driver de Selenium
+        run: |
+          cd banquetBuddy/static/driver
+          chmod +x chromedriver.exe
+
+      - name: Crear archivo .env y escribir DB_PASSWORD
+        run: |
+          echo "DB_PASSWORD=ispp" >  .env
+          echo "EMAIL_HOST_PASSWORD=zsqt bsae cayb atuk" >> .env
+          echo ".env creado y contraseñas escritas"
+
+      - name: Aplicar migraciones
+        run: |
+          cd banquetBuddy
+          python manage.py makemigrations
+          python manage.py migrate
+          echo "Migraciones aplicadas."
+
+      - name: Ejecutar pruebas con Coverage y generar reporte
+        run: |
+          cd banquetBuddy
+          coverage run manage.py test
+          coverage xml -o ../coverage.xml
+          ls -la ..
+          echo "Archivo coverage.xml generado."
+      
+      - name: Fix Code Coverage Paths
+        run: |
+          sed -i 's/\/home\/runner\/work\/BANQUETBUDDY\/BANQUETBUDDY\//\/github\/workspace\//g' coverage.xml
+          echo "Fix Code Coverage Paths done."
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
