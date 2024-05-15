@@ -36,8 +36,7 @@
       {% endif %}
 
       {% if form_error_capacity %}
-      <div class="alert alert-danger">The selected number of guests exceeds the available capacity of {{
-        catering.capacity }}. Please choose a lower number of guests.</div>
+      <div class="alert alert-danger">The selected number of guests exceeds the available capacity of &nbsp;{{ cateringservice.capacity }}. Please choose a lower number of guests.</div>
       {% endif %}
 
       {% if form_error_date %}
@@ -80,7 +79,7 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-                <div class="mt-auto">
+                <div class="mt-auto text-center">
                     <div class="btn-group">
                         <button type="button" class="btn btn-add select-menu" data-menu-id="{{ menu.id }}">Select</button>
                     </div>

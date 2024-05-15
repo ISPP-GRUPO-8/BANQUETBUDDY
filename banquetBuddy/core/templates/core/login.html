@@ -39,12 +39,22 @@
         margin-top: 10px;
         color: #ffffff;
     }
+
+    .mt-6 {
+        margin-top: 7rem;
+    }
+
+    @media (max-width: 767px) {
+        .mt-6 {
+            margin-top: 3rem;
+        }
+    }
 </style>
 
-<div class="container" style="margin-bottom: 10px;">
+<div class="container mt-6" style="margin-bottom: 10px;">
     <div class="row row-cols-1 row-cols-md-2 justify-content-center align-items-center">
         <div class="col-md-6 text-center">
-            <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo">
+            <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image">
         </div>
         <div class="col-md-6">
             <div class="login-form">

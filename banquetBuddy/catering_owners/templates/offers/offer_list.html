@@ -31,13 +31,15 @@
         margin-top: 3%;
     }
 
-    hr {
-        margin-top: 3%;
-    }
-
     .offerTitle {
         font-weight: bold;
         color: #02483E;
+    }
+
+    @media (max-width: 767px) {
+        .offer {
+            margin-top: 11%;
+        }
     }
 
 </style>
@@ -94,7 +96,6 @@
                 
             {% endif %}
             
-            <hr></hr>
         </div>
         {% empty %}
         <div class="col">

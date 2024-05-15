@@ -749,6 +749,7 @@ def edit_offer(request, offer_id):
         if form.is_valid():
             try:
                 form.save()  # Intenta guardar el formulario
+                messages.success(request, "Offer updated successfully.")
                 return redirect("offer_list")
             except ValidationError as e:
                 # Añade los errores de validación del modelo a los errores del formulario

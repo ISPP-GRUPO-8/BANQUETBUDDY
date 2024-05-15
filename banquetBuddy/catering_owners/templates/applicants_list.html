@@ -3,16 +3,11 @@
 
 {% block content %}
 <style>
-    body {
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        color: #02483E;
-    }
     .table-container {
         overflow-x: auto;
         max-width: 1000px;
         margin: 20px auto;
+        text-align: center;
     }
     table {
         width: 100%;
@@ -32,6 +27,9 @@
         background-color: #02483E;
         color: #ffffff;
     }
+    td {
+        color: #02483E;
+    }
     tr:nth-child(even) {
         background-color: #ffffff;
     }
@@ -44,6 +42,17 @@
     }
     a:hover {
         color: #3f8c7f;
+    }
+
+    @media (max-width: 767px) {
+        .table-container {
+            max-width: 375px;
+        }
+
+        th, td {
+            padding: 5px;
+            font-size: 0.7em;
+        }
     }
 </style>
 

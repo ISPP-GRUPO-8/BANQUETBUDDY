@@ -10,16 +10,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Bookings</title>
     <style>
-        body {
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            color: #02483E;
-        }
         .table-container {
             overflow-x: auto;
             max-width: 1000px;
             margin: 20px auto;
+            text-align: center;
         }
         table {
             width: 100%;
@@ -39,6 +34,9 @@
             background-color: #02483E;
             color: #ffffff;
         }
+        td {
+            color: #02483E;
+        }
         tr:nth-child(even) {
             background-color: #ffffff;
         }
@@ -53,19 +51,14 @@
             color: #3f8c7f;
         }
 
-        @media screen and (max-width: 450px) {
-            td, th {
-                font-size: 0.5em; /* Cambio de tamaño de fuente en dispositivos pequeños */
+        @media (max-width: 767px) {
+            .table-container {
+                max-width: 350px;
             }
-        }
-        @media screen and (max-width: 600px) and (min-width: 451px) {
-            td, th {
-                font-size: 0.7em; /* Cambio de tamaño de fuente en dispositivos pequeños */
-            }
-        }
-        @media screen and (max-width: 450px) {
-            h2 {
-                font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
+            
+            th, td {
+                padding: 5px;
+                font-size: 0.9em;
             }
         }
     </style>
