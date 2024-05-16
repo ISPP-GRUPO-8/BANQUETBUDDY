@@ -1,6 +1,6 @@
 from decimal import Decimal
 import os
-from django.test import Client, TestCase
+from django.test import Client, LiveServerTestCase, TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from catering_particular.models import Particular
@@ -15,6 +15,15 @@ from core.models import CustomUser, BookingState
 from phonenumbers import parse
 from datetime import datetime, timedelta
 from django.core.files import File
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from django.urls import reverse
+from selenium.webdriver.common.keys import Keys
+import time
 
 
 class CateringBookTestCase(TestCase):
@@ -896,3 +905,297 @@ class RegisterCompanyTest(TestCase):
 ########################
 ###Tests de interfaz####
 ########################
+
+class RegisterFormTestCase(LiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        cls.selenium.implicitly_wait(10)  # Espera implícita de hasta 10 segundos
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_register_form(self):
+        ruta_archivo = os.path.join(os.path.dirname(__file__), 'test_files', 'test_pdf.pdf')
+        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
+
+        # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
+        # Por ejemplo:
+        register_particular_button = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, 'register_company_button'))
+        )
+        register_particular_button.click()
+
+        # Verifica que se haya redirigido correctamente a la vista de registro de empleado
+        self.assertIn('/register_company', self.selenium.current_url)
+
+        # Completa el formulario de usuario
+        username_input = self.selenium.find_element_by_name('username')
+        username_input.send_keys('testuser')
+
+        first_name_input = self.selenium.find_element_by_name('first_name')
+        first_name_input.send_keys('John')
+
+        last_name_input = self.selenium.find_element_by_name('last_name')
+        last_name_input.send_keys('Doe')
+
+        email_input = self.selenium.find_element_by_name('email')
+        email_input.send_keys('test@example.com')
+
+        password1_input = self.selenium.find_element_by_name('password1')
+        password1_input.send_keys('parkour%123')
+
+        password2_input = self.selenium.find_element_by_name('password2')
+        password2_input.send_keys('parkour%123')
+
+        # Completa el formulario de compañía
+        name_input = self.selenium.find_element_by_name('name')
+        name_input.send_keys('Test Catering Company')
+
+        address_input = self.selenium.find_element_by_name('address')
+        address_input.send_keys('123 Test St.')
+
+        phone_number_input = self.selenium.find_element_by_name('phone_number')
+        phone_number_input.send_keys('+12125552368')
+
+        cif_input = self.selenium.find_element_by_name('cif')
+        cif_input.send_keys('A1234567J')
+
+        verification_document_input = self.selenium.find_element_by_name('verification_document')
+        verification_document_input.send_keys(ruta_archivo)
+
+        # Completa la casilla de Política de Privacidad
+        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
+        privacy_policy_checkbox.click()
+
+        # Envía el formulario
+        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
+
+        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
+        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
+
+
+class VisualAddMenuTest(LiveServerTestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        self.driver.implicitly_wait(10)
+
+        # Crear usuario y empresa de catering
+        self.user = CustomUser.objects.create_user(username='testuser', password='password',email='testuser@gmail.com')
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_add_menu_authenticated_user(self):
+        # Iniciar sesión con Selenium
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys('testuser@gmail.com')
+        self.driver.find_element_by_name('password').send_keys('password')
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Navegar a la página para agregar un plato
+        self.driver.get(self.live_server_url + '/add_menu/')
+        # Rellenar el formulario
+
+        name_input = self.driver.find_element_by_name('name')
+        name_input.send_keys('Test Menu')
+        description_input = self.driver.find_element_by_name('description')
+        description_input.send_keys('This is a test menu')
+        diet_restrictions_input = self.driver.find_element_by_name('diet_restrictions')
+        diet_restrictions_input.send_keys('No restrictions')
+
+        # Enviar el formulario
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Verificar si el plato se creó correctamente
+        self.assertEqual(self.driver.current_url, self.live_server_url + '/list_menus/')
+        success_message = self.driver.find_element_by_css_selector('.alert-success').text
+        self.assertIn('Menu created successfully', success_message)
+
+
+class VisualEditMenuTest(StaticLiveServerTestCase):
+    def setUp(self):
+        self.username = 'testuser@gmail.com'
+        self.password = 'password'
+        self.user = CustomUser.objects.create_user(username=self.username, password=self.password,email = self.username)
+        self.catering_company = CateringCompany.objects.create(user=self.user, name='Test Catering Company')
+        self.menu = Menu.objects.create(cateringcompany=self.catering_company, name='Test Menu', description='Test Description', diet_restrictions='No restrictions')
+        self.url = self.live_server_url + reverse('edit_menu', kwargs={'menu_id': self.menu.id})
+        self.delete_url = self.live_server_url + reverse('delete_menu', kwargs={'menu_id': self.menu.id})
+
+        self.driver = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        self.driver.implicitly_wait(10)
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_edit_menu_authenticated_user(self):
+        # Iniciar sesión
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys(self.username)
+        self.driver.find_element_by_name('password').send_keys(self.password)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Acceder a la página de edición del menú
+        self.driver.get(self.url)
+
+        # Simular la edición del menú
+        name_input = self.driver.find_element_by_css_selector('input[name="name"]')
+        name_input.clear()  # Limpiar el campo de nombre
+        name_input.send_keys('Updated Menu')  # Introducir un nombre actualizado
+        description_input = self.driver.find_element_by_css_selector('textarea[name="description"]')
+        description_input.clear()
+        description_input.send_keys('Updated Description')
+        diet_restrictions_input = self.driver.find_element_by_css_selector('input[name="diet_restrictions"]')
+        diet_restrictions_input.clear()
+        diet_restrictions_input.send_keys('Updated Restrictions')
+
+        # Enviar el formulario (método PUT simulado)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Verificar si el menú se actualizó correctamente
+        updated_menu = Menu.objects.get(id=self.menu.id)
+        self.assertEqual(updated_menu.name, 'Updated Menu')
+        self.assertEqual(updated_menu.description, 'Updated Description')
+        self.assertEqual(updated_menu.diet_restrictions, 'Updated Restrictions')
+    
+    def test_delete_menu(self):
+        # Ir a la página de lista de menús
+        self.driver.get(self.live_server_url + '/login')
+        self.driver.find_element_by_name('username').send_keys(self.username)
+        self.driver.find_element_by_name('password').send_keys(self.password)
+        self.driver.find_element_by_css_selector('button[type="submit"]').click()
+
+        self.driver.get(f'{self.live_server_url}/list_menus/')
+        
+        # Encontrar el botón de eliminar y hacer clic en él
+        delete_button = WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((By.NAME, 'delete_menu_button'))
+    )
+        if delete_button.is_displayed():
+            delete_button.click()
+
+        # Verificar si el menú fue eliminado correctamente
+        self.assertNotIn(self.menu.name, self.driver.page_source)
+
+
+
+class CateringCalendarViewTest(StaticLiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        cls.email = 'testuser@gmail.com'
+        cls.password = 'password'
+        cls.user = CustomUser.objects.create_user(username=cls.email, password=cls.password,email = cls.email)
+        cls.catering_company = CateringCompany.objects.create(user=cls.user, name='Test Catering Company',price_plan="PREMIUM_PRO")
+
+        cls.catering_service = CateringService.objects.create(
+            cateringcompany=cls.catering_company,
+            name="Mi servicio de catering",
+            description="Descripción de mi servicio de catering",
+            location="Ubicación de mi servicio de catering",
+            capacity=100,
+            price=500.00,
+        )
+
+        cls.selenium.get(cls.live_server_url + reverse('login'))
+        cls.selenium.find_element_by_name('username').send_keys(cls.email)
+        cls.selenium.find_element_by_name('password').send_keys(cls.password)
+        cls.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+
+    def test_catering_calendar_view(self):
+
+        # Abre la página del calendario de catering
+        catering_calendar_url = reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.id, 'year': 2024, 'month': 4})
+        self.selenium.get(self.live_server_url + catering_calendar_url)
+
+        # Verifica que se muestre el nombre del catering y el año/mes actual
+        h1_element = WebDriverWait(self.selenium, 10).until(
+            EC.visibility_of_element_located((By.TAG_NAME, "h2"))
+        )
+
+        # Verifica si el texto esperado está presente en el elemento h1
+        self.assertIn('Events on', h1_element.text)
+
+        # Verificar la presencia del enlace "Previous Month"
+        prev_month_link = self.selenium.find_element_by_link_text('Previous Month')
+        self.assertIsNotNone(prev_month_link)
+
+        # Verificar la presencia del enlace "Next Month"
+        next_month_link = self.selenium.find_element_by_link_text('Next Month')
+        self.assertIsNotNone(next_month_link)
+
+        # Verifica que se muestre la tabla del calendario
+        calendar_table = self.selenium.find_element_by_class_name("calendar-table")
+        self.assertIsNotNone(calendar_table)
+
+        # Verifica que se muestren los días del mes actual
+        days_in_month = calendar_table.find_elements_by_xpath("//td")
+        self.assertTrue(len(days_in_month) > 0)
+
+        # Verifica que se muestre la información adicional
+        info_section = self.selenium.find_element_by_class_name("info")
+        next_event_info = info_section.find_element_by_xpath("//p[contains(text(), 'Next event:')]")
+        num_events_info = info_section.find_element_by_xpath("//p[contains(text(), 'Number of events this month:')]")
+
+        self.assertIsNotNone(next_event_info)
+        self.assertIsNotNone(num_events_info)
+
+
+
+class CateringUnsubscribeTest(StaticLiveServerTestCase):
+    def setUp(self):
+        super().setUpClass()
+        self.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        # Crear un usuario premium
+        self.email = 'testuser@gmail.com'
+        self.password = 'password'
+        self.user = CustomUser.objects.create_user(username=self.email, password=self.password,email = self.email)
+        self.catering_company = CateringCompany.objects.create(user=self.user,price_plan = "PREMIUM")
+        self.catering_company.save()
+        # Otros pasos de configuración si es necesario
+
+    def tearDown(self):
+        # Limpiar los datos creados durante la prueba si es necesario
+        self.user.delete()
+        self.catering_company.delete()
+
+    def test_catering_unsubscribe_view(self):
+        # Iniciar sesión
+        self.selenium.get(self.live_server_url + reverse('login'))
+        self.selenium.find_element_by_name('username').send_keys(self.email)
+        self.selenium.find_element_by_name('password').send_keys(self.password)
+        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
+        # Hacer clic en el enlace del header para ir a la página de suscripciones
+        self.selenium.find_element_by_link_text('Plan').click()
+
+        # Verificar que estamos en la página de suscripciones
+        self.assertIn('subscription-plans', self.selenium.current_url)
+
+        # Encontrar el botón de cancelar suscripción y hacer clic en él
+        
+        unsubscribe_button = self.selenium.find_element_by_name("cancel_subscription_premium")
+        unsubscribe_button.click()
+
+            # Esperar a que se realice la redirección a la página de perfil
+        profile_url = self.live_server_url + reverse('profile')
+        WebDriverWait(self.selenium, 10).until(EC.url_to_be(profile_url))
+
+            # Verificar que se haya actualizado la suscripción
+        updated_subscription = CateringCompany.objects.get(user=self.user).price_plan
+        self.assertEqual(updated_subscription, "NO_SUBSCRIBED")
+
+    
+
+

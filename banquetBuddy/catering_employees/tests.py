@@ -2,7 +2,7 @@ from asyncio import Task
 import os
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.test import RequestFactory, TestCase, Client
+from django.test import LiveServerTestCase, RequestFactory, TestCase, Client
 from django.urls import reverse
 from unittest.mock import patch
 
@@ -16,6 +16,11 @@ from datetime import datetime, timedelta, date
 from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
 
 # Create your tests here.
 class EmployeeTestCases(TestCase):
@@ -377,7 +382,84 @@ class ListWorkServicesIntegrationTest(TestCase):
         response = self.client.get("/listWorkServices")
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "list_work_services.html")
+        self.assertTemplateUsed(response, 'list_work_services.html')
+
+########################
+###Tests de interfaz####
+########################
+
+
+class RegisterFormTestCase(LiveServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)  # O el driver que estés utilizando
+        cls.selenium.implicitly_wait(10)  # Espera implícita de hasta 10 segundos
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_register_form(self):
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum_0chkcrb.pdf')
+        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
+
+        # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
+        # Por ejemplo:
+        register_particular_button = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, 'register_employee_button'))
+        )
+        register_particular_button.click()
+
+        # Verifica que se haya redirigido correctamente a la vista de registro de empleado
+        self.assertIn('/register_employee', self.selenium.current_url)
+
+        # Completa el formulario de usuario
+        username_input = self.selenium.find_element_by_name('username')
+        username_input.send_keys('testuser')
+
+        first_name_input = self.selenium.find_element_by_name('first_name')
+        first_name_input.send_keys('John')
+
+        last_name_input = self.selenium.find_element_by_name('last_name')
+        last_name_input.send_keys('Doe')
+
+        email_input = self.selenium.find_element_by_name('email')
+        email_input.send_keys('test@example.com')
+
+        password1_input = self.selenium.find_element_by_name('password1')
+        password1_input.send_keys('parkour%123')
+
+        password2_input = self.selenium.find_element_by_name('password2')
+        password2_input.send_keys('parkour%123')
+
+        # Completa el formulario de empleado
+        phone_number_input = self.selenium.find_element_by_name('phone_number')
+        phone_number_input.send_keys('+12125552368')
+
+        profession_input = self.selenium.find_element_by_name('profession')
+        profession_input.send_keys('Chef')
+
+        experience_input = self.selenium.find_element_by_name('experience')
+        experience_input.send_keys('5 years')
+
+        skills_input = self.selenium.find_element_by_name('skills')
+        skills_input.send_keys('Culinary arts')
+
+        curriculum_input = self.selenium.find_element_by_name('curriculum')
+        curriculum_input.send_keys(curriculum_path)
+
+        # Completa la casilla de Política de Privacidad
+        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
+        privacy_policy_checkbox.click()
+
+        # Envía el formulario
+        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
+        submit_button.click()
+
+        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
+        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
 
 
 class RegisterEmployeeTest(TestCase):
