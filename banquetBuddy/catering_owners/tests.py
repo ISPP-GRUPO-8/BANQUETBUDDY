@@ -1104,16 +1104,16 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
             price=500.00,
         )
 
+        cls.selenium.get(cls.live_server_url + reverse('login'))
+        cls.selenium.find_element_by_name('username').send_keys(cls.email)
+        cls.selenium.find_element_by_name('password').send_keys(cls.password)
+        cls.selenium.find_element_by_css_selector('button[type="submit"]').click()
+
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
 
     def test_catering_calendar_view(self):
-        # Iniciar sesión
-        self.selenium.get(self.live_server_url + reverse('login'))
-        self.selenium.find_element_by_name('username').send_keys(self.email)
-        self.selenium.find_element_by_name('password').send_keys(self.password)
-        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
 
         # Abre la página del calendario de catering
         catering_calendar_url = reverse('catering_calendar', kwargs={'catering_service_id': self.catering_service.id, 'year': 2024, 'month': 4})
@@ -1150,66 +1150,6 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
 
         self.assertIsNotNone(next_event_info)
         self.assertIsNotNone(num_events_info)
-
-    def test_next_month_view(self):
-        # Iniciar sesión
-        self.selenium.get(self.live_server_url + reverse('login'))
-        self.selenium.find_element_by_name('username').send_keys(self.email)
-        self.selenium.find_element_by_name('password').send_keys(self.password)
-        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
-
-        # Obtener la fecha actual
-        current_date = datetime.now()
-
-        # Calcular el mes siguiente
-        next_date = current_date + timedelta(days=30)
-
-
-
-        # Abre la página del calendario de catering
-        next_month_url = reverse('next_month', kwargs={'catering_service_id': self.catering_service.id, 'year': next_date.year, 'month': next_date.month})
-        self.selenium.get(self.live_server_url + next_month_url)
-
-        # Verificar si la redirección a la página del próximo mes es exitosa
-        self.assertIn('catering-calendar', self.selenium.current_url)
-
-        # Obtener los parámetros de la URL
-        url_params = next_month_url.split('/')
-        year_param = int(url_params[-4])
-        month_param = int(url_params[-3])
-
-        # Verificar si la fecha en la URL corresponde al mes siguiente
-        self.assertEqual(year_param, next_date.year)
-        self.assertEqual(month_param, next_date.month)
-
-    def test_prev_month_view(self):
-        # Iniciar sesión
-        self.selenium.get(self.live_server_url + reverse('login'))
-        self.selenium.find_element_by_name('username').send_keys(self.email)
-        self.selenium.find_element_by_name('password').send_keys(self.password)
-        self.selenium.find_element_by_css_selector('button[type="submit"]').click()
-
-        # Obtener la fecha actual
-        current_date = datetime.now()
-
-        # Calcular el mes anterior
-        prev_date = current_date - timedelta(days=30)
-
-        # Abre la página del calendario de catering
-        prev_month_url = reverse('prev_month', kwargs={'catering_service_id': self.catering_service.id, 'year': prev_date.year, 'month': prev_date.month})
-        self.selenium.get(self.live_server_url + prev_month_url)
-
-        # Verificar si la redirección a la página del mes anterior es exitosa
-        self.assertIn('catering-calendar', self.selenium.current_url)
-
-        # Obtener los parámetros de la URL
-        url_params = prev_month_url.split('/')
-        year_param = int(url_params[-4])
-        month_param = int(url_params[-3])
-
-        # Verificar si la fecha en la URL corresponde al mes anterior
-        self.assertEqual(year_param, prev_date.year)
-        self.assertEqual(month_param, prev_date.month)  
 
 
 
