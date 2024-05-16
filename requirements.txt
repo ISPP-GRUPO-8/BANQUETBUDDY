@@ -17,9 +17,11 @@ requests==2.31.0
 six==1.16.0
 sqlparse==0.4.4
 stripe==4.0.2
+tzdata==2024.1
+urllib3
+auto-changelog
 selenium==4.1.0
 locust==2.5.1
 chromedriver-autoinstaller==0.2.2
-
-tzdata==2024.1
-urllib3
+coverage
+python-dotenv

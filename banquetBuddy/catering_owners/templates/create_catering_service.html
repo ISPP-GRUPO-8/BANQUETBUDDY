@@ -2,23 +2,6 @@
 
 {% block content %}
 <style>
-    form {
-    margin: 10%;
-}
-input[type="submit"] {
-    display: block;
-    width: 80%;
-    padding: 0.5%;
-    background-color: #02483E;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 4%;
-    margin-left: 10%;
-    margin-right: 10%;
-}
-
 input[type="text"], textarea {
     width: 100%;
     padding: 10px;
@@ -28,20 +11,41 @@ input[type="text"], textarea {
 
 </style>
 
-<form method="POST" action="{% url 'create_service' %}">
-    {% csrf_token %}
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br>
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea><br>
-    <label for="location">Location:</label>
-    <textarea id="location" name="location" required></textarea><br>
-    <label for="price">Price:</label>
-    <input type="text" id="price" name="price" required><br>
-    <label for="capacity">Capacity:</label>
-    <input type="text" id="capacity" name="capacity" required><br>
-    <input type="submit" value="Create">
-</form>
-
-
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data" action="{% url 'create_service' %}">
+                <div class="card" style="background-color: #02483e">
+                    <h2 class="mt-4 mb-3 text-white text-center">Create New Service</h2>
+                    <div class="container">
+                        {% csrf_token %}
+                        <div class="form-group text-white">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" required></textarea>
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="location">Location:</label>
+                            <textarea id="location" name="location" required></textarea>
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="price">Price:</label>
+                            <input type="text" id="price" name="price" required>
+                        </div>
+                        <div class="form-group text-white">
+                            <label for="capacity">Number of Guests:</label>
+                            <input type="text" id="capacity" name="capacity" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-custom">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

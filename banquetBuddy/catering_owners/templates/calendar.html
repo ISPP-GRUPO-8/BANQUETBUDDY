@@ -10,11 +10,9 @@
     <title>Catering Calendar</title>
     <style>
         body {
-            font-family:  Verdana, Geneva, Tahoma, sans-serif;
-            background-color: #f9f9f9;
-            color: #013b2a;
+            color: #02483E;
         }
-        h1{
+        h2{
             font-size: 35px;
         }
         .calendar-container {
@@ -57,7 +55,7 @@
             display: block;
         }
         .calendar-table a:hover {
-            background-color: #013b2a;
+            background-color: #01352e;
         }
         .calendar-container .navigation {
             display: flex;
@@ -74,7 +72,7 @@
         }
 
         .calendar-container .navigation a:hover {
-            background-color: #041611; /* Cambia el color de fondo al pasar el ratón por encima */
+            background-color: #01352e; /* Cambia el color de fondo al pasar el ratón por encima */
         }
         .calendar-container .info {
             margin-top: 20px;
@@ -99,26 +97,6 @@
         .calendar-table td .event-day-button:hover {
             background-color: #FFA500; /* Cambia el color de fondo al que desees */
         }
-        @media screen and (max-width: 600px) and (min-width: 451px) {
-            h1 {
-                font-size: 30px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-            }
-        }
-        @media screen and (max-width: 450px) {
-                h1 {
-                    font-size: 24px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-                }
-        }
-        @media screen and (max-width: 600px) and (min-width: 451px) {
-            td, th, p, a {
-                font-size: 14px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-            }
-        }
-        @media screen and (max-width: 450px) {
-            td, th, p, a {
-                font-size: 10px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-            }
-        }
         .zero-day {
             background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, #02483E 5px, #02483E 10px);
             background-size: auto 100%;
@@ -128,7 +106,8 @@
 </head>
 
 <body>
-    <h1 style="text-align: center; margin-bottom: 30px; margin-top: 30px;">Events on {{ month_name }}/{{ year }} for {{ catering_name }}</h1>
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Events on {{ month_name }}/{{ year }} for {{ catering_name }}</h2>
     <div class="calendar-container">
         <div class="navigation">
             <a href="{% url 'prev_month' catering_service_id=catering_service_id year=year month=month %}">Previous Month</a>
@@ -161,7 +140,7 @@
             {% endfor %}
         </table>
         <div class="info">
-            <p>Next Event: {{ next_event_date }}</p>
+            <p>Next event: {{ next_event_date }}</p>
             <p>Number of events this month: {{ num_events }}</p>
         </div>
     </div>

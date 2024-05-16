@@ -3,28 +3,15 @@
 
 {% block content %}
 <style>
-
-    .row {
-        text-align: center;
-    }
-    .text {
-        text-align: center;
-        margin-top: 4%;
-        margin-bottom: 7%
-    }
-
-    .butYes {
+    .btn-danger {
         text-align: center;
         display: block;
         width: 40%;
         padding: 0.5%;
-        color: white;
         border: none;
         cursor: pointer;
         margin-left: 30%;
-        margin-bottom: 2%;
-        background-color: #cb3234
-
+        margin-bottom: 1%;
     }
 
     .butNo {
@@ -36,17 +23,21 @@
         border: none;
         cursor: pointer;
         margin-left: 30%;
-        background-color: #02483E
-  
+        background-color: #02483E;
+    }
+
+    .butNo:hover {
+        background-color: #01352e;
+        color: white;
     }
 
 </style>
-<h3 class="text">Are you sure you want to delete the offer "{{ offer.title }}"?</h3>
-            <form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
-                {% csrf_token %}
-                <button class="butYes" type="submit" href="{% url 'offer_list' %}"> Yes</button>
-            </form>
-            <a href="{% url 'offer_list' %}" class="butNo">No</a>
-
-
+<h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+    Confirm</h2>
+<h3 style="text-align: center; color: #02483E;">Are you sure that you want to delete the offer "{{ offer.title }}"?</h3>
+    <form action="{% url 'confirm_delete_offer' offer.id %}" method="post">
+        {% csrf_token %}
+        <input class="btn btn-danger" type="submit" href="{% url 'offer_list' %}" value="Yes, delete">
+    </form>
+    <button class="butNo" onclick="window.location.href='{% url 'offer_list' %}'">Cancel</button>
 {% endblock %}

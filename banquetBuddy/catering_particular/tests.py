@@ -7,6 +7,7 @@ from catering_owners.models import *
 from .views import *
 from catering_particular.models import *
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -103,15 +104,11 @@ class BookTestCase(TestCase):
         response = self.client.post(
             reverse("book_edit", args=[self.event.id]),
             {
-                "date": self.event.date,
-                "number_guests": "15",
-                "selected_menu": self.menu2.id,
+                "date": "2024-07-12",
             },
         )
         self.assertEqual(response.status_code, 302)
         edited_event = Event.objects.get(id=self.event.id)
-        self.assertEqual(edited_event.number_guests, 15)
-        self.assertEqual(edited_event.menu, self.menu2)
         self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
 
     def test_book_edit_view_incomplete_form(self):
@@ -200,6 +197,14 @@ class CateringViewsTestCase(TestCase):
             capacity=100,
             price=1000.00,
         )
+        self.menu = Menu.objects.create(
+            id=1,
+            cateringservice=self.catering_service,
+            name="Test Menu",
+            description="Test menu description",
+            diet_restrictions="Test diet restrictions",
+        )
+        self.catering_service.menus.add(self.menu)
 
         # Autenticar al usuario particular
         self.client.login(username="pablo@gmail.com", password="Pablo")

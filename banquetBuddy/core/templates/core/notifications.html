@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 {% extends 'core/base.html' %}
-{% block extra_css %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-{% endblock %}
 {% block content %}
 <style>
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-
     label {
         display: block;
         margin-top: 3%;
@@ -32,16 +24,21 @@
         margin-top: 3%;
     }
 
-    hr {
-        margin-top: 3%;
-    }
-
     .notificationTitle {
         font-weight: bold;
+        color: #02483E;
+    }
+
+    @media (max-width: 767px) {
+        .notification {
+            margin-top: 11%;
+            margin-bottom: 11%;
+        }
     }
 
 </style>
-    <h1 style="margin-top: 2%;">Notifications</h1>
+    <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        Notifications</h2>
     <div class="list">
         <form method="post" action="{% url 'mark_as_read' %}">
             {% csrf_token %}
@@ -50,11 +47,16 @@
         {% for notification in notifications %}
         <div class="notification">
         {% if request.user.is_authenticated and request.user.EmployeeUsername %}
-            <h2 class="notificationTitle">{{ notification.title }}</h2>
+            <h4 class="notificationTitle">{{ notification.title }}</h4>
         {% else %}
-            <h2 class="notificationTitle">{{ notification.event.name }}</h2>
+            <h4 class="notificationTitle">{{ notification.event.name }}</h4>
         {% endif %}
-            <h4>{{ notification.message }}</h4>
+            <h5>{{ notification.message }}</h5>
+        </div>
+        {% empty %}
+        <div>
+            <p class="small-font" style="color: #02483E; margin-top: 10px; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                No notifications</p>
         </div>
         {% endfor %}
     </div>

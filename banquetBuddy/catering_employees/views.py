@@ -2,7 +2,13 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from catering_owners.models import CateringCompany, Offer, JobApplication, RecommendationLetter, Task
+from catering_owners.models import (
+    CateringCompany,
+    Offer,
+    JobApplication,
+    RecommendationLetter,
+    Task,
+)
 from catering_owners.models import (
     CateringCompany,
     Offer,
@@ -96,7 +102,7 @@ def register_employee(request):
 
             messages.success(
                 request,
-                "Registration successful! Please confirm your email address to complete the registration",
+                "Registration successful! Please check your email to activate you account",
             )
 
             return redirect("home")
@@ -135,29 +141,31 @@ def employee_offer_list(request):
     context = {}
 
     current_user = request.user
-    offers = Offer.objects.all()
-
     if not is_user_employee(current_user):
         return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
 
     employee = Employee.objects.get(user=current_user)
-    search = ""
-    offers = Offer.objects.all()
-    if request.method == "POST":
-        search = request.POST.get("search", "")
-        if search:
-            offers = Offer.objects.filter(Q(title__icontains=search))
+    search = request.POST.get("search", "") if request.method == "POST" else ""
+    offers = (
+        Offer.objects.filter(title__icontains=search) if search else Offer.objects.all()
+    )
+
+    # Obtenemos todas las asignaciones de trabajo para el empleado
+    work_services = EmployeeWorkService.objects.filter(
+        employee=employee
+    ).select_related("cateringservice")
+
+    # Filtramos por aquellas que están actualmente activas según el método current_status
+    active_hirings = {
+        ws.cateringservice.id for ws in work_services if ws.current_status() == "Activo"
+    }
 
     applications = {
         offer.id: offer.job_applications.filter(employee=employee).exists()
         for offer in offers
     }
-    hirings = {
-        offer.id: EmployeeWorkService.objects.filter(
-            employee=employee, cateringservice=offer.cateringservice
-        ).exists()
-        for offer in offers
-    }
+    hirings = {offer.id: offer.cateringservice.id in active_hirings for offer in offers}
+
     context = {
         "offers": offers,
         "applications": applications,
@@ -237,6 +245,12 @@ def listar_caterings_companies(request):
     if not is_employee(request):
         return HttpResponseForbidden(NOT_EMPLOYEE_ERROR)
     caterings = CateringCompany.objects.all()
+    if "search" not in context:
+        busqueda = ""
+
+    if request.method == "POST":
+        busqueda = request.POST.get("search", "")
+        caterings = CateringCompany.objects.filter(Q(name__icontains=busqueda))
 
     context["caterings"] = caterings
     return render(request, "contact_chat_employee.html", context)
@@ -269,8 +283,11 @@ def list_work_services(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    
-    return render(request, 'list_work_services.html', {'page_obj': page_obj, 'current_status': status_filter})
+    return render(
+        request,
+        "list_work_services.html",
+        {"page_obj": page_obj, "current_status": status_filter},
+    )
 
 
 def employee_kanban(request, event_id):
@@ -279,60 +296,94 @@ def employee_kanban(request, event_id):
     try:
         employee = Employee.objects.get(user=current_user)
         employee_service = EmployeeWorkService.objects.get(
-            employee=employee, 
-            event_id=event_id, 
+            employee=employee,
+            event_id=event_id,
         )
     except Employee.DoesNotExist:
         return HttpResponseForbidden("No employee record found.")
     except EmployeeWorkService.DoesNotExist:
         return HttpResponseForbidden("No active work service found for this event.")
-    
-    tasks = Task.objects.filter(event_id=event_id).select_related('event')
+
+    tasks = Task.objects.filter(event_id=event_id).select_related("event")
     task_list = []
     for task in tasks:
         task.is_draggable = task.employees.filter(user=current_user).exists()
         task_list.append(task)
 
-    return render(request, 'employee_kanban.html', {
-        'event': event,
-        'tasks': task_list,
-        'event_id': event_id,
-        'employee_service': employee_service
-    })
+    return render(
+        request,
+        "employee_kanban.html",
+        {
+            "event": event,
+            "tasks": task_list,
+            "event_id": event_id,
+            "employee_service": employee_service,
+        },
+    )
 
 
 logger = logging.getLogger(__name__)
+
+
 def update_task_state(request, task_id):
     try:
-        logger.debug("Attempting to update task state for task_id: %s by user: %s", task_id, request.user.username)
+        logger.debug(
+            "Attempting to update task state for task_id: %s by user: %s",
+            task_id,
+            request.user.username,
+        )
         employee = Employee.objects.get(user=request.user)
         task = Task.objects.get(pk=task_id)
 
         if not task.employees.filter(user=employee.user).exists():
-            logger.warning("User %s does not have permission to modify task_id: %s", request.user.username, task_id)
-            return JsonResponse({'status': 'error', 'message': 'You do not have permission to modify this task.'}, status=403)
+            logger.warning(
+                "User %s does not have permission to modify task_id: %s",
+                request.user.username,
+                task_id,
+            )
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "You do not have permission to modify this task.",
+                },
+                status=403,
+            )
 
         data = json.loads(request.body)
-        new_state = data.get('newState', '')
+        new_state = data.get("newState", "")
 
         if new_state in [choice[0] for choice in AssignmentState.choices]:
             task.assignment_state = new_state
             task.save()
-            logger.info("Task state updated successfully for task_id: %s to state: %s", task_id, new_state)
-            return JsonResponse({'status': 'success', 'message': 'Task state updated.'})
+            logger.info(
+                "Task state updated successfully for task_id: %s to state: %s",
+                task_id,
+                new_state,
+            )
+            return JsonResponse({"status": "success", "message": "Task state updated."})
         else:
             logger.error("Invalid state provided for task_id: %s", task_id)
-            return JsonResponse({'status': 'error', 'message': 'Invalid state provided.'}, status=400)
-    
+            return JsonResponse(
+                {"status": "error", "message": "Invalid state provided."}, status=400
+            )
+
     except json.JSONDecodeError as e:
-        logger.error("Invalid JSON from user: %s, error: %s", request.user.username, str(e))
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        logger.error(
+            "Invalid JSON from user: %s, error: %s", request.user.username, str(e)
+        )
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
     except Employee.DoesNotExist:
         logger.error("Employee not found for user: %s", request.user.username)
-        return JsonResponse({'status': 'error', 'message': 'Employee not found.'}, status=404)
+        return JsonResponse(
+            {"status": "error", "message": "Employee not found."}, status=404
+        )
     except Task.DoesNotExist:
         logger.error("Task not found with task_id: %s", task_id)
-        return JsonResponse({'status': 'error', 'message': 'Task not found.'}, status=404)
+        return JsonResponse(
+            {"status": "error", "message": "Task not found."}, status=404
+        )
     except Exception as e:
-        logger.error("Unexpected error for user: %s, error: %s", request.user.username, str(e))
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        logger.error(
+            "Unexpected error for user: %s, error: %s", request.user.username, str(e)
+        )
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)

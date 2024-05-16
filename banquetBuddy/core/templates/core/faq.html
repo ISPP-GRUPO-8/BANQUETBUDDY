@@ -3,18 +3,7 @@
 
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preguntas Frecuentes</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
   .faq-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -36,9 +25,14 @@
   .faq-item.open .faq-answer {
     display: block;
   }
+
+  @media (max-width: 767px) {
+    .faq-container {
+      max-width: 375px;
+      margin: 0 auto;
+    }
+  }
 </style>
-</head>
-<body>
 
     <div class="jumbotron text-center" style="background-color: #02483E; color: #fff;">
         <h1 class="display-4">FAQ</h1>
@@ -99,9 +93,5 @@
     });
   });
 </script>
-
-</body>
-</html>
-
 
 {% endblock %}

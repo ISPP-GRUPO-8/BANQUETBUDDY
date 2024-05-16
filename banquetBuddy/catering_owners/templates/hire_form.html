@@ -38,7 +38,7 @@ function confirmHire() {
     <form method="POST" onsubmit="return confirmHire();">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save</button>
+        <button type="submit">Save Changes</button>
     </form>
 </body>
 </html>

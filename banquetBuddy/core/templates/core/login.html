@@ -2,30 +2,12 @@
 {% load static %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
 <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-
     .login-form {
-        background-color: #54bfaf;
+        background-color: #54BFAF;
         padding: 20px;
-        height: 100%;
-        width: 100%;
         border-radius: 35px;
         text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 
     .rounded-input {
@@ -50,32 +32,41 @@
     }
 
     .btn:hover {
-        background-color: #035D48;
+        background-color: #01352e;
     }
 
     .forgot-password {
         margin-top: 10px;
         color: #ffffff;
     }
-</style>
-<body>
 
-<div class="container">
-    <div class="row d-flex align-items-center" style="height: 80vh;">
-        <div class="col-md-6 mx-auto text-center">
+    .mt-6 {
+        margin-top: 7rem;
+    }
+
+    @media (max-width: 767px) {
+        .mt-6 {
+            margin-top: 3rem;
+        }
+    }
+</style>
+
+<div class="container mt-6" style="margin-bottom: 10px;">
+    <div class="row row-cols-1 row-cols-md-2 justify-content-center align-items-center">
+        <div class="col-md-6 text-center">
             <img src="{% static 'core/images/Logo-transparente.png' %}" alt="Logo" class="logo-image">
         </div>
         <div class="col-md-6">
             <div class="login-form">
-                <h2 class="login-heading">Login</h2>
+                <h2 class="login-heading"><u>Log In</u></h2>
                 <form method="post">
                     {% csrf_token %}
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.non_field_errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                     <div class="form-group">
                         {{ form.username }}
@@ -83,14 +74,11 @@
                     <div class="form-group">
                         {{ form.password }}
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                    <button type="submit" class="btn btn-primary">Log In</button>
                 </form>
                 <a href="{% url 'reset_password' %}" class="forgot-password">Forgot your password?</a>
             </div>
         </div>
     </div>
 </div>
-
-</body>
-</html>
 {% endblock %}

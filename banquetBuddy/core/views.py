@@ -1,37 +1,25 @@
-from django.shortcuts import render, redirect
-from banquetBuddy import settings
-from catering_employees.models import Employee
-from catering_particular.models import Particular
-
-from catering_owners.models import CateringCompany
-from .forms import EmailAuthenticationForm
-
-
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.mail import send_mail
-from .forms import ErrorForm
-
-from django.contrib import messages
+from datetime import timedelta
+from .forms import EmailAuthenticationForm, ErrorForm
 from .models import CustomUser
-from catering_owners.models import CateringService, Offer
+from catering_employees.models import Employee
+from catering_owners.models import CateringCompany, CateringService, Event, NotificationEvent, NotificationJobApplication, Offer
+from catering_particular.models import Particular
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
-from django.core.mail import send_mail
-from django.conf import settings
-from django.urls import reverse
-from django.contrib.auth import update_session_auth_hash
-
-from random import sample
-from django.utils import timezone
-from datetime import timedelta
-from catering_owners.models import NotificationEvent, NotificationJobApplication
-from catering_owners.models import Event
-
-from django.utils.http import urlsafe_base64_decode
-from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.utils import timezone
+from random import sample
+
 
 
 def get_user_type(user):
@@ -217,6 +205,14 @@ def subscription_plans(request):
             "core/subscriptionsplans.html",
             {"price_plan": catering_company.price_plan},
         )
+    elif is_particular(request):
+        particular = Particular.objects.get(user=request.user)
+        print(particular.is_subscribed)
+        return render(
+            request,
+            "core/subscriptionsplans.html",
+            {"is_subscribed": particular.is_subscribed},
+        )
     return render(request, "core/subscriptionsplans.html")
 
 
@@ -234,21 +230,21 @@ def login_view(request):
     elif request.method == "POST":
         form = EmailAuthenticationForm(request, request.POST)
 
+        # Custom validation for the email field
+        username = request.POST.get('username')
+        try:
+            validate_email(username)
+        except ValidationError:
+            form.add_error(None, 'Please enter a valid email address.')
+            return render(request, "core/login.html", {"form": form})
+
         if form.is_valid():
             user = form.get_user()
             login(request, user)
 
-            # Comprueba si el usuario es particular o empresa
-            try:
-                particular_username = request.user.ParticularUsername
-                is_particular = True
-            except:
-                is_particular = False
-            try:
-                company_username = request.user.CateringCompanyusername
-                is_company = True
-            except:
-                is_company = False
+            # Check if user is particular or company
+            is_particular = hasattr(user, 'ParticularUsername')
+            is_company = hasattr(user, 'CateringCompanyusername')
 
             if is_particular:
                 send_notifications_next_events_particular(request)
@@ -256,9 +252,7 @@ def login_view(request):
                 send_notifications_next_events_catering_company(request)
             return redirect("/")
     else:
-        # Si la solicitud no es POST, crea un nuevo formulario vacío
         form = EmailAuthenticationForm()
-    # Renderiza la plantilla de inicio de sesión con el formulario
     return render(request, "core/login.html", {"form": form})
 
 
@@ -287,6 +281,10 @@ def profile_view(request):
     return render(request, "core/profile.html", context)
 
 
+import re
+
+import re
+
 @login_required
 def profile_edit_view(request):
     context = {"user": request.user}
@@ -302,12 +300,16 @@ def profile_edit_view(request):
         username = request.POST.get("username", "")
         first_name = request.POST.get("first_name", "")
         last_name = request.POST.get("last_name", "")
+        experience = request.POST.get("experience", "")
+        profession = request.POST.get("profession", "")
 
         # Pasar valores al contexto
         context["email"] = email
         context["username"] = username
         context["first_name"] = first_name
         context["last_name"] = last_name
+        context["experience"] = experience
+        context["profession"] = profession
 
         # Validaciones
         if not (email and username and first_name and last_name):
@@ -330,6 +332,18 @@ def profile_edit_view(request):
             messages.error(request, "Username is already in use")
             return render(request, "core/profile_edit.html", context)
 
+        if not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", first_name) or not re.match("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", last_name):
+            messages.error(request, "First name and last name can only contain letters and spaces")
+            return render(request, "core/profile_edit.html", context)
+
+        if len(first_name) < 3  or len(last_name) < 3:
+            messages.error(request, "First name and last name must be at least 3 characters long")
+            return render(request, "core/profile_edit.html", context)
+        
+        if len(first_name) > 149  or len(last_name) > 149:
+            messages.error(request, "First name and last name must have less than 150 characters")
+            return render(request, "core/profile_edit.html", context)
+
         if is_employee:
             curriculum_file = request.FILES.get("curriculum")
             if curriculum_file:
@@ -340,6 +354,14 @@ def profile_edit_view(request):
                     employee_instance.curriculum.delete()
                 employee_instance.curriculum = curriculum_file
                 employee_instance.save()
+
+            if not experience or not profession:
+                messages.error(request, "Please provide both experience and profession")
+                return render(request, "core/profile_edit.html", context)
+
+            employee_instance.experience = experience
+            employee_instance.profession = profession
+            employee_instance.save()
 
         user = request.user
         user.email = email
@@ -352,6 +374,8 @@ def profile_edit_view(request):
         return redirect("profile")
 
     return render(request, "core/profile_edit.html", context)
+
+
 
 
 @login_required
@@ -380,12 +404,14 @@ def error_report(request):
 
             send_mail(subject, message, from_email, to_email, html_message=message)
 
-            return redirect("/")
+            return redirect("/error-report-send")
     else:
         form = ErrorForm()
 
     return render(request, "core/error_report.html", {"form": form})
 
+def error_report_send(request):
+    return render(request, "core/error_report_send.html")
 
 def listar_caterings_home(request):
     context = {}

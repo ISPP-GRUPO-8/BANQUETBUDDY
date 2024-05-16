@@ -1,87 +1,21 @@
 {% extends 'core/base.html' %}
-
-{% block extra_css %}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Acme&display=swap">
 
 <style>
     .custom-border {
         border-color: #02483E !important; /* Cambia el color verde aquí */
     }
 
+    .pagination .page-link {
+        color: #02483E;
+    }
     
-    #floating-button-container {
-        position: fixed;
-        top: 50px; /* Ajusta la distancia desde la parte inferior */
-        right: 12%;
-        z-index: 1000;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Agrega sombra al botón */
-    }
-
-    @media screen and (max-width: 768px) {
-        #floating-button-container {
-            display: none;
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 15px;
-        }
-    }
-    @media screen and (max-width: 600px) and (min-width: 451px) {
-        p {
-            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-        }
-        #floating-button-container {
-            right: 4%; /* Ajusta la distancia desde el lado derecho */
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 15px;
-        }
-        h5 {
-            font-size: 17px;
-        }
-    }
-    @media screen and (max-width: 450px) {
-        p {
-            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-        }
-        #floating-button-container {
-            right: 2%; /* Ajusta la distancia desde el lado derecho */
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 13px;
-        }
-        h5 {
-            font-size: 14.5px;
-        }
+    .pagination .page-item.active .page-link {
+        background-color: #02483E;
+        border-color: #02483E;
     }
 </style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var addButton = document.querySelector('.btn.btn-success');
-        var floatingButton = document.getElementById('floating-button-container');
-
-        function toggleFloatingButton() {
-            if (addButton && addButton.getBoundingClientRect().top < 0) {
-                floatingButton.style.display = 'block';
-            } else {
-                floatingButton.style.display = 'none';
-            }
-        }
-
-        toggleFloatingButton();
-
-        window.addEventListener('scroll', function() {
-            toggleFloatingButton();
-        });
-    });
-</script>
 
 {% if messages %}
 <div class="container mt-3">
@@ -103,13 +37,13 @@
 
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
+    <h2 class="mb-4 text-center" style="color: #02483E; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">My Menus</h2>
     
     <div class="row justify-content-end mb-4">
         <div class="col-md-2">
             <a href="{% url 'add_menu' %}" class="text-decoration-none">
                 <button class="btn btn-add btn-block small-font">
-                    <i class="bi bi-plus-circle"></i> Add menu
+                    <i class="bi bi-plus-circle"></i> Add Menu
                 </button>
             </a>
         </div>
@@ -124,6 +58,11 @@
                     <p class="card-text small-font">{{ menu.description }}</p>
                 </div>
                 <div class="card-footer">
+                    <a href="{% url 'list_plates' %}">
+                        <button class="btn btn-custom mr-2">
+                            Add Plate
+                        </button>
+                      </a>
                     <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
@@ -137,16 +76,32 @@
         </div>
         {% empty %}
         <div class="col">
-            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available.</p>
+            <p class="mb-4 text-center small-font" style="color: #02483E; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">No menus available</p>
         </div>
         {% endfor %}
     </div>
-    <div id="floating-button-container">
-        <a href="{% url 'add_menu' %}" class="text-decoration-none">
-            <button class="btn btn-success small-font" style="background-color: #02483E;">
-                <i class="bi bi-plus-circle"></i> Add menu
-            </button>
-        </a>
-    </div>
+    
+    <!-- Paginación -->
+    <nav aria-label="Menu pagination">
+        <ul class="pagination justify-content-center">
+            {% if menus.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.previous_page_number }}"><</a></li>
+            {% endif %}
+
+            {% for num in menus.paginator.page_range %}
+            {% if menus.number == num %}
+            <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if menus.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ menus.next_page_number }}">></a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ menus.paginator.num_pages }}">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 {% endblock %}
