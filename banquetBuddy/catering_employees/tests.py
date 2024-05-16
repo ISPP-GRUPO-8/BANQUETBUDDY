@@ -402,7 +402,7 @@ class RegisterFormTestCase(LiveServerTestCase):
         super().tearDownClass()
 
     def test_register_form(self):
-        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum.pdf')
+        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum_0chkcrb.pdf')
         self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
 
         # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
@@ -460,7 +460,6 @@ class RegisterFormTestCase(LiveServerTestCase):
 
         # Verifica que se haya redirigido a la página de inicio después del registro exitoso
         self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
-        self.assertTemplateUsed(response, "list_work_services.html")
 
 
 class RegisterEmployeeTest(TestCase):

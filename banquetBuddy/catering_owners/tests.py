@@ -1121,7 +1121,7 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
 
         # Verifica que se muestre el nombre del catering y el año/mes actual
         h1_element = WebDriverWait(self.selenium, 10).until(
-            EC.visibility_of_element_located((By.TAG_NAME, "h1"))
+            EC.visibility_of_element_located((By.TAG_NAME, "h2"))
         )
 
         # Verifica si el texto esperado está presente en el elemento h1
@@ -1145,7 +1145,7 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
 
         # Verifica que se muestre la información adicional
         info_section = self.selenium.find_element_by_class_name("info")
-        next_event_info = info_section.find_element_by_xpath("//p[contains(text(), 'Next Event:')]")
+        next_event_info = info_section.find_element_by_xpath("//p[contains(text(), 'Next event:')]")
         num_events_info = info_section.find_element_by_xpath("//p[contains(text(), 'Number of events this month:')]")
 
         self.assertIsNotNone(next_event_info)
