@@ -266,10 +266,12 @@ def view_reservations(request, catering_service_id):
     if request.user == catering_service.cateringcompany.user:
         catering_service = get_object_or_404(CateringService, pk=catering_service_id)
         reservations = catering_service.events.all()
+        price_plan = catering_service.cateringcompany.price_plan
+
         return render(
             request,
             "reservations.html",
-            {"reservations": reservations, "catering_service": catering_service},
+            {"reservations": reservations, "catering_service": catering_service,  "price_plan": price_plan,},
         )
     else:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)

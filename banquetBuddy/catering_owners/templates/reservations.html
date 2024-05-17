@@ -88,10 +88,12 @@
                     <td>{{ reservation.booking_state }}</td>
                     <td><a href="{% url 'view_reservation' catering_service_id=catering_service.id event_id=reservation.id %}">View Details</a></td>
                     <td>
-                        {% if reservation.booking_state == "CONFIRMED" %}
+                        {% if reservation.booking_state == "CONFIRMED" and price_plan in "PREMIUM PREMIUM_PRO" %}
                         <a href="{% url 'manage_tasks' event_id=reservation.id %}">Manage Tasks</a>
+                        {% elif not reservation.booking_state == "CONFIRMED"%}
+                        <a>N/A</a>
                         {% else %}
-                        N/A
+                        <a href="{% url 'subscription_plans' %}">Subscribe Plan</a>
                         {% endif %}
                     </td>
                 </tr>
