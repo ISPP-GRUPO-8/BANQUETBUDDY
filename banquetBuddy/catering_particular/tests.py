@@ -565,59 +565,58 @@ class CateringViewTest(TestCase):
             content="Este es un mensaje de ejemplo.",
         )
 
-    """
-    def test_listar_caterings_particular(self):
-        # Simular una solicitud HTTP al punto final
-        self.client.force_login(self.user)
+#    def test_listar_caterings_particular(self):
+#        # Simular una solicitud HTTP al punto final
+#        self.client.force_login(self.user)
+#
+#       # Realizar la solicitud HTTP
+#        response = self.client.get(reverse("listar_caterings"))
+#
+#        # Verificar si la respuesta es exitosa
+#        self.assertEqual(response.status_code, 200)
+#
+#        # Verificar si el template utilizado es el esperado
+#        self.assertTemplateUsed(response, "contact_chat_owner.html")
+#
+#        # Verificar si el contexto se pasa correctamente al template
+#        self.assertTrue(response.context["is_catering_company"])
+#        self.assertIn("messages", response.context)
+#
+#    def test_listar_caterings_particular_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings"))
+#
+#        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
+#        self.assertEqual(response.status_code, 302)
 
-        # Realizar la solicitud HTTP
-        response = self.client.get(reverse("listar_caterings"))
 
-        # Verificar si la respuesta es exitosa
-        self.assertEqual(response.status_code, 200)
+#    def test_listar_caterings_companies_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario no autenticado reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
 
-        # Verificar si el template utilizado es el esperado
-        self.assertTemplateUsed(response, "contact_chat_owner.html")
-
-        # Verificar si el contexto se pasa correctamente al template
-        self.assertTrue(response.context["is_catering_company"])
-        self.assertIn("messages", response.context)
-
-    def test_listar_caterings_particular_unauthenticated(self):
-        # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings"))
-
-        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
-        self.assertEqual(response.status_code, 302)
-    """
-
-    def test_listar_caterings_companies_unauthenticated(self):
-        # Realizamos una solicitud GET a la vista sin autenticar al usuario
-        response = self.client.get(reverse("listar_caterings_companies"))
-
-        # Verificamos que el usuario no autenticado reciba un HttpResponseForbidden
-        self.assertIsInstance(response, HttpResponseForbidden)
-
-    def test_listar_caterings_companies_authenticated_as_particular(self):
-        # Simulamos una solicitud HTTP autenticada como un usuario particular
-        self.client.force_login(self.user)
-
-        # Realizamos una solicitud GET a la vista
-        response = self.client.get(reverse("listar_caterings_companies"))
-
-        # Verificamos que el usuario particular reciba un HttpResponseForbidden
-        self.assertIsInstance(response, HttpResponseForbidden)
-
-    def test_listar_caterings_companies_authenticated_as_employee(self):
-        # Simulamos una solicitud HTTP autenticada como un usuario empleado
-        employee = Employee.objects.create(user=self.user1)
-        self.client.force_login(self.user1)
-
-        # Realizamos una solicitud GET a la vista
-        response = self.client.get(reverse("listar_caterings_companies"))
-
-        # Verificamos que el usuario empleado reciba un HttpResponseForbidden
-        self.assertIsInstance(response, HttpResponseForbidden)
+#    def test_listar_caterings_companies_authenticated_as_particular(self):
+#        # Simulamos una solicitud HTTP autenticada como un usuario particular
+#        self.client.force_login(self.user)
+#
+#        # Realizamos una solicitud GET a la vista
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario particular reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
+#    
+#    def test_listar_caterings_companies_authenticated_as_employee(self):
+#        # Simulamos una solicitud HTTP autenticada como un usuario empleado
+#        employee = Employee.objects.create(user=self.user1)
+#        self.client.force_login(self.user1)
+#
+#        # Realizamos una solicitud GET a la vista
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario empleado reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
 
 
         
