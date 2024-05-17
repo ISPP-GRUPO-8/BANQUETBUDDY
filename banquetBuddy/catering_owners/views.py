@@ -1297,11 +1297,16 @@ def listar_caterings_particular(request):
 def manage_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     task_id = request.POST.get("task_id", None)
+    catering_company = event.cateringcompany
 
-    if event.booking_state != "CONFIRMED" or request.user != event.cateringcompany.user:
-        return HttpResponseForbidden(
-            "You do not have permission to manage tasks for this event."
-        )
+        # Verificar si el usuario es el propietario del evento
+    if request.user != catering_company.user:
+        return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
+
+    # Verificar el plan de precios de la empresa
+    if catering_company.price_plan not in ["PREMIUM", "PREMIUM_PRO"]:
+        return HttpResponseForbidden("You need a Premium plan to manage tasks for this event.")
+
 
     if task_id:
         task = get_object_or_404(Task, pk=task_id)

@@ -300,9 +300,9 @@ def employee_kanban(request, event_id):
             event_id=event_id,
         )
     except Employee.DoesNotExist:
-        return HttpResponseForbidden("No employee record found.")
+        return HttpResponseForbidden("Acces denied. You are not an employee.")
     except EmployeeWorkService.DoesNotExist:
-        return HttpResponseForbidden("No active work service found for this event.")
+        return HttpResponseForbidden("Acces denied. You don't have any active work service found for this event.")
 
     tasks = Task.objects.filter(event_id=event_id).select_related("event")
     task_list = []
