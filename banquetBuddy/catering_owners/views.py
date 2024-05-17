@@ -1448,15 +1448,33 @@ def delete_task(request, task_id):
 
 def update_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
+    event_id = task.event.id
+
     if request.method == "POST":
-        form = TaskForm(request.POST, instance=task, event_id=task.event.id)
+        form = TaskForm(request.POST, instance=task, event_id=event_id)
         if form.is_valid():
             form.save()
-            return redirect("manage_tasks", event_id=task.event.id)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            else:
+                return redirect("manage_tasks", event_id=event_id)
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                form_html = render_to_string('task_edit_form.html', {'form': form, 'task': task, 'event_id': event_id}, request)
+                return JsonResponse({'success': False, 'form_html': form_html})
+            else:
+                messages.error(request, "Please correct the errors below.")
+                return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
     else:
-        form = TaskForm(instance=task, event_id=task.event.id)
+        form = TaskForm(instance=task, event_id=event_id)
+        return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
 
-    return render(request, "edit_task.html", {"form": form, "task": task})
+def get_task_data(request):
+    task_id = request.GET.get("task_id")
+    task = get_object_or_404(Task, pk=task_id)
+    form = TaskForm(instance=task, event_id=task.event.id)
+    form_html = render_to_string("task_edit_form.html", {"form": form, "task": task, "event_id": task.event.id}, request)
+    return JsonResponse({"form_html": form_html})
 
 
 def get_task_data(request):

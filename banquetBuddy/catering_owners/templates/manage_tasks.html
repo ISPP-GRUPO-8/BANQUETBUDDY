@@ -298,7 +298,62 @@
             form.style.display = form.style.display === 'block' ? 'none' : 'block';
         });
     </script>
+    <script>
     
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Kanban JS loaded and running");
+    
+            const board = document.querySelector('.kanban-board');
+            board.addEventListener('click', function(event) {
+                if (event.target.classList.contains('btn-edit')) {
+                    event.preventDefault();
+                    const taskId = event.target.closest('.task').dataset.taskId;
+                    loadTaskData(taskId);
+                }
+            });
+    
+            function loadTaskData(taskId) {
+                fetch(`/get_task_data/?task_id=${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('#task-edit-form-container').innerHTML = data.form_html;
+                    $('#editTaskModal').modal('show');
+                })
+                .catch(error => {
+                    console.error('Error loading task data:', error);
+                });
+            }
+    
+            $('#editTaskModal').on('submit', 'form', function(event) {
+                event.preventDefault();
+                const $form = $(this);
+                const formData = new FormData($form[0]);
+    
+                fetch($form.attr('action'), {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        $('#editTaskModal').modal('hide');
+                        location.reload();
+                    } else {
+                        $('#task-edit-form-container').html(data.form_html);
+                        $('#editTaskModal').modal('show');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating task:', error);
+                });
+            });
+        });
+    
+    </script>
 
 <script src="{% static 'core/kanban.js' %}"></script>
 <!-- Modal para editar tarea -->
@@ -311,7 +366,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="task-edit-form-container">
                 <!-- El formulario se carga aquí dinámicamente -->
             </div>
         </div>
