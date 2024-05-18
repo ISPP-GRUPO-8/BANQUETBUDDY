@@ -266,10 +266,12 @@ def view_reservations(request, catering_service_id):
     if request.user == catering_service.cateringcompany.user:
         catering_service = get_object_or_404(CateringService, pk=catering_service_id)
         reservations = catering_service.events.all()
+        price_plan = catering_service.cateringcompany.price_plan
+
         return render(
             request,
             "reservations.html",
-            {"reservations": reservations, "catering_service": catering_service},
+            {"reservations": reservations, "catering_service": catering_service,  "price_plan": price_plan,},
         )
     else:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
@@ -1295,11 +1297,16 @@ def listar_caterings_particular(request):
 def manage_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     task_id = request.POST.get("task_id", None)
+    catering_company = event.cateringcompany
 
-    if event.booking_state != "CONFIRMED" or request.user != event.cateringcompany.user:
-        return HttpResponseForbidden(
-            "You do not have permission to manage tasks for this event."
-        )
+        # Verificar si el usuario es el propietario del evento
+    if request.user != catering_company.user:
+        return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
+
+    # Verificar el plan de precios de la empresa
+    if catering_company.price_plan not in ["PREMIUM", "PREMIUM_PRO"]:
+        return HttpResponseForbidden("You need a Premium plan to manage tasks for this event.")
+
 
     if task_id:
         task = get_object_or_404(Task, pk=task_id)
@@ -1441,15 +1448,33 @@ def delete_task(request, task_id):
 
 def update_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
+    event_id = task.event.id
+
     if request.method == "POST":
-        form = TaskForm(request.POST, instance=task, event_id=task.event.id)
+        form = TaskForm(request.POST, instance=task, event_id=event_id)
         if form.is_valid():
             form.save()
-            return redirect("manage_tasks", event_id=task.event.id)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            else:
+                return redirect("manage_tasks", event_id=event_id)
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                form_html = render_to_string('task_edit_form.html', {'form': form, 'task': task, 'event_id': event_id}, request)
+                return JsonResponse({'success': False, 'form_html': form_html})
+            else:
+                messages.error(request, "Please correct the errors below.")
+                return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
     else:
-        form = TaskForm(instance=task, event_id=task.event.id)
+        form = TaskForm(instance=task, event_id=event_id)
+        return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
 
-    return render(request, "edit_task.html", {"form": form, "task": task})
+def get_task_data(request):
+    task_id = request.GET.get("task_id")
+    task = get_object_or_404(Task, pk=task_id)
+    form = TaskForm(instance=task, event_id=task.event.id)
+    form_html = render_to_string("task_edit_form.html", {"form": form, "task": task, "event_id": task.event.id}, request)
+    return JsonResponse({"form_html": form_html})
 
 
 def get_task_data(request):

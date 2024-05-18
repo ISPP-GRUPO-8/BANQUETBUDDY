@@ -403,7 +403,7 @@ def populate_database():
     create_recommendation_letters()
     create_task_employee()
     create_superusers()
-    create_Pablo_event()
+    #create_Pablo_event()
 
 if __name__ == "__main__":
     populate_database()

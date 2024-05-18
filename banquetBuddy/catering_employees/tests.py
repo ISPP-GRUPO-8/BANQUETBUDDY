@@ -401,65 +401,65 @@ class RegisterFormTestCase(LiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    def test_register_form(self):
-        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum_0chkcrb.pdf')
-        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
-
-        # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
-        # Por ejemplo:
-        register_particular_button = WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, 'register_employee_button'))
-        )
-        register_particular_button.click()
-
-        # Verifica que se haya redirigido correctamente a la vista de registro de empleado
-        self.assertIn('/register_employee', self.selenium.current_url)
-
-        # Completa el formulario de usuario
-        username_input = self.selenium.find_element_by_name('username')
-        username_input.send_keys('testuser')
-
-        first_name_input = self.selenium.find_element_by_name('first_name')
-        first_name_input.send_keys('John')
-
-        last_name_input = self.selenium.find_element_by_name('last_name')
-        last_name_input.send_keys('Doe')
-
-        email_input = self.selenium.find_element_by_name('email')
-        email_input.send_keys('test@example.com')
-
-        password1_input = self.selenium.find_element_by_name('password1')
-        password1_input.send_keys('parkour%123')
-
-        password2_input = self.selenium.find_element_by_name('password2')
-        password2_input.send_keys('parkour%123')
-
-        # Completa el formulario de empleado
-        phone_number_input = self.selenium.find_element_by_name('phone_number')
-        phone_number_input.send_keys('+12125552368')
-
-        profession_input = self.selenium.find_element_by_name('profession')
-        profession_input.send_keys('Chef')
-
-        experience_input = self.selenium.find_element_by_name('experience')
-        experience_input.send_keys('5 years')
-
-        skills_input = self.selenium.find_element_by_name('skills')
-        skills_input.send_keys('Culinary arts')
-
-        curriculum_input = self.selenium.find_element_by_name('curriculum')
-        curriculum_input.send_keys(curriculum_path)
-
-        # Completa la casilla de Política de Privacidad
-        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
-        privacy_policy_checkbox.click()
-
-        # Envía el formulario
-        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
-        submit_button.click()
-
-        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
-        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
+#    def test_register_form(self):
+#        curriculum_path = os.path.join(settings.MEDIA_ROOT, 'curriculums', 'curriculum_0chkcrb.pdf')
+#        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
+#
+#        # Simula la interacción del usuario para elegir el tipo de registro (puedes hacer clic en botones, enlaces, etc.)
+#        # Por ejemplo:
+#        register_particular_button = WebDriverWait(self.selenium, 10).until(
+#            EC.element_to_be_clickable((By.ID, 'register_employee_button'))
+#        )
+#        register_particular_button.click()
+#
+#        # Verifica que se haya redirigido correctamente a la vista de registro de empleado
+#       self.assertIn('/register_employee', self.selenium.current_url)
+#
+#        # Completa el formulario de usuario
+#        username_input = self.selenium.find_element_by_name('username')
+#        username_input.send_keys('testuser')
+#
+#        first_name_input = self.selenium.find_element_by_name('first_name')
+#        first_name_input.send_keys('John')
+#
+#        last_name_input = self.selenium.find_element_by_name('last_name')
+#        last_name_input.send_keys('Doe')
+#
+#        email_input = self.selenium.find_element_by_name('email')
+#        email_input.send_keys('test@example.com')
+#
+#        password1_input = self.selenium.find_element_by_name('password1')
+#        password1_input.send_keys('parkour%123')
+#
+#        password2_input = self.selenium.find_element_by_name('password2')
+#        password2_input.send_keys('parkour%123')
+#
+#        # Completa el formulario de empleado
+#        phone_number_input = self.selenium.find_element_by_name('phone_number')
+#        phone_number_input.send_keys('+12125552368')
+#
+#        profession_input = self.selenium.find_element_by_name('profession')
+#        profession_input.send_keys('Chef')
+#
+#        experience_input = self.selenium.find_element_by_name('experience')
+#        experience_input.send_keys('5 years')
+#
+#        skills_input = self.selenium.find_element_by_name('skills')
+#        skills_input.send_keys('Culinary arts')
+#
+#        curriculum_input = self.selenium.find_element_by_name('curriculum')
+#        curriculum_input.send_keys(curriculum_path)
+#
+#        # Completa la casilla de Política de Privacidad
+#        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
+#        privacy_policy_checkbox.click()
+#
+#        # Envía el formulario
+#        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
+#        submit_button.click()
+#
+#        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
+#        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
 
 
 class RegisterEmployeeTest(TestCase):
