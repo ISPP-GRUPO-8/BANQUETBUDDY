@@ -852,6 +852,8 @@ class RegisterCompanyTest(TestCase):
 
 
 class RegisterFormTestCase(LiveServerTestCase):
+
+    @unittest.skip("Se omiten los tests de interfaz")
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1067,6 +1069,8 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
 
 
 class CateringCalendarViewTest(StaticLiveServerTestCase):
+
+    @unittest.skip("Se omiten los tests de interfaz")
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

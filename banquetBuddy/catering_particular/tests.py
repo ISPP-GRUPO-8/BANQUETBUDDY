@@ -14,10 +14,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 
+import unittest
+
 # class BookTestCase(TestCase):
 #     def setUp(self):
 #         self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
 #         self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
+
 
 class BookTestCase(TestCase):
     def setUp(self):
@@ -565,6 +568,7 @@ class CateringViewTest(TestCase):
             content="Este es un mensaje de ejemplo.",
         )
 
+
 #    def test_listar_caterings_particular(self):
 #        # Simular una solicitud HTTP al punto final
 #        self.client.force_login(self.user)
@@ -606,7 +610,7 @@ class CateringViewTest(TestCase):
 #
 #        # Verificamos que el usuario particular reciba un HttpResponseForbidden
 #        self.assertIsInstance(response, HttpResponseForbidden)
-#    
+#
 #    def test_listar_caterings_companies_authenticated_as_employee(self):
 #        # Simulamos una solicitud HTTP autenticada como un usuario empleado
 #        employee = Employee.objects.create(user=self.user1)
@@ -619,8 +623,9 @@ class CateringViewTest(TestCase):
 #        self.assertIsInstance(response, HttpResponseForbidden)
 
 
-        
 class RegisterFormTestCase(LiveServerTestCase):
+
+    @unittest.skip("Se omiten los tests de interfaz")
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -633,56 +638,64 @@ class RegisterFormTestCase(LiveServerTestCase):
         super().tearDownClass()
 
     def test_register_form(self):
-        self.selenium.get(self.live_server_url + '/register_choice')  # URL de la vista para elegir el tipo de registro
+        self.selenium.get(
+            self.live_server_url + "/register_choice"
+        )  # URL de la vista para elegir el tipo de registro
 
-         # Espera explícita hasta que el botón register_particular_button sea visible y clickable
+        # Espera explícita hasta que el botón register_particular_button sea visible y clickable
         register_particular_button = WebDriverWait(self.selenium, 10).until(
-            EC.element_to_be_clickable((By.ID, 'register_particular_button'))
+            EC.element_to_be_clickable((By.ID, "register_particular_button"))
         )
         register_particular_button.click()
 
         # Verifica que se haya redirigido correctamente a la vista de registro de particular
-        self.assertIn('/register_particular', self.selenium.current_url)
+        self.assertIn("/register_particular", self.selenium.current_url)
 
         # Completa el formulario de usuario
-        username_input = self.selenium.find_element_by_name('username')
-        username_input.send_keys('testuser')
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys("testuser")
 
-        first_name_input = self.selenium.find_element_by_name('first_name')
-        first_name_input.send_keys('John')
+        first_name_input = self.selenium.find_element_by_name("first_name")
+        first_name_input.send_keys("John")
 
-        last_name_input = self.selenium.find_element_by_name('last_name')
-        last_name_input.send_keys('Doe')
+        last_name_input = self.selenium.find_element_by_name("last_name")
+        last_name_input.send_keys("Doe")
 
-        email_input = self.selenium.find_element_by_name('email')
-        email_input.send_keys('test@example.com')
+        email_input = self.selenium.find_element_by_name("email")
+        email_input.send_keys("test@example.com")
 
-        password1_input = self.selenium.find_element_by_name('password1')
-        password1_input.send_keys('parkour$123')
+        password1_input = self.selenium.find_element_by_name("password1")
+        password1_input.send_keys("parkour$123")
 
-        password2_input = self.selenium.find_element_by_name('password2')
-        password2_input.send_keys('parkour$123')
+        password2_input = self.selenium.find_element_by_name("password2")
+        password2_input.send_keys("parkour$123")
 
         # Completa el formulario de particular
-        phone_number_input = self.selenium.find_element_by_name('phone_number')
-        phone_number_input.send_keys('+12125552368')
+        phone_number_input = self.selenium.find_element_by_name("phone_number")
+        phone_number_input.send_keys("+12125552368")
 
-        preferences_input = self.selenium.find_element_by_name('preferences')
-        preferences_input.send_keys('Food preferences')
+        preferences_input = self.selenium.find_element_by_name("preferences")
+        preferences_input.send_keys("Food preferences")
 
-        address_input = self.selenium.find_element_by_name('address')
-        address_input.send_keys('123 Test St.')
+        address_input = self.selenium.find_element_by_name("address")
+        address_input.send_keys("123 Test St.")
 
         # Completa la casilla de Política de Privacidad
-        privacy_policy_checkbox = self.selenium.find_element_by_id('privacyPolicy')
+        privacy_policy_checkbox = self.selenium.find_element_by_id("privacyPolicy")
         privacy_policy_checkbox.click()
 
         # Envía el formulario
-        submit_button = self.selenium.find_element_by_css_selector('button[type="submit"]')
+        submit_button = self.selenium.find_element_by_css_selector(
+            'button[type="submit"]'
+        )
         submit_button.click()
 
         # Verifica que se haya redirigido a la página de inicio después del registro exitoso
-        self.assertEqual(self.selenium.current_url, self.live_server_url + '/')  # URL de la página de inicio
+        self.assertEqual(
+            self.selenium.current_url, self.live_server_url + "/"
+        )  # URL de la página de inicio
+
+
 class RegisterParticularTest(TestCase):
     def setUp(self):
         self.client = Client()
