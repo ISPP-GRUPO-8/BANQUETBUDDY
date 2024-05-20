@@ -341,6 +341,13 @@ class ListarCateringsHomeTests(TestCase):
             capacity=100,
             price=1000.00,
         )
+        self.menu = Menu.objects.create(
+            id=1,
+            cateringservice=self.catering_service,
+            name="Test Menu",
+            description="Test menu description",
+            diet_restrictions="Test diet restrictions",
+        )
 
         # Autenticar al usuario particular
         self.client.login(username="pablo@gmail.com", password="Pablo")

@@ -24,13 +24,16 @@
         margin-top: 3%;
     }
 
-    hr {
-        margin-top: 3%;
-    }
-
     .notificationTitle {
         font-weight: bold;
         color: #02483E;
+    }
+
+    @media (max-width: 767px) {
+        .notification {
+            margin-top: 11%;
+            margin-bottom: 11%;
+        }
     }
 
 </style>
@@ -39,7 +42,7 @@
     <div class="list">
         <form method="post" action="{% url 'mark_as_read' %}">
             {% csrf_token %}
-            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit" style="margin-left: 15px;">Mark as read</button>
+            <button class="btn btn-primary btn-add my-2 my-sm-0" type="submit">Mark as read</button>
         </form>
         {% for notification in notifications %}
         <div class="notification">
@@ -51,7 +54,7 @@
             <h5>{{ notification.message }}</h5>
         </div>
         {% empty %}
-        <div class="col">
+        <div>
             <p class="small-font" style="color: #02483E; margin-top: 10px; font-family: 'Merriweather', sans-serif; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                 No notifications</p>
         </div>

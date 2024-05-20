@@ -4,7 +4,7 @@
 
 <div class="container mt-4">
     <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
-        My Books</h2>
+        My Bookings</h2>
     <p class="mb-4 text-center small-font" style="color: #02483E;">Find and manage your events</p>
     <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for event in events %}
@@ -83,7 +83,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <a href="{% url 'book_cancel' event.id %}" class="btn btn-danger">Confirm cancellation</a>
+                    <a href="{% url 'book_cancel' event.id %}" class="btn btn-danger">Confirm Cancellation</a>
                 </div>
             </div>
         </div>

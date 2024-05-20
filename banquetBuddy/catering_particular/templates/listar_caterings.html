@@ -11,10 +11,16 @@
     height: auto; /* Ajusta el tamaño según sea necesario */
     max-height: 65px;
   }
+
+  @media (max-width: 767px) {
+    h2 {
+      font-size: 40px;
+    }
+  }
 </style>
 <div class="container mt-4">
   <h2 class="mb-4 text-center" style="color: #02483E; margin-bottom: 30px; margin-top: 30px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
-    Caterings List</h2>
+    Caterings Services List</h2>
   <hr/>
   {% if messages %} 
     {% for message in messages %}
@@ -32,7 +38,7 @@
       <input
         type="text"
         class="form-control bg-light border-0 small"
-        placeholder="Search catering by name..."
+        placeholder="Search catering service..."
         id="search"
         name="search"
         value="{{ search }}"
@@ -183,8 +189,8 @@
           <p class="card-title">Catering company: {{ catering.cateringcompany.name }}</p>
           <p class="card-text">{{ catering.description }}</p>
           <p class="card-text">Location: {{ catering.location }}</p>
-          <p class="card-text">Capacity: {{ catering.capacity }}</p>
-          <p class="card-text">Price: {{ catering.price }}</p>
+          <p class="card-text">Capacity: {{ catering.capacity }} guests</p>
+          <p class="card-text">Price: {{ catering.price }} €/guest</p>
           <a
             href="{% url 'catering_detail' catering.id %}"
             class="btn btn-custom"

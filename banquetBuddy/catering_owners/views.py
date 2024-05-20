@@ -5,10 +5,23 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Case, When, Value, CharField
 from core.views import *
-from .forms import OfferForm,CateringCompanyForm, MenuForm, EmployeeWorkServiceForm, TaskForm, TerminationForm
-from .forms import CateringServiceFilterForm, OfferForm,CateringCompanyForm, MenuForm,EmployeeFilterForm
-from django.http import HttpResponseForbidden;
-from .models import  Offer, CateringService,Event, Employee, EmployeeWorkService
+from .forms import (
+    OfferForm,
+    CateringCompanyForm,
+    MenuForm,
+    EmployeeWorkServiceForm,
+    TaskForm,
+    TerminationForm,
+)
+from .forms import (
+    CateringServiceFilterForm,
+    OfferForm,
+    CateringCompanyForm,
+    MenuForm,
+    EmployeeFilterForm,
+)
+from django.http import HttpResponseForbidden
+from .models import Offer, CateringService, Event, Employee, EmployeeWorkService
 from urllib.parse import urlencode
 from django.conf import settings
 from django.contrib import messages
@@ -28,6 +41,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 import stripe
 from django.conf import settings
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 from django.core.exceptions import ValidationError
@@ -37,6 +51,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import traceback
 import logging
+
 logger = logging.getLogger(__name__)
 from django.db import transaction
 from django.db.models import Case, When, Value, CharField
@@ -187,7 +202,7 @@ def register_company(request):
 
             messages.success(
                 request,
-                "Registration successful! Please confirm your email address to complete the registration",
+                "Registration successful! Please check your email to activate you account",
             )
 
             return redirect("home")
@@ -208,15 +223,15 @@ def list_menus(request):
     current_user = request.user
     if not is_user_catering_company(current_user):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
-    
+
     catering_company = CateringCompany.objects.get(user=current_user)
     menus_query = Menu.objects.filter(cateringcompany=catering_company)
-    
+
     # Paginación
     paginator = Paginator(menus_query, 9)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get("page")
     menus = paginator.get_page(page_number)
-    
+
     return render(request, "list_menus.html", {"menus": menus})
 
 
@@ -251,10 +266,12 @@ def view_reservations(request, catering_service_id):
     if request.user == catering_service.cateringcompany.user:
         catering_service = get_object_or_404(CateringService, pk=catering_service_id)
         reservations = catering_service.events.all()
+        price_plan = catering_service.cateringcompany.price_plan
+
         return render(
             request,
             "reservations.html",
-            {"reservations": reservations, "catering_service": catering_service},
+            {"reservations": reservations, "catering_service": catering_service,  "price_plan": price_plan,},
         )
     else:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
@@ -725,7 +742,7 @@ def edit_offer(request, offer_id):
         return HttpResponseForbidden(NOT_CATERING_COMPANY_ERROR)
     if current_user != offer.cateringservice.cateringcompany.user:
         return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
-    
+
     catering_company = request.user.CateringCompanyusername
     events = Event.objects.filter(cateringcompany=catering_company)
 
@@ -734,6 +751,7 @@ def edit_offer(request, offer_id):
         if form.is_valid():
             try:
                 form.save()  # Intenta guardar el formulario
+                messages.success(request, "Offer updated successfully.")
                 return redirect("offer_list")
             except ValidationError as e:
                 # Añade los errores de validación del modelo a los errores del formulario
@@ -744,7 +762,11 @@ def edit_offer(request, offer_id):
     else:
         messages.error(request, "Please correct the errors below.")
 
-    return render(request, "offers/edit_offer.html", {"form": form, "offer": offer, "events": events})
+    return render(
+        request,
+        "offers/edit_offer.html",
+        {"form": form, "offer": offer, "events": events},
+    )
 
 
 @login_required
@@ -839,9 +861,7 @@ def update_catering_service(request, service_id):
         form = CateringServiceForm(request.POST, instance=catering_service)
         if form.is_valid():
             form.save()
-            messages.success(
-                request, "Catering Service updated successfully."
-            )
+            messages.success(request, "Catering Service updated successfully.")
             return redirect("services")
     else:
         form = CateringServiceForm(instance=catering_service)
@@ -1251,22 +1271,24 @@ def chat_view(request, id):
 @login_required
 def listar_caterings_particular(request):
     context = {}
-    context['is_catering_company'] = is_catering_company(request)
-    catering_company = get_object_or_404(CateringCompany, user = request.user)
+    context["is_catering_company"] = is_catering_company(request)
+    catering_company = get_object_or_404(CateringCompany, user=request.user)
 
-    messages_o = Message.objects.filter(receiver = catering_company.user)
+    messages_o = Message.objects.filter(receiver=catering_company.user)
     unique_senders = set()  # Mantener un registro de los remitentes únicos
-    messages = []    # Lista para almacenar mensajes únicos
+    messages = []  # Lista para almacenar mensajes únicos
 
     for message in messages_o:
         sender_id = message.sender.id
-        
+
         # Verificar si el remitente ya se ha encontrado antes
         if sender_id not in unique_senders:
-            unique_senders.add(sender_id)  # Agregar el remitente a los remitentes únicos
+            unique_senders.add(
+                sender_id
+            )  # Agregar el remitente a los remitentes únicos
             messages.append(message)  # Agregar el mensaje a la lista de mensajes únicos
-    
-    context['messages'] = messages
+
+    context["messages"] = messages
     return render(request, "contact_chat_owner.html", context)
 
 
@@ -1274,10 +1296,17 @@ def listar_caterings_particular(request):
 @csrf_exempt
 def manage_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    task_id = request.POST.get('task_id', None)
+    task_id = request.POST.get("task_id", None)
+    catering_company = event.cateringcompany
 
-    if event.booking_state != 'CONFIRMED' or request.user != event.cateringcompany.user:
+        # Verificar si el usuario es el propietario del evento
+    if request.user != catering_company.user:
         return HttpResponseForbidden("You do not have permission to manage tasks for this event.")
+
+    # Verificar el plan de precios de la empresa
+    if catering_company.price_plan not in ["PREMIUM", "PREMIUM_PRO"]:
+        return HttpResponseForbidden("You need a Premium plan to manage tasks for this event.")
+
 
     if task_id:
         task = get_object_or_404(Task, pk=task_id)
@@ -1285,39 +1314,44 @@ def manage_tasks(request, event_id):
     else:
         form = TaskForm(request.POST or None, event_id=event_id)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         if form.is_valid():
             task = form.save(commit=False)
             task.event = event
             task.cateringservice = event.cateringservice
             task.cateringcompany = event.cateringcompany
             if not task_id:
-                task.assignment_state = 'PENDING'
+                task.assignment_state = "PENDING"
             task.save()
             form.save_m2m()
-            messages.success(request, 'Task updated successfully.' if task_id else 'Task added successfully.')
-            return redirect('manage_tasks', event_id=event_id)
+            messages.success(
+                request,
+                "Task updated successfully." if task_id else "Task added successfully.",
+            )
+            return redirect("manage_tasks", event_id=event_id)
         else:
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
 
-    tasks = Task.objects.filter(event=event).prefetch_related('employees')
+    tasks = Task.objects.filter(event=event).prefetch_related("employees")
     all_employee_work_services = EmployeeWorkService.objects.filter(
-        event=event,
-        cateringservice=event.cateringservice
-    ).select_related('employee')
-    active_employees = [ews.employee for ews in all_employee_work_services if ews.current_status() == 'Activo']
+        event=event, cateringservice=event.cateringservice
+    ).select_related("employee")
+    active_employees = [
+        ews.employee
+        for ews in all_employee_work_services
+        if ews.current_status() == "Activo"
+    ]
 
     context = {
-        'event': event,
-        'tasks': tasks,
-        'form': form,
-        'active_employees': active_employees
+        "event": event,
+        "tasks": tasks,
+        "form": form,
+        "active_employees": active_employees,
     }
 
     return render(request, "manage_tasks.html", context)
-
 
 
 @require_POST
@@ -1325,29 +1359,42 @@ def manage_tasks(request, event_id):
 @csrf_exempt
 def update_task_state(request, task_id):
     try:
-        if hasattr(request.user, 'CateringCompanyusername'):
+        if hasattr(request.user, "CateringCompanyusername"):
             catering_company = request.user.CateringCompanyusername
         else:
-            return JsonResponse({'status': 'error', 'message': 'User does not have a catering company.'}, status=403)
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "User does not have a catering company.",
+                },
+                status=403,
+            )
 
         task = Task.objects.get(id=task_id, cateringcompany=catering_company)
         data = json.loads(request.body)
-        new_state = data.get('newState')
+        new_state = data.get("newState")
 
-        if new_state in [choice[0] for choice in AssignmentState.choices]:  
+        if new_state in [choice[0] for choice in AssignmentState.choices]:
             task.assignment_state = new_state
             task.save()
-            return JsonResponse({'status': 'success', 'message': 'Task state updated.'})
+            return JsonResponse({"status": "success", "message": "Task state updated."})
         else:
-            return JsonResponse({'status': 'error', 'message': 'Invalid state provided.'}, status=400)
+            return JsonResponse(
+                {"status": "error", "message": "Invalid state provided."}, status=400
+            )
 
     except Task.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Task not found.'}, status=404)
+        return JsonResponse(
+            {"status": "error", "message": "Task not found."}, status=404
+        )
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'}, status=400)
+        return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
     except Exception as e:
-        logger.error('Error updating task state: %s', str(e), exc_info=True)
-        return JsonResponse({'status': 'error', 'message': 'Internal server error: {}'.format(str(e))}, status=500)
+        logger.error("Error updating task state: %s", str(e), exc_info=True)
+        return JsonResponse(
+            {"status": "error", "message": "Internal server error: {}".format(str(e))},
+            status=500,
+        )
 
 
 @require_POST
@@ -1360,7 +1407,7 @@ def add_task(request, event_id):
     if form.is_valid():
         with transaction.atomic():
             task = form.save(commit=False)
-            task.assignment_state = 'PENDING'
+            task.assignment_state = "PENDING"
             task.event = event
             task.cateringservice = event.cateringservice
             task.cateringcompany = event.cateringcompany
@@ -1368,47 +1415,70 @@ def add_task(request, event_id):
             form.save_m2m()  # Guarda relaciones ManyToMany, incluyendo employees
 
             # Guardar empleados seleccionados en la tarea
-            employees = form.cleaned_data.get('employees', [])
+            employees = form.cleaned_data.get("employees", [])
             task.employees.add(*employees)
 
-        messages.success(request, 'Task added successfully.')
-        return redirect('manage_tasks', event_id=event_id)
+        messages.success(request, "Task added successfully.")
+        return redirect("manage_tasks", event_id=event_id)
 
     else:
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(request, f"{field}: {error}")
 
-        return redirect('manage_tasks', event_id=event_id)
+        return redirect("manage_tasks", event_id=event_id)
+
 
 @require_POST
 @login_required
 @csrf_exempt
 def delete_task(request, task_id):
-    task = get_object_or_404(Task, id=task_id, cateringcompany=request.user.CateringCompanyusername)
+    task = get_object_or_404(
+        Task, id=task_id, cateringcompany=request.user.CateringCompanyusername
+    )
 
     if task:
         task.delete()
-        messages.success(request, 'Task deleted successfully.')
+        messages.success(request, "Task deleted successfully.")
     else:
-        messages.error(request, 'Task not found.')
+        messages.error(request, "Task not found.")
 
-    return redirect('manage_tasks', event_id=task.event.id)
+    return redirect("manage_tasks", event_id=task.event.id)
+
 
 def update_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id)
-    if request.method == 'POST':
-        form = TaskForm(request.POST, instance=task, event_id=task.event.id)
+    event_id = task.event.id
+
+    if request.method == "POST":
+        form = TaskForm(request.POST, instance=task, event_id=event_id)
         if form.is_valid():
             form.save()
-            return redirect('manage_tasks', event_id=task.event.id)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            else:
+                return redirect("manage_tasks", event_id=event_id)
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                form_html = render_to_string('task_edit_form.html', {'form': form, 'task': task, 'event_id': event_id}, request)
+                return JsonResponse({'success': False, 'form_html': form_html})
+            else:
+                messages.error(request, "Please correct the errors below.")
+                return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
     else:
-        form = TaskForm(instance=task, event_id=task.event.id)  
-
-    return render(request, 'edit_task.html', {'form': form, 'task': task})
+        form = TaskForm(instance=task, event_id=event_id)
+        return render(request, "task_edit_form.html", {"form": form, "task": task, "event_id": event_id})
 
 def get_task_data(request):
-    task_id = request.GET.get('task_id')
+    task_id = request.GET.get("task_id")
     task = get_object_or_404(Task, pk=task_id)
     form = TaskForm(instance=task, event_id=task.event.id)
-    return render(request, 'task_edit_form.html', {'form': form, 'task': task})
+    form_html = render_to_string("task_edit_form.html", {"form": form, "task": task, "event_id": task.event.id}, request)
+    return JsonResponse({"form_html": form_html})
+
+
+def get_task_data(request):
+    task_id = request.GET.get("task_id")
+    task = get_object_or_404(Task, pk=task_id)
+    form = TaskForm(instance=task, event_id=task.event.id)
+    return render(request, "task_edit_form.html", {"form": form, "task": task})

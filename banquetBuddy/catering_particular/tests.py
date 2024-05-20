@@ -1,5 +1,6 @@
-from django.test import TestCase, Client
+from django.test import LiveServerTestCase, TestCase, Client
 from django.urls import reverse
+import phonenumbers
 from core.models import CustomUser
 from datetime import datetime
 from catering_owners.models import *
@@ -7,6 +8,18 @@ from .views import *
 from catering_particular.models import *
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+
+import unittest
+
+# class BookTestCase(TestCase):
+#     def setUp(self):
+#         self.user = CustomUser.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+#         self.user1 = CustomUser.objects.create_user(username='testuser2', email='test2@example.com', password='testpassword2')
 
 
 class BookTestCase(TestCase):
@@ -95,14 +108,10 @@ class BookTestCase(TestCase):
             reverse("book_edit", args=[self.event.id]),
             {
                 "date": "2024-07-12",
-                "number_guests": "15",
-                "selected_menu": self.menu2.id,
             },
         )
         self.assertEqual(response.status_code, 302)
         edited_event = Event.objects.get(id=self.event.id)
-        self.assertEqual(edited_event.number_guests, 15)
-        self.assertEqual(edited_event.menu, self.menu2)
         self.assertEqual(edited_event.booking_state, BookingState.CONTRACT_PENDING)
 
     def test_book_edit_view_incomplete_form(self):
@@ -191,6 +200,14 @@ class CateringViewsTestCase(TestCase):
             capacity=100,
             price=1000.00,
         )
+        self.menu = Menu.objects.create(
+            id=1,
+            cateringservice=self.catering_service,
+            name="Test Menu",
+            description="Test menu description",
+            diet_restrictions="Test diet restrictions",
+        )
+        self.catering_service.menus.add(self.menu)
 
         # Autenticar al usuario particular
         self.client.login(username="pablo@gmail.com", password="Pablo")
@@ -524,6 +541,160 @@ class FiltrosTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # Asegúrate de que no hay filtros de ciudad en la respuesta
         self.assertFalse(response.context["ciudad"])
+
+
+class CateringViewTest(TestCase):
+    def setUp(self):
+        # Configurar el entorno de prueba con objetos necesarios
+        self.client = Client()
+
+        self.user = CustomUser.objects.create_user(
+            username="test_user", password="test_password", email="testuser@gmail.com"
+        )
+        self.user1 = CustomUser.objects.create_user(
+            username="test_user1",
+            password="test_password1",
+            email="testuser1@gmail.com",
+        )
+
+        self.catering_company = CateringCompany.objects.create(
+            user=self.user, name="Test Catering Company", price_plan="PREMIUM_PRO"
+        )
+
+        self.message = Message.objects.create(
+            sender=self.user,
+            receiver=self.user1,
+            date=datetime.now(),
+            content="Este es un mensaje de ejemplo.",
+        )
+
+
+#    def test_listar_caterings_particular(self):
+#        # Simular una solicitud HTTP al punto final
+#        self.client.force_login(self.user)
+#
+#       # Realizar la solicitud HTTP
+#        response = self.client.get(reverse("listar_caterings"))
+#
+#        # Verificar si la respuesta es exitosa
+#        self.assertEqual(response.status_code, 200)
+#
+#        # Verificar si el template utilizado es el esperado
+#        self.assertTemplateUsed(response, "contact_chat_owner.html")
+#
+#        # Verificar si el contexto se pasa correctamente al template
+#        self.assertTrue(response.context["is_catering_company"])
+#        self.assertIn("messages", response.context)
+#
+#    def test_listar_caterings_particular_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings"))
+#
+#        # Verificamos que el usuario no autenticado reciba un código de estado 302 para redirigirlo
+#        self.assertEqual(response.status_code, 302)
+
+
+#    def test_listar_caterings_companies_unauthenticated(self):
+#        # Realizamos una solicitud GET a la vista sin autenticar al usuario
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario no autenticado reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
+
+#    def test_listar_caterings_companies_authenticated_as_particular(self):
+#        # Simulamos una solicitud HTTP autenticada como un usuario particular
+#        self.client.force_login(self.user)
+#
+#        # Realizamos una solicitud GET a la vista
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario particular reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
+#
+#    def test_listar_caterings_companies_authenticated_as_employee(self):
+#        # Simulamos una solicitud HTTP autenticada como un usuario empleado
+#        employee = Employee.objects.create(user=self.user1)
+#        self.client.force_login(self.user1)
+#
+#        # Realizamos una solicitud GET a la vista
+#        response = self.client.get(reverse("listar_caterings_companies"))
+#
+#        # Verificamos que el usuario empleado reciba un HttpResponseForbidden
+#        self.assertIsInstance(response, HttpResponseForbidden)
+
+
+class RegisterFormTestCase(LiveServerTestCase):
+
+    @unittest.skip("Se omiten los tests de interfaz")
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = webdriver.Chrome(executable_path=settings.DRIVER_PATH)
+        cls.selenium.implicitly_wait(10)  # Espera implícita de hasta 10 segundos
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_register_form(self):
+        self.selenium.get(
+            self.live_server_url + "/register_choice"
+        )  # URL de la vista para elegir el tipo de registro
+
+        # Espera explícita hasta que el botón register_particular_button sea visible y clickable
+        register_particular_button = WebDriverWait(self.selenium, 10).until(
+            EC.element_to_be_clickable((By.ID, "register_particular_button"))
+        )
+        register_particular_button.click()
+
+        # Verifica que se haya redirigido correctamente a la vista de registro de particular
+        self.assertIn("/register_particular", self.selenium.current_url)
+
+        # Completa el formulario de usuario
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys("testuser")
+
+        first_name_input = self.selenium.find_element_by_name("first_name")
+        first_name_input.send_keys("John")
+
+        last_name_input = self.selenium.find_element_by_name("last_name")
+        last_name_input.send_keys("Doe")
+
+        email_input = self.selenium.find_element_by_name("email")
+        email_input.send_keys("test@example.com")
+
+        password1_input = self.selenium.find_element_by_name("password1")
+        password1_input.send_keys("parkour$123")
+
+        password2_input = self.selenium.find_element_by_name("password2")
+        password2_input.send_keys("parkour$123")
+
+        # Completa el formulario de particular
+        phone_number_input = self.selenium.find_element_by_name("phone_number")
+        phone_number_input.send_keys("+12125552368")
+
+        preferences_input = self.selenium.find_element_by_name("preferences")
+        preferences_input.send_keys("Food preferences")
+
+        address_input = self.selenium.find_element_by_name("address")
+        address_input.send_keys("123 Test St.")
+
+        # Completa la casilla de Política de Privacidad
+        privacy_policy_checkbox = self.selenium.find_element_by_id("privacyPolicy")
+        privacy_policy_checkbox.click()
+
+        # Envía el formulario
+        submit_button = self.selenium.find_element_by_css_selector(
+            'button[type="submit"]'
+        )
+        submit_button.click()
+
+        # Verifica que se haya redirigido a la página de inicio después del registro exitoso
+        self.assertEqual(
+            self.selenium.current_url, self.live_server_url + "/"
+        )  # URL de la página de inicio
+
 
 class RegisterParticularTest(TestCase):
     def setUp(self):

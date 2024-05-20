@@ -15,37 +15,6 @@
         background-color: #02483E;
         border-color: #02483E;
     }
-
-    @media screen and (max-width: 768px) {
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 15px;
-        }
-    }
-    @media screen and (max-width: 600px) and (min-width: 451px) {
-        p {
-            font-size: 15px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 15px;
-        }
-        h5 {
-            font-size: 17px;
-        }
-    }
-    @media screen and (max-width: 450px) {
-        p {
-            font-size: 12.5px; /* Cambio de tamaño de fuente en dispositivos pequeños */
-        }
-        /* Tamaño de fuente más pequeño para dispositivos pequeños */
-        .small-font {
-            font-size: 13px;
-        }
-        h5 {
-            font-size: 14.5px;
-        }
-    }
 </style>
 
 {% if messages %}
@@ -89,13 +58,18 @@
                     <p class="card-text small-font">{{ menu.description }}</p>
                 </div>
                 <div class="card-footer">
+                    <a href="{% url 'list_plates' %}">
+                        <button class="btn btn-custom mr-2">
+                            Add Plate
+                        </button>
+                      </a>
                     <form action="{% url 'edit_menu' menu.id %}" method="get" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-edit mr-2 small-font"><i class="bi bi-pencil"></i></button>
                     </form>
                     <form action="{% url 'delete_menu' menu.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger small-font"><i class="bi bi-trash3"></i></button>
+                        <button type="submit" class="btn btn-danger small-font" name="delete_menu_button"><i class="bi bi-trash3"></i></button>
                     </form>
                 </div>
             </div>
