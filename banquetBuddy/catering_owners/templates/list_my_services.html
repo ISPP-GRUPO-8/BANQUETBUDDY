@@ -42,7 +42,7 @@
   {% endif %}
 
    <!-- Alerta sobre servicios sin menús -->
-   <div class="alert alert-danger text-center" role="alert">
+   <div class="alert alert-warning text-center" role="alert">
     If you create a service with no menus associated, it will not be visible to clients.
   </div>
 
@@ -72,7 +72,7 @@
             </button>
           </a>
           <a href="{% url 'list_employee' service.id %}">
-            <button class="btn btn-custom">
+            <button class="btn btn-custom" style="margin-left: 5px;">
                 Employees
             </button>
           </a>

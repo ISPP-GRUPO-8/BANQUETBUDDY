@@ -65,6 +65,19 @@ main {
     font-size: 24px;
     color: #54BFAF; 
 }
+
+@media (max-width: 767px) {
+    .text-lg {
+        font-size: 9px;
+        margin-bottom: 3px;
+        white-space: nowrap;
+    }
+
+    .icon-lg {
+        font-size: 16px;
+        color: #54BFAF; 
+    }
+}
 /* HOME */
 .logo-image {
     width: 100%; /* Haz que la imagen ocupe el 100% del ancho del contenedor */

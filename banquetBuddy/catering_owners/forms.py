@@ -287,3 +287,14 @@ class TaskForm(forms.ModelForm):
 
         if 'instance' in kwargs and kwargs['instance']:
             self.fields['employees'].initial = kwargs['instance'].employees.all()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        assignment_date = cleaned_data.get("assignment_date")
+        expiration_date = cleaned_data.get("expiration_date")
+
+        if assignment_date and expiration_date:
+            if assignment_date > expiration_date:
+                raise ValidationError("La fecha de asignación debe ser anterior o igual a la fecha de vencimiento.")
+
+        return cleaned_data
