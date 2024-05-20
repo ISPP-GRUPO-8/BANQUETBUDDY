@@ -24,7 +24,7 @@ from selenium import webdriver
 from django.urls import reverse
 from selenium.webdriver.common.keys import Keys
 import time
-from nose.tools import nottest
+import unittest
 
 
 class CateringBookTestCase(TestCase):
@@ -863,7 +863,7 @@ class RegisterFormTestCase(LiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_register_form(self):
         ruta_archivo = os.path.join(
             os.path.dirname(__file__), "test_files", "test_pdf.pdf"
@@ -951,7 +951,7 @@ class VisualAddMenuTest(LiveServerTestCase):
     def tearDown(self):
         self.driver.quit()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_add_menu_authenticated_user(self):
         # Iniciar sesión con Selenium
         self.driver.get(self.live_server_url + "/login")
@@ -1010,7 +1010,7 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
     def tearDown(self):
         self.driver.quit()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_edit_menu_authenticated_user(self):
         # Iniciar sesión
         self.driver.get(self.live_server_url + "/login")
@@ -1045,7 +1045,7 @@ class VisualEditMenuTest(StaticLiveServerTestCase):
         self.assertEqual(updated_menu.description, "Updated Description")
         self.assertEqual(updated_menu.diet_restrictions, "Updated Restrictions")
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_delete_menu(self):
         # Ir a la página de lista de menús
         self.driver.get(self.live_server_url + "/login")
@@ -1098,7 +1098,7 @@ class CateringCalendarViewTest(StaticLiveServerTestCase):
     def tearDownClass(cls):
         cls.selenium.quit()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_catering_calendar_view(self):
 
         # Abre la página del calendario de catering
@@ -1170,7 +1170,7 @@ class CateringUnsubscribeTest(StaticLiveServerTestCase):
         self.user.delete()
         self.catering_company.delete()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_catering_unsubscribe_view(self):
         # Iniciar sesión
         self.selenium.get(self.live_server_url + reverse("login"))

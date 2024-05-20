@@ -25,4 +25,3 @@ locust==2.5.1
 chromedriver-autoinstaller==0.2.2
 coverage
 python-dotenv
-nose

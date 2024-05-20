@@ -22,7 +22,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 
-from nose.tools import nottest
+import unittest
 
 
 # Create your tests here.
@@ -393,7 +393,7 @@ class ListWorkServicesIntegrationTest(TestCase):
 ########################
 
 
-@nottest
+@unittest.skip("Se omiten los tests de interfaz")
 class RegisterFormTestCase(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
@@ -408,7 +408,7 @@ class RegisterFormTestCase(LiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    @nottest
+    @unittest.skip("Se omiten los tests de interfaz")
     def test_register_form(self):
         curriculum_path = os.path.join(
             settings.MEDIA_ROOT, "curriculums", "curriculum_0chkcrb.pdf"
