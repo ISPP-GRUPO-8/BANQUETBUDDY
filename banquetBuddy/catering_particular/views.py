@@ -55,6 +55,8 @@ def book_cancel(request, event_id):
     events = Event.objects.filter(particular_id=user.id)
     context = {"events": events}
     event = get_object_or_404(Event, id=event_id)
+    if request.user != event.particular.user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     if user.id == event.particular_id:
         event.booking_state = BookingState.CANCELLED
         event.save()
@@ -65,6 +67,8 @@ def book_cancel(request, event_id):
 def book_edit(request, event_id):
     context = {}
     event = get_object_or_404(Event, id=event_id)
+    if request.user != event.particular.user:
+        return HttpResponseForbidden(FORBIDDEN_ACCESS_ERROR)
     # Ya no necesitas obtener todos los menús y sus platos, solo los platos del menú seleccionado.
     selected_menu = event.menu
     plates = Plate.objects.filter(menu=selected_menu)
